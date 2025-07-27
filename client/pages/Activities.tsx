@@ -211,6 +211,329 @@ export default function Activities() {
   );
 }
 
+function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
+  const partnerRequests = [
+    {
+      id: "partner1",
+      title: "Looking for belay partner",
+      date: "Tonight",
+      time: "7:00 PM",
+      location: "Westway Climbing Centre",
+      organizer: "Sarah Chen",
+      type: "climbing",
+      climbingLevel: "5.9 - 5.11a",
+      maxParticipants: "2"
+    },
+    {
+      id: "partner2",
+      title: "Lead climbing session",
+      date: "Friday evenings",
+      time: "6:30 PM",
+      location: "The Castle Climbing Centre",
+      organizer: "Alex Rodriguez",
+      type: "climbing",
+      climbingLevel: "6a - 6c",
+      maxParticipants: "4"
+    },
+    {
+      id: "partner3",
+      title: "Weekend bouldering buddy",
+      date: "Saturday",
+      time: "2:00 PM",
+      location: "VauxWall East",
+      organizer: "Mike Johnson",
+      type: "climbing",
+      climbingLevel: "V3 - V6",
+      maxParticipants: "3"
+    }
+  ];
+
+  const gymActivities = [
+    {
+      id: "gym1",
+      title: "Women's+ Climbing Morning",
+      date: "Every Wednesday",
+      time: "10:00 AM",
+      location: "Westway Climbing Centre",
+      organizer: "Coach Holly Peristiani",
+      type: "climbing",
+      climbingLevel: "Competent top-rope climbers",
+      maxParticipants: "15",
+      isWestway: true
+    },
+    {
+      id: "gym2",
+      title: "Bouldering Competition Training",
+      date: "Saturday",
+      time: "2:00 PM",
+      location: "The Arch Climbing Wall",
+      organizer: "The Arch Coaching Team",
+      type: "climbing",
+      climbingLevel: "V4 - V8",
+      maxParticipants: "12"
+    },
+    {
+      id: "gym3",
+      title: "Youth Climbing Club",
+      date: "Saturday",
+      time: "11:00 AM",
+      location: "VauxWall East",
+      organizer: "Youth Development Team",
+      type: "climbing",
+      climbingLevel: "Beginner to 6a",
+      maxParticipants: "20"
+    }
+  ];
+
+  const competitions = [
+    {
+      id: "comp1",
+      title: "London Bouldering League",
+      date: "Monthly",
+      time: "Next: July 20, 6:00 PM",
+      location: "Various London gyms",
+      organizer: "London Climbing Coalition",
+      type: "climbing",
+      climbingLevel: "V0 - V12",
+      maxParticipants: "150"
+    },
+    {
+      id: "comp2",
+      title: "Lead Climbing Championships",
+      date: "Saturday, August 5",
+      time: "9:00 AM",
+      location: "Westway Climbing Centre",
+      organizer: "British Mountaineering Council",
+      type: "climbing",
+      climbingLevel: "5.10a - 5.13d",
+      maxParticipants: "80"
+    }
+  ];
+
+  const outdoorTrips = [
+    {
+      id: "trip1",
+      title: "Peak District Sport Climbing",
+      date: "Weekend, July 22-23",
+      time: "6:00 AM departure",
+      location: "Stanage Edge & Burbage",
+      organizer: "Peak Adventures",
+      type: "climbing",
+      climbingLevel: "E1 - E4 / 5.6 - 5.10",
+      maxParticipants: "8"
+    },
+    {
+      id: "trip2",
+      title: "Multi-pitch Climbing Course",
+      date: "3 days, Aug 12-14",
+      time: "All day",
+      location: "Lake District",
+      organizer: "Mountain Skills Academy",
+      type: "climbing",
+      climbingLevel: "Multi-pitch routes",
+      maxParticipants: "6"
+    },
+    {
+      id: "trip3",
+      title: "Portland Sport Trip",
+      date: "Long weekend, Sept 15-18",
+      time: "All weekend",
+      location: "Portland, Dorset",
+      organizer: "South Coast Climbing",
+      type: "climbing",
+      climbingLevel: "5.8 - 5.12",
+      maxParticipants: "12"
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* User Created Activities */}
+      {userActivities.length > 0 && (
+        <div>
+          <h2 className="text-lg font-bold text-black font-poppins mb-4">Your Activities</h2>
+          <div className="space-y-3">
+            {userActivities.map((activity) => (
+              <CreatedActivityItem key={activity.id} activity={activity} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Partner Requests */}
+      <div>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">Partner Requests</h2>
+        <div className="space-y-3">
+          {partnerRequests.map((activity) => (
+            <CreatedActivityItem key={activity.id} activity={activity} />
+          ))}
+        </div>
+      </div>
+
+      {/* Gym Activities */}
+      <div>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">Climbing Gym Activities</h2>
+        <div className="space-y-3">
+          {gymActivities.map((activity) => (
+            <CreatedActivityItem key={activity.id} activity={activity} />
+          ))}
+        </div>
+      </div>
+
+      {/* Competitions */}
+      <div>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">Competitions</h2>
+        <div className="space-y-3">
+          {competitions.map((activity) => (
+            <CreatedActivityItem key={activity.id} activity={activity} />
+          ))}
+        </div>
+      </div>
+
+      {/* Outdoor Trips */}
+      <div>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">Climbing Trips</h2>
+        <div className="space-y-3">
+          {outdoorTrips.map((activity) => (
+            <CreatedActivityItem key={activity.id} activity={activity} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
+  const groupRides = [
+    {
+      id: "group1",
+      title: "Sunday Morning Social Ride",
+      date: "Sunday",
+      time: "8:00 AM",
+      location: "Richmond Park, London",
+      organizer: "Richmond Cycling Club",
+      type: "cycling",
+      distance: "25",
+      distanceUnit: "km",
+      pace: "20",
+      paceUnit: "kph",
+      elevation: "150",
+      elevationUnit: "m",
+      maxParticipants: "15"
+    },
+    {
+      id: "group2",
+      title: "Intermediate Chaingang",
+      date: "Tuesday",
+      time: "6:30 PM",
+      location: "Box Hill, Surrey",
+      organizer: "Surrey Road Cycling",
+      type: "cycling",
+      distance: "40",
+      distanceUnit: "km",
+      pace: "32",
+      paceUnit: "kph",
+      elevation: "420",
+      elevationUnit: "m",
+      maxParticipants: "12"
+    }
+  ];
+
+  const sportives = [
+    {
+      id: "sportive1",
+      title: "London to Brighton Challenge",
+      date: "Saturday",
+      time: "7:00 AM",
+      location: "Clapham Common, London",
+      organizer: "British Heart Foundation",
+      type: "cycling",
+      distance: "54",
+      distanceUnit: "miles",
+      elevation: "900",
+      elevationUnit: "m",
+      maxParticipants: "2000"
+    },
+    {
+      id: "sportive2",
+      title: "Cotswolds Century",
+      date: "Sunday",
+      time: "8:00 AM",
+      location: "Chipping Campden",
+      organizer: "Sportive Series",
+      type: "cycling",
+      distance: "100",
+      distanceUnit: "miles",
+      elevation: "1850",
+      elevationUnit: "m",
+      maxParticipants: "500"
+    }
+  ];
+
+  const training = [
+    {
+      id: "training1",
+      title: "Hill Climbing Intervals",
+      date: "Thursday",
+      time: "6:00 PM",
+      location: "Leith Hill, Surrey",
+      organizer: "Watts Cycling Club",
+      type: "cycling",
+      distance: "35",
+      distanceUnit: "km",
+      elevation: "650",
+      elevationUnit: "m",
+      maxParticipants: "8"
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* User Created Activities */}
+      {userActivities.length > 0 && (
+        <div>
+          <h2 className="text-lg font-bold text-black font-poppins mb-4">Your Activities</h2>
+          <div className="space-y-3">
+            {userActivities.map((activity) => (
+              <CreatedActivityItem key={activity.id} activity={activity} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Group Rides */}
+      <div>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">Group Rides</h2>
+        <div className="space-y-3">
+          {groupRides.map((activity) => (
+            <CreatedActivityItem key={activity.id} activity={activity} />
+          ))}
+        </div>
+      </div>
+
+      {/* Sportives */}
+      <div>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">Sportives & Events</h2>
+        <div className="space-y-3">
+          {sportives.map((activity) => (
+            <CreatedActivityItem key={activity.id} activity={activity} />
+          ))}
+        </div>
+      </div>
+
+      {/* Training */}
+      <div>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">Training Sessions</h2>
+        <div className="space-y-3">
+          {training.map((activity) => (
+            <CreatedActivityItem key={activity.id} activity={activity} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CreatedActivityItem({ activity }: { activity: any }) {
   return (
     <div className="bg-explore-gray border-2 border-explore-green rounded-lg p-4 mb-3">
