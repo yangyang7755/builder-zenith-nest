@@ -867,7 +867,13 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
       </div>
 
       {/* Action Button */}
-      <button className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          alert(`Request to join ${activity.title}`);
+        }}
+        className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+      >
         Request to join
       </button>
     </div>
