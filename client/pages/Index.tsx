@@ -138,19 +138,19 @@ function FilterChip({ label, active = false }: { label: string; active?: boolean
   );
 }
 
-function ActivityCard({ 
-  title, 
-  date, 
-  location, 
-  imageSrc 
-}: { 
-  title: string; 
-  date: string; 
-  location: string; 
-  imageSrc: string; 
+function ActivityCard({
+  title,
+  date,
+  location,
+  imageSrc
+}: {
+  title: string;
+  date: string;
+  location: string;
+  imageSrc: string;
 }) {
   return (
-    <div className="w-60 h-32 border-2 border-explore-green rounded-lg p-3 flex-shrink-0 bg-white">
+    <div className="min-w-60 w-60 h-32 border-2 border-explore-green rounded-lg p-3 flex-shrink-0 bg-white">
       <h3 className="font-bold text-explore-green font-cabin text-base mb-2">{title}</h3>
       <div className="flex items-start gap-3">
         <img 
