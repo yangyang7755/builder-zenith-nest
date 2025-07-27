@@ -16,6 +16,7 @@ import ActivityDetails from "./pages/ActivityDetails";
 import CreateActivity from "./pages/CreateActivity";
 import CreateCycling from "./pages/CreateCycling";
 import CreateClimbing from "./pages/CreateClimbing";
+import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
 import { ChatProvider } from "./contexts/ChatContext";
