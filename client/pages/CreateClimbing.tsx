@@ -15,7 +15,7 @@ export default function CreateClimbing() {
     climbingLevel: "",
     languages: "",
     gearRequired: "",
-    gender: "Female only",
+    femaleOnly: false,
     ageMin: "",
     ageMax: "",
     visibility: "All",
