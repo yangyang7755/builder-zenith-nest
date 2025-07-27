@@ -151,7 +151,7 @@ function ChatItem({
             </h3>
             <p className="text-gray-500 text-lg font-cabin">
               {message.type === "join_request" && message.activityTitle
-                ? `Requested to join "${message.activityTitle}": ${message.content}`
+                ? `You: ${message.content}`
                 : message.content}{" "}
               · {getTimeAgo(message.timestamp)}
             </p>
