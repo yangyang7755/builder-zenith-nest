@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
+import RequestJoinModal from "../components/RequestJoinModal";
 
 export default function Index() {
   const { activities, searchActivities } = useActivities();
