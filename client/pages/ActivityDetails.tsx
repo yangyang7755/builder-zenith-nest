@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { MapPin, Clock, AlertTriangle, Info, X } from "lucide-react";
 import { useChat } from "../contexts/ChatContext";
 
