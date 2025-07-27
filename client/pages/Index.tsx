@@ -80,7 +80,15 @@ export default function Index() {
         <div className="relative mb-6">
           <div className="bg-explore-green rounded-full h-12 flex items-center px-5">
             <Search className="w-6 h-6 text-white" />
-            <span className="text-white text-xl font-cabin ml-6">Search</span>
+            <input
+              id="search-input"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search activities..."
+              className="bg-transparent text-white text-xl font-cabin ml-6 flex-1 placeholder-white/70 focus:outline-none"
+              onClick={handleSearchClick}
+            />
             <div className="ml-auto">
               <Menu className="w-6 h-6 text-white" />
             </div>
