@@ -141,15 +141,22 @@ export default function CreateCycling() {
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
                 Max number of riders
               </h3>
-              <input
-                type="number"
-                value={formData.maxRiders}
-                onChange={(e) =>
-                  setFormData({ ...formData, maxRiders: e.target.value })
-                }
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter max number"
-              />
+              <div className="relative">
+                <select
+                  value={formData.maxRiders}
+                  onChange={(e) =>
+                    setFormData({ ...formData, maxRiders: e.target.value })
+                  }
+                  className="appearance-none w-full border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
+                >
+                  {[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map((num) => (
+                    <option key={num} value={num.toString()}>
+                      {num} riders
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>
             </div>
 
             {/* Distance */}
