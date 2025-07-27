@@ -129,8 +129,30 @@ export default function ActivityDetails() {
           <div className="ml-8">
             <p className="text-sm text-black font-cabin mb-6">
               Participants must be{" "}
-              <span className="underline cursor-pointer">
+              <span
+                className="underline cursor-pointer relative"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
                 competent top-rope climbers
+                {showTooltip && (
+                  <div className="absolute left-0 top-6 bg-explore-green text-white p-4 rounded-lg shadow-lg z-50 w-80 text-sm font-cabin">
+                    <div className="font-bold text-base mb-2">Top-rope Competent Climbers</div>
+                    <div className="mb-2">To join this session, you should be able to:</div>
+                    <ul className="space-y-1 mb-3">
+                      <li>• Tie into a harness using a figure-eight knot</li>
+                      <li>• Belay using an appropriate device (e.g. GriGri, ATC)</li>
+                      <li>• Perform safety checks and communicate clearly</li>
+                      <li>• Catch falls and lower a partner safely</li>
+                    </ul>
+                    <div className="flex items-start gap-2 bg-yellow-500 bg-opacity-20 p-2 rounded">
+                      <span className="text-yellow-300 font-bold">⚠</span>
+                      <div className="text-sm">
+                        If you're unsure about any of the above, please check with a coach or ask in advance. This ensures a safe and enjoyable session for everyone.
+                      </div>
+                    </div>
+                  </div>
+                )}
               </span>{" "}
               <Info className="inline w-4 h-4 text-gray-400" />.
             </p>
