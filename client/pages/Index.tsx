@@ -240,20 +240,23 @@ export default function Index() {
 function FilterChip({
   label,
   active = false,
+  onClick,
 }: {
   label: string;
   active?: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <div
-      className={`px-5 py-2 rounded-lg border border-black font-bold text-sm font-cabin whitespace-nowrap ${
+    <button
+      onClick={onClick}
+      className={`px-5 py-2 rounded-lg border border-black font-bold text-sm font-cabin whitespace-nowrap transition-colors ${
         active
           ? "bg-explore-green text-white"
-          : "bg-explore-gray text-explore-green"
+          : "bg-explore-gray text-explore-green hover:bg-gray-300"
       }`}
     >
       {label}
-    </div>
+    </button>
   );
 }
 
