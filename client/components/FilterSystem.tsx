@@ -51,6 +51,7 @@ export default function FilterSystem({ onFiltersChange, onShowMap, currentFilter
       pace: { min: 0, max: 100 },
       distance: { min: 0, max: 200 },
       elevation: { min: 0, max: 5000 },
+      clubOnly: false,
     };
     setFilters(clearedFilters);
     onFiltersChange(clearedFilters);
