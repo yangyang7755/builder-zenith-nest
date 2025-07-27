@@ -69,6 +69,10 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        cabin: ["Cabin", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
+      },
       keyframes: {
         "accordion-down": {
           from: {
