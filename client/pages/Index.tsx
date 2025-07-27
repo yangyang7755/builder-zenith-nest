@@ -530,6 +530,7 @@ function MixedActivitiesSection({
                   type={activity.type}
                   difficulty={activity.difficulty}
                   isFirstCard={activity.isFirstCard}
+                  activityId={index === 0 ? "westway-womens-climb" : "peak-district-climb"}
                 />
               ))}
           </div>
