@@ -156,18 +156,27 @@ function ActivityCard({
     <div className="min-w-60 w-60 h-32 border-2 border-explore-green rounded-lg p-3 flex-shrink-0 bg-white">
       <h3 className="font-bold text-explore-green font-cabin text-base mb-2">{title}</h3>
       <div className="flex items-start gap-3">
-        <img 
-          src={imageSrc} 
-          alt="Profile" 
+        <img
+          src={imageSrc}
+          alt="Profile"
           className="w-10 h-10 rounded-full border border-black object-cover"
         />
         <div className="flex-1">
           <div className="text-sm text-explore-green font-cabin mb-1">{date}</div>
           <div className="text-sm text-explore-green font-cabin">{location}</div>
         </div>
-        <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-base font-cabin">
-          Join
-        </button>
+        {isFirstCard ? (
+          <Link
+            to="/activity/westway-womens-climb"
+            className="bg-explore-green text-white px-3 py-2 rounded-lg text-base font-cabin inline-block text-center"
+          >
+            Join
+          </Link>
+        ) : (
+          <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-base font-cabin">
+            Join
+          </button>
+        )}
       </div>
     </div>
   );
