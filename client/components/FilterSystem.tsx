@@ -64,6 +64,7 @@ export default function FilterSystem({ onFiltersChange, onShowMap, currentFilter
     if (filters.date.start || filters.date.end) count++;
     if (filters.gender.length > 0) count++;
     if (filters.gear.length > 0) count++;
+    if (filters.clubOnly) count++;
     return count;
   };
 
