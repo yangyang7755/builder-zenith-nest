@@ -298,46 +298,50 @@ function MixedActivitiesSection({
   const mixedActivities = [
     // Climbing activity
     {
-      title: "Westway women's+ climb...",
-      date: "📅 Wednesday",
+      title: "Westway women's+ climbing morning",
+      date: "📅 Wednesday, 10:00 AM",
       location: "📍London, UK",
       imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
-      organizer: "Coach Holly",
+      organizer: "Coach Holly Peristiani",
+      difficulty: "Intermediate",
       isFirstCard: true
     },
     // Cycling activity
     {
-      title: "Oxford Road Cycling Club Ride",
-      date: "📅 Saturday",
-      location: "📍Oxford, UK",
+      title: "Sunday Morning Social Ride",
+      date: "📅 Sunday, 8:00 AM",
+      location: "📍Richmond Park, London",
       imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-      organizer: "Oxford University Cycling Club",
+      organizer: "Richmond Cycling Club",
       type: "cycling",
-      distance: "45km",
-      pace: "25 kph",
-      elevation: "320m"
+      distance: "25km",
+      pace: "20 kph",
+      elevation: "150m",
+      difficulty: "Beginner"
     },
     // Climbing activity
     {
       title: "Sport climbing trip",
-      date: "📅 17.06 - 20.06",
+      date: "📅 Weekend, July 22-23",
       location: "📍Malham cove, UK",
       imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
-      organizer: "Peak Adventures"
+      organizer: "Peak Adventures",
+      difficulty: "Advanced"
     },
     // Cycling activity
     {
-      title: "Sunday Morning Social Ride",
-      date: "📅 Sunday",
-      location: "📍Richmond Park",
+      title: "Intermediate Chaingang",
+      date: "📅 Tuesday, 6:30 PM",
+      location: "📍Box Hill, Surrey",
       imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       type: "cycling",
-      organizer: "Richmond Cycling Club",
-      distance: "25km",
-      pace: "20 kph",
-      elevation: "150m"
+      organizer: "Surrey Road Cycling",
+      distance: "40km",
+      pace: "32 kph",
+      elevation: "420m",
+      difficulty: "Intermediate"
     }
   ];
 
