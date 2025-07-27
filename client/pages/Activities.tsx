@@ -113,7 +113,7 @@ function ActivityItem({ activity }: { activity: typeof activitiesData[0] }) {
       {/* Activity Icon */}
       <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C10.89 2 10 2.89 10 4S10.89 6 12 6 14 5.11 14 4 13.11 2 12 2M21 9V7L15 1.5V6H9V4.5L3 7V9H2V22H7V15H17V22H22V9H21M7 7.5L9 6.25V8.5L7 7.5M17 7.5L15 8.5V6.25L17 7.5Z"/>
+          <path d="M12 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm1 14v6h-2v-6H8.5l2-8h3l2 8H13z"/>
         </svg>
       </div>
 
