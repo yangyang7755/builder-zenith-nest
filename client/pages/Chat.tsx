@@ -101,6 +101,10 @@ export default function Chat() {
               message={message}
               getTimeAgo={getTimeAgo}
               getAvatarImage={getAvatarImage}
+              onClick={() => {
+                const userId = getUserId(message.sender);
+                navigate(`/chat/${userId}`);
+              }}
             />
           ))}
         </div>
