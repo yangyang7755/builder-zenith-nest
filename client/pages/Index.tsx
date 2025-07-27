@@ -1,5 +1,7 @@
 import { Search, Menu, MapPin, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useActivities } from "../contexts/ActivitiesContext";
 
 export default function Index() {
   return (
