@@ -276,13 +276,13 @@ function ActivityCard({
         {isFirstCard ? (
           <Link
             to="/activity/westway-womens-climb"
-            className="bg-explore-green text-white px-3 py-2 rounded-lg text-base font-cabin inline-block text-center"
+            className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin inline-block text-center"
           >
-            Join
+            Request to join
           </Link>
         ) : (
-          <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-base font-cabin">
-            Join
+          <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin">
+            Request to join
           </button>
         )}
       </div>
