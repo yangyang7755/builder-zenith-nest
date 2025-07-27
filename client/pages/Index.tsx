@@ -161,6 +161,13 @@ export default function Index() {
               </Link>
             )}
           </div>
+
+          {/* No Activities Message */}
+          {!isSearching && filteredActivities.length === 0 && (
+            <div className="text-center py-4 text-gray-500 font-cabin">
+              Change filters to see more activities...
+            </div>
+          )}
           <div className="flex gap-2 overflow-x-auto pb-2">
             {/* Default activities */}
             {!isSearching && (
