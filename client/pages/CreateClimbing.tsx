@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Calendar } from "lucide-react";
+import { useActivities } from "../contexts/ActivitiesContext";
 
 export default function CreateClimbing() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function CreateClimbing() {
     location: "",
     meetupLocation: "",
     date: "",
+    time: "",
     climbingLevel: "",
     languages: "",
     gearRequired: "",
@@ -20,8 +22,38 @@ export default function CreateClimbing() {
     specialComments: "",
   });
 
+  const { addActivity } = useActivities();
+
   const handleSubmit = () => {
-    // Handle form submission
+    if (!formData.maxPeople || !formData.location || !formData.meetupLocation || !formData.date || !formData.time) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    // Create activity with proper title
+    const activityTitle = `${selectedType} at ${formData.location}`;
+
+    addActivity({
+      type: 'climbing',
+      title: activityTitle,
+      date: formData.date,
+      time: formData.time,
+      location: formData.location,
+      meetupLocation: formData.meetupLocation,
+      organizer: "You",
+      maxParticipants: formData.maxPeople,
+      specialComments: formData.specialComments,
+      climbingLevel: formData.climbingLevel,
+      languages: formData.languages,
+      gearRequired: formData.gearRequired,
+      subtype: selectedType,
+      gender: formData.gender,
+      ageMin: formData.ageMin,
+      ageMax: formData.ageMax,
+      visibility: formData.visibility,
+      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+    });
+
     alert("Climbing activity created successfully!");
     navigate("/explore");
   };
@@ -128,6 +160,8 @@ export default function CreateClimbing() {
                 <h3 className="text-xl font-medium text-black font-cabin mb-3">Time</h3>
                 <input
                   type="time"
+                  value={formData.time}
+                  onChange={(e) => setFormData({...formData, time: e.target.value})}
                   className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                 />
               </div>
