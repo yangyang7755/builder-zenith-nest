@@ -163,10 +163,10 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
             );
           })}
 
-          {/* User Location */}
-          <div 
+          {/* User Location - Notting Hill */}
+          <div
             className="absolute transform -translate-x-1/2 -translate-y-1/2"
-            style={{ left: '50%', top: '50%' }}
+            style={{ left: '40%', top: '45%' }}
           >
             <div className="w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-lg">
               <div className="absolute inset-0 bg-blue-600 rounded-full animate-pulse opacity-50"></div>
