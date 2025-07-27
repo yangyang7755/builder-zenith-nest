@@ -37,6 +37,17 @@ export default function Chat() {
     );
   };
 
+  const getUserId = (sender: string) => {
+    const userIds = {
+      "Coach Holly Peristiani": "coach-holly",
+      "Ben Stuart": "ben-stuart",
+      "Dan Smith": "dan-smith",
+      "UCLMC": "uclmc",
+      "Maggie Chang": "maggie-chang",
+    };
+    return userIds[sender as keyof typeof userIds] || "unknown";
+  };
+
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
       {/* Status Bar */}
