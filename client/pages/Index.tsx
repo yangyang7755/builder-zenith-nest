@@ -507,6 +507,7 @@ function MixedActivitiesSection({
                   imageSrc={activity.imageSrc}
                   organizer={activity.organizer}
                   type={activity.type}
+                  difficulty={activity.difficulty}
                   isFirstCard={activity.isFirstCard}
                 />
               ))}
