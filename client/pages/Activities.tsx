@@ -66,10 +66,12 @@ export default function Activities() {
 
   // Check URL parameters for specific activity filter
   const urlParams = new URLSearchParams(location.search);
-  const filterParam = urlParams.get('filter');
+  const filterParam = urlParams.get("filter");
 
   const [filters, setFilters] = useState<FilterOptions>({
-    activityType: filterParam ? [filterParam.charAt(0).toUpperCase() + filterParam.slice(1)] : ["Cycling", "Climbing"],
+    activityType: filterParam
+      ? [filterParam.charAt(0).toUpperCase() + filterParam.slice(1)]
+      : ["Cycling", "Climbing"],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     date: { start: "", end: "" },
@@ -172,8 +174,7 @@ export default function Activities() {
           <h1 className="text-3xl font-bold text-explore-green font-cabin">
             {filterParam
               ? `${filterParam.charAt(0).toUpperCase() + filterParam.slice(1)} Activities`
-              : "Activities"
-            }
+              : "Activities"}
           </h1>
         </div>
 
@@ -185,9 +186,11 @@ export default function Activities() {
         />
 
         {/* Activities Content - Climbing or Cycling specific or mixed */}
-        {filters.activityType.length === 1 && filters.activityType.includes("Climbing") ? (
+        {filters.activityType.length === 1 &&
+        filters.activityType.includes("Climbing") ? (
           <AllClimbingActivities userActivities={filteredActivities} />
-        ) : filters.activityType.length === 1 && filters.activityType.includes("Cycling") ? (
+        ) : filters.activityType.length === 1 &&
+          filters.activityType.includes("Cycling") ? (
           <AllCyclingActivities userActivities={filteredActivities} />
         ) : (
           /* Mixed Activities List */
@@ -231,7 +234,7 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "Sarah Chen",
       type: "climbing",
       climbingLevel: "5.9 - 5.11a",
-      maxParticipants: "2"
+      maxParticipants: "2",
     },
     {
       id: "partner2",
@@ -242,7 +245,7 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "Alex Rodriguez",
       type: "climbing",
       climbingLevel: "6a - 6c",
-      maxParticipants: "4"
+      maxParticipants: "4",
     },
     {
       id: "partner3",
@@ -253,8 +256,8 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "Mike Johnson",
       type: "climbing",
       climbingLevel: "V3 - V6",
-      maxParticipants: "3"
-    }
+      maxParticipants: "3",
+    },
   ];
 
   const gymActivities = [
@@ -268,7 +271,7 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       type: "climbing",
       climbingLevel: "Competent top-rope climbers",
       maxParticipants: "15",
-      isWestway: true
+      isWestway: true,
     },
     {
       id: "gym2",
@@ -279,7 +282,7 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "The Arch Coaching Team",
       type: "climbing",
       climbingLevel: "V4 - V8",
-      maxParticipants: "12"
+      maxParticipants: "12",
     },
     {
       id: "gym3",
@@ -290,8 +293,8 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "Youth Development Team",
       type: "climbing",
       climbingLevel: "Beginner to 6a",
-      maxParticipants: "20"
-    }
+      maxParticipants: "20",
+    },
   ];
 
   const competitions = [
@@ -304,7 +307,7 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "London Climbing Coalition",
       type: "climbing",
       climbingLevel: "V0 - V12",
-      maxParticipants: "150"
+      maxParticipants: "150",
     },
     {
       id: "comp2",
@@ -315,8 +318,8 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "British Mountaineering Council",
       type: "climbing",
       climbingLevel: "5.10a - 5.13d",
-      maxParticipants: "80"
-    }
+      maxParticipants: "80",
+    },
   ];
 
   const outdoorTrips = [
@@ -329,7 +332,7 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "Peak Adventures",
       type: "climbing",
       climbingLevel: "E1 - E4 / 5.6 - 5.10",
-      maxParticipants: "8"
+      maxParticipants: "8",
     },
     {
       id: "trip2",
@@ -340,7 +343,7 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "Mountain Skills Academy",
       type: "climbing",
       climbingLevel: "Multi-pitch routes",
-      maxParticipants: "6"
+      maxParticipants: "6",
     },
     {
       id: "trip3",
@@ -351,8 +354,8 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       organizer: "South Coast Climbing",
       type: "climbing",
       climbingLevel: "5.8 - 5.12",
-      maxParticipants: "12"
-    }
+      maxParticipants: "12",
+    },
   ];
 
   return (
@@ -360,7 +363,9 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
       {/* User Created Activities */}
       {userActivities.length > 0 && (
         <div>
-          <h2 className="text-lg font-bold text-black font-poppins mb-4">Your Activities</h2>
+          <h2 className="text-lg font-bold text-black font-poppins mb-4">
+            Your Activities
+          </h2>
           <div className="space-y-3">
             {userActivities.map((activity) => (
               <CreatedActivityItem key={activity.id} activity={activity} />
@@ -371,7 +376,9 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
 
       {/* Partner Requests */}
       <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">Partner Requests</h2>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">
+          Partner Requests
+        </h2>
         <div className="space-y-3">
           {partnerRequests.map((activity) => (
             <CreatedActivityItem key={activity.id} activity={activity} />
@@ -381,7 +388,9 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
 
       {/* Gym Activities */}
       <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">Climbing Gym Activities</h2>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">
+          Climbing Gym Activities
+        </h2>
         <div className="space-y-3">
           {gymActivities.map((activity) => (
             <CreatedActivityItem key={activity.id} activity={activity} />
@@ -391,7 +400,9 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
 
       {/* Competitions */}
       <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">Competitions</h2>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">
+          Competitions
+        </h2>
         <div className="space-y-3">
           {competitions.map((activity) => (
             <CreatedActivityItem key={activity.id} activity={activity} />
@@ -401,7 +412,9 @@ function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
 
       {/* Outdoor Trips */}
       <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">Climbing Trips</h2>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">
+          Climbing Trips
+        </h2>
         <div className="space-y-3">
           {outdoorTrips.map((activity) => (
             <CreatedActivityItem key={activity.id} activity={activity} />
@@ -428,7 +441,7 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
       paceUnit: "kph",
       elevation: "150",
       elevationUnit: "m",
-      maxParticipants: "15"
+      maxParticipants: "15",
     },
     {
       id: "group2",
@@ -444,8 +457,8 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
       paceUnit: "kph",
       elevation: "420",
       elevationUnit: "m",
-      maxParticipants: "12"
-    }
+      maxParticipants: "12",
+    },
   ];
 
   const sportives = [
@@ -461,7 +474,7 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
       distanceUnit: "miles",
       elevation: "900",
       elevationUnit: "m",
-      maxParticipants: "2000"
+      maxParticipants: "2000",
     },
     {
       id: "sportive2",
@@ -475,8 +488,8 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
       distanceUnit: "miles",
       elevation: "1850",
       elevationUnit: "m",
-      maxParticipants: "500"
-    }
+      maxParticipants: "500",
+    },
   ];
 
   const training = [
@@ -492,8 +505,8 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
       distanceUnit: "km",
       elevation: "650",
       elevationUnit: "m",
-      maxParticipants: "8"
-    }
+      maxParticipants: "8",
+    },
   ];
 
   return (
@@ -501,7 +514,9 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
       {/* User Created Activities */}
       {userActivities.length > 0 && (
         <div>
-          <h2 className="text-lg font-bold text-black font-poppins mb-4">Your Activities</h2>
+          <h2 className="text-lg font-bold text-black font-poppins mb-4">
+            Your Activities
+          </h2>
           <div className="space-y-3">
             {userActivities.map((activity) => (
               <CreatedActivityItem key={activity.id} activity={activity} />
@@ -512,7 +527,9 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
 
       {/* Group Rides */}
       <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">Group Rides</h2>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">
+          Group Rides
+        </h2>
         <div className="space-y-3">
           {groupRides.map((activity) => (
             <CreatedActivityItem key={activity.id} activity={activity} />
@@ -522,7 +539,9 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
 
       {/* Sportives */}
       <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">Sportives & Events</h2>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">
+          Sportives & Events
+        </h2>
         <div className="space-y-3">
           {sportives.map((activity) => (
             <CreatedActivityItem key={activity.id} activity={activity} />
@@ -532,7 +551,9 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
 
       {/* Training */}
       <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">Training Sessions</h2>
+        <h2 className="text-lg font-bold text-black font-poppins mb-4">
+          Training Sessions
+        </h2>
         <div className="space-y-3">
           {training.map((activity) => (
             <CreatedActivityItem key={activity.id} activity={activity} />

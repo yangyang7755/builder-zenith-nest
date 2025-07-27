@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { MapPin, Clock, AlertTriangle, Info, X, Calendar, Users, Target, Trophy } from "lucide-react";
+import {
+  MapPin,
+  Clock,
+  AlertTriangle,
+  Info,
+  X,
+  Calendar,
+  Users,
+  Target,
+  Trophy,
+} from "lucide-react";
 import { useChat } from "../contexts/ChatContext";
 
 // Activity data structure
@@ -11,9 +21,11 @@ const activitiesData = {
     title: "Westway women's+ climbing morning",
     organizer: {
       name: "Coach Holly Peristiani",
-      image: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=80&h=80&fit=crop&crop=face"
+      image:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=80&h=80&fit=crop&crop=face",
     },
-    description: "This session is perfect for meeting fellow climbers and boosting your confidence. Holly can provide expert tips on top-roping, lead climbing, abseiling, fall practice and more. Standard entry fees apply.",
+    description:
+      "This session is perfect for meeting fellow climbers and boosting your confidence. Holly can provide expert tips on top-roping, lead climbing, abseiling, fall practice and more. Standard entry fees apply.",
     location: "Westway Climbing Centre",
     schedule: "Every Wednesday, 10:00-12:00 AM",
     difficulty: "Intermediate",
@@ -23,14 +35,15 @@ const activitiesData = {
         "Tie into a harness using a figure-eight knot",
         "Belay using an appropriate device (e.g. GriGri, ATC)",
         "Perform safety checks and communicate clearly",
-        "Catch falls and lower a partner safely"
+        "Catch falls and lower a partner safely",
       ],
-      warning: "If you're unsure about any of the above, please check with a coach or ask in advance. This ensures a safe and enjoyable session for everyone."
+      warning:
+        "If you're unsure about any of the above, please check with a coach or ask in advance. This ensures a safe and enjoyable session for everyone.",
     },
     tags: ["Top rope", "Lead climbing", "Coaching", "Women's+"],
     capacity: 12,
     currentParticipants: 8,
-    fee: "Standard entry"
+    fee: "Standard entry",
   },
   "sunday-morning-ride": {
     id: "sunday-morning-ride",
@@ -38,9 +51,11 @@ const activitiesData = {
     title: "Sunday Morning Social Ride",
     organizer: {
       name: "Richmond Cycling Club",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
-    description: "Join us for a friendly social ride through Richmond Park and surrounding areas. Perfect for cyclists looking to meet new people and explore beautiful routes. Coffee stop included at Roehampton Cafe.",
+    description:
+      "Join us for a friendly social ride through Richmond Park and surrounding areas. Perfect for cyclists looking to meet new people and explore beautiful routes. Coffee stop included at Roehampton Cafe.",
     location: "Richmond Park Main Gate",
     schedule: "Sunday, 8:00 AM",
     difficulty: "Beginner",
@@ -53,15 +68,16 @@ const activitiesData = {
         "Road bike in good working condition",
         "Helmet mandatory for all participants",
         "Basic bike maintenance knowledge helpful",
-        "Ability to ride 25km at moderate pace"
+        "Ability to ride 25km at moderate pace",
       ],
-      warning: "Please ensure your bike is roadworthy and bring a spare tube and basic tools."
+      warning:
+        "Please ensure your bike is roadworthy and bring a spare tube and basic tools.",
     },
     tags: ["Social", "Coffee stop", "Scenic route", "All levels"],
     capacity: 15,
     currentParticipants: 12,
     route: "Richmond Park → Kingston → Roehampton",
-    cafeStop: "Roehampton Cafe"
+    cafeStop: "Roehampton Cafe",
   },
   "peak-district-climb": {
     id: "peak-district-climb",
@@ -69,9 +85,11 @@ const activitiesData = {
     title: "Peak District Sport Climbing",
     organizer: {
       name: "Peak Adventures",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
-    description: "Weekend climbing adventure in the Peak District. We'll tackle some classic sport routes at Stanage Edge and Burbage. Perfect for those looking to transition from indoor to outdoor climbing or improve their outdoor skills.",
+    description:
+      "Weekend climbing adventure in the Peak District. We'll tackle some classic sport routes at Stanage Edge and Burbage. Perfect for those looking to transition from indoor to outdoor climbing or improve their outdoor skills.",
     location: "Stanage Edge & Burbage",
     schedule: "Weekend, July 22-23",
     difficulty: "Advanced",
@@ -81,16 +99,17 @@ const activitiesData = {
         "Comfortable leading 6a+ routes indoors",
         "Basic outdoor climbing experience preferred",
         "Own climbing shoes and harness",
-        "Comfortable with multi-pitch belaying"
+        "Comfortable with multi-pitch belaying",
       ],
-      warning: "Outdoor climbing involves additional risks. Weather conditions may affect the trip."
+      warning:
+        "Outdoor climbing involves additional risks. Weather conditions may affect the trip.",
     },
     tags: ["Outdoor", "Sport climbing", "Weekend trip", "Camping"],
     capacity: 8,
     currentParticipants: 6,
     accommodation: "Camping included",
     transport: "Minibus from London",
-    gradeRange: "E1 - E4 / 5.6 - 5.10"
+    gradeRange: "E1 - E4 / 5.6 - 5.10",
   },
   "chaingang-training": {
     id: "chaingang-training",
@@ -98,9 +117,11 @@ const activitiesData = {
     title: "Intermediate Chaingang",
     organizer: {
       name: "Surrey Road Cycling",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
-    description: "High-intensity training session for intermediate to advanced cyclists. We'll focus on paceline skills, hill repeats, and interval training. This is a structured workout designed to improve your cycling performance.",
+    description:
+      "High-intensity training session for intermediate to advanced cyclists. We'll focus on paceline skills, hill repeats, and interval training. This is a structured workout designed to improve your cycling performance.",
     location: "Box Hill, Surrey",
     schedule: "Tuesday, 6:30 PM",
     difficulty: "Intermediate",
@@ -113,15 +134,16 @@ const activitiesData = {
         "Comfortable maintaining 30+ kph on flats",
         "Experience riding in groups",
         "Good bike handling skills",
-        "Able to ride for 1.5+ hours continuously"
+        "Able to ride for 1.5+ hours continuously",
       ],
-      warning: "This is a demanding training session. Please ensure you're adequately fit and experienced."
+      warning:
+        "This is a demanding training session. Please ensure you're adequately fit and experienced.",
     },
     tags: ["Training", "High intensity", "Group riding", "Hill climbs"],
     capacity: 12,
     currentParticipants: 9,
-    trainingFocus: "Power & climbing"
-  }
+    trainingFocus: "Power & climbing",
+  },
 };
 
 export default function ActivityDetails() {
@@ -134,7 +156,9 @@ export default function ActivityDetails() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   // Get activity data based on ID
-  const activity = activityId ? activitiesData[activityId as keyof typeof activitiesData] : null;
+  const activity = activityId
+    ? activitiesData[activityId as keyof typeof activitiesData]
+    : null;
 
   useEffect(() => {
     if (!activity) {
@@ -168,10 +192,14 @@ export default function ActivityDetails() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
-      case "beginner": return "bg-green-100 text-green-700";
-      case "intermediate": return "bg-yellow-100 text-yellow-700";
-      case "advanced": return "bg-red-100 text-red-700";
-      default: return "bg-gray-100 text-gray-700";
+      case "beginner":
+        return "bg-green-100 text-green-700";
+      case "intermediate":
+        return "bg-yellow-100 text-yellow-700";
+      case "advanced":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -205,7 +233,7 @@ export default function ActivityDetails() {
       {/* Main Content */}
       <div className="px-6 pb-24">
         {/* Back button */}
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 mt-4 mb-4 text-explore-green font-cabin"
         >
@@ -218,7 +246,9 @@ export default function ActivityDetails() {
             <h1 className="text-2xl font-bold text-explore-green font-cabin leading-tight flex-1 pr-4">
               {activity.title}
             </h1>
-            <span className={`text-sm px-3 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}>
+            <span
+              className={`text-sm px-3 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}
+            >
               {activity.difficulty}
             </span>
           </div>
@@ -254,7 +284,9 @@ export default function ActivityDetails() {
           <div className="col-span-2">
             <div className="flex items-center gap-3 mb-1">
               <MapPin className="w-5 h-5 text-red-500" />
-              <h3 className="text-xl font-bold text-black font-cabin">Location</h3>
+              <h3 className="text-xl font-bold text-black font-cabin">
+                Location
+              </h3>
             </div>
             <p className="text-sm text-gray-600 font-cabin ml-8">
               {activity.location}
@@ -276,7 +308,9 @@ export default function ActivityDetails() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Users className="w-4 h-4 text-blue-500" />
-              <h4 className="text-lg font-bold text-black font-cabin">Capacity</h4>
+              <h4 className="text-lg font-bold text-black font-cabin">
+                Capacity
+              </h4>
             </div>
             <p className="text-sm text-black font-cabin ml-6">
               {activity.currentParticipants}/{activity.capacity} joined
@@ -289,7 +323,9 @@ export default function ActivityDetails() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Target className="w-4 h-4 text-green-500" />
-                  <h4 className="text-lg font-bold text-black font-cabin">Distance</h4>
+                  <h4 className="text-lg font-bold text-black font-cabin">
+                    Distance
+                  </h4>
                 </div>
                 <p className="text-sm text-black font-cabin ml-6">
                   {activity.distance}
@@ -298,7 +334,9 @@ export default function ActivityDetails() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-yellow-500">⚡</span>
-                  <h4 className="text-lg font-bold text-black font-cabin">Pace</h4>
+                  <h4 className="text-lg font-bold text-black font-cabin">
+                    Pace
+                  </h4>
                 </div>
                 <p className="text-sm text-black font-cabin ml-6">
                   {activity.pace}
@@ -307,7 +345,9 @@ export default function ActivityDetails() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-green-600">⛰️</span>
-                  <h4 className="text-lg font-bold text-black font-cabin">Elevation</h4>
+                  <h4 className="text-lg font-bold text-black font-cabin">
+                    Elevation
+                  </h4>
                 </div>
                 <p className="text-sm text-black font-cabin ml-6">
                   {activity.elevation}
@@ -320,7 +360,9 @@ export default function ActivityDetails() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Trophy className="w-4 h-4 text-purple-500" />
-                <h4 className="text-lg font-bold text-black font-cabin">Grade Range</h4>
+                <h4 className="text-lg font-bold text-black font-cabin">
+                  Grade Range
+                </h4>
               </div>
               <p className="text-sm text-black font-cabin ml-6">
                 {activity.gradeRange}
@@ -330,7 +372,12 @@ export default function ActivityDetails() {
         </div>
 
         {/* Additional Info */}
-        {(activity.fee || activity.accommodation || activity.transport || activity.cafeStop || activity.route || activity.trainingFocus) && (
+        {(activity.fee ||
+          activity.accommodation ||
+          activity.transport ||
+          activity.cafeStop ||
+          activity.route ||
+          activity.trainingFocus) && (
           <div className="mb-6">
             <h3 className="text-xl font-bold text-black font-cabin mb-3">
               Additional Information
@@ -339,37 +386,49 @@ export default function ActivityDetails() {
               {activity.fee && (
                 <div className="flex items-center gap-2">
                   <span className="text-green-600">💰</span>
-                  <span className="text-sm font-cabin">Fee: {activity.fee}</span>
+                  <span className="text-sm font-cabin">
+                    Fee: {activity.fee}
+                  </span>
                 </div>
               )}
               {activity.accommodation && (
                 <div className="flex items-center gap-2">
                   <span className="text-purple-600">🏕️</span>
-                  <span className="text-sm font-cabin">Accommodation: {activity.accommodation}</span>
+                  <span className="text-sm font-cabin">
+                    Accommodation: {activity.accommodation}
+                  </span>
                 </div>
               )}
               {activity.transport && (
                 <div className="flex items-center gap-2">
                   <span className="text-orange-600">🚐</span>
-                  <span className="text-sm font-cabin">Transport: {activity.transport}</span>
+                  <span className="text-sm font-cabin">
+                    Transport: {activity.transport}
+                  </span>
                 </div>
               )}
               {activity.cafeStop && (
                 <div className="flex items-center gap-2">
                   <span className="text-brown-600">☕</span>
-                  <span className="text-sm font-cabin">Cafe stop: {activity.cafeStop}</span>
+                  <span className="text-sm font-cabin">
+                    Cafe stop: {activity.cafeStop}
+                  </span>
                 </div>
               )}
               {activity.route && (
                 <div className="flex items-center gap-2">
                   <span className="text-blue-600">🗺️</span>
-                  <span className="text-sm font-cabin">Route: {activity.route}</span>
+                  <span className="text-sm font-cabin">
+                    Route: {activity.route}
+                  </span>
                 </div>
               )}
               {activity.trainingFocus && (
                 <div className="flex items-center gap-2">
                   <span className="text-red-600">🎯</span>
-                  <span className="text-sm font-cabin">Focus: {activity.trainingFocus}</span>
+                  <span className="text-sm font-cabin">
+                    Focus: {activity.trainingFocus}
+                  </span>
                 </div>
               )}
             </div>
@@ -378,12 +437,13 @@ export default function ActivityDetails() {
 
         {/* Tags */}
         <div className="mb-6">
-          <h3 className="text-xl font-bold text-black font-cabin mb-3">
-            Tags
-          </h3>
+          <h3 className="text-xl font-bold text-black font-cabin mb-3">Tags</h3>
           <div className="flex flex-wrap gap-2">
             {activity.tags.map((tag, index) => (
-              <span key={index} className="text-xs bg-explore-green bg-opacity-10 text-explore-green px-3 py-1 rounded-full font-cabin">
+              <span
+                key={index}
+                className="text-xs bg-explore-green bg-opacity-10 text-explore-green px-3 py-1 rounded-full font-cabin"
+              >
                 {tag}
               </span>
             ))}
@@ -427,9 +487,7 @@ export default function ActivityDetails() {
                 </ul>
                 <div className="flex items-start gap-2 bg-yellow-500 bg-opacity-20 p-2 rounded">
                   <span className="text-yellow-300 font-bold">⚠</span>
-                  <div className="text-sm">
-                    {activity.requirements.warning}
-                  </div>
+                  <div className="text-sm">{activity.requirements.warning}</div>
                 </div>
               </div>
             )}

@@ -12,7 +12,7 @@ export default function Profile() {
     { name: "Trad rack", completed: false, icon: "🔧" },
     { name: "Rope", completed: false, icon: "🪢" },
     { name: "Quickdraws", completed: false, icon: "🔗" },
-    { name: "Helmet", completed: false, icon: "⛑️" }
+    { name: "Helmet", completed: false, icon: "⛑️" },
   ];
 
   const pastActivities = [
@@ -20,13 +20,20 @@ export default function Profile() {
       id: "1",
       title: "Portland sport trip",
       date: "17.06",
-      image: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=100&h=100&fit=crop"
-    }
+      image:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=100&h=100&fit=crop",
+    },
   ];
 
   const clubs = [
-    { name: "Westway", logo: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800" },
-    { name: "CULMC", logo: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=50&h=50&fit=crop" }
+    {
+      name: "Westway",
+      logo: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800",
+    },
+    {
+      name: "CULMC",
+      logo: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=50&h=50&fit=crop",
+    },
   ];
 
   const handleFollowersClick = () => {
@@ -35,7 +42,7 @@ export default function Profile() {
   };
 
   const handleFollowingClick = () => {
-    // Navigate to following list  
+    // Navigate to following list
     navigate("/following");
   };
 
@@ -51,7 +58,16 @@ export default function Profile() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -65,24 +81,26 @@ export default function Profile() {
             <div className="flex items-center gap-4">
               {/* Profile Image */}
               <div className="w-24 h-24 rounded-full border border-black overflow-hidden">
-                <img 
-                  src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F23fa8ee56cbe4c7e834fbdf7cdf6cfd3?format=webp&width=800" 
-                  alt="Ben Stuart" 
-                  className="w-full h-full object-cover" 
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F23fa8ee56cbe4c7e834fbdf7cdf6cfd3?format=webp&width=800"
+                  alt="Ben Stuart"
+                  className="w-full h-full object-cover"
                 />
               </div>
-              
+
               <div>
-                <h1 className="text-xl font-bold text-black font-cabin mb-2">Ben Stuart</h1>
+                <h1 className="text-xl font-bold text-black font-cabin mb-2">
+                  Ben Stuart
+                </h1>
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     onClick={handleFollowersClick}
                     className="text-sm text-explore-green font-cabin underline"
                   >
                     100 Followers
                   </button>
                   <span className="text-sm text-gray-400">•</span>
-                  <button 
+                  <button
                     onClick={handleFollowingClick}
                     className="text-sm text-explore-green font-cabin underline"
                   >
@@ -139,11 +157,17 @@ export default function Profile() {
           <div className="grid grid-cols-2 gap-6">
             {/* Left Column */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-4">Activities joined</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-4">
+                Activities joined
+              </h3>
               <div className="space-y-3">
                 <div>
-                  <div className="text-lg font-medium text-explore-green font-cabin">18 climbs</div>
-                  <div className="text-sm text-explore-green font-cabin">Preferred terrain:</div>
+                  <div className="text-lg font-medium text-explore-green font-cabin">
+                    18 climbs
+                  </div>
+                  <div className="text-sm text-explore-green font-cabin">
+                    Preferred terrain:
+                  </div>
                   <ul className="text-sm text-explore-green font-cabin ml-4">
                     <li>• Indoor</li>
                     <li>• Sport</li>
@@ -156,7 +180,9 @@ export default function Profile() {
                     <div className="w-6 h-6 bg-explore-green rounded-full flex items-center justify-center">
                       <span className="text-white text-xs">🧗</span>
                     </div>
-                    <span className="text-sm font-medium text-black font-cabin">Portland sport trip</span>
+                    <span className="text-sm font-medium text-black font-cabin">
+                      Portland sport trip
+                    </span>
                   </div>
                   <div className="text-xs text-gray-500 font-cabin">17.06</div>
                 </div>
@@ -165,12 +191,16 @@ export default function Profile() {
 
             {/* Right Column */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-4">Gear & skills</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-4">
+                Gear & skills
+              </h3>
               <div className="space-y-3">
                 {gearSkills.map((skill, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <span className="text-lg">{skill.icon}</span>
-                    <span className="text-sm text-black font-cabin flex-1">{skill.name}</span>
+                    <span className="text-sm text-black font-cabin flex-1">
+                      {skill.name}
+                    </span>
                     {skill.completed ? (
                       <CheckCircle className="w-4 h-4 text-green-500" />
                     ) : (
@@ -184,12 +214,21 @@ export default function Profile() {
 
           {/* Clubs Section */}
           <div className="mt-8">
-            <h3 className="text-xl font-medium text-black font-cabin mb-4">Clubs</h3>
+            <h3 className="text-xl font-medium text-black font-cabin mb-4">
+              Clubs
+            </h3>
             <div className="flex gap-4">
               {clubs.map((club, index) => (
-                <div key={index} className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg"
+                >
                   <div className="w-6 h-6 rounded-full overflow-hidden">
-                    <img src={club.logo} alt={club.name} className="w-full h-full object-cover" />
+                    <img
+                      src={club.logo}
+                      alt={club.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <span className="text-sm font-cabin">{club.name}</span>
                 </div>
@@ -199,10 +238,14 @@ export default function Profile() {
 
           {/* Location Section */}
           <div className="mt-8">
-            <h3 className="text-xl font-medium text-black font-cabin mb-2">Location</h3>
+            <h3 className="text-xl font-medium text-black font-cabin mb-2">
+              Location
+            </h3>
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-black font-cabin">Notting Hill, London</span>
+              <span className="text-sm text-black font-cabin">
+                Notting Hill, London
+              </span>
             </div>
           </div>
         </div>

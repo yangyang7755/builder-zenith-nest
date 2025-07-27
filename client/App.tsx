@@ -56,7 +56,10 @@ const App = () => (
               <Route path="/profile" element={<Profile />} />
               <Route path="/followers" element={<Followers />} />
               <Route path="/following" element={<Following />} />
-              <Route path="/activity/:activityId" element={<ActivityDetails />} />
+              <Route
+                path="/activity/:activityId"
+                element={<ActivityDetails />}
+              />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -165,9 +165,13 @@ export default function Index() {
         />
 
         {/* Cycling-Focused Activities Section */}
-        {!isSearching && filters.activityType.length === 1 && filters.activityType.includes("Cycling") ? (
+        {!isSearching &&
+        filters.activityType.length === 1 &&
+        filters.activityType.includes("Cycling") ? (
           <CyclingExploreSection />
-        ) : !isSearching && filters.activityType.length === 1 && filters.activityType.includes("Climbing") ? (
+        ) : !isSearching &&
+          filters.activityType.length === 1 &&
+          filters.activityType.includes("Climbing") ? (
           <ClimbingExploreSection />
         ) : (
           /* Mixed Activities Section */
@@ -287,7 +291,7 @@ function MixedActivitiesSection({
   filteredActivities,
   isSearching,
   searchQuery,
-  activities
+  activities,
 }: {
   filters: any;
   filteredActivities: any[];
@@ -302,48 +306,52 @@ function MixedActivitiesSection({
       title: "Westway women's+ climbing morning",
       date: "📅 Wednesday, 10:00 AM",
       location: "📍London, UK",
-      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
       organizer: "Coach Holly Peristiani",
       difficulty: "Intermediate",
-      isFirstCard: true
+      isFirstCard: true,
     },
     // Cycling activity
     {
       title: "Sunday Morning Social Ride",
       date: "📅 Sunday, 8:00 AM",
       location: "📍Richmond Park, London",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       organizer: "Richmond Cycling Club",
       type: "cycling",
       distance: "25km",
       pace: "20 kph",
       elevation: "150m",
-      difficulty: "Beginner"
+      difficulty: "Beginner",
     },
     // Climbing activity
     {
       title: "Sport climbing trip",
       date: "📅 Weekend, July 22-23",
       location: "📍Malham cove, UK",
-      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
       organizer: "Peak Adventures",
-      difficulty: "Advanced"
+      difficulty: "Advanced",
     },
     // Cycling activity
     {
       title: "Intermediate Chaingang",
       date: "📅 Tuesday, 6:30 PM",
       location: "📍Box Hill, Surrey",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       type: "cycling",
       organizer: "Surrey Road Cycling",
       distance: "40km",
       pace: "32 kph",
       elevation: "420m",
-      difficulty: "Intermediate"
-    }
+      difficulty: "Intermediate",
+    },
   ];
 
   return (
@@ -404,9 +412,12 @@ function MixedActivitiesSection({
             <>
               {/* Mixed default activities */}
               {mixedActivities
-                .filter(activity =>
-                  filters.activityType.includes("Cycling") && activity.type === "cycling" ||
-                  filters.activityType.includes("Climbing") && activity.type === "climbing"
+                .filter(
+                  (activity) =>
+                    (filters.activityType.includes("Cycling") &&
+                      activity.type === "cycling") ||
+                    (filters.activityType.includes("Climbing") &&
+                      activity.type === "climbing"),
                 )
                 .map((activity, index) => (
                   <ActivityCard
@@ -453,7 +464,9 @@ function MixedActivitiesSection({
       {!isSearching && filters.activityType.includes("Cycling") && (
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-black font-poppins">Cycling Activities</h2>
+            <h2 className="text-xl font-bold text-black font-poppins">
+              Cycling Activities
+            </h2>
             <Link
               to="/activities?filter=cycling"
               className="text-sm text-black underline font-poppins"
@@ -463,7 +476,7 @@ function MixedActivitiesSection({
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {mixedActivities
-              .filter(activity => activity.type === "cycling")
+              .filter((activity) => activity.type === "cycling")
               .slice(0, 2)
               .map((activity, index) => (
                 <ActivityCard
@@ -488,7 +501,9 @@ function MixedActivitiesSection({
       {!isSearching && filters.activityType.includes("Climbing") && (
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-black font-poppins">Climbing Activities</h2>
+            <h2 className="text-xl font-bold text-black font-poppins">
+              Climbing Activities
+            </h2>
             <Link
               to="/activities?filter=climbing"
               className="text-sm text-black underline font-poppins"
@@ -498,7 +513,7 @@ function MixedActivitiesSection({
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {mixedActivities
-              .filter(activity => activity.type === "climbing")
+              .filter((activity) => activity.type === "climbing")
               .slice(0, 2)
               .map((activity, index) => (
                 <ActivityCard
@@ -530,7 +545,8 @@ function ClimbingExploreSection() {
       grade: "5.9 - 5.11a",
       discipline: "Top rope",
       level: "Intermediate",
-      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Lead climbing session",
@@ -540,8 +556,9 @@ function ClimbingExploreSection() {
       grade: "6a - 6c",
       discipline: "Lead climbing",
       level: "Advanced",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-    }
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   const gymActivities = [
@@ -554,7 +571,8 @@ function ClimbingExploreSection() {
       discipline: "Top rope coaching",
       level: "All levels",
       fee: "Standard entry",
-      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Bouldering Competition Training",
@@ -565,7 +583,8 @@ function ClimbingExploreSection() {
       discipline: "Bouldering",
       level: "Advanced",
       equipment: "Shoes provided",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Youth Climbing Club",
@@ -575,8 +594,9 @@ function ClimbingExploreSection() {
       grade: "Beginner to 6a",
       discipline: "Multi-discipline",
       level: "Youth (8-16)",
-      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
-    }
+      imageSrc:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   const competitions = [
@@ -590,7 +610,8 @@ function ClimbingExploreSection() {
       level: "All categories",
       prize: "Prizes & rankings",
       registration: "Open",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Lead Climbing Championships",
@@ -601,8 +622,9 @@ function ClimbingExploreSection() {
       discipline: "Lead competition",
       level: "Regional qualifiers",
       registration: "Closes July 15",
-      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
-    }
+      imageSrc:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   const outdoorTrips = [
@@ -616,7 +638,8 @@ function ClimbingExploreSection() {
       level: "Experienced outdoor",
       accommodation: "Camping included",
       transport: "Minibus from London",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Multi-pitch Climbing Course",
@@ -627,7 +650,8 @@ function ClimbingExploreSection() {
       discipline: "Trad climbing",
       level: "Lead climbing experience required",
       certification: "RCI certification",
-      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Portland Sport Trip",
@@ -638,8 +662,9 @@ function ClimbingExploreSection() {
       discipline: "Sport climbing",
       level: "Intermediate+",
       accommodation: "Shared cottages",
-      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
-    }
+      imageSrc:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   return (
@@ -647,8 +672,12 @@ function ClimbingExploreSection() {
       {/* Partner Requests Section */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-black font-poppins">Partner Requests</h2>
-          <span className="text-sm text-gray-500 font-cabin">Find climbing partners</span>
+          <h2 className="text-xl font-bold text-black font-poppins">
+            Partner Requests
+          </h2>
+          <span className="text-sm text-gray-500 font-cabin">
+            Find climbing partners
+          </span>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {partnerRequests.map((request, index) => (
@@ -660,8 +689,12 @@ function ClimbingExploreSection() {
       {/* Gym Activities Section */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-black font-poppins">Climbing Gym Activities</h2>
-          <span className="text-sm text-gray-500 font-cabin">Sessions & coaching</span>
+          <h2 className="text-xl font-bold text-black font-poppins">
+            Climbing Gym Activities
+          </h2>
+          <span className="text-sm text-gray-500 font-cabin">
+            Sessions & coaching
+          </span>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {gymActivities.map((activity, index) => (
@@ -673,8 +706,12 @@ function ClimbingExploreSection() {
       {/* Competitions Section */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-black font-poppins">Competitions</h2>
-          <span className="text-sm text-gray-500 font-cabin">Events & contests</span>
+          <h2 className="text-xl font-bold text-black font-poppins">
+            Competitions
+          </h2>
+          <span className="text-sm text-gray-500 font-cabin">
+            Events & contests
+          </span>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {competitions.map((comp, index) => (
@@ -686,8 +723,12 @@ function ClimbingExploreSection() {
       {/* Outdoor Trips Section */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-black font-poppins">Climbing Trips</h2>
-          <span className="text-sm text-gray-500 font-cabin">Outdoor adventures</span>
+          <h2 className="text-xl font-bold text-black font-poppins">
+            Climbing Trips
+          </h2>
+          <span className="text-sm text-gray-500 font-cabin">
+            Outdoor adventures
+          </span>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {outdoorTrips.map((trip, index) => (
@@ -708,13 +749,21 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
           {activity.title}
         </h3>
         <div className="flex-shrink-0">
-          <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${
-            activity.level === 'Beginner' || activity.level === 'All levels' ? 'bg-green-100 text-green-700' :
-            activity.level === 'Intermediate' || activity.level === 'Intermediate+' ? 'bg-yellow-100 text-yellow-700' :
-            activity.level === 'Advanced' || activity.level === 'Experienced outdoor' ? 'bg-red-100 text-red-700' :
-            activity.level === 'Youth (8-16)' ? 'bg-purple-100 text-purple-700' :
-            'bg-gray-100 text-gray-700'
-          }`}>
+          <span
+            className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${
+              activity.level === "Beginner" || activity.level === "All levels"
+                ? "bg-green-100 text-green-700"
+                : activity.level === "Intermediate" ||
+                    activity.level === "Intermediate+"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : activity.level === "Advanced" ||
+                      activity.level === "Experienced outdoor"
+                    ? "bg-red-100 text-red-700"
+                    : activity.level === "Youth (8-16)"
+                      ? "bg-purple-100 text-purple-700"
+                      : "bg-gray-100 text-gray-700"
+            }`}
+          >
             {activity.level}
           </span>
         </div>
@@ -749,12 +798,20 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
           </div>
           <div>
             <div className="text-gray-500">Discipline</div>
-            <div className="font-medium text-black">⛰️ {activity.discipline}</div>
+            <div className="font-medium text-black">
+              ⛰️ {activity.discipline}
+            </div>
           </div>
         </div>
 
         {/* Additional Info */}
-        {(activity.fee || activity.equipment || activity.prize || activity.accommodation || activity.transport || activity.certification || activity.registration) && (
+        {(activity.fee ||
+          activity.equipment ||
+          activity.prize ||
+          activity.accommodation ||
+          activity.transport ||
+          activity.certification ||
+          activity.registration) && (
           <div className="flex flex-wrap gap-1 mt-2">
             {activity.fee && (
               <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-cabin">
@@ -814,7 +871,8 @@ function CyclingExploreSection() {
       pace: "20 kph",
       elevation: "150m",
       difficulty: "Beginner",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Intermediate Chaingang",
@@ -825,8 +883,9 @@ function CyclingExploreSection() {
       pace: "32 kph",
       elevation: "420m",
       difficulty: "Intermediate",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-    }
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   const sportives = [
@@ -840,7 +899,8 @@ function CyclingExploreSection() {
       elevation: "900m",
       difficulty: "Challenge",
       fee: "£45",
-      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Cotswolds Century",
@@ -852,8 +912,9 @@ function CyclingExploreSection() {
       elevation: "1850m",
       difficulty: "Epic",
       fee: "£38",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-    }
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   const bikepacking = [
@@ -867,8 +928,9 @@ function CyclingExploreSection() {
       elevation: "2100m total",
       difficulty: "Multi-day",
       gear: "Camping required",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-    }
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   const training = [
@@ -882,8 +944,9 @@ function CyclingExploreSection() {
       elevation: "650m",
       difficulty: "Advanced",
       focus: "Power & climbing",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-    }
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   return (
@@ -891,8 +954,12 @@ function CyclingExploreSection() {
       {/* Group Rides Section */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-black font-poppins">Group Rides</h2>
-          <span className="text-sm text-gray-500 font-cabin">Social & Club rides</span>
+          <h2 className="text-xl font-bold text-black font-poppins">
+            Group Rides
+          </h2>
+          <span className="text-sm text-gray-500 font-cabin">
+            Social & Club rides
+          </span>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {groupRides.map((ride, index) => (
@@ -904,8 +971,12 @@ function CyclingExploreSection() {
       {/* Sportives Section */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-black font-poppins">Sportives & Events</h2>
-          <span className="text-sm text-gray-500 font-cabin">Organized events</span>
+          <h2 className="text-xl font-bold text-black font-poppins">
+            Sportives & Events
+          </h2>
+          <span className="text-sm text-gray-500 font-cabin">
+            Organized events
+          </span>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {sportives.map((event, index) => (
@@ -917,8 +988,12 @@ function CyclingExploreSection() {
       {/* Bikepacking Section */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-black font-poppins">Bikepacking Adventures</h2>
-          <span className="text-sm text-gray-500 font-cabin">Multi-day tours</span>
+          <h2 className="text-xl font-bold text-black font-poppins">
+            Bikepacking Adventures
+          </h2>
+          <span className="text-sm text-gray-500 font-cabin">
+            Multi-day tours
+          </span>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {bikepacking.map((adventure, index) => (
@@ -930,8 +1005,12 @@ function CyclingExploreSection() {
       {/* Training Section */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-black font-poppins">Training Sessions</h2>
-          <span className="text-sm text-gray-500 font-cabin">Structured workouts</span>
+          <h2 className="text-xl font-bold text-black font-poppins">
+            Training Sessions
+          </h2>
+          <span className="text-sm text-gray-500 font-cabin">
+            Structured workouts
+          </span>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {training.map((session, index) => (
@@ -952,14 +1031,21 @@ function CyclingActivityCard({ activity }: { activity: any }) {
           {activity.title}
         </h3>
         <div className="flex-shrink-0">
-          <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${
-            activity.difficulty === 'Beginner' ? 'bg-green-100 text-green-700' :
-            activity.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-700' :
-            activity.difficulty === 'Advanced' ? 'bg-red-100 text-red-700' :
-            activity.difficulty === 'Epic' ? 'bg-purple-100 text-purple-700' :
-            activity.difficulty === 'Challenge' ? 'bg-blue-100 text-blue-700' :
-            'bg-gray-100 text-gray-700'
-          }`}>
+          <span
+            className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${
+              activity.difficulty === "Beginner"
+                ? "bg-green-100 text-green-700"
+                : activity.difficulty === "Intermediate"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : activity.difficulty === "Advanced"
+                    ? "bg-red-100 text-red-700"
+                    : activity.difficulty === "Epic"
+                      ? "bg-purple-100 text-purple-700"
+                      : activity.difficulty === "Challenge"
+                        ? "bg-blue-100 text-blue-700"
+                        : "bg-gray-100 text-gray-700"
+            }`}
+          >
             {activity.difficulty}
           </span>
         </div>
@@ -998,7 +1084,9 @@ function CyclingActivityCard({ activity }: { activity: any }) {
           </div>
           <div className="text-center">
             <div className="text-gray-500">Elevation</div>
-            <div className="font-medium text-black">⛰️ {activity.elevation}</div>
+            <div className="font-medium text-black">
+              ⛰️ {activity.elevation}
+            </div>
           </div>
         </div>
 
@@ -1044,7 +1132,7 @@ function ActivityCard({
   pace,
   elevation,
   difficulty,
-  activityId
+  activityId,
 }: {
   title: string;
   date: string;
@@ -1078,16 +1166,25 @@ function ActivityCard({
   // Determine difficulty level and color
   const getDifficultyBadge = () => {
     if (!difficulty && type === "cycling") {
-      if (pace && parseInt(pace) > 30) return { label: "Advanced", color: "bg-red-100 text-red-700" };
-      if (pace && parseInt(pace) > 25) return { label: "Intermediate", color: "bg-yellow-100 text-yellow-700" };
+      if (pace && parseInt(pace) > 30)
+        return { label: "Advanced", color: "bg-red-100 text-red-700" };
+      if (pace && parseInt(pace) > 25)
+        return {
+          label: "Intermediate",
+          color: "bg-yellow-100 text-yellow-700",
+        };
       return { label: "Beginner", color: "bg-green-100 text-green-700" };
     }
-    if (!difficulty) return { label: "All levels", color: "bg-gray-100 text-gray-700" };
+    if (!difficulty)
+      return { label: "All levels", color: "bg-gray-100 text-gray-700" };
 
     const level = difficulty.toLowerCase();
-    if (level.includes("beginner") || level.includes("all")) return { label: difficulty, color: "bg-green-100 text-green-700" };
-    if (level.includes("intermediate")) return { label: difficulty, color: "bg-yellow-100 text-yellow-700" };
-    if (level.includes("advanced") || level.includes("expert")) return { label: difficulty, color: "bg-red-100 text-red-700" };
+    if (level.includes("beginner") || level.includes("all"))
+      return { label: difficulty, color: "bg-green-100 text-green-700" };
+    if (level.includes("intermediate"))
+      return { label: difficulty, color: "bg-yellow-100 text-yellow-700" };
+    if (level.includes("advanced") || level.includes("expert"))
+      return { label: difficulty, color: "bg-red-100 text-red-700" };
     return { label: difficulty, color: "bg-blue-100 text-blue-700" };
   };
 
@@ -1100,7 +1197,9 @@ function ActivityCard({
         <h3 className="font-bold text-black font-cabin text-lg line-clamp-2 leading-tight flex-1 pr-2">
           {title}
         </h3>
-        <span className={`text-xs px-3 py-1 rounded-full font-cabin font-medium flex-shrink-0 ${difficultyBadge.color}`}>
+        <span
+          className={`text-xs px-3 py-1 rounded-full font-cabin font-medium flex-shrink-0 ${difficultyBadge.color}`}
+        >
           {difficultyBadge.label}
         </span>
       </div>
@@ -1113,9 +1212,7 @@ function ActivityCard({
           className="w-12 h-12 rounded-full border border-black object-cover flex-shrink-0"
         />
         <div className="flex-1 min-w-0">
-          <div className="text-sm text-gray-600 font-cabin">
-            By {organizer}
-          </div>
+          <div className="text-sm text-gray-600 font-cabin">By {organizer}</div>
         </div>
       </div>
 
@@ -1141,28 +1238,40 @@ function ActivityCard({
           <div className="grid grid-cols-3 gap-4 text-center">
             {distance && (
               <div>
-                <div className="text-xs text-gray-500 font-cabin mb-1">Distance</div>
+                <div className="text-xs text-gray-500 font-cabin mb-1">
+                  Distance
+                </div>
                 <div className="flex items-center justify-center gap-1">
                   <span className="text-yellow-600">🚴</span>
-                  <span className="text-sm font-medium text-black font-cabin">{distance}</span>
+                  <span className="text-sm font-medium text-black font-cabin">
+                    {distance}
+                  </span>
                 </div>
               </div>
             )}
             {pace && (
               <div>
-                <div className="text-xs text-gray-500 font-cabin mb-1">Pace</div>
+                <div className="text-xs text-gray-500 font-cabin mb-1">
+                  Pace
+                </div>
                 <div className="flex items-center justify-center gap-1">
                   <span className="text-yellow-500">⚡</span>
-                  <span className="text-sm font-medium text-black font-cabin">{pace}</span>
+                  <span className="text-sm font-medium text-black font-cabin">
+                    {pace}
+                  </span>
                 </div>
               </div>
             )}
             {elevation && (
               <div>
-                <div className="text-xs text-gray-500 font-cabin mb-1">Elevation</div>
+                <div className="text-xs text-gray-500 font-cabin mb-1">
+                  Elevation
+                </div>
                 <div className="flex items-center justify-center gap-1">
                   <span className="text-green-600">⛰️</span>
-                  <span className="text-sm font-medium text-black font-cabin">{elevation}</span>
+                  <span className="text-sm font-medium text-black font-cabin">
+                    {elevation}
+                  </span>
                 </div>
               </div>
             )}
@@ -1245,9 +1354,13 @@ function ClubLogo({
       navigate(`/club/${clubId}`);
     } else {
       // For non-member clubs, show a "Request to join" confirmation
-      const confirmed = confirm(`Request to join ${alt}?\n\nYour request will be sent to the club admin for approval. You'll be notified once it's reviewed.`);
+      const confirmed = confirm(
+        `Request to join ${alt}?\n\nYour request will be sent to the club admin for approval. You'll be notified once it's reviewed.`,
+      );
       if (confirmed) {
-        alert(`Join request sent to ${alt}! You'll receive a notification when the admin responds.`);
+        alert(
+          `Join request sent to ${alt}! You'll receive a notification when the admin responds.`,
+        );
       }
     }
   };
