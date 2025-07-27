@@ -104,33 +104,58 @@ export default function Index() {
           <FilterChip label="Clubs" />
         </div>
 
-        {/* Recent Activities Section */}
+        {/* Activities Section */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-black font-poppins">
-              Recent activities nearby
+              {isSearching ? `Search Results (${filteredActivities.length})` : "Recent activities nearby"}
             </h2>
-            <Link
-              to="/activities"
-              className="text-sm text-black underline font-poppins"
-            >
-              See all
-            </Link>
+            {!isSearching && (
+              <Link
+                to="/activities"
+                className="text-sm text-black underline font-poppins"
+              >
+                See all
+              </Link>
+            )}
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
-            <ActivityCard
-              title="Westway women's+ climb..."
-              date="📅 Wednesday"
-              location="📍London, UK"
-              imageSrc="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
-              isFirstCard={true}
-            />
-            <ActivityCard
-              title="Sport climbing trip"
-              date="📅 17.06 - 20.06"
-              location="📍Malham cove, UK"
-              imageSrc="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
-            />
+            {/* Default activities */}
+            {!isSearching && (
+              <>
+                <ActivityCard
+                  title="Westway women's+ climb..."
+                  date="📅 Wednesday"
+                  location="📍London, UK"
+                  imageSrc="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+                  isFirstCard={true}
+                />
+                <ActivityCard
+                  title="Sport climbing trip"
+                  date="📅 17.06 - 20.06"
+                  location="📍Malham cove, UK"
+                  imageSrc="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+                />
+              </>
+            )}
+
+            {/* User created activities */}
+            {(isSearching ? filteredActivities : activities.slice(0, 3)).map((activity) => (
+              <ActivityCard
+                key={activity.id}
+                title={activity.title}
+                date={`📅 ${activity.date}`}
+                location={`📍${activity.location}`}
+                imageSrc={activity.imageSrc || "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"}
+                organizer={activity.organizer}
+              />
+            ))}
+
+            {isSearching && filteredActivities.length === 0 && (
+              <div className="text-center py-8 text-gray-500 w-full">
+                No activities found matching "{searchQuery}"
+              </div>
+            )}
           </div>
         </div>
 
