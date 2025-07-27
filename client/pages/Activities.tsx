@@ -73,6 +73,7 @@ export default function Activities() {
     pace: { min: 0, max: 100 },
     distance: { min: 0, max: 200 },
     elevation: { min: 0, max: 5000 },
+    clubOnly: false,
   });
 
   const applyFilters = (newFilters: FilterOptions) => {
