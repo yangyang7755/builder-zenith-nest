@@ -57,6 +57,7 @@ export default function CreateClimbing() {
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
+      club: formData.visibility === "Club members" ? "westway" : undefined, // Assume climbing is for Westway club
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     });
