@@ -103,7 +103,7 @@ export default function Index() {
         {/* Join Local Clubs Section */}
         <div className="mb-8">
           <h2 className="text-base font-semibold text-black font-poppins mb-3">Join local clubs/communities</h2>
-          <div className="flex gap-4">
+          <div className="flex gap-4 justify-start">
             <ClubLogo 
               src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
               alt="Westway Sports & Fitness"
