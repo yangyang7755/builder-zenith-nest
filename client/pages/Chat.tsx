@@ -140,15 +140,20 @@ function ChatItem({
   message,
   getTimeAgo,
   getAvatarImage,
+  onClick,
 }: {
   message: any;
   getTimeAgo: (timestamp: Date) => string;
   getAvatarImage: (sender: string) => string;
+  onClick: () => void;
 }) {
   const hasNotification = message.sender === "UCLMC";
 
   return (
-    <div className="flex items-center gap-3 py-2 relative">
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3 py-2 relative hover:bg-gray-50 rounded-lg px-2 transition-colors text-left"
+    >
       {/* Avatar */}
       <img
         src={getAvatarImage(message.sender)}
@@ -179,7 +184,7 @@ function ChatItem({
           )}
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
