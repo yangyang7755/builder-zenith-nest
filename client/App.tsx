@@ -54,6 +54,8 @@ const App = () => (
               <Route path="/club/oxford-cycling" element={<ClubOxford />} />
               <Route path="/saved" element={<Saved />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/followers" element={<Followers />} />
+              <Route path="/following" element={<Following />} />
               <Route
                 path="/activity/westway-womens-climb"
                 element={<ActivityDetails />}
