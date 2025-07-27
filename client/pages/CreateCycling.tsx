@@ -7,7 +7,7 @@ export default function CreateCycling() {
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState("Road");
   const [formData, setFormData] = useState({
-    maxRiders: "",
+    maxRiders: "10",
     distance: "",
     distanceUnit: "km" as "km" | "miles",
     elevation: "",
@@ -15,16 +15,19 @@ export default function CreateCycling() {
     pace: "",
     paceUnit: "kph" as "kph" | "mph",
     meetupLocation: "",
+    coordinates: { lat: 51.5074, lng: -0.1278 }, // Default to London
     date: "",
     time: "",
     cafeStop: "",
     routeLink: "",
-    gender: "Female only",
+    femaleOnly: false,
     ageMin: "",
     ageMax: "",
     visibility: "All",
     specialComments: "",
   });
+
+  const [showLocationMap, setShowLocationMap] = useState(false);
 
   const { addActivity } = useActivities();
 
