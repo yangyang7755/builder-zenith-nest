@@ -22,6 +22,8 @@ import ClubWestway from "./pages/ClubWestway";
 import ClubOxford from "./pages/ClubOxford";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
+import Followers from "./pages/Followers";
+import Following from "./pages/Following";
 import NotFound from "./pages/NotFound";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
 import { ChatProvider } from "./contexts/ChatContext";
