@@ -246,20 +246,26 @@ export default function Index() {
         {/* Join Local Clubs Section */}
         <div className="mb-8">
           <h2 className="text-base font-semibold text-black font-poppins mb-3">
-            Join local clubs/communities
+            Your clubs & communities
           </h2>
           <div className="flex gap-4 justify-start">
             <ClubLogo
-              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
-              alt="Westway Sports & Fitness"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800"
+              alt="Westway climbing gym"
+              isMember={true}
+              clubId="westway"
             />
             <ClubLogo
               src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
-              alt="Gorp Girls"
+              alt="Oxford university cycling club"
+              isMember={true}
+              clubId="oxford-cycling"
             />
             <ClubLogo
-              src="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=70&h=70&fit=crop"
-              alt="Climbing Club"
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
+              alt="Gorp Girls"
+              isMember={false}
+              clubId="gorp-girls"
             />
           </div>
         </div>
