@@ -175,18 +175,25 @@ export default function Activities() {
           currentFilters={filters}
         />
 
-        {/* Activities List */}
-        <div className="space-y-2">
-          {/* User Created Activities */}
-          {filteredActivities.map((activity) => (
-            <CreatedActivityItem key={activity.id} activity={activity} />
-          ))}
+        {/* Activities Content - Climbing or Cycling specific or mixed */}
+        {filters.activityType.length === 1 && filters.activityType.includes("Climbing") ? (
+          <AllClimbingActivities userActivities={filteredActivities} />
+        ) : filters.activityType.length === 1 && filters.activityType.includes("Cycling") ? (
+          <AllCyclingActivities userActivities={filteredActivities} />
+        ) : (
+          /* Mixed Activities List */
+          <div className="space-y-2">
+            {/* User Created Activities */}
+            {filteredActivities.map((activity) => (
+              <CreatedActivityItem key={activity.id} activity={activity} />
+            ))}
 
-          {/* Default Activities */}
-          {activitiesData.map((activity) => (
-            <ActivityItem key={activity.id} activity={activity} />
-          ))}
-        </div>
+            {/* Default Activities */}
+            {activitiesData.map((activity) => (
+              <ActivityItem key={activity.id} activity={activity} />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Map View */}
