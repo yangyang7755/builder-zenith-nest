@@ -442,7 +442,7 @@ function BottomNavigation() {
       </Link>
 
       {/* Clock Icon */}
-      <div className="p-2">
+      <Link to="/saved" className="p-2">
         <svg
           className="w-7 h-7"
           viewBox="0 0 30 30"
@@ -455,7 +455,7 @@ function BottomNavigation() {
           <circle cx="15" cy="15" r="12.5" />
           <path d="M15 7.5V15L20 17.5" />
         </svg>
-      </div>
+      </Link>
 
       {/* Plus Icon */}
       <Link to="/create" className="p-2">
