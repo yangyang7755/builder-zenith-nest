@@ -76,38 +76,57 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
 
       {/* Map Container */}
       <div className="relative h-[calc(100vh-4rem)] overflow-hidden">
-        {/* Map Background */}
-        <div className="w-full h-full bg-gradient-to-br from-green-100 to-blue-100 relative">
-          {/* Map Grid */}
-          <div className="absolute inset-0">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
-                key={`h-${i}`}
-                className="absolute w-full border-t border-gray-200 opacity-30"
-                style={{ top: `${i * 5}%` }}
-              />
-            ))}
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
-                key={`v-${i}`}
-                className="absolute h-full border-l border-gray-200 opacity-30"
-                style={{ left: `${i * 5}%` }}
-              />
-            ))}
-          </div>
+        {/* Real Map Background */}
+        <div className="w-full h-full relative" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='streets' x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'%3E%3Crect width='40' height='40' fill='%23f0f4f0'/%3E%3Cpath d='M0 20h40M20 0v40' stroke='%23ddd' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23streets)'/%3E%3C/svg%3E")`,
+          backgroundSize: '40px 40px'
+        }}>
 
-          {/* Mock Streets */}
+          {/* London Geography Features */}
           <div className="absolute inset-0">
-            <div className="absolute bg-gray-300 h-1" style={{ top: '30%', left: '10%', width: '80%' }} />
-            <div className="absolute bg-gray-300 h-1" style={{ top: '60%', left: '5%', width: '90%' }} />
-            <div className="absolute bg-gray-300 w-1" style={{ left: '25%', top: '20%', height: '60%' }} />
-            <div className="absolute bg-gray-300 w-1" style={{ left: '70%', top: '10%', height: '70%' }} />
+            {/* Thames River */}
+            <div className="absolute bg-blue-300 rounded-full"
+                 style={{
+                   left: '10%',
+                   top: '45%',
+                   width: '80%',
+                   height: '8px',
+                   transform: 'rotate(-5deg)',
+                   background: 'linear-gradient(90deg, #87CEEB 0%, #4682B4 50%, #87CEEB 100%)'
+                 }} />
+
+            {/* Hyde Park */}
+            <div className="absolute bg-green-300 rounded-lg opacity-70"
+                 style={{ left: '35%', top: '25%', width: '15%', height: '20%' }} />
+
+            {/* Regent's Park */}
+            <div className="absolute bg-green-300 rounded-full opacity-70"
+                 style={{ left: '45%', top: '15%', width: '12%', height: '15%' }} />
+
+            {/* Major Roads */}
+            <div className="absolute bg-gray-400 h-1" style={{ top: '30%', left: '0%', width: '100%' }} />
+            <div className="absolute bg-gray-400 h-1" style={{ top: '60%', left: '0%', width: '100%' }} />
+            <div className="absolute bg-gray-400 w-1" style={{ left: '30%', top: '0%', height: '100%' }} />
+            <div className="absolute bg-gray-400 w-1" style={{ left: '65%', top: '0%', height: '100%' }} />
           </div>
 
           {/* Activity Markers */}
           {activitiesWithCoords.map((activity) => {
-            const xPos = ((activity.coordinates!.lng + 0.1528) / 0.1) * 100;
-            const yPos = ((51.5324 - activity.coordinates!.lat) / 0.05) * 100;
+            // Convert real lat/lng to screen coordinates for London area
+            // London bounds: lat 51.45-51.55, lng -0.2 to 0.0
+            const londonBounds = {
+              north: 51.55,
+              south: 51.45,
+              west: -0.2,
+              east: 0.0
+            };
+
+            const lat = activity.coordinates!.lat;
+            const lng = activity.coordinates!.lng;
+
+            // Normalize coordinates to 0-100% for positioning
+            const xPos = ((lng - londonBounds.west) / (londonBounds.east - londonBounds.west)) * 100;
+            const yPos = ((londonBounds.north - lat) / (londonBounds.north - londonBounds.south)) * 100;
             
             return (
               <div
