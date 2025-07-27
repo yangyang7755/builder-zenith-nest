@@ -150,7 +150,7 @@ export default function CreateCycling() {
                   }
                   className="appearance-none w-full border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
                 >
-                  {[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map((num) => (
+                  {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
                     <option key={num} value={num.toString()}>
                       {num} riders
                     </option>
