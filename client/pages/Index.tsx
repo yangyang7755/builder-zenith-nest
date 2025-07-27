@@ -418,6 +418,7 @@ function MixedActivitiesSection({
                     distance={activity.distance}
                     pace={activity.pace}
                     elevation={activity.elevation}
+                    difficulty={activity.difficulty}
                     isFirstCard={activity.isFirstCard}
                   />
                 ))}
