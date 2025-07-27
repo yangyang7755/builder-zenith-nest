@@ -4,6 +4,28 @@ import { useState, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
 
 export default function Index() {
+  const { activities, searchActivities } = useActivities();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredActivities, setFilteredActivities] = useState(activities);
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      setFilteredActivities(searchActivities(searchQuery));
+      setIsSearching(true);
+    } else {
+      setFilteredActivities(activities);
+      setIsSearching(false);
+    }
+  }, [searchQuery, activities, searchActivities]);
+
+  const handleSearchClick = () => {
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    if (searchInput) {
+      searchInput.focus();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
       {/* Status Bar */}
