@@ -310,13 +310,13 @@ function ActivityItem({ activity }: { activity: (typeof activitiesData)[0] }) {
       {activity.isWestway ? (
         <Link
           to="/activity/westway-womens-climb"
-          className="bg-explore-green text-white px-4 py-2 rounded-lg text-base font-cabin font-medium"
+          className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin font-medium"
         >
-          Join
+          Request to join
         </Link>
       ) : (
-        <button className="bg-explore-green text-white px-4 py-2 rounded-lg text-base font-cabin font-medium">
-          Join
+        <button className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin font-medium">
+          Request to join
         </button>
       )}
     </div>
