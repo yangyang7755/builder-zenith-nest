@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar } from "lucide-react";
+import { Calendar, ChevronDown } from "lucide-react";
+import { useActivities } from "../contexts/ActivitiesContext";
 
 export default function CreateCycling() {
   const navigate = useNavigate();
@@ -8,10 +9,14 @@ export default function CreateCycling() {
   const [formData, setFormData] = useState({
     maxRiders: "",
     distance: "",
+    distanceUnit: "km" as "km" | "miles",
     elevation: "",
+    elevationUnit: "m" as "m" | "feet",
+    pace: "",
+    paceUnit: "kph" as "kph" | "mph",
     meetupLocation: "",
     date: "",
-    pace: "",
+    time: "",
     cafeStop: "",
     routeLink: "",
     gender: "Female only",
@@ -21,8 +26,43 @@ export default function CreateCycling() {
     specialComments: "",
   });
 
+  const { addActivity } = useActivities();
+
   const handleSubmit = () => {
-    // Handle form submission
+    if (!formData.maxRiders || !formData.meetupLocation || !formData.date || !formData.time) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    // Create activity with proper title
+    const activityTitle = `${selectedType} ride ${formData.distance ? `- ${formData.distance}${formData.distanceUnit}` : ''}`;
+
+    addActivity({
+      type: 'cycling',
+      title: activityTitle,
+      date: formData.date,
+      time: formData.time,
+      location: formData.meetupLocation,
+      meetupLocation: formData.meetupLocation,
+      organizer: "You",
+      distance: formData.distance,
+      distanceUnit: formData.distanceUnit,
+      elevation: formData.elevation,
+      elevationUnit: formData.elevationUnit,
+      pace: formData.pace,
+      paceUnit: formData.paceUnit,
+      maxParticipants: formData.maxRiders,
+      specialComments: formData.specialComments,
+      routeLink: formData.routeLink,
+      cafeStop: formData.cafeStop,
+      subtype: selectedType,
+      gender: formData.gender,
+      ageMin: formData.ageMin,
+      ageMax: formData.ageMax,
+      visibility: formData.visibility,
+      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+    });
+
     alert("Activity created successfully!");
     navigate("/explore");
   };
@@ -86,30 +126,52 @@ export default function CreateCycling() {
               />
             </div>
 
-            {/* Distance and Elevation */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-xl font-medium text-black font-cabin mb-3">Distance</h3>
-                <div className="flex">
-                  <input
-                    type="number"
-                    value={formData.distance}
-                    onChange={(e) => setFormData({...formData, distance: e.target.value})}
-                    className="flex-1 border-2 border-gray-300 rounded-l-lg py-2 px-3 font-cabin"
-                  />
-                  <span className="bg-gray-300 border-2 border-l-0 border-gray-300 rounded-r-lg px-2 py-2 text-sm font-cabin">kph</span>
+            {/* Distance */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">Distance</h3>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  value={formData.distance}
+                  onChange={(e) => setFormData({...formData, distance: e.target.value})}
+                  className="flex-1 border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+                  placeholder="Enter distance"
+                />
+                <div className="relative">
+                  <select
+                    value={formData.distanceUnit}
+                    onChange={(e) => setFormData({...formData, distanceUnit: e.target.value as "km" | "miles"})}
+                    className="appearance-none border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
+                  >
+                    <option value="km">km</option>
+                    <option value="miles">miles</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>
               </div>
-              <div>
-                <h3 className="text-xl font-medium text-black font-cabin mb-3">Elevation</h3>
-                <div className="flex">
-                  <input
-                    type="number"
-                    value={formData.elevation}
-                    onChange={(e) => setFormData({...formData, elevation: e.target.value})}
-                    className="flex-1 border-2 border-gray-300 rounded-l-lg py-2 px-3 font-cabin"
-                  />
-                  <span className="bg-gray-300 border-2 border-l-0 border-gray-300 rounded-r-lg px-2 py-2 text-sm font-cabin">m</span>
+            </div>
+
+            {/* Elevation */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">Elevation</h3>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  value={formData.elevation}
+                  onChange={(e) => setFormData({...formData, elevation: e.target.value})}
+                  className="flex-1 border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+                  placeholder="Enter elevation"
+                />
+                <div className="relative">
+                  <select
+                    value={formData.elevationUnit}
+                    onChange={(e) => setFormData({...formData, elevationUnit: e.target.value as "m" | "feet"})}
+                    className="appearance-none border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
+                  >
+                    <option value="m">m</option>
+                    <option value="feet">feet</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>
               </div>
             </div>
@@ -145,6 +207,8 @@ export default function CreateCycling() {
                 <h3 className="text-xl font-medium text-black font-cabin mb-3">Time</h3>
                 <input
                   type="time"
+                  value={formData.time}
+                  onChange={(e) => setFormData({...formData, time: e.target.value})}
                   className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                 />
               </div>
@@ -153,13 +217,26 @@ export default function CreateCycling() {
             {/* Pace */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">Pace</h3>
-              <input
-                type="text"
-                value={formData.pace}
-                onChange={(e) => setFormData({...formData, pace: e.target.value})}
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter pace"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={formData.pace}
+                  onChange={(e) => setFormData({...formData, pace: e.target.value})}
+                  className="flex-1 border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+                  placeholder="Enter pace"
+                />
+                <div className="relative">
+                  <select
+                    value={formData.paceUnit}
+                    onChange={(e) => setFormData({...formData, paceUnit: e.target.value as "kph" | "mph"})}
+                    className="appearance-none border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
+                  >
+                    <option value="kph">kph</option>
+                    <option value="mph">mph</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
             </div>
 
             {/* Cafe stop */}
