@@ -26,27 +26,29 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <ActivitiesProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<SplashScreen />} />
-            <Route path="/auth" element={<AuthLanding />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/explore" element={<Index />} />
-            <Route path="/activities" element={<Activities />} />
-            <Route path="/create" element={<CreateActivity />} />
-            <Route path="/create/cycling" element={<CreateCycling />} />
-            <Route path="/create/climbing" element={<CreateClimbing />} />
-            <Route
-              path="/activity/westway-womens-climb"
-              element={<ActivityDetails />}
-            />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <ChatProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<SplashScreen />} />
+              <Route path="/auth" element={<AuthLanding />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/explore" element={<Index />} />
+              <Route path="/activities" element={<Activities />} />
+              <Route path="/create" element={<CreateActivity />} />
+              <Route path="/create/cycling" element={<CreateCycling />} />
+              <Route path="/create/climbing" element={<CreateClimbing />} />
+              <Route
+                path="/activity/westway-womens-climb"
+                element={<ActivityDetails />}
+              />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </ChatProvider>
       </ActivitiesProvider>
     </TooltipProvider>
   </QueryClientProvider>
