@@ -64,7 +64,7 @@ export default function CreateCycling() {
       routeLink: formData.routeLink,
       cafeStop: formData.cafeStop,
       subtype: selectedType,
-      gender: formData.gender,
+      gender: formData.femaleOnly ? "Female only" : "All genders",
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
