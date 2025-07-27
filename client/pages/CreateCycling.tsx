@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, ChevronDown } from "lucide-react";
+import { Calendar, ChevronDown, MapPin, X } from "lucide-react";
 import { useActivities } from "../contexts/ActivitiesContext";
 
 export default function CreateCycling() {
