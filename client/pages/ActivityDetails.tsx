@@ -42,14 +42,14 @@ export default function ActivityDetails() {
         </div>
 
         {/* Coach Section */}
-        <div className="flex items-center gap-3 mb-8">
-          <img 
-            src="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=80&h=80&fit=crop&crop=face" 
-            alt="Coach Holly Peristiani" 
-            className="w-16 h-16 rounded-full border border-black object-cover"
+        <div className="flex items-center gap-3 mb-6">
+          <img
+            src="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=80&h=80&fit=crop&crop=face"
+            alt="Coach Holly Peristiani"
+            className="w-12 h-12 rounded-full border border-black object-cover"
           />
           <div>
-            <h2 className="text-xl font-bold text-black font-cabin">
+            <h2 className="text-lg font-bold text-black font-cabin">
               Coach Holly Peristiani
             </h2>
           </div>
