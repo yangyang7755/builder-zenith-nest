@@ -119,10 +119,10 @@ function ActivityItem({ activity }: { activity: typeof activitiesData[0] }) {
 
       {/* Activity Details */}
       <div className="flex-1">
-        <h3 className="font-bold text-black font-cabin text-base mb-1">
+        <h3 className="font-bold text-black font-cabin text-base mb-2">
           {activity.title}
         </h3>
-        <div className="flex items-center gap-4">
+        <div className="space-y-1">
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4 text-black" />
             <span className="text-sm text-black font-cabin">{activity.date}</span>
