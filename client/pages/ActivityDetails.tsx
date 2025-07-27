@@ -1,17 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Clock, AlertTriangle, Info } from "lucide-react";
+import { MapPin, Clock, AlertTriangle, Info, X } from "lucide-react";
+import { useChat } from "../contexts/ChatContext";
 
 export default function ActivityDetails() {
   const navigate = useNavigate();
+  const { addJoinRequest } = useChat();
   const [agreedToRequirements, setAgreedToRequirements] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [requestMessage, setRequestMessage] = useState("");
 
-  const handleJoin = () => {
+  const handleRequestToJoin = () => {
     if (agreedToRequirements) {
-      // Handle join logic here
-      alert("Successfully joined the activity!");
-      navigate(-1); // Go back to previous page
+      setShowRequestModal(true);
     }
+  };
+
+  const handleSendRequest = () => {
+    addJoinRequest({
+      activityTitle: "Westway women's+ climbing morning",
+      activityOrganizer: "Coach Holly Peristiani",
+      requesterName: "You",
+      message: requestMessage || "Hi! I'd like to join this activity."
+    });
+
+    setShowRequestModal(false);
+    setRequestMessage("");
+    alert("Request sent! You can check your message in the Chat page.");
+    navigate("/chat");
   };
 
   return (
@@ -138,9 +154,9 @@ export default function ActivityDetails() {
           </div>
         </div>
 
-        {/* Join Button */}
+        {/* Request to Join Button */}
         <button
-          onClick={handleJoin}
+          onClick={handleRequestToJoin}
           disabled={!agreedToRequirements}
           className={`w-full py-3 rounded-lg text-lg font-cabin font-medium transition-colors ${
             agreedToRequirements
@@ -148,9 +164,55 @@ export default function ActivityDetails() {
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >
-          Join
+          Request to join
         </button>
       </div>
+
+      {/* Request Modal */}
+      {showRequestModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-sm p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-explore-green font-cabin">
+                Send Request
+              </h3>
+              <button
+                onClick={() => setShowRequestModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 font-cabin mb-3">
+                Send a message to Coach Holly Peristiani (optional):
+              </p>
+              <textarea
+                value={requestMessage}
+                onChange={(e) => setRequestMessage(e.target.value)}
+                placeholder="Hi! I'd like to join this activity..."
+                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin h-24 resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowRequestModal(false)}
+                className="flex-1 py-3 border-2 border-gray-300 rounded-lg text-gray-600 font-cabin font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSendRequest}
+                className="flex-1 py-3 bg-explore-green text-white rounded-lg font-cabin font-medium"
+              >
+                Send Request
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bottom Navigation */}
       <BottomNavigation />
