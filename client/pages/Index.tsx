@@ -434,6 +434,7 @@ function MixedActivitiesSection({
                     elevation={activity.elevation}
                     difficulty={activity.difficulty}
                     isFirstCard={activity.isFirstCard}
+                    activityId={activity.type === "climbing" ? "westway-womens-climb" : activity.type === "cycling" ? "sunday-morning-ride" : "westway-womens-climb"}
                   />
                 ))}
 
