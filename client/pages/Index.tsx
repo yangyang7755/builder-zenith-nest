@@ -166,6 +166,8 @@ export default function Index() {
         {/* Cycling-Focused Activities Section */}
         {!isSearching && filters.activityType.length === 1 && filters.activityType.includes("Cycling") ? (
           <CyclingExploreSection />
+        ) : !isSearching && filters.activityType.length === 1 && filters.activityType.includes("Climbing") ? (
+          <ClimbingExploreSection />
         ) : (
           /* Regular Activities Section */
           <div className="mb-8">
@@ -567,7 +569,7 @@ function CyclingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.gear && (
               <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded font-cabin">
-                🎒 {activity.gear}
+                ��� {activity.gear}
               </span>
             )}
             {activity.focus && (
