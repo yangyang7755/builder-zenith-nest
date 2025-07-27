@@ -242,12 +242,14 @@ function ActivityCard({
   location,
   imageSrc,
   isFirstCard = false,
+  organizer = "Community",
 }: {
   title: string;
   date: string;
   location: string;
   imageSrc: string;
   isFirstCard?: boolean;
+  organizer?: string;
 }) {
   return (
     <div className="min-w-60 w-60 h-32 border-2 border-explore-green rounded-lg p-3 flex-shrink-0 bg-white">
