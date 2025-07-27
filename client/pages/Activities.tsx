@@ -199,7 +199,7 @@ function BottomNavigation() {
       </div>
 
       {/* Plus Icon */}
-      <div className="p-2">
+      <Link to="/create" className="p-2">
         <svg
           className="w-7 h-7"
           viewBox="0 0 30 30"
@@ -209,9 +209,9 @@ function BottomNavigation() {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <path d="M15 6.25V23.75M6.25 15H23.75" />
+          <path d="M15 6.25V23.75" />
         </svg>
-      </div>
+      </Link>
 
       {/* Chat Icon */}
       <div className="p-2">
