@@ -257,17 +257,17 @@ function BottomNavigation() {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white h-14 flex items-center justify-around border-t border-gray-200 max-w-md mx-auto">
       {/* Home Icon */}
-      <div className="p-2">
+      <Link to="/explore" className="p-2">
         <svg className="w-8 h-7" viewBox="0 0 35 31" fill="none">
           <path
             d="M31.4958 7.46836L21.4451 1.22114C18.7055 -0.484058 14.5003 -0.391047 11.8655 1.42266L3.12341 7.48386C1.37849 8.693 0 11.1733 0 13.1264V23.8227C0 27.7756 3.61199 31 8.06155 31H26.8718C31.3213 31 34.9333 27.7911 34.9333 23.8382V13.328C34.9333 11.2353 33.4152 8.662 31.4958 7.46836ZM18.7753 24.7993C18.7753 25.4349 18.1821 25.9619 17.4666 25.9619C16.7512 25.9619 16.1579 25.4349 16.1579 24.7993V20.1487C16.1579 19.5132 16.7512 18.9861 17.4666 18.9861C18.1821 18.9861 18.7753 19.5132 18.7753 20.1487V24.7993Z"
             fill="#2F2F2F"
           />
         </svg>
-      </div>
+      </Link>
 
       {/* Clock Icon */}
-      <div className="p-2">
+      <Link to="/saved" className="p-2">
         <svg
           className="w-7 h-7"
           viewBox="0 0 30 30"
@@ -280,10 +280,10 @@ function BottomNavigation() {
           <circle cx="15" cy="15" r="12.5" />
           <path d="M15 7.5V15L20 17.5" />
         </svg>
-      </div>
+      </Link>
 
       {/* Plus Icon */}
-      <div className="p-2">
+      <Link to="/create" className="p-2">
         <svg
           className="w-7 h-7"
           viewBox="0 0 30 30"
@@ -295,7 +295,7 @@ function BottomNavigation() {
         >
           <path d="M15 6.25V23.75M6.25 15H23.75" />
         </svg>
-      </div>
+      </Link>
 
       {/* Chat Icon */}
       <Link to="/chat" className="p-2">
