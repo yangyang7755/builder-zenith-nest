@@ -84,7 +84,7 @@ export default function Index() {
             <h2 className="text-xl font-bold text-black font-poppins">Partner requests</h2>
             <a href="#" className="text-sm text-black underline font-poppins">See all</a>
           </div>
-          <div className="flex gap-2 overflow-x-auto">
+          <div className="flex gap-2 overflow-x-auto pb-2">
             <PartnerCard
               title="Looking for a belay partner..."
               date="📅 Friday evenings"
