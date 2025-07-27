@@ -207,6 +207,21 @@ export default function Index() {
               </>
             )}
 
+            {/* Default cycling activity if filtered for cycling */}
+            {!isSearching && filters.activityType.includes("Cycling") && (
+              <ActivityCard
+                title="Oxford Road Cycling Club Ride"
+                date="📅 Saturday"
+                location="📍Oxford, UK"
+                imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+                organizer="Oxford University Cycling Club"
+                type="cycling"
+                distance="45km"
+                pace="25 kph"
+                elevation="320m"
+              />
+            )}
+
             {/* User created activities */}
             {(isSearching ? filteredActivities : activities.slice(0, 3)).map(
               (activity) => (
@@ -220,6 +235,10 @@ export default function Index() {
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
                   }
                   organizer={activity.organizer}
+                  type={activity.type}
+                  distance={activity.distance}
+                  pace={activity.pace}
+                  elevation={activity.elevation}
                 />
               ),
             )}
