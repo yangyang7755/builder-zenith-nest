@@ -46,7 +46,7 @@ export default function CreateCycling() {
       </div>
 
       {/* Scrollable Content */}
-      <div className="overflow-y-auto pb-20 h-[calc(100vh-96px)]">
+      <div className="overflow-y-auto pb-20">
         <div className="px-6">
           {/* Title */}
           <div className="text-center py-4">
