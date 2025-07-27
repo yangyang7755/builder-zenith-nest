@@ -20,8 +20,14 @@ interface MapViewProps {
   onActivitySelect: (activity: Activity) => void;
 }
 
-export default function MapView({ activities, onClose, onActivitySelect }: MapViewProps) {
-  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+export default function MapView({
+  activities,
+  onClose,
+  onActivitySelect,
+}: MapViewProps) {
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
+    null,
+  );
 
   // Real London coordinates for activities if not provided
   const londonLocations = [
@@ -37,30 +43,45 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
 
   const activitiesWithCoords = activities.map((activity, index) => ({
     ...activity,
-    coordinates: activity.coordinates || londonLocations[index % londonLocations.length]
+    coordinates:
+      activity.coordinates || londonLocations[index % londonLocations.length],
   }));
 
   const getActivityColor = (type: string) => {
     switch (type.toLowerCase()) {
-      case 'cycling': return 'bg-blue-500';
-      case 'climbing': return 'bg-red-500';
-      case 'running': return 'bg-green-500';
-      case 'swimming': return 'bg-cyan-500';
-      case 'hiking': return 'bg-orange-500';
-      case 'yoga': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      case "cycling":
+        return "bg-blue-500";
+      case "climbing":
+        return "bg-red-500";
+      case "running":
+        return "bg-green-500";
+      case "swimming":
+        return "bg-cyan-500";
+      case "hiking":
+        return "bg-orange-500";
+      case "yoga":
+        return "bg-purple-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getActivityIcon = (type: string) => {
     switch (type.toLowerCase()) {
-      case 'cycling': return '🚴';
-      case 'climbing': return '🧗';
-      case 'running': return '🏃';
-      case 'swimming': return '🏊';
-      case 'hiking': return '🥾';
-      case 'yoga': return '🧘';
-      default: return '🏃';
+      case "cycling":
+        return "🚴";
+      case "climbing":
+        return "🧗";
+      case "running":
+        return "🏃";
+      case "swimming":
+        return "🏊";
+      case "hiking":
+        return "🥾";
+      case "yoga":
+        return "🧘";
+      default:
+        return "🏃";
     }
   };
 
@@ -69,7 +90,9 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
       {/* Header */}
       <div className="h-16 bg-white border-b flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold text-explore-green font-cabin">Activities Map</h2>
+          <h2 className="text-xl font-bold text-explore-green font-cabin">
+            Activities Map
+          </h2>
           <div className="bg-explore-green text-white px-2 py-1 rounded-full text-sm font-cabin">
             {activitiesWithCoords.length} activities
           </div>
@@ -85,37 +108,58 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
       {/* Map Container */}
       <div className="relative h-[calc(100vh-4rem)] overflow-hidden">
         {/* Real Map Background */}
-        <div className="w-full h-full relative" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='streets' x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'%3E%3Crect width='40' height='40' fill='%23f0f4f0'/%3E%3Cpath d='M0 20h40M20 0v40' stroke='%23ddd' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23streets)'/%3E%3C/svg%3E")`,
-          backgroundSize: '40px 40px'
-        }}>
-
+        <div
+          className="w-full h-full relative"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='streets' x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'%3E%3Crect width='40' height='40' fill='%23f0f4f0'/%3E%3Cpath d='M0 20h40M20 0v40' stroke='%23ddd' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23streets)'/%3E%3C/svg%3E")`,
+            backgroundSize: "40px 40px",
+          }}
+        >
           {/* London Geography Features */}
           <div className="absolute inset-0">
             {/* Thames River */}
-            <div className="absolute bg-blue-300 rounded-full"
-                 style={{
-                   left: '10%',
-                   top: '45%',
-                   width: '80%',
-                   height: '8px',
-                   transform: 'rotate(-5deg)',
-                   background: 'linear-gradient(90deg, #87CEEB 0%, #4682B4 50%, #87CEEB 100%)'
-                 }} />
+            <div
+              className="absolute bg-blue-300 rounded-full"
+              style={{
+                left: "10%",
+                top: "45%",
+                width: "80%",
+                height: "8px",
+                transform: "rotate(-5deg)",
+                background:
+                  "linear-gradient(90deg, #87CEEB 0%, #4682B4 50%, #87CEEB 100%)",
+              }}
+            />
 
             {/* Hyde Park */}
-            <div className="absolute bg-green-300 rounded-lg opacity-70"
-                 style={{ left: '35%', top: '25%', width: '15%', height: '20%' }} />
+            <div
+              className="absolute bg-green-300 rounded-lg opacity-70"
+              style={{ left: "35%", top: "25%", width: "15%", height: "20%" }}
+            />
 
             {/* Regent's Park */}
-            <div className="absolute bg-green-300 rounded-full opacity-70"
-                 style={{ left: '45%', top: '15%', width: '12%', height: '15%' }} />
+            <div
+              className="absolute bg-green-300 rounded-full opacity-70"
+              style={{ left: "45%", top: "15%", width: "12%", height: "15%" }}
+            />
 
             {/* Major Roads */}
-            <div className="absolute bg-gray-400 h-1" style={{ top: '30%', left: '0%', width: '100%' }} />
-            <div className="absolute bg-gray-400 h-1" style={{ top: '60%', left: '0%', width: '100%' }} />
-            <div className="absolute bg-gray-400 w-1" style={{ left: '30%', top: '0%', height: '100%' }} />
-            <div className="absolute bg-gray-400 w-1" style={{ left: '65%', top: '0%', height: '100%' }} />
+            <div
+              className="absolute bg-gray-400 h-1"
+              style={{ top: "30%", left: "0%", width: "100%" }}
+            />
+            <div
+              className="absolute bg-gray-400 h-1"
+              style={{ top: "60%", left: "0%", width: "100%" }}
+            />
+            <div
+              className="absolute bg-gray-400 w-1"
+              style={{ left: "30%", top: "0%", height: "100%" }}
+            />
+            <div
+              className="absolute bg-gray-400 w-1"
+              style={{ left: "65%", top: "0%", height: "100%" }}
+            />
           </div>
 
           {/* Activity Markers */}
@@ -126,38 +170,53 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
               north: 51.55,
               south: 51.45,
               west: -0.2,
-              east: 0.0
+              east: 0.0,
             };
 
             const lat = activity.coordinates!.lat;
             const lng = activity.coordinates!.lng;
 
             // Normalize coordinates to 0-100% for positioning
-            const xPos = ((lng - londonBounds.west) / (londonBounds.east - londonBounds.west)) * 100;
-            const yPos = ((londonBounds.north - lat) / (londonBounds.north - londonBounds.south)) * 100;
-            
+            const xPos =
+              ((lng - londonBounds.west) /
+                (londonBounds.east - londonBounds.west)) *
+              100;
+            const yPos =
+              ((londonBounds.north - lat) /
+                (londonBounds.north - londonBounds.south)) *
+              100;
+
             return (
               <div
                 key={activity.id}
                 className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
                 style={{
                   left: `${Math.max(5, Math.min(95, xPos))}%`,
-                  top: `${Math.max(5, Math.min(95, yPos))}%`
+                  top: `${Math.max(5, Math.min(95, yPos))}%`,
                 }}
                 onClick={() => setSelectedActivity(activity)}
               >
                 {/* Activity Pin */}
-                <div className={`w-10 h-10 ${getActivityColor(activity.type)} rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-lg group-hover:scale-110 transition-transform`}>
+                <div
+                  className={`w-10 h-10 ${getActivityColor(activity.type)} rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-lg group-hover:scale-110 transition-transform`}
+                >
                   {getActivityIcon(activity.type)}
                 </div>
-                
+
                 {/* Pulse Animation */}
-                <div className={`absolute inset-0 ${getActivityColor(activity.type)} rounded-full animate-ping opacity-25`}></div>
-                
+                <div
+                  className={`absolute inset-0 ${getActivityColor(activity.type)} rounded-full animate-ping opacity-25`}
+                ></div>
+
                 {/* Quick Info Tooltip */}
                 <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 min-w-max">
-                  <div className="font-bold text-sm text-explore-green">{activity.title}</div>
-                  <div className="text-xs text-gray-600">{activity.date} • {activity.participants || 0}/{activity.maxParticipants} people</div>
+                  <div className="font-bold text-sm text-explore-green">
+                    {activity.title}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    {activity.date} • {activity.participants || 0}/
+                    {activity.maxParticipants} people
+                  </div>
                 </div>
               </div>
             );
@@ -166,7 +225,7 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
           {/* User Location - Notting Hill */}
           <div
             className="absolute transform -translate-x-1/2 -translate-y-1/2"
-            style={{ left: '40%', top: '45%' }}
+            style={{ left: "40%", top: "45%" }}
           >
             <div className="w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-lg">
               <div className="absolute inset-0 bg-blue-600 rounded-full animate-pulse opacity-50"></div>
@@ -178,11 +237,15 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
 
           {/* Legend */}
           <div className="absolute top-4 left-4 bg-white p-3 rounded-lg shadow-lg">
-            <h3 className="font-bold text-sm mb-2 font-cabin">Activity Types</h3>
+            <h3 className="font-bold text-sm mb-2 font-cabin">
+              Activity Types
+            </h3>
             <div className="space-y-1">
-              {['Cycling', 'Climbing', 'Running', 'Swimming'].map((type) => (
+              {["Cycling", "Climbing", "Running", "Swimming"].map((type) => (
                 <div key={type} className="flex items-center gap-2">
-                  <div className={`w-3 h-3 ${getActivityColor(type)} rounded-full`}></div>
+                  <div
+                    className={`w-3 h-3 ${getActivityColor(type)} rounded-full`}
+                  ></div>
                   <span className="text-xs font-cabin">{type}</span>
                 </div>
               ))}
@@ -203,7 +266,9 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
                 <h3 className="font-bold text-lg text-explore-green font-cabin">
                   {selectedActivity.title}
                 </h3>
-                <p className="text-sm text-gray-600 font-cabin">{selectedActivity.location}</p>
+                <p className="text-sm text-gray-600 font-cabin">
+                  {selectedActivity.location}
+                </p>
               </div>
               <button
                 onClick={() => setSelectedActivity(null)}
@@ -212,16 +277,19 @@ export default function MapView({ activities, onClose, onActivitySelect }: MapVi
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="flex items-center gap-4 mb-4">
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-cabin">{selectedActivity.date}</span>
+                <span className="text-sm font-cabin">
+                  {selectedActivity.date}
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4 text-gray-500" />
                 <span className="text-sm font-cabin">
-                  {selectedActivity.participants || 0}/{selectedActivity.maxParticipants} people
+                  {selectedActivity.participants || 0}/
+                  {selectedActivity.maxParticipants} people
                 </span>
               </div>
             </div>

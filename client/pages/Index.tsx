@@ -46,33 +46,42 @@ export default function Index() {
 
     // Apply comprehensive filters
     if (filters.activityType.length > 0) {
-      filtered = filtered.filter(activity =>
-        filters.activityType.some(type =>
-          activity.type === type.toLowerCase() ||
-          (type === "Cycling" && activity.type === "cycling") ||
-          (type === "Climbing" && activity.type === "climbing")
-        )
+      filtered = filtered.filter((activity) =>
+        filters.activityType.some(
+          (type) =>
+            activity.type === type.toLowerCase() ||
+            (type === "Cycling" && activity.type === "cycling") ||
+            (type === "Climbing" && activity.type === "climbing"),
+        ),
       );
     }
 
     // Filter by location
     if (filters.location) {
-      filtered = filtered.filter(activity =>
-        activity.location.toLowerCase().includes(filters.location.toLowerCase()) ||
-        activity.meetupLocation.toLowerCase().includes(filters.location.toLowerCase())
+      filtered = filtered.filter(
+        (activity) =>
+          activity.location
+            .toLowerCase()
+            .includes(filters.location.toLowerCase()) ||
+          activity.meetupLocation
+            .toLowerCase()
+            .includes(filters.location.toLowerCase()),
       );
     }
 
     // Filter by number of people
-    filtered = filtered.filter(activity => {
+    filtered = filtered.filter((activity) => {
       const maxPeople = parseInt(activity.maxParticipants) || 50;
-      return maxPeople >= filters.numberOfPeople.min && maxPeople <= filters.numberOfPeople.max;
+      return (
+        maxPeople >= filters.numberOfPeople.min &&
+        maxPeople <= filters.numberOfPeople.max
+      );
     });
 
     // Filter by gender
     if (filters.gender.length > 0) {
-      filtered = filtered.filter(activity =>
-        filters.gender.includes(activity.gender || "All genders")
+      filtered = filtered.filter((activity) =>
+        filters.gender.includes(activity.gender || "All genders"),
       );
     }
 
@@ -80,8 +89,8 @@ export default function Index() {
     if (filters.clubOnly) {
       // User is member of westway and oxford-cycling
       const userClubs = ["westway", "oxford-cycling"];
-      filtered = filtered.filter(activity =>
-        activity.club && userClubs.includes(activity.club)
+      filtered = filtered.filter(
+        (activity) => activity.club && userClubs.includes(activity.club),
       );
     }
 
@@ -295,8 +304,6 @@ export default function Index() {
   );
 }
 
-
-
 function ActivityCard({
   title,
   date,
@@ -393,7 +400,7 @@ function ClubLogo({
   src,
   alt,
   isMember,
-  clubId
+  clubId,
 }: {
   src: string;
   alt: string;
@@ -414,7 +421,9 @@ function ClubLogo({
   return (
     <div
       className={`relative w-16 h-16 rounded-full border-2 overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 ${
-        isMember ? 'border-explore-green shadow-lg' : 'border-gray-300 hover:border-explore-green'
+        isMember
+          ? "border-explore-green shadow-lg"
+          : "border-gray-300 hover:border-explore-green"
       }`}
       onClick={handleClick}
     >

@@ -85,7 +85,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
     // Check if there's already a chat with this organizer
     const existingChatIndex = chatMessages.findIndex(
-      (msg) => msg.sender === requestData.activityOrganizer && msg.type === "join_request"
+      (msg) =>
+        msg.sender === requestData.activityOrganizer &&
+        msg.type === "join_request",
     );
 
     if (existingChatIndex !== -1) {
@@ -94,7 +96,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         const updated = [...prev];
         updated[existingChatIndex] = {
           ...updated[existingChatIndex],
-          content: requestData.message || `Requested to join "${requestData.activityTitle}"`,
+          content:
+            requestData.message ||
+            `Requested to join "${requestData.activityTitle}"`,
           timestamp: new Date(),
           activityTitle: requestData.activityTitle,
         };

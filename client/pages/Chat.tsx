@@ -42,7 +42,7 @@ export default function Chat() {
       "Coach Holly Peristiani": "coach-holly",
       "Ben Stuart": "ben-stuart",
       "Dan Smith": "dan-smith",
-      "UCLMC": "uclmc",
+      UCLMC: "uclmc",
       "Maggie Chang": "maggie-chang",
     };
     return userIds[sender as keyof typeof userIds] || "unknown";

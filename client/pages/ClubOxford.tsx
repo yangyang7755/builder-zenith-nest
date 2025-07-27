@@ -12,34 +12,61 @@ export default function ClubOxford() {
       title: "Weekend Road Ride",
       date: "Jun 29",
       time: "8:00 AM",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-      type: "cycling"
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      type: "cycling",
     },
     {
       id: 2,
       title: "Track Training Session",
       date: "Jul 3",
-      time: "6:00 PM", 
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
-      type: "cycling"
+      time: "6:00 PM",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+      type: "cycling",
     },
     {
       id: 3,
       title: "Social Ride & Pub",
       date: "Jul 12",
       time: "4:00 PM",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
-      type: "cycling"
-    }
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+      type: "cycling",
+    },
   ];
 
   const members = [
-    { name: "Tom", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" },
-    { name: "Emma", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face" },
-    { name: "James", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" },
-    { name: "Sophie", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face" },
-    { name: "Alex", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" },
-    { name: "Lucy", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face" }
+    {
+      name: "Tom",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Emma",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "James",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Sophie",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Alex",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Lucy",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   return (
@@ -54,7 +81,16 @@ export default function ClubOxford() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -94,13 +130,15 @@ export default function ClubOxford() {
 
             {/* Description */}
             <p className="text-sm text-black font-cabin text-center mb-6 max-w-xs">
-              One of the oldest cycling clubs in the world. 
-              Join us for training rides, races, and social events throughout the year.
+              One of the oldest cycling clubs in the world. Join us for training
+              rides, races, and social events throughout the year.
             </p>
 
             {/* Request to Join Button - but user is already member */}
             <div className="w-48 h-14 flex items-center justify-center bg-gray-100 rounded-lg">
-              <span className="text-explore-green font-cabin font-medium">✓ Member</span>
+              <span className="text-explore-green font-cabin font-medium">
+                ✓ Member
+              </span>
             </div>
           </div>
         </div>
@@ -146,13 +184,21 @@ export default function ClubOxford() {
           {selectedTab === "events" && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium text-black font-cabin">Upcoming Events</h3>
-                <Link to="/activities" className="text-sm text-explore-green underline font-cabin">
+                <h3 className="text-lg font-medium text-black font-cabin">
+                  Upcoming Events
+                </h3>
+                <Link
+                  to="/activities"
+                  className="text-sm text-explore-green underline font-cabin"
+                >
                   See all
                 </Link>
               </div>
               {upcomingEvents.map((event) => (
-                <div key={event.id} className="border-2 border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                <div
+                  key={event.id}
+                  className="border-2 border-gray-200 rounded-lg p-4 flex items-center justify-between"
+                >
                   <div className="flex items-center gap-3">
                     <img
                       src={event.avatar}
@@ -160,10 +206,14 @@ export default function ClubOxford() {
                       className="w-10 h-10 rounded-full border border-black object-cover"
                     />
                     <div>
-                      <h4 className="font-medium text-black font-cabin">{event.title}</h4>
+                      <h4 className="font-medium text-black font-cabin">
+                        {event.title}
+                      </h4>
                       <div className="flex items-center gap-2 text-sm text-gray-600 font-cabin">
                         <Calendar className="w-4 h-4" />
-                        <span>{event.date} {event.time}</span>
+                        <span>
+                          {event.date} {event.time}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -178,8 +228,12 @@ export default function ClubOxford() {
           {selectedTab === "members" && (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-black font-cabin">Members</h3>
-                <span className="text-sm text-gray-500 font-cabin">42 members</span>
+                <h3 className="text-lg font-medium text-black font-cabin">
+                  Members
+                </h3>
+                <span className="text-sm text-gray-500 font-cabin">
+                  42 members
+                </span>
               </div>
               <div className="grid grid-cols-6 gap-4">
                 {members.map((member, index) => (
@@ -189,30 +243,44 @@ export default function ClubOxford() {
                       alt={member.name}
                       className="w-12 h-12 rounded-full border border-black object-cover mx-auto mb-2"
                     />
-                    <span className="text-xs text-black font-cabin">{member.name}</span>
+                    <span className="text-xs text-black font-cabin">
+                      {member.name}
+                    </span>
                   </div>
                 ))}
               </div>
               <div className="text-center mt-6">
-                <button className="text-explore-green font-cabin underline">View All</button>
+                <button className="text-explore-green font-cabin underline">
+                  View All
+                </button>
               </div>
             </div>
           )}
 
           {selectedTab === "chat" && (
             <div>
-              <h3 className="text-lg font-medium text-black font-cabin mb-4">Club Chat</h3>
+              <h3 className="text-lg font-medium text-black font-cabin mb-4">
+                Club Chat
+              </h3>
               <div className="border-2 border-gray-200 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
-                    <span className="text-white font-cabin font-bold text-xs">OUCC</span>
+                    <span className="text-white font-cabin font-bold text-xs">
+                      OUCC
+                    </span>
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-black font-cabin">Training ride tomorrow!</div>
-                    <div className="text-sm text-gray-600 font-cabin">Meet at Radcliffe Camera 7am</div>
+                    <div className="font-medium text-black font-cabin">
+                      Training ride tomorrow!
+                    </div>
+                    <div className="text-sm text-gray-600 font-cabin">
+                      Meet at Radcliffe Camera 7am
+                    </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs text-gray-500 font-cabin">42 members</div>
+                    <div className="text-xs text-gray-500 font-cabin">
+                      42 members
+                    </div>
                   </div>
                 </div>
               </div>

@@ -89,33 +89,42 @@ export default function Activities() {
 
     // Apply comprehensive filters
     if (filters.activityType.length > 0) {
-      filtered = filtered.filter(activity =>
-        filters.activityType.some(type =>
-          activity.type === type.toLowerCase() ||
-          (type === "Cycling" && activity.type === "cycling") ||
-          (type === "Climbing" && activity.type === "climbing")
-        )
+      filtered = filtered.filter((activity) =>
+        filters.activityType.some(
+          (type) =>
+            activity.type === type.toLowerCase() ||
+            (type === "Cycling" && activity.type === "cycling") ||
+            (type === "Climbing" && activity.type === "climbing"),
+        ),
       );
     }
 
     // Filter by location
     if (filters.location) {
-      filtered = filtered.filter(activity =>
-        activity.location.toLowerCase().includes(filters.location.toLowerCase()) ||
-        activity.meetupLocation.toLowerCase().includes(filters.location.toLowerCase())
+      filtered = filtered.filter(
+        (activity) =>
+          activity.location
+            .toLowerCase()
+            .includes(filters.location.toLowerCase()) ||
+          activity.meetupLocation
+            .toLowerCase()
+            .includes(filters.location.toLowerCase()),
       );
     }
 
     // Filter by number of people
-    filtered = filtered.filter(activity => {
+    filtered = filtered.filter((activity) => {
       const maxPeople = parseInt(activity.maxParticipants) || 50;
-      return maxPeople >= filters.numberOfPeople.min && maxPeople <= filters.numberOfPeople.max;
+      return (
+        maxPeople >= filters.numberOfPeople.min &&
+        maxPeople <= filters.numberOfPeople.max
+      );
     });
 
     // Filter by gender
     if (filters.gender.length > 0) {
-      filtered = filtered.filter(activity =>
-        filters.gender.includes(activity.gender || "All genders")
+      filtered = filtered.filter((activity) =>
+        filters.gender.includes(activity.gender || "All genders"),
       );
     }
 
@@ -193,8 +202,6 @@ export default function Activities() {
     </div>
   );
 }
-
-
 
 function CreatedActivityItem({ activity }: { activity: any }) {
   return (

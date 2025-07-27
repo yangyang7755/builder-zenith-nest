@@ -68,7 +68,8 @@ export default function CreateCycling() {
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
-      club: formData.visibility === "Club members" ? "oxford-cycling" : undefined, // Assume cycling is for Oxford club
+      club:
+        formData.visibility === "Club members" ? "oxford-cycling" : undefined, // Assume cycling is for Oxford club
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     });
@@ -505,20 +506,21 @@ export default function CreateCycling() {
                   className="absolute w-6 h-6 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200"
                   style={{
                     left: `${((formData.coordinates.lng + 0.1278) / 0.2556) * 100}%`,
-                    top: `${((51.5174 - formData.coordinates.lat) / 0.02) * 100}%`
+                    top: `${((51.5174 - formData.coordinates.lat) / 0.02) * 100}%`,
                   }}
                   onClick={(e) => {
-                    const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                    const rect =
+                      e.currentTarget.parentElement?.getBoundingClientRect();
                     if (rect) {
                       const x = (e.clientX - rect.left) / rect.width;
                       const y = (e.clientY - rect.top) / rect.height;
-                      const newLng = (x * 0.2556) - 0.1278;
-                      const newLat = 51.5174 - (y * 0.02);
+                      const newLng = x * 0.2556 - 0.1278;
+                      const newLat = 51.5174 - y * 0.02;
 
                       setFormData({
                         ...formData,
                         coordinates: { lat: newLat, lng: newLng },
-                        meetupLocation: `Location (${newLat.toFixed(4)}, ${newLng.toFixed(4)})`
+                        meetupLocation: `Location (${newLat.toFixed(4)}, ${newLng.toFixed(4)})`,
                       });
                     }
                   }}

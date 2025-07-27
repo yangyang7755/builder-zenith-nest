@@ -11,8 +11,8 @@ export default function Saved() {
       location: "Oxford, UK",
       type: "Road",
       icon: "🚴",
-      saved: true
-    }
+      saved: true,
+    },
   ];
 
   const happeningNow = [
@@ -24,8 +24,8 @@ export default function Saved() {
       location: "Wallingford, UK",
       type: "Road",
       icon: "🚴",
-      saved: true
-    }
+      saved: true,
+    },
   ];
 
   const pastActivities = [
@@ -37,8 +37,8 @@ export default function Saved() {
       location: "Didcot, UK",
       type: "Road",
       icon: "🚴",
-      saved: true
-    }
+      saved: true,
+    },
   ];
 
   return (
@@ -53,7 +53,16 @@ export default function Saved() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -121,16 +130,20 @@ function ActivityCard({ activity }: { activity: any }) {
           {activity.title}
         </h3>
         <button className="p-1">
-          <Bookmark className={`w-5 h-5 ${activity.saved ? 'fill-explore-green text-explore-green' : 'text-gray-400'}`} />
+          <Bookmark
+            className={`w-5 h-5 ${activity.saved ? "fill-explore-green text-explore-green" : "text-gray-400"}`}
+          />
         </button>
       </div>
 
       <div className="space-y-2 mb-3">
         <div className="flex items-center gap-2 text-gray-600">
           <Clock className="w-4 h-4" />
-          <span className="text-sm font-cabin">{activity.date} • {activity.time}</span>
+          <span className="text-sm font-cabin">
+            {activity.date} • {activity.time}
+          </span>
         </div>
-        
+
         <div className="flex items-center gap-2 text-gray-600">
           <MapPin className="w-4 h-4" />
           <span className="text-sm font-cabin">{activity.location}</span>

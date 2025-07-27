@@ -12,34 +12,61 @@ export default function ClubWestway() {
       title: "Friday Women's+ Night",
       date: "Jun 28",
       time: "6:00 PM",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
-      type: "climbing"
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+      type: "climbing",
     },
     {
       id: 2,
       title: "Monthly Bouldering Comp",
       date: "Jul 5",
-      time: "7:00 PM", 
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-      type: "climbing"
+      time: "7:00 PM",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      type: "climbing",
     },
     {
       id: 3,
       title: "Lead Climbing Basics",
       date: "Jul 20",
       time: "11:00 AM",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
-      type: "climbing"
-    }
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+      type: "climbing",
+    },
   ];
 
   const members = [
-    { name: "Arthur", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" },
-    { name: "Maggie", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face" },
-    { name: "Ben", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" },
-    { name: "Dan", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" },
-    { name: "Sarah", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face" },
-    { name: "Mike", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" }
+    {
+      name: "Arthur",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Maggie",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Ben",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Dan",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Sarah",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+    },
+    {
+      name: "Mike",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+    },
   ];
 
   return (
@@ -54,7 +81,16 @@ export default function ClubWestway() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -75,10 +111,10 @@ export default function ClubWestway() {
           <div className="flex flex-col items-center text-center">
             {/* Club Logo */}
             <div className="w-32 h-32 rounded-full border-2 border-black overflow-hidden mb-4">
-              <img 
-                src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800" 
-                alt="Westway Sports & Fitness" 
-                className="w-full h-full object-cover" 
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800"
+                alt="Westway Sports & Fitness"
+                className="w-full h-full object-cover"
               />
             </div>
 
@@ -95,13 +131,15 @@ export default function ClubWestway() {
 
             {/* Description */}
             <p className="text-sm text-black font-cabin text-center mb-6 max-w-xs">
-              Londons biggest and most diverse climbing centre. 
-              Take a look at our weekly social events below.
+              Londons biggest and most diverse climbing centre. Take a look at
+              our weekly social events below.
             </p>
 
             {/* Request to Join Button - but user is already member */}
             <div className="w-48 h-14 flex items-center justify-center bg-gray-100 rounded-lg">
-              <span className="text-explore-green font-cabin font-medium">✓ Member</span>
+              <span className="text-explore-green font-cabin font-medium">
+                ✓ Member
+              </span>
             </div>
           </div>
         </div>
@@ -147,13 +185,21 @@ export default function ClubWestway() {
           {selectedTab === "events" && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium text-black font-cabin">Upcoming Events</h3>
-                <Link to="/activities" className="text-sm text-explore-green underline font-cabin">
+                <h3 className="text-lg font-medium text-black font-cabin">
+                  Upcoming Events
+                </h3>
+                <Link
+                  to="/activities"
+                  className="text-sm text-explore-green underline font-cabin"
+                >
                   See all
                 </Link>
               </div>
               {upcomingEvents.map((event) => (
-                <div key={event.id} className="border-2 border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                <div
+                  key={event.id}
+                  className="border-2 border-gray-200 rounded-lg p-4 flex items-center justify-between"
+                >
                   <div className="flex items-center gap-3">
                     <img
                       src={event.avatar}
@@ -161,10 +207,14 @@ export default function ClubWestway() {
                       className="w-10 h-10 rounded-full border border-black object-cover"
                     />
                     <div>
-                      <h4 className="font-medium text-black font-cabin">{event.title}</h4>
+                      <h4 className="font-medium text-black font-cabin">
+                        {event.title}
+                      </h4>
                       <div className="flex items-center gap-2 text-sm text-gray-600 font-cabin">
                         <Calendar className="w-4 h-4" />
-                        <span>{event.date} {event.time}</span>
+                        <span>
+                          {event.date} {event.time}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -179,8 +229,12 @@ export default function ClubWestway() {
           {selectedTab === "members" && (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-black font-cabin">Members</h3>
-                <span className="text-sm text-gray-500 font-cabin">34 members</span>
+                <h3 className="text-lg font-medium text-black font-cabin">
+                  Members
+                </h3>
+                <span className="text-sm text-gray-500 font-cabin">
+                  34 members
+                </span>
               </div>
               <div className="grid grid-cols-6 gap-4">
                 {members.map((member, index) => (
@@ -190,30 +244,42 @@ export default function ClubWestway() {
                       alt={member.name}
                       className="w-12 h-12 rounded-full border border-black object-cover mx-auto mb-2"
                     />
-                    <span className="text-xs text-black font-cabin">{member.name}</span>
+                    <span className="text-xs text-black font-cabin">
+                      {member.name}
+                    </span>
                   </div>
                 ))}
               </div>
               <div className="text-center mt-6">
-                <button className="text-explore-green font-cabin underline">View All</button>
+                <button className="text-explore-green font-cabin underline">
+                  View All
+                </button>
               </div>
             </div>
           )}
 
           {selectedTab === "chat" && (
             <div>
-              <h3 className="text-lg font-medium text-black font-cabin mb-4">Club Chat</h3>
+              <h3 className="text-lg font-medium text-black font-cabin mb-4">
+                Club Chat
+              </h3>
               <div className="border-2 border-gray-200 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-explore-green rounded-full flex items-center justify-center">
                     <span className="text-white font-cabin font-bold">W</span>
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-black font-cabin">See you all later day!</div>
-                    <div className="text-sm text-gray-600 font-cabin">Lower walls are busy</div>
+                    <div className="font-medium text-black font-cabin">
+                      See you all later day!
+                    </div>
+                    <div className="text-sm text-gray-600 font-cabin">
+                      Lower walls are busy
+                    </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs text-gray-500 font-cabin">34 members</div>
+                    <div className="text-xs text-gray-500 font-cabin">
+                      34 members
+                    </div>
                   </div>
                 </div>
               </div>

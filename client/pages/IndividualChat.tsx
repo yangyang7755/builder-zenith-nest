@@ -1,13 +1,21 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Phone, Video, MoreVertical, Send, Smile, Check } from "lucide-react";
+import {
+  ArrowLeft,
+  Phone,
+  Video,
+  MoreVertical,
+  Send,
+  Smile,
+  Check,
+} from "lucide-react";
 
 interface Message {
   id: string;
   content: string;
   timestamp: Date;
   isFromMe: boolean;
-  status: 'sending' | 'sent' | 'delivered' | 'read';
+  status: "sending" | "sent" | "delivered" | "read";
 }
 
 interface User {
@@ -22,30 +30,34 @@ const users: Record<string, User> = {
   "coach-holly": {
     id: "coach-holly",
     name: "Coach Holly Peristiani",
-    avatar: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=60&h=60&fit=crop&crop=face",
+    avatar:
+      "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=60&h=60&fit=crop&crop=face",
     isOnline: true,
   },
   "ben-stuart": {
-    id: "ben-stuart", 
+    id: "ben-stuart",
     name: "Ben Stuart",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
     isOnline: false,
-    lastSeen: "2h ago"
+    lastSeen: "2h ago",
   },
   "dan-smith": {
     id: "dan-smith",
-    name: "Dan Smith", 
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
+    name: "Dan Smith",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
     isOnline: false,
-    lastSeen: "1h ago"
+    lastSeen: "1h ago",
   },
   "maggie-chang": {
     id: "maggie-chang",
     name: "Maggie Chang",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=60&h=60&fit=crop&crop=face", 
+    avatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=60&h=60&fit=crop&crop=face",
     isOnline: false,
-    lastSeen: "3d ago"
-  }
+    lastSeen: "3d ago",
+  },
 };
 
 const chatData: Record<string, Message[]> = {
@@ -55,29 +67,29 @@ const chatData: Record<string, Message[]> = {
       content: "Holly, want to head to the climbing gym tonight?",
       timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
       isFromMe: false,
-      status: 'read'
+      status: "read",
     },
     {
-      id: "2", 
+      id: "2",
       content: "Sounds great!",
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
       isFromMe: true,
-      status: 'read'
+      status: "read",
     },
     {
       id: "3",
       content: "I'll meet you at 8 PM!",
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
       isFromMe: false,
-      status: 'read'
+      status: "read",
     },
     {
       id: "4",
       content: "Looking forward! 😎",
       timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
       isFromMe: true,
-      status: 'read'
-    }
+      status: "read",
+    },
   ],
   "ben-stuart": [
     {
@@ -85,22 +97,22 @@ const chatData: Record<string, Message[]> = {
       content: "Hey! Are you free for a cycling session this weekend?",
       timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
       isFromMe: true,
-      status: 'delivered'
+      status: "delivered",
     },
     {
       id: "2",
       content: "Sure! What time works for you?",
       timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
       isFromMe: false,
-      status: 'read'
+      status: "read",
     },
     {
       id: "3",
       content: "How about 7 AM? I know a great route through the park.",
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
       isFromMe: true,
-      status: 'sent'
-    }
+      status: "sent",
+    },
   ],
   "dan-smith": [
     {
@@ -108,44 +120,49 @@ const chatData: Record<string, Message[]> = {
       content: "Thanks for the climbing tips yesterday!",
       timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
       isFromMe: false,
-      status: 'read'
+      status: "read",
     },
     {
       id: "2",
       content: "Anytime! You're improving so fast 💪",
       timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
       isFromMe: true,
-      status: 'read'
+      status: "read",
     },
     {
       id: "3",
       content: "Let's practice lead climbing next time?",
       timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
       isFromMe: false,
-      status: 'read'
-    }
+      status: "read",
+    },
   ],
   "maggie-chang": [
     {
       id: "1",
-      content: "Hi! I saw you're organizing a hiking trip next month. Can you send me the details?",
+      content:
+        "Hi! I saw you're organizing a hiking trip next month. Can you send me the details?",
       timestamp: new Date(Date.now() - 12 * 7 * 24 * 60 * 60 * 1000),
       isFromMe: false,
-      status: 'read'
+      status: "read",
     },
     {
       id: "2",
       content: "Of course! I'll send you the full itinerary later today.",
-      timestamp: new Date(Date.now() - 12 * 7 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000),
+      timestamp: new Date(
+        Date.now() - 12 * 7 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000,
+      ),
       isFromMe: true,
-      status: 'delivered'
-    }
-  ]
+      status: "delivered",
+    },
+  ],
 };
 
 export default function IndividualChat() {
   const { userId } = useParams<{ userId: string }>();
-  const [messages, setMessages] = useState<Message[]>(chatData[userId || ""] || []);
+  const [messages, setMessages] = useState<Message[]>(
+    chatData[userId || ""] || [],
+  );
   const [newMessage, setNewMessage] = useState("");
   const [showProfile, setShowProfile] = useState(false);
 
@@ -163,48 +180,54 @@ export default function IndividualChat() {
       content: newMessage,
       timestamp: new Date(),
       isFromMe: true,
-      status: 'sending'
+      status: "sending",
     };
 
-    setMessages(prev => [...prev, message]);
+    setMessages((prev) => [...prev, message]);
     setNewMessage("");
 
     // Simulate message status updates
     setTimeout(() => {
-      setMessages(prev => prev.map(msg => 
-        msg.id === message.id ? { ...msg, status: 'sent' } : msg
-      ));
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === message.id ? { ...msg, status: "sent" } : msg,
+        ),
+      );
     }, 500);
 
     setTimeout(() => {
-      setMessages(prev => prev.map(msg => 
-        msg.id === message.id ? { ...msg, status: 'delivered' } : msg
-      ));
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === message.id ? { ...msg, status: "delivered" } : msg,
+        ),
+      );
     }, 1000);
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false 
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     });
   };
 
-  const renderMessageStatus = (status: Message['status']) => {
+  const renderMessageStatus = (status: Message["status"]) => {
     switch (status) {
-      case 'sending':
-        return <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />;
-      case 'sent':
+      case "sending":
+        return (
+          <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+        );
+      case "sent":
         return <Check className="w-4 h-4 text-gray-400" />;
-      case 'delivered':
+      case "delivered":
         return (
           <div className="flex">
             <Check className="w-4 h-4 text-gray-400 -mr-1" />
             <Check className="w-4 h-4 text-gray-400" />
           </div>
         );
-      case 'read':
+      case "read":
         return (
           <div className="flex">
             <Check className="w-4 h-4 text-blue-500 -mr-1" />
@@ -228,8 +251,17 @@ export default function IndividualChat() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none"/>
-            <rect x="23" y="6" width="2" height="4" rx="1" fill="black"/>
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
+            <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
       </div>
@@ -239,8 +271,8 @@ export default function IndividualChat() {
         <Link to="/chat" className="p-1">
           <ArrowLeft className="w-6 h-6 text-black" />
         </Link>
-        
-        <button 
+
+        <button
           onClick={() => setShowProfile(true)}
           className="flex items-center gap-3 flex-1"
         >
@@ -250,7 +282,9 @@ export default function IndividualChat() {
             className="w-10 h-10 rounded-full border border-black object-cover"
           />
           <div className="text-left">
-            <h2 className="font-bold text-lg text-black font-cabin">{user.name}</h2>
+            <h2 className="font-bold text-lg text-black font-cabin">
+              {user.name}
+            </h2>
             <p className="text-sm text-gray-600 font-cabin">
               {user.isOnline ? "Active now" : `Last seen ${user.lastSeen}`}
             </p>
@@ -275,20 +309,26 @@ export default function IndividualChat() {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.isFromMe ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${message.isFromMe ? "justify-end" : "justify-start"}`}
           >
-            <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-              message.isFromMe 
-                ? 'bg-explore-green text-white' 
-                : 'bg-gray-200 text-black'
-            }`}>
+            <div
+              className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                message.isFromMe
+                  ? "bg-explore-green text-white"
+                  : "bg-gray-200 text-black"
+              }`}
+            >
               <p className="font-cabin">{message.content}</p>
-              <div className={`flex items-center gap-1 mt-1 ${
-                message.isFromMe ? 'justify-end' : 'justify-start'
-              }`}>
-                <span className={`text-xs font-cabin ${
-                  message.isFromMe ? 'text-white/70' : 'text-gray-500'
-                }`}>
+              <div
+                className={`flex items-center gap-1 mt-1 ${
+                  message.isFromMe ? "justify-end" : "justify-start"
+                }`}
+              >
+                <span
+                  className={`text-xs font-cabin ${
+                    message.isFromMe ? "text-white/70" : "text-gray-500"
+                  }`}
+                >
                   {formatTime(message.timestamp)}
                 </span>
                 {message.isFromMe && (
@@ -308,13 +348,13 @@ export default function IndividualChat() {
           <button className="p-2">
             <Smile className="w-6 h-6 text-gray-400" />
           </button>
-          
+
           <div className="flex-1 relative">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               placeholder="Type a message..."
               className="w-full border border-gray-300 rounded-full py-3 px-4 pr-12 font-cabin focus:outline-none focus:border-explore-green"
             />
@@ -330,10 +370,7 @@ export default function IndividualChat() {
 
       {/* User Profile Modal */}
       {showProfile && (
-        <UserProfile 
-          user={user} 
-          onClose={() => setShowProfile(false)} 
-        />
+        <UserProfile user={user} onClose={() => setShowProfile(false)} />
       )}
     </div>
   );
@@ -349,17 +386,24 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
       gear: ["Lead belay ✓", "Multipitch ✓", "Rescue", "First aid"],
       clubs: ["Westway", "London Climbers"],
       location: "London, UK",
-      tags: ["Coach", "Expert"]
+      tags: ["Coach", "Expert"],
     },
     "ben-stuart": {
       bio: "Weekend warrior. Always up for some mountain adventures",
       activities: ["Climbing", "Cycling"],
       joinedActivities: 18,
       preferredTerrain: ["Indoor", "Sport"],
-      gear: ["Lead belay ✓", "Multipitch ✓", "Trad rack", "Rope", "Quickdraws", "Helmet"],
+      gear: [
+        "Lead belay ✓",
+        "Multipitch ✓",
+        "Trad rack",
+        "Rope",
+        "Quickdraws",
+        "Helmet",
+      ],
       clubs: ["Westway", "CUMC"],
       location: "Notting Hill, London",
-      tags: ["Sport climber", "Road cyclist"]
+      tags: ["Sport climber", "Road cyclist"],
     },
     "dan-smith": {
       bio: "New to climbing but passionate about learning. Always looking for climbing partners!",
@@ -369,7 +413,7 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
       gear: ["Basic gear", "Harness", "Shoes"],
       clubs: ["Westway"],
       location: "East London",
-      tags: ["Beginner", "Enthusiastic"]
+      tags: ["Beginner", "Enthusiastic"],
     },
     "maggie-chang": {
       bio: "Love outdoor adventures and meeting new people. Organizing group trips regularly!",
@@ -379,8 +423,8 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
       gear: ["Complete kit", "Navigation", "First aid"],
       clubs: ["London Hikers", "Outdoor Club"],
       location: "Central London",
-      tags: ["Organizer", "Outdoor enthusiast"]
-    }
+      tags: ["Organizer", "Outdoor enthusiast"],
+    },
   };
 
   const profile = profileData[user.id as keyof typeof profileData];
@@ -395,7 +439,9 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
             alt={user.name}
             className="w-24 h-24 rounded-full border-2 border-black mx-auto mb-4 object-cover"
           />
-          <h2 className="text-xl font-bold text-black font-cabin">{user.name}</h2>
+          <h2 className="text-xl font-bold text-black font-cabin">
+            {user.name}
+          </h2>
           <div className="flex justify-center gap-2 mt-3">
             <button className="px-4 py-1 border border-explore-green text-explore-green rounded text-sm font-cabin">
               Share
@@ -414,7 +460,9 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
               <span
                 key={tag}
                 className={`px-3 py-1 rounded text-sm font-bold font-cabin border border-black ${
-                  index === 0 ? 'bg-explore-green text-white' : 'bg-gray-100 text-explore-green'
+                  index === 0
+                    ? "bg-explore-green text-white"
+                    : "bg-gray-100 text-explore-green"
                 }`}
               >
                 {tag}
@@ -431,7 +479,9 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
               <span
                 key={activity}
                 className={`px-3 py-1 rounded text-sm font-bold font-cabin border border-black ${
-                  index === 0 ? 'bg-explore-green text-white' : 'bg-gray-100 text-explore-green'
+                  index === 0
+                    ? "bg-explore-green text-white"
+                    : "bg-gray-100 text-explore-green"
                 }`}
               >
                 {activity}
@@ -441,11 +491,17 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
 
           {/* Activities Joined */}
           <div>
-            <h3 className="text-xl font-medium text-black font-cabin mb-2">Activities joined</h3>
-            <p className="text-lg text-explore-green font-cabin">{profile.joinedActivities} activities</p>
-            <p className="text-sm text-black font-cabin mt-1">Preferred terrain:</p>
+            <h3 className="text-xl font-medium text-black font-cabin mb-2">
+              Activities joined
+            </h3>
+            <p className="text-lg text-explore-green font-cabin">
+              {profile.joinedActivities} activities
+            </p>
+            <p className="text-sm text-black font-cabin mt-1">
+              Preferred terrain:
+            </p>
             <ul className="list-disc list-inside text-sm text-black font-cabin ml-2">
-              {profile.preferredTerrain.map(terrain => (
+              {profile.preferredTerrain.map((terrain) => (
                 <li key={terrain}>{terrain}</li>
               ))}
             </ul>
@@ -453,10 +509,15 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
 
           {/* Gear & Skills */}
           <div>
-            <h3 className="text-xl font-medium text-black font-cabin mb-2">Gear & skills</h3>
+            <h3 className="text-xl font-medium text-black font-cabin mb-2">
+              Gear & skills
+            </h3>
             <div className="space-y-1">
-              {profile.gear.map(item => (
-                <div key={item} className="flex items-center gap-2 text-sm font-cabin">
+              {profile.gear.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-2 text-sm font-cabin"
+                >
                   <span className="text-explore-green">🛠</span>
                   <span className="text-black">{item}</span>
                 </div>
@@ -466,10 +527,15 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
 
           {/* Clubs */}
           <div>
-            <h3 className="text-xl font-medium text-black font-cabin mb-2">Clubs</h3>
+            <h3 className="text-xl font-medium text-black font-cabin mb-2">
+              Clubs
+            </h3>
             <div className="flex gap-2">
-              {profile.clubs.map(club => (
-                <span key={club} className="px-3 py-1 bg-gray-100 text-explore-green rounded text-sm font-cabin border border-black">
+              {profile.clubs.map((club) => (
+                <span
+                  key={club}
+                  className="px-3 py-1 bg-gray-100 text-explore-green rounded text-sm font-cabin border border-black"
+                >
                   🏔️ {club}
                 </span>
               ))}
@@ -478,7 +544,9 @@ function UserProfile({ user, onClose }: { user: User; onClose: () => void }) {
 
           {/* Location */}
           <div>
-            <h3 className="text-xl font-medium text-black font-cabin mb-2">Location</h3>
+            <h3 className="text-xl font-medium text-black font-cabin mb-2">
+              Location
+            </h3>
             <div className="flex items-center gap-2">
               <span className="text-explore-green">📍</span>
               <span className="text-black font-cabin">{profile.location}</span>
