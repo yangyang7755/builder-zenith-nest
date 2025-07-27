@@ -280,8 +280,8 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Join Local Clubs Section */}
-        <div className="mb-8">
+        {/* My Clubs Section */}
+        <div className="mb-6">
           <h2 className="text-base font-semibold text-black font-poppins mb-3">
             Your clubs & communities
           </h2>
@@ -298,13 +298,43 @@ export default function Index() {
               isMember={true}
               clubId="oxford-cycling"
             />
+          </div>
+        </div>
+
+        {/* Discover More Clubs Section */}
+        <div className="mb-8">
+          <h2 className="text-base font-semibold text-black font-poppins mb-3">
+            Discover local clubs
+          </h2>
+          <div className="flex gap-4 justify-start flex-wrap">
             <ClubLogo
               src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
               alt="Gorp Girls"
               isMember={false}
               clubId="gorp-girls"
             />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
+              alt="London Climbing Club"
+              isMember={false}
+              clubId="london-climbing"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
+              alt="Richmond Park Runners"
+              isMember={false}
+              clubId="richmond-runners"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
+              alt="Thames Path Cyclists"
+              isMember={false}
+              clubId="thames-cyclists"
+            />
           </div>
+          <p className="text-xs text-gray-500 font-cabin mt-2">
+            Request to join clubs to see their activities and events
+          </p>
         </div>
       </div>
 
