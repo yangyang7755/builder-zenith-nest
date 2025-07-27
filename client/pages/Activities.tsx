@@ -109,7 +109,7 @@ export default function Activities() {
 
 function ActivityItem({ activity }: { activity: typeof activitiesData[0] }) {
   return (
-    <div className="flex items-center gap-3 py-3">
+    <div className="flex items-center gap-3 py-4">
       {/* Activity Icon */}
       <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
