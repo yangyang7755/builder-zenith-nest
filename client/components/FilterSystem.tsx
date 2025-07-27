@@ -12,6 +12,7 @@ export interface FilterOptions {
   pace: { min: number; max: number };
   distance: { min: number; max: number };
   elevation: { min: number; max: number };
+  clubOnly: boolean;
 }
 
 interface FilterSystemProps {
