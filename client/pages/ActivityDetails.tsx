@@ -35,8 +35,8 @@ export default function ActivityDetails() {
       {/* Main Content */}
       <div className="px-6 pb-24">
         {/* Title */}
-        <div className="mb-8 mt-6">
-          <h1 className="text-3xl font-bold text-explore-green font-cabin leading-tight">
+        <div className="mb-6 mt-4">
+          <h1 className="text-2xl font-bold text-explore-green font-cabin leading-tight">
             Westway women's+ climbing morning
           </h1>
         </div>
