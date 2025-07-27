@@ -179,6 +179,15 @@ export default function Activities() {
         </div>
       </div>
 
+      {/* Map View */}
+      {showMapView && (
+        <MapView
+          activities={filteredActivities}
+          onClose={() => setShowMapView(false)}
+          onActivitySelect={handleActivitySelect}
+        />
+      )}
+
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
