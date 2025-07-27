@@ -1,5 +1,5 @@
 import { Search, Menu, MapPin, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
