@@ -23,13 +23,21 @@ interface MapViewProps {
 export default function MapView({ activities, onClose, onActivitySelect }: MapViewProps) {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
 
-  // Mock coordinates for activities if not provided
+  // Real London coordinates for activities if not provided
+  const londonLocations = [
+    { lat: 51.5074, lng: -0.1278 }, // Central London
+    { lat: 51.5155, lng: -0.0922 }, // Canary Wharf
+    { lat: 51.4994, lng: -0.1248 }, // South Bank
+    { lat: 51.5183, lng: -0.1755 }, // Paddington
+    { lat: 51.4893, lng: -0.1441 }, // Battersea
+    { lat: 51.5074, lng: -0.0896 }, // Tower Bridge
+    { lat: 51.5287, lng: -0.1339 }, // Regent's Park
+    { lat: 51.5033, lng: -0.1726 }, // Hyde Park
+  ];
+
   const activitiesWithCoords = activities.map((activity, index) => ({
     ...activity,
-    coordinates: activity.coordinates || {
-      lat: 51.5074 + (Math.random() - 0.5) * 0.05,
-      lng: -0.1278 + (Math.random() - 0.5) * 0.05
-    }
+    coordinates: activity.coordinates || londonLocations[index % londonLocations.length]
   }));
 
   const getActivityColor = (type: string) => {
