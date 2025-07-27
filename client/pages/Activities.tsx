@@ -149,6 +149,29 @@ export default function Activities() {
   );
 }
 
+function FilterChip({
+  label,
+  active = false,
+  onClick,
+}: {
+  label: string;
+  active?: boolean;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-4 py-2 rounded-lg border border-black font-bold text-sm font-cabin whitespace-nowrap transition-colors ${
+        active
+          ? "bg-explore-green text-white"
+          : "bg-explore-gray text-explore-green hover:bg-gray-300"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
 function CreatedActivityItem({ activity }: { activity: any }) {
   return (
     <div className="bg-explore-gray border-2 border-explore-green rounded-lg p-4 mb-3">
