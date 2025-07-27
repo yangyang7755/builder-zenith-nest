@@ -394,7 +394,7 @@ function MixedActivitiesSection({
                   key={activity.id}
                   title={activity.title}
                   date={`📅 ${activity.date}`}
-                  location={`📍${activity.location}`}
+                  location={`����${activity.location}`}
                   imageSrc={
                     activity.imageSrc ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
@@ -455,6 +455,7 @@ function MixedActivitiesSection({
                   pace={activity.pace}
                   elevation={activity.elevation}
                   difficulty="Intermediate"
+                  activityId={activity.type === "cycling" ? "sunday-morning-ride" : "westway-womens-climb"}
                 />
               ))}
             </>
