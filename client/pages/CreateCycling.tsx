@@ -460,6 +460,98 @@ export default function CreateCycling() {
         </div>
       </div>
 
+      {/* Location Map Modal */}
+      {showLocationMap && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-sm h-96">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-xl font-bold text-explore-green font-cabin">
+                Select Location
+              </h3>
+              <button
+                onClick={() => setShowLocationMap(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-4 h-64">
+              {/* Simple map placeholder */}
+              <div className="w-full h-full bg-gray-200 rounded-lg relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-200 to-blue-200"></div>
+
+                {/* Map grid lines */}
+                <div className="absolute inset-0">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div
+                      key={`h-${i}`}
+                      className="absolute w-full border-t border-gray-300 opacity-30"
+                      style={{ top: `${(i + 1) * 12.5}%` }}
+                    />
+                  ))}
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div
+                      key={`v-${i}`}
+                      className="absolute h-full border-l border-gray-300 opacity-30"
+                      style={{ left: `${(i + 1) * 16.66}%` }}
+                    />
+                  ))}
+                </div>
+
+                {/* Pin */}
+                <div
+                  className="absolute w-6 h-6 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200"
+                  style={{
+                    left: `${((formData.coordinates.lng + 0.1278) / 0.2556) * 100}%`,
+                    top: `${((51.5174 - formData.coordinates.lat) / 0.02) * 100}%`
+                  }}
+                  onClick={(e) => {
+                    const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                    if (rect) {
+                      const x = (e.clientX - rect.left) / rect.width;
+                      const y = (e.clientY - rect.top) / rect.height;
+                      const newLng = (x * 0.2556) - 0.1278;
+                      const newLat = 51.5174 - (y * 0.02);
+
+                      setFormData({
+                        ...formData,
+                        coordinates: { lat: newLat, lng: newLng },
+                        meetupLocation: `Location (${newLat.toFixed(4)}, ${newLng.toFixed(4)})`
+                      });
+                    }
+                  }}
+                >
+                  <MapPin className="w-6 h-6 text-red-500 drop-shadow-lg" />
+                </div>
+
+                {/* Location info */}
+                <div className="absolute bottom-2 left-2 bg-white bg-opacity-90 rounded px-2 py-1 text-xs font-cabin">
+                  London Area
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowLocationMap(false)}
+                  className="flex-1 py-3 border-2 border-gray-300 rounded-lg text-gray-600 font-cabin font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setShowLocationMap(false)}
+                  className="flex-1 py-3 bg-explore-green text-white rounded-lg font-cabin font-medium"
+                >
+                  Confirm Location
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
