@@ -66,23 +66,23 @@ export default function ActivityDetails() {
         </div>
 
         {/* Location Section */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="mb-4">
+          <div className="flex items-center gap-3 mb-1">
             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <h3 className="text-2xl font-bold text-black font-cabin">Location</h3>
+            <h3 className="text-xl font-bold text-black font-cabin">Location</h3>
           </div>
-          <p className="text-base text-gray-400 font-cabin ml-6">
+          <p className="text-sm text-gray-400 font-cabin ml-6">
             Westway Climbing Centre
           </p>
         </div>
 
         {/* Time Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Clock className="w-6 h-6 text-gray-400" />
-            <h3 className="text-2xl font-bold text-black font-cabin">Time</h3>
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-1">
+            <Clock className="w-5 h-5 text-gray-400" />
+            <h3 className="text-xl font-bold text-black font-cabin">Time</h3>
           </div>
-          <p className="text-base text-black font-cabin ml-9">
+          <p className="text-sm text-black font-cabin ml-8">
             Every Wednesday, 10:00-12:00 AM
           </p>
         </div>
