@@ -170,7 +170,10 @@ export default function Activities() {
         {/* Title */}
         <div className="text-center py-6">
           <h1 className="text-3xl font-bold text-explore-green font-cabin">
-            Activities
+            {filterParam
+              ? `${filterParam.charAt(0).toUpperCase() + filterParam.slice(1)} Activities`
+              : "Activities"
+            }
           </h1>
         </div>
 
