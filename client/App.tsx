@@ -24,7 +24,11 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<SplashScreen />} />
+          <Route path="/auth" element={<AuthLanding />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/explore" element={<Index />} />
           <Route path="/activities" element={<Activities />} />
           <Route path="/activity/westway-womens-climb" element={<ActivityDetails />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
