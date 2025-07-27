@@ -360,6 +360,289 @@ export default function Index() {
   );
 }
 
+function ClimbingExploreSection() {
+  const partnerRequests = [
+    {
+      title: "Looking for belay partner",
+      date: "📅 Tonight, 7:00 PM",
+      location: "📍Westway Climbing Centre",
+      organizer: "Sarah Chen",
+      grade: "5.9 - 5.11a",
+      discipline: "Top rope",
+      level: "Intermediate",
+      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      title: "Lead climbing session",
+      date: "📅 Friday evenings",
+      location: "📍The Castle Climbing Centre",
+      organizer: "Alex Rodriguez",
+      grade: "6a - 6c",
+      discipline: "Lead climbing",
+      level: "Advanced",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    }
+  ];
+
+  const gymActivities = [
+    {
+      title: "Women's+ Climbing Morning",
+      date: "📅 Every Wednesday, 10:00 AM",
+      location: "📍Westway Climbing Centre",
+      organizer: "Coach Holly Peristiani",
+      grade: "Competent top-rope climbers",
+      discipline: "Top rope coaching",
+      level: "All levels",
+      fee: "Standard entry",
+      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      title: "Bouldering Competition Training",
+      date: "📅 Saturday, 2:00 PM",
+      location: "📍The Arch Climbing Wall",
+      organizer: "The Arch Coaching Team",
+      grade: "V4 - V8",
+      discipline: "Bouldering",
+      level: "Advanced",
+      equipment: "Shoes provided",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      title: "Youth Climbing Club",
+      date: "📅 Saturday, 11:00 AM",
+      location: "📍VauxWall East",
+      organizer: "Youth Development Team",
+      grade: "Beginner to 6a",
+      discipline: "Multi-discipline",
+      level: "Youth (8-16)",
+      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+    }
+  ];
+
+  const competitions = [
+    {
+      title: "London Bouldering League",
+      date: "📅 Monthly, Next: July 20",
+      location: "📍Various London gyms",
+      organizer: "London Climbing Coalition",
+      grade: "V0 - V12",
+      discipline: "Bouldering competition",
+      level: "All categories",
+      prize: "Prizes & rankings",
+      registration: "Open",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      title: "Lead Climbing Championships",
+      date: "📅 Saturday, August 5, 9:00 AM",
+      location: "📍Westway Climbing Centre",
+      organizer: "British Mountaineering Council",
+      grade: "5.10a - 5.13d",
+      discipline: "Lead competition",
+      level: "Regional qualifiers",
+      registration: "Closes July 15",
+      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+    }
+  ];
+
+  const outdoorTrips = [
+    {
+      title: "Peak District Sport Climbing",
+      date: "📅 Weekend, July 22-23",
+      location: "📍Stanage Edge & Burbage",
+      organizer: "Peak Adventures",
+      grade: "E1 - E4 / 5.6 - 5.10",
+      discipline: "Trad & Sport",
+      level: "Experienced outdoor",
+      accommodation: "Camping included",
+      transport: "Minibus from London",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      title: "Multi-pitch Climbing Course",
+      date: "📅 3 days, Aug 12-14",
+      location: "📍Lake District",
+      organizer: "Mountain Skills Academy",
+      grade: "Multi-pitch routes",
+      discipline: "Trad climbing",
+      level: "Lead climbing experience required",
+      certification: "RCI certification",
+      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      title: "Portland Sport Trip",
+      date: "📅 Long weekend, Sept 15-18",
+      location: "📍Portland, Dorset",
+      organizer: "South Coast Climbing",
+      grade: "5.8 - 5.12",
+      discipline: "Sport climbing",
+      level: "Intermediate+",
+      accommodation: "Shared cottages",
+      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+    }
+  ];
+
+  return (
+    <div className="space-y-8">
+      {/* Partner Requests Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-black font-poppins">Partner Requests</h2>
+          <span className="text-sm text-gray-500 font-cabin">Find climbing partners</span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {partnerRequests.map((request, index) => (
+            <ClimbingActivityCard key={index} activity={request} />
+          ))}
+        </div>
+      </div>
+
+      {/* Gym Activities Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-black font-poppins">Climbing Gym Activities</h2>
+          <span className="text-sm text-gray-500 font-cabin">Sessions & coaching</span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {gymActivities.map((activity, index) => (
+            <ClimbingActivityCard key={index} activity={activity} />
+          ))}
+        </div>
+      </div>
+
+      {/* Competitions Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-black font-poppins">Competitions</h2>
+          <span className="text-sm text-gray-500 font-cabin">Events & contests</span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {competitions.map((comp, index) => (
+            <ClimbingActivityCard key={index} activity={comp} />
+          ))}
+        </div>
+      </div>
+
+      {/* Outdoor Trips Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-black font-poppins">Climbing Trips</h2>
+          <span className="text-sm text-gray-500 font-cabin">Outdoor adventures</span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {outdoorTrips.map((trip, index) => (
+            <ClimbingActivityCard key={index} activity={trip} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ClimbingActivityCard({ activity }: { activity: any }) {
+  return (
+    <div className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="font-bold text-explore-green font-cabin text-base line-clamp-2 leading-tight flex-1 pr-2">
+          {activity.title}
+        </h3>
+        <div className="flex-shrink-0">
+          <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${
+            activity.level === 'Beginner' || activity.level === 'All levels' ? 'bg-green-100 text-green-700' :
+            activity.level === 'Intermediate' || activity.level === 'Intermediate+' ? 'bg-yellow-100 text-yellow-700' :
+            activity.level === 'Advanced' || activity.level === 'Experienced outdoor' ? 'bg-red-100 text-red-700' :
+            activity.level === 'Youth (8-16)' ? 'bg-purple-100 text-purple-700' :
+            'bg-gray-100 text-gray-700'
+          }`}>
+            {activity.level}
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex gap-3 mb-4">
+        <img
+          src={activity.imageSrc}
+          alt="Organizer"
+          className="w-12 h-12 rounded-full border border-black object-cover flex-shrink-0"
+        />
+        <div className="flex-1 min-w-0">
+          <div className="text-xs text-gray-600 font-cabin mb-1 truncate">
+            By {activity.organizer}
+          </div>
+          <div className="text-sm text-explore-green font-cabin mb-1 truncate">
+            {activity.date}
+          </div>
+          <div className="text-sm text-explore-green font-cabin truncate">
+            {activity.location}
+          </div>
+        </div>
+      </div>
+
+      {/* Climbing Details */}
+      <div className="space-y-2 mb-4">
+        <div className="grid grid-cols-2 gap-2 text-xs font-cabin">
+          <div>
+            <div className="text-gray-500">Grade/Difficulty</div>
+            <div className="font-medium text-black">🧗 {activity.grade}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Discipline</div>
+            <div className="font-medium text-black">⛰️ {activity.discipline}</div>
+          </div>
+        </div>
+
+        {/* Additional Info */}
+        {(activity.fee || activity.equipment || activity.prize || activity.accommodation || activity.transport || activity.certification || activity.registration) && (
+          <div className="flex flex-wrap gap-1 mt-2">
+            {activity.fee && (
+              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-cabin">
+                💰 {activity.fee}
+              </span>
+            )}
+            {activity.equipment && (
+              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-cabin">
+                🥾 {activity.equipment}
+              </span>
+            )}
+            {activity.prize && (
+              <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded font-cabin">
+                🏆 {activity.prize}
+              </span>
+            )}
+            {activity.accommodation && (
+              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-cabin">
+                🏕️ {activity.accommodation}
+              </span>
+            )}
+            {activity.transport && (
+              <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded font-cabin">
+                🚐 {activity.transport}
+              </span>
+            )}
+            {activity.certification && (
+              <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded font-cabin">
+                📜 {activity.certification}
+              </span>
+            )}
+            {activity.registration && (
+              <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-cabin">
+                📝 {activity.registration}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Action Button */}
+      <button className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors">
+        Request to join
+      </button>
+    </div>
+  );
+}
+
 function CyclingExploreSection() {
   const groupRides = [
     {
