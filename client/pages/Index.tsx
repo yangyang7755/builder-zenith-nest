@@ -1032,7 +1032,8 @@ function ActivityCard({
   type = "climbing",
   distance,
   pace,
-  elevation
+  elevation,
+  difficulty
 }: {
   title: string;
   date: string;
@@ -1044,51 +1045,117 @@ function ActivityCard({
   distance?: string;
   pace?: string;
   elevation?: string;
+  difficulty?: string;
 }) {
+  // Determine difficulty level and color
+  const getDifficultyBadge = () => {
+    if (!difficulty && type === "cycling") {
+      if (pace && parseInt(pace) > 30) return { label: "Advanced", color: "bg-red-100 text-red-700" };
+      if (pace && parseInt(pace) > 25) return { label: "Intermediate", color: "bg-yellow-100 text-yellow-700" };
+      return { label: "Beginner", color: "bg-green-100 text-green-700" };
+    }
+    if (!difficulty) return { label: "All levels", color: "bg-gray-100 text-gray-700" };
+
+    const level = difficulty.toLowerCase();
+    if (level.includes("beginner") || level.includes("all")) return { label: difficulty, color: "bg-green-100 text-green-700" };
+    if (level.includes("intermediate")) return { label: difficulty, color: "bg-yellow-100 text-yellow-700" };
+    if (level.includes("advanced") || level.includes("expert")) return { label: difficulty, color: "bg-red-100 text-red-700" };
+    return { label: difficulty, color: "bg-blue-100 text-blue-700" };
+  };
+
+  const difficultyBadge = getDifficultyBadge();
+
   return (
-    <div className="min-w-60 w-60 h-36 border-2 border-explore-green rounded-lg p-3 flex-shrink-0 bg-white">
-      <h3 className="font-bold text-explore-green font-cabin text-base mb-2 line-clamp-2 leading-tight">
-        {title}
-      </h3>
-      <div className="flex items-start gap-3 h-full">
+    <div className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white">
+      {/* Header with title and difficulty badge */}
+      <div className="flex justify-between items-start mb-4">
+        <h3 className="font-bold text-black font-cabin text-lg line-clamp-2 leading-tight flex-1 pr-2">
+          {title}
+        </h3>
+        <span className={`text-xs px-3 py-1 rounded-full font-cabin font-medium flex-shrink-0 ${difficultyBadge.color}`}>
+          {difficultyBadge.label}
+        </span>
+      </div>
+
+      {/* Organizer info */}
+      <div className="flex items-center gap-3 mb-4">
         <img
           src={imageSrc}
-          alt="Profile"
-          className="w-10 h-10 rounded-full border border-black object-cover flex-shrink-0"
+          alt="Organizer"
+          className="w-12 h-12 rounded-full border border-black object-cover flex-shrink-0"
         />
         <div className="flex-1 min-w-0">
-          <div className="text-xs text-gray-600 font-cabin mb-1 truncate">
+          <div className="text-sm text-gray-600 font-cabin">
             By {organizer}
           </div>
-          <div className="text-sm text-explore-green font-cabin mb-1 truncate">
-            {date}
-          </div>
-          <div className="text-sm text-explore-green font-cabin mb-1 truncate">
-            {location}
-          </div>
-          {/* Cycling-specific details */}
-          {type === "cycling" && (distance || pace || elevation) && (
-            <div className="text-xs text-gray-500 font-cabin space-y-0.5">
-              {distance && <div>🚴 {distance}</div>}
-              {pace && <div>⚡ {pace}</div>}
-              {elevation && <div>⛰️ {elevation}</div>}
-            </div>
-          )}
         </div>
-        <div className="flex-shrink-0">
-          {isFirstCard ? (
-            <Link
-              to="/activity/westway-womens-climb"
-              className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin inline-block text-center whitespace-nowrap"
-            >
-              Request to join
-            </Link>
-          ) : (
-            <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin whitespace-nowrap">
-              Request to join
-            </button>
-          )}
+      </div>
+
+      {/* Date and Location */}
+      <div className="space-y-2 mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-orange-500 text-base">📅</span>
+          <span className="text-sm text-black font-cabin">
+            {date.replace("📅 ", "")}
+          </span>
         </div>
+        <div className="flex items-center gap-2">
+          <span className="text-red-500 text-base">📍</span>
+          <span className="text-sm text-black font-cabin">
+            {location.replace("📍", "")}
+          </span>
+        </div>
+      </div>
+
+      {/* Activity Metrics */}
+      {type === "cycling" && (distance || pace || elevation) && (
+        <div className="mb-4">
+          <div className="grid grid-cols-3 gap-4 text-center">
+            {distance && (
+              <div>
+                <div className="text-xs text-gray-500 font-cabin mb-1">Distance</div>
+                <div className="flex items-center justify-center gap-1">
+                  <span className="text-yellow-600">🚴</span>
+                  <span className="text-sm font-medium text-black font-cabin">{distance}</span>
+                </div>
+              </div>
+            )}
+            {pace && (
+              <div>
+                <div className="text-xs text-gray-500 font-cabin mb-1">Pace</div>
+                <div className="flex items-center justify-center gap-1">
+                  <span className="text-yellow-500">⚡</span>
+                  <span className="text-sm font-medium text-black font-cabin">{pace}</span>
+                </div>
+              </div>
+            )}
+            {elevation && (
+              <div>
+                <div className="text-xs text-gray-500 font-cabin mb-1">Elevation</div>
+                <div className="flex items-center justify-center gap-1">
+                  <span className="text-green-600">⛰️</span>
+                  <span className="text-sm font-medium text-black font-cabin">{elevation}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Request to join button */}
+      <div className="w-full">
+        {isFirstCard ? (
+          <Link
+            to="/activity/westway-womens-climb"
+            className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium inline-block text-center hover:bg-explore-green-dark transition-colors"
+          >
+            Request to join
+          </Link>
+        ) : (
+          <button className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors">
+            Request to join
+          </button>
+        )}
       </div>
     </div>
   );
