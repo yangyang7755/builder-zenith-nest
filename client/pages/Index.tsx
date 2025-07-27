@@ -2,7 +2,7 @@ import { Search, Menu, MapPin, ChevronDown } from "lucide-react";
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-white font-cabin">
+    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
       {/* Status Bar */}
       <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
         <span>9:41</span>
