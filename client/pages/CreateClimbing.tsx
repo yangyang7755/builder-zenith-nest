@@ -53,7 +53,7 @@ export default function CreateClimbing() {
       languages: formData.languages,
       gearRequired: formData.gearRequired,
       subtype: selectedType,
-      gender: formData.gender,
+      gender: formData.femaleOnly ? "Female only" : "All genders",
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
