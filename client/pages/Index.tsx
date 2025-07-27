@@ -76,6 +76,15 @@ export default function Index() {
       );
     }
 
+    // Filter by club only
+    if (filters.clubOnly) {
+      // User is member of westway and oxford-cycling
+      const userClubs = ["westway", "oxford-cycling"];
+      filtered = filtered.filter(activity =>
+        activity.club && userClubs.includes(activity.club)
+      );
+    }
+
     setFilteredActivities(filtered);
   }, [searchQuery, activities, searchActivities, filters]);
 
