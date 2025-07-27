@@ -18,6 +18,7 @@ import CreateCycling from "./pages/CreateCycling";
 import CreateClimbing from "./pages/CreateClimbing";
 import NotFound from "./pages/NotFound";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
+import { ChatProvider } from "./contexts/ChatContext";
 
 const queryClient = new QueryClient();
 
