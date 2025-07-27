@@ -1,5 +1,6 @@
-import { Search, SlidersHorizontal, Calendar, MapPin } from "lucide-react";
+import { Search, SlidersHorizontal, Calendar, MapPin, Bike, Mountain } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useActivities } from "../contexts/ActivitiesContext";
 
 const activitiesData = [
   {
@@ -48,6 +49,8 @@ const activitiesData = [
 ];
 
 export default function Activities() {
+  const { activities } = useActivities();
+
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
       {/* Status Bar */}
@@ -103,6 +106,12 @@ export default function Activities() {
 
         {/* Activities List */}
         <div className="space-y-2">
+          {/* User Created Activities */}
+          {activities.map((activity) => (
+            <CreatedActivityItem key={activity.id} activity={activity} />
+          ))}
+
+          {/* Default Activities */}
           {activitiesData.map((activity) => (
             <ActivityItem key={activity.id} activity={activity} />
           ))}
