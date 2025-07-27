@@ -89,28 +89,28 @@ export default function ActivityDetails() {
 
         {/* Requirements Section */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <AlertTriangle className="w-6 h-6 text-yellow-500" />
-            <h3 className="text-2xl font-bold text-black font-cabin">Requirements</h3>
+          <div className="flex items-center gap-3 mb-3">
+            <AlertTriangle className="w-5 h-5 text-yellow-500" />
+            <h3 className="text-xl font-bold text-black font-cabin">Requirements</h3>
           </div>
-          <div className="ml-9">
-            <p className="text-base text-black font-cabin mb-4">
+          <div className="ml-8">
+            <p className="text-sm text-black font-cabin mb-6">
               Participants must be{" "}
               <span className="underline cursor-pointer">competent top-rope climbers</span>
               {" "}
               <Info className="inline w-4 h-4 text-gray-400" />.
             </p>
-            
+
             {/* Checkbox */}
-            <div className="flex items-start gap-3 mb-6">
+            <div className="flex items-start gap-3 mb-8">
               <input
                 type="checkbox"
                 id="requirements-agreement"
                 checked={agreedToRequirements}
                 onChange={(e) => setAgreedToRequirements(e.target.checked)}
-                className="w-5 h-5 mt-0.5 border-2 border-gray-300 rounded"
+                className="w-4 h-4 mt-0.5 border-2 border-gray-300 rounded"
               />
-              <label htmlFor="requirements-agreement" className="text-base text-black font-cabin cursor-pointer">
+              <label htmlFor="requirements-agreement" className="text-sm text-black font-cabin cursor-pointer">
                 I agree I adhere to the requirements{" "}
                 <Info className="inline w-4 h-4 text-gray-400" />
               </label>
