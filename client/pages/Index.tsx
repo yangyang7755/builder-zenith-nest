@@ -169,93 +169,14 @@ export default function Index() {
         ) : !isSearching && filters.activityType.length === 1 && filters.activityType.includes("Climbing") ? (
           <ClimbingExploreSection />
         ) : (
-          /* Regular Activities Section */
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-black font-poppins">
-                {isSearching
-                  ? `Search Results (${filteredActivities.length})`
-                  : "Recent activities nearby"}
-              </h2>
-              {!isSearching && (
-                <Link
-                  to="/activities"
-                  className="text-sm text-black underline font-poppins"
-                >
-                  See all
-                </Link>
-              )}
-            </div>
-
-            {/* No Activities Message */}
-            {!isSearching && filteredActivities.length === 0 && (
-              <div className="text-center py-4 text-gray-500 font-cabin">
-                Change filters to see more activities...
-              </div>
-            )}
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {/* Default activities */}
-              {!isSearching && (
-                <>
-                  <ActivityCard
-                    title="Westway women's+ climb..."
-                    date="📅 Wednesday"
-                    location="📍London, UK"
-                    imageSrc="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
-                    isFirstCard={true}
-                  />
-                  <ActivityCard
-                    title="Sport climbing trip"
-                    date="📅 17.06 - 20.06"
-                    location="📍Malham cove, UK"
-                    imageSrc="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
-                  />
-                </>
-              )}
-
-              {/* Default cycling activity if cycling is in mixed filters */}
-              {!isSearching && filters.activityType.includes("Cycling") && filters.activityType.length > 1 && (
-                <ActivityCard
-                  title="Oxford Road Cycling Club Ride"
-                  date="📅 Saturday"
-                  location="📍Oxford, UK"
-                  imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-                  organizer="Oxford University Cycling Club"
-                  type="cycling"
-                  distance="45km"
-                  pace="25 kph"
-                  elevation="320m"
-                />
-              )}
-
-              {/* User created activities */}
-              {(isSearching ? filteredActivities : activities.slice(0, 3)).map(
-                (activity) => (
-                  <ActivityCard
-                    key={activity.id}
-                    title={activity.title}
-                    date={`📅 ${activity.date}`}
-                    location={`📍${activity.location}`}
-                    imageSrc={
-                      activity.imageSrc ||
-                      "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
-                    }
-                    organizer={activity.organizer}
-                    type={activity.type}
-                    distance={activity.distance}
-                    pace={activity.pace}
-                    elevation={activity.elevation}
-                  />
-                ),
-              )}
-
-              {isSearching && filteredActivities.length === 0 && (
-                <div className="text-center py-8 text-gray-500 w-full">
-                  No activities found matching "{searchQuery}"
-                </div>
-              )}
-            </div>
-          </div>
+          /* Mixed Activities Section */
+          <MixedActivitiesSection
+            filters={filters}
+            filteredActivities={filteredActivities}
+            isSearching={isSearching}
+            searchQuery={searchQuery}
+            activities={activities}
+          />
         )}
 
         {/* Partner Requests Section */}
