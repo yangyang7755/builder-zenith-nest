@@ -7,8 +7,10 @@ import {
   Mountain,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
+import FilterSystem, { FilterOptions } from "../components/FilterSystem";
+import MapView from "../components/MapView";
 
 const activitiesData = [
   {
@@ -58,16 +60,67 @@ const activitiesData = [
 
 export default function Activities() {
   const { activities } = useActivities();
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [showMapView, setShowMapView] = useState(false);
+  const [filteredActivities, setFilteredActivities] = useState(activities);
+  const [filters, setFilters] = useState<FilterOptions>({
+    activityType: ["Cycling", "Climbing"],
+    numberOfPeople: { min: 1, max: 50 },
+    location: "",
+    date: { start: "", end: "" },
+    gender: [],
+    age: { min: 16, max: 80 },
+    gear: [],
+    pace: { min: 0, max: 100 },
+    distance: { min: 0, max: 200 },
+    elevation: { min: 0, max: 5000 },
+  });
 
-  const filteredActivities = useMemo(() => {
-    if (activeFilter === "Cycling") {
-      return activities.filter(activity => activity.type === "cycling");
-    } else if (activeFilter === "Climbing") {
-      return activities.filter(activity => activity.type === "climbing");
+  const applyFilters = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
+  };
+
+  const handleActivitySelect = (activity: any) => {
+    setShowMapView(false);
+    // Navigate to activity details if needed
+  };
+
+  useEffect(() => {
+    let filtered = activities;
+
+    // Apply comprehensive filters
+    if (filters.activityType.length > 0) {
+      filtered = filtered.filter(activity =>
+        filters.activityType.some(type =>
+          activity.type === type.toLowerCase() ||
+          (type === "Cycling" && activity.type === "cycling") ||
+          (type === "Climbing" && activity.type === "climbing")
+        )
+      );
     }
-    return activities;
-  }, [activities, activeFilter]);
+
+    // Filter by location
+    if (filters.location) {
+      filtered = filtered.filter(activity =>
+        activity.location.toLowerCase().includes(filters.location.toLowerCase()) ||
+        activity.meetupLocation.toLowerCase().includes(filters.location.toLowerCase())
+      );
+    }
+
+    // Filter by number of people
+    filtered = filtered.filter(activity => {
+      const maxPeople = parseInt(activity.maxParticipants) || 50;
+      return maxPeople >= filters.numberOfPeople.min && maxPeople <= filters.numberOfPeople.max;
+    });
+
+    // Filter by gender
+    if (filters.gender.length > 0) {
+      filtered = filtered.filter(activity =>
+        filters.gender.includes(activity.gender || "All genders")
+      );
+    }
+
+    setFilteredActivities(filtered);
+  }, [activities, filters]);
 
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
@@ -105,29 +158,12 @@ export default function Activities() {
           </h1>
         </div>
 
-        {/* Search and Filter Row */}
-        <div className="flex gap-3 mb-6">
-          {/* Search Bar */}
-          <div className="flex-1 relative">
-            <div className="bg-white border-2 border-black rounded-full h-12 flex items-center px-4">
-              <Search className="w-5 h-5 text-black mr-3" />
-              <span className="text-black text-base font-cabin">Search</span>
-            </div>
-          </div>
-
-          {/* Filter Button */}
-          <button className="bg-gray-200 rounded-full px-4 h-12 flex items-center gap-2">
-            <SlidersHorizontal className="w-5 h-5 text-black" />
-            <span className="text-black text-base font-cabin">Filter</span>
-          </button>
-        </div>
-
-        {/* Filter Chips */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
-          <FilterChip label="All" active={activeFilter === "All"} onClick={() => setActiveFilter("All")} />
-          <FilterChip label="Cycling" active={activeFilter === "Cycling"} onClick={() => setActiveFilter("Cycling")} />
-          <FilterChip label="Climbing" active={activeFilter === "Climbing"} onClick={() => setActiveFilter("Climbing")} />
-        </div>
+        {/* Filter System */}
+        <FilterSystem
+          onFiltersChange={applyFilters}
+          onShowMap={() => setShowMapView(true)}
+          currentFilters={filters}
+        />
 
         {/* Activities List */}
         <div className="space-y-2">
@@ -136,8 +172,8 @@ export default function Activities() {
             <CreatedActivityItem key={activity.id} activity={activity} />
           ))}
 
-          {/* Default Activities - only show if All filter is active */}
-          {activeFilter === "All" && activitiesData.map((activity) => (
+          {/* Default Activities */}
+          {activitiesData.map((activity) => (
             <ActivityItem key={activity.id} activity={activity} />
           ))}
         </div>
