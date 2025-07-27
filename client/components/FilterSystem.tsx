@@ -135,6 +135,15 @@ export default function FilterSystem({ onFiltersChange, onShowMap, currentFilter
             </div>
           )}
 
+          {filters.clubOnly && (
+            <div className="flex items-center gap-1 bg-explore-green text-white px-3 py-1 rounded-full text-sm font-cabin whitespace-nowrap">
+              🏛️ Club only
+              <button onClick={() => updateFilter('clubOnly', false)}>
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          )}
+
           <button
             onClick={clearAllFilters}
             className="text-explore-green text-sm font-cabin underline whitespace-nowrap"
