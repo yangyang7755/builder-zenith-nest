@@ -122,6 +122,13 @@ export default function Activities() {
           </button>
         </div>
 
+        {/* Filter Chips */}
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+          <FilterChip label="All" active={activeFilter === "All"} onClick={() => setActiveFilter("All")} />
+          <FilterChip label="Cycling" active={activeFilter === "Cycling"} onClick={() => setActiveFilter("Cycling")} />
+          <FilterChip label="Climbing" active={activeFilter === "Climbing"} onClick={() => setActiveFilter("Climbing")} />
+        </div>
+
         {/* Activities List */}
         <div className="space-y-2">
           {/* User Created Activities */}
