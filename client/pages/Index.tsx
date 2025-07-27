@@ -746,8 +746,17 @@ function ClimbingExploreSection() {
 }
 
 function ClimbingActivityCard({ activity }: { activity: any }) {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate("/activity/westway-womens-climb");
+  };
+
   return (
-    <div className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white">
+    <div
+      className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      onClick={handleCardClick}
+    >
       {/* Header */}
       <div className="flex justify-between items-start mb-3">
         <h3 className="font-bold text-explore-green font-cabin text-base line-clamp-2 leading-tight flex-1 pr-2">
