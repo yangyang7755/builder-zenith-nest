@@ -494,6 +494,7 @@ function MixedActivitiesSection({
                   pace={activity.pace}
                   elevation={activity.elevation}
                   difficulty={activity.difficulty}
+                  activityId={index === 0 ? "sunday-morning-ride" : "chaingang-training"}
                 />
               ))}
           </div>
