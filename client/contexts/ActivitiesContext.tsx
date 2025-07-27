@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from "react";
 
 export interface Activity {
   id: string;
-  type: 'cycling' | 'climbing';
+  type: "cycling" | "climbing";
   title: string;
   date: string;
   time: string;
@@ -10,11 +10,11 @@ export interface Activity {
   meetupLocation: string;
   organizer: string;
   distance?: string;
-  distanceUnit?: 'km' | 'miles';
+  distanceUnit?: "km" | "miles";
   elevation?: string;
-  elevationUnit?: 'm' | 'feet';
+  elevationUnit?: "m" | "feet";
   pace?: string;
-  paceUnit?: 'kph' | 'mph';
+  paceUnit?: "kph" | "mph";
   maxParticipants: string;
   specialComments: string;
   imageSrc?: string;
@@ -33,39 +33,44 @@ export interface Activity {
 
 interface ActivitiesContextType {
   activities: Activity[];
-  addActivity: (activity: Omit<Activity, 'id' | 'createdAt'>) => void;
+  addActivity: (activity: Omit<Activity, "id" | "createdAt">) => void;
   searchActivities: (query: string) => Activity[];
 }
 
-const ActivitiesContext = createContext<ActivitiesContextType | undefined>(undefined);
+const ActivitiesContext = createContext<ActivitiesContextType | undefined>(
+  undefined,
+);
 
 export function ActivitiesProvider({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Activity[]>([]);
 
-  const addActivity = (activityData: Omit<Activity, 'id' | 'createdAt'>) => {
+  const addActivity = (activityData: Omit<Activity, "id" | "createdAt">) => {
     const newActivity: Activity = {
       ...activityData,
       id: Date.now().toString(),
       createdAt: new Date(),
     };
-    setActivities(prev => [newActivity, ...prev]);
+    setActivities((prev) => [newActivity, ...prev]);
   };
 
   const searchActivities = (query: string): Activity[] => {
     if (!query.trim()) return activities;
-    
+
     const lowercaseQuery = query.toLowerCase();
-    return activities.filter(activity => 
-      activity.title.toLowerCase().includes(lowercaseQuery) ||
-      activity.location.toLowerCase().includes(lowercaseQuery) ||
-      activity.meetupLocation.toLowerCase().includes(lowercaseQuery) ||
-      activity.organizer.toLowerCase().includes(lowercaseQuery) ||
-      activity.specialComments.toLowerCase().includes(lowercaseQuery)
+    return activities.filter(
+      (activity) =>
+        activity.title.toLowerCase().includes(lowercaseQuery) ||
+        activity.location.toLowerCase().includes(lowercaseQuery) ||
+        activity.meetupLocation.toLowerCase().includes(lowercaseQuery) ||
+        activity.organizer.toLowerCase().includes(lowercaseQuery) ||
+        activity.specialComments.toLowerCase().includes(lowercaseQuery),
     );
   };
 
   return (
-    <ActivitiesContext.Provider value={{ activities, addActivity, searchActivities }}>
+    <ActivitiesContext.Provider
+      value={{ activities, addActivity, searchActivities }}
+    >
       {children}
     </ActivitiesContext.Provider>
   );
@@ -74,7 +79,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 export function useActivities() {
   const context = useContext(ActivitiesContext);
   if (context === undefined) {
-    throw new Error('useActivities must be used within an ActivitiesProvider');
+    throw new Error("useActivities must be used within an ActivitiesProvider");
   }
   return context;
 }

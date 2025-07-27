@@ -1,4 +1,11 @@
-import { Search, SlidersHorizontal, Calendar, MapPin, Bike, Mountain } from "lucide-react";
+import {
+  Search,
+  SlidersHorizontal,
+  Calendar,
+  MapPin,
+  Bike,
+  Mountain,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useActivities } from "../contexts/ActivitiesContext";
 
@@ -131,7 +138,7 @@ function CreatedActivityItem({ activity }: { activity: any }) {
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-explore-green rounded-full flex items-center justify-center flex-shrink-0">
-            {activity.type === 'cycling' ? (
+            {activity.type === "cycling" ? (
               <Bike className="w-6 h-6 text-white" />
             ) : (
               <Mountain className="w-6 h-6 text-white" />
@@ -168,11 +175,13 @@ function CreatedActivityItem({ activity }: { activity: any }) {
       {/* Location */}
       <div className="flex items-center gap-2 mb-3">
         <MapPin className="w-4 h-4 text-explore-green" />
-        <span className="text-sm text-black font-cabin">{activity.location}</span>
+        <span className="text-sm text-black font-cabin">
+          {activity.location}
+        </span>
       </div>
 
       {/* Activity specific metrics */}
-      {activity.type === 'cycling' && (
+      {activity.type === "cycling" && (
         <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
           {activity.distance && (
             <div className="flex items-center gap-2">
@@ -217,14 +226,16 @@ function CreatedActivityItem({ activity }: { activity: any }) {
         </div>
       )}
 
-      {activity.type === 'climbing' && (
+      {activity.type === "climbing" && (
         <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
           {activity.climbingLevel && (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 flex items-center justify-center">
                 <span className="text-explore-green text-xs">📊</span>
               </div>
-              <span className="text-black font-cabin">Level: {activity.climbingLevel}</span>
+              <span className="text-black font-cabin">
+                Level: {activity.climbingLevel}
+              </span>
             </div>
           )}
           {activity.maxParticipants && (
@@ -242,7 +253,9 @@ function CreatedActivityItem({ activity }: { activity: any }) {
               <div className="w-4 h-4 flex items-center justify-center">
                 <span className="text-explore-green text-xs">🗣️</span>
               </div>
-              <span className="text-black font-cabin">{activity.languages}</span>
+              <span className="text-black font-cabin">
+                {activity.languages}
+              </span>
             </div>
           )}
           {activity.gearRequired && (
@@ -250,7 +263,9 @@ function CreatedActivityItem({ activity }: { activity: any }) {
               <div className="w-4 h-4 flex items-center justify-center">
                 <span className="text-explore-green text-xs">⚙️</span>
               </div>
-              <span className="text-black font-cabin">{activity.gearRequired}</span>
+              <span className="text-black font-cabin">
+                {activity.gearRequired}
+              </span>
             </div>
           )}
         </div>
@@ -260,7 +275,10 @@ function CreatedActivityItem({ activity }: { activity: any }) {
       {activity.specialComments && (
         <div className="mt-3 p-3 bg-white rounded-lg">
           <p className="text-sm text-black font-cabin">
-            <span className="font-bold text-explore-green">Special comments:</span><br />
+            <span className="font-bold text-explore-green">
+              Special comments:
+            </span>
+            <br />
             {activity.specialComments}
           </p>
         </div>

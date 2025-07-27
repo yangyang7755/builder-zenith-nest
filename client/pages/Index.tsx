@@ -20,7 +20,9 @@ export default function Index() {
   }, [searchQuery, activities, searchActivities]);
 
   const handleSearchClick = () => {
-    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const searchInput = document.getElementById(
+      "search-input",
+    ) as HTMLInputElement;
     if (searchInput) {
       searchInput.focus();
     }
@@ -108,7 +110,9 @@ export default function Index() {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-black font-poppins">
-              {isSearching ? `Search Results (${filteredActivities.length})` : "Recent activities nearby"}
+              {isSearching
+                ? `Search Results (${filteredActivities.length})`
+                : "Recent activities nearby"}
             </h2>
             {!isSearching && (
               <Link
@@ -140,16 +144,21 @@ export default function Index() {
             )}
 
             {/* User created activities */}
-            {(isSearching ? filteredActivities : activities.slice(0, 3)).map((activity) => (
-              <ActivityCard
-                key={activity.id}
-                title={activity.title}
-                date={`📅 ${activity.date}`}
-                location={`📍${activity.location}`}
-                imageSrc={activity.imageSrc || "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"}
-                organizer={activity.organizer}
-              />
-            ))}
+            {(isSearching ? filteredActivities : activities.slice(0, 3)).map(
+              (activity) => (
+                <ActivityCard
+                  key={activity.id}
+                  title={activity.title}
+                  date={`📅 ${activity.date}`}
+                  location={`📍${activity.location}`}
+                  imageSrc={
+                    activity.imageSrc ||
+                    "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+                  }
+                  organizer={activity.organizer}
+                />
+              ),
+            )}
 
             {isSearching && filteredActivities.length === 0 && (
               <div className="text-center py-8 text-gray-500 w-full">

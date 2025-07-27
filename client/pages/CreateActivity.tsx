@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
-import { Bike, Users, Mountain, TreePine, Snowflake, Waves } from "lucide-react";
+import {
+  Bike,
+  Users,
+  Mountain,
+  TreePine,
+  Snowflake,
+  Waves,
+} from "lucide-react";
 
 export default function CreateActivity() {
   const activities = [
@@ -12,7 +19,7 @@ export default function CreateActivity() {
     },
     {
       id: "running",
-      name: "Running", 
+      name: "Running",
       icon: Users,
       available: false,
       route: "#",
@@ -87,7 +94,7 @@ export default function CreateActivity() {
         <div className="grid grid-cols-3 gap-8 mt-16">
           {activities.map((activity) => {
             const IconComponent = activity.icon;
-            
+
             if (activity.available) {
               return (
                 <Link

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from "react";
 
 export interface JoinRequest {
   id: string;
@@ -7,12 +7,12 @@ export interface JoinRequest {
   requesterName: string;
   message: string;
   timestamp: Date;
-  status: 'pending' | 'accepted' | 'declined';
+  status: "pending" | "accepted" | "declined";
 }
 
 export interface ChatMessage {
   id: string;
-  type: 'join_request' | 'general';
+  type: "join_request" | "general";
   sender: string;
   content: string;
   timestamp: Date;
@@ -23,8 +23,10 @@ export interface ChatMessage {
 interface ChatContextType {
   joinRequests: JoinRequest[];
   chatMessages: ChatMessage[];
-  addJoinRequest: (request: Omit<JoinRequest, 'id' | 'timestamp' | 'status'>) => void;
-  addChatMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
+  addJoinRequest: (
+    request: Omit<JoinRequest, "id" | "timestamp" | "status">,
+  ) => void;
+  addChatMessage: (message: Omit<ChatMessage, "id" | "timestamp">) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -34,75 +36,83 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     // Default messages for demonstration
     {
-      id: '1',
-      type: 'general',
-      sender: 'Coach Holly Peristiani',
-      content: 'Sent 2h ago',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
+      id: "1",
+      type: "general",
+      sender: "Coach Holly Peristiani",
+      content: "Sent 2h ago",
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
     },
     {
-      id: '2',
-      type: 'general',
-      sender: 'Ben Stuart',
-      content: 'Liked a message . 2h',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
+      id: "2",
+      type: "general",
+      sender: "Ben Stuart",
+      content: "Liked a message . 2h",
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
     },
     {
-      id: '3',
-      type: 'general',
-      sender: 'Dan Smith',
-      content: 'Reacted 😢 to your message . 3h',
-      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000)
+      id: "3",
+      type: "general",
+      sender: "Dan Smith",
+      content: "Reacted 😢 to your message . 3h",
+      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
     },
     {
-      id: '4',
-      type: 'general',
-      sender: 'UCLMC',
-      content: 'lewis_tay: Let\'s do it',
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000)
+      id: "4",
+      type: "general",
+      sender: "UCLMC",
+      content: "lewis_tay: Let's do it",
+      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
     },
     {
-      id: '5',
-      type: 'general',
-      sender: 'Maggie Chang',
-      content: 'Can you send me the address ... 12w',
-      timestamp: new Date(Date.now() - 12 * 7 * 24 * 60 * 60 * 1000)
-    }
+      id: "5",
+      type: "general",
+      sender: "Maggie Chang",
+      content: "Can you send me the address ... 12w",
+      timestamp: new Date(Date.now() - 12 * 7 * 24 * 60 * 60 * 1000),
+    },
   ]);
 
-  const addJoinRequest = (requestData: Omit<JoinRequest, 'id' | 'timestamp' | 'status'>) => {
+  const addJoinRequest = (
+    requestData: Omit<JoinRequest, "id" | "timestamp" | "status">,
+  ) => {
     const newRequest: JoinRequest = {
       ...requestData,
       id: Date.now().toString(),
       timestamp: new Date(),
-      status: 'pending'
+      status: "pending",
     };
-    setJoinRequests(prev => [newRequest, ...prev]);
+    setJoinRequests((prev) => [newRequest, ...prev]);
 
     // Also add to chat messages
     const chatMessage: ChatMessage = {
-      id: Date.now().toString() + '_chat',
-      type: 'join_request',
+      id: Date.now().toString() + "_chat",
+      type: "join_request",
       sender: requestData.requesterName,
-      content: requestData.message || `Requested to join "${requestData.activityTitle}"`,
+      content:
+        requestData.message ||
+        `Requested to join "${requestData.activityTitle}"`,
       timestamp: new Date(),
       activityTitle: requestData.activityTitle,
-      activityOrganizer: requestData.activityOrganizer
+      activityOrganizer: requestData.activityOrganizer,
     };
-    setChatMessages(prev => [chatMessage, ...prev]);
+    setChatMessages((prev) => [chatMessage, ...prev]);
   };
 
-  const addChatMessage = (messageData: Omit<ChatMessage, 'id' | 'timestamp'>) => {
+  const addChatMessage = (
+    messageData: Omit<ChatMessage, "id" | "timestamp">,
+  ) => {
     const newMessage: ChatMessage = {
       ...messageData,
       id: Date.now().toString(),
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-    setChatMessages(prev => [newMessage, ...prev]);
+    setChatMessages((prev) => [newMessage, ...prev]);
   };
 
   return (
-    <ChatContext.Provider value={{ joinRequests, chatMessages, addJoinRequest, addChatMessage }}>
+    <ChatContext.Provider
+      value={{ joinRequests, chatMessages, addJoinRequest, addChatMessage }}
+    >
       {children}
     </ChatContext.Provider>
   );
@@ -111,7 +121,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 export function useChat() {
   const context = useContext(ChatContext);
   if (context === undefined) {
-    throw new Error('useChat must be used within a ChatProvider');
+    throw new Error("useChat must be used within a ChatProvider");
   }
   return context;
 }

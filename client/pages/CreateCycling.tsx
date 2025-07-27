@@ -29,16 +29,21 @@ export default function CreateCycling() {
   const { addActivity } = useActivities();
 
   const handleSubmit = () => {
-    if (!formData.maxRiders || !formData.meetupLocation || !formData.date || !formData.time) {
+    if (
+      !formData.maxRiders ||
+      !formData.meetupLocation ||
+      !formData.date ||
+      !formData.time
+    ) {
       alert("Please fill in all required fields");
       return;
     }
 
     // Create activity with proper title
-    const activityTitle = `${selectedType} ride ${formData.distance ? `- ${formData.distance}${formData.distanceUnit}` : ''}`;
+    const activityTitle = `${selectedType} ride ${formData.distance ? `- ${formData.distance}${formData.distanceUnit}` : ""}`;
 
     addActivity({
-      type: 'cycling',
+      type: "cycling",
       title: activityTitle,
       date: formData.date,
       time: formData.time,
@@ -60,7 +65,8 @@ export default function CreateCycling() {
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
-      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+      imageSrc:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     });
 
     alert("Activity created successfully!");
@@ -79,8 +85,17 @@ export default function CreateCycling() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none"/>
-            <rect x="23" y="6" width="2" height="4" rx="1" fill="black"/>
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
+            <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
       </div>
@@ -90,13 +105,17 @@ export default function CreateCycling() {
         <div className="px-6">
           {/* Title */}
           <div className="text-center py-4">
-            <h1 className="text-3xl font-bold text-explore-green font-cabin">New ride!</h1>
+            <h1 className="text-3xl font-bold text-explore-green font-cabin">
+              New ride!
+            </h1>
           </div>
 
           <div className="space-y-6">
             {/* Type */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">Type</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Type
+              </h3>
               <div className="flex gap-2 flex-wrap">
                 {["Road", "Gravel", "Track", "MTB"].map((type) => (
                   <button
@@ -116,11 +135,15 @@ export default function CreateCycling() {
 
             {/* Max number of riders */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">Max number of riders</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Max number of riders
+              </h3>
               <input
                 type="number"
                 value={formData.maxRiders}
-                onChange={(e) => setFormData({...formData, maxRiders: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, maxRiders: e.target.value })
+                }
                 className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                 placeholder="Enter max number"
               />
@@ -128,19 +151,28 @@ export default function CreateCycling() {
 
             {/* Distance */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">Distance</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Distance
+              </h3>
               <div className="flex gap-2">
                 <input
                   type="number"
                   value={formData.distance}
-                  onChange={(e) => setFormData({...formData, distance: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, distance: e.target.value })
+                  }
                   className="flex-1 border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                   placeholder="Enter distance"
                 />
                 <div className="relative">
                   <select
                     value={formData.distanceUnit}
-                    onChange={(e) => setFormData({...formData, distanceUnit: e.target.value as "km" | "miles"})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        distanceUnit: e.target.value as "km" | "miles",
+                      })
+                    }
                     className="appearance-none border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
                   >
                     <option value="km">km</option>
@@ -153,19 +185,28 @@ export default function CreateCycling() {
 
             {/* Elevation */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">Elevation</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Elevation
+              </h3>
               <div className="flex gap-2">
                 <input
                   type="number"
                   value={formData.elevation}
-                  onChange={(e) => setFormData({...formData, elevation: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, elevation: e.target.value })
+                  }
                   className="flex-1 border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                   placeholder="Enter elevation"
                 />
                 <div className="relative">
                   <select
                     value={formData.elevationUnit}
-                    onChange={(e) => setFormData({...formData, elevationUnit: e.target.value as "m" | "feet"})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        elevationUnit: e.target.value as "m" | "feet",
+                      })
+                    }
                     className="appearance-none border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
                   >
                     <option value="m">m</option>
@@ -178,11 +219,15 @@ export default function CreateCycling() {
 
             {/* Meetup location */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">Meetup location</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Meetup location
+              </h3>
               <input
                 type="text"
                 value={formData.meetupLocation}
-                onChange={(e) => setFormData({...formData, meetupLocation: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, meetupLocation: e.target.value })
+                }
                 className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                 placeholder="Enter meetup location"
               />
@@ -191,12 +236,16 @@ export default function CreateCycling() {
             {/* Date and Time */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <h3 className="text-xl font-medium text-black font-cabin mb-3">Date</h3>
+                <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                  Date
+                </h3>
                 <div className="relative">
                   <input
                     type="text"
                     value={formData.date}
-                    onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
                     className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin pr-10"
                     placeholder="dd/mm/yyyy"
                   />
@@ -204,11 +253,15 @@ export default function CreateCycling() {
                 </div>
               </div>
               <div>
-                <h3 className="text-xl font-medium text-black font-cabin mb-3">Time</h3>
+                <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                  Time
+                </h3>
                 <input
                   type="time"
                   value={formData.time}
-                  onChange={(e) => setFormData({...formData, time: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, time: e.target.value })
+                  }
                   className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                 />
               </div>
@@ -216,19 +269,28 @@ export default function CreateCycling() {
 
             {/* Pace */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">Pace</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Pace
+              </h3>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={formData.pace}
-                  onChange={(e) => setFormData({...formData, pace: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, pace: e.target.value })
+                  }
                   className="flex-1 border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                   placeholder="Enter pace"
                 />
                 <div className="relative">
                   <select
                     value={formData.paceUnit}
-                    onChange={(e) => setFormData({...formData, paceUnit: e.target.value as "kph" | "mph"})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        paceUnit: e.target.value as "kph" | "mph",
+                      })
+                    }
                     className="appearance-none border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
                   >
                     <option value="kph">kph</option>
@@ -241,11 +303,15 @@ export default function CreateCycling() {
 
             {/* Cafe stop */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">Cafe stop</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Cafe stop
+              </h3>
               <input
                 type="text"
                 value={formData.cafeStop}
-                onChange={(e) => setFormData({...formData, cafeStop: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, cafeStop: e.target.value })
+                }
                 className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                 placeholder="Enter cafe stop location"
               />
@@ -253,11 +319,15 @@ export default function CreateCycling() {
 
             {/* Route link */}
             <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">Route link</h3>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Route link
+              </h3>
               <input
                 type="url"
                 value={formData.routeLink}
-                onChange={(e) => setFormData({...formData, routeLink: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, routeLink: e.target.value })
+                }
                 className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                 placeholder="Enter route link"
               />
@@ -271,7 +341,9 @@ export default function CreateCycling() {
 
               {/* Gender */}
               <div className="mb-6">
-                <h3 className="text-lg font-medium text-black font-cabin mb-3">Gender</h3>
+                <h3 className="text-lg font-medium text-black font-cabin mb-3">
+                  Gender
+                </h3>
                 <button className="bg-explore-green text-white px-6 py-2 rounded-lg font-bold text-sm font-cabin">
                   Female only
                 </button>
@@ -279,19 +351,25 @@ export default function CreateCycling() {
 
               {/* Age range */}
               <div className="mb-6">
-                <h3 className="text-lg font-medium text-black font-cabin mb-3">Age range</h3>
+                <h3 className="text-lg font-medium text-black font-cabin mb-3">
+                  Age range
+                </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="number"
                     value={formData.ageMin}
-                    onChange={(e) => setFormData({...formData, ageMin: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, ageMin: e.target.value })
+                    }
                     className="border-2 border-gray-300 rounded-lg py-2 px-3 font-cabin"
                     placeholder="Min"
                   />
                   <input
                     type="number"
                     value={formData.ageMax}
-                    onChange={(e) => setFormData({...formData, ageMax: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, ageMax: e.target.value })
+                    }
                     className="border-2 border-gray-300 rounded-lg py-2 px-3 font-cabin"
                     placeholder="Max"
                   />
@@ -300,12 +378,16 @@ export default function CreateCycling() {
 
               {/* Activity visibility */}
               <div className="mb-6">
-                <h3 className="text-lg font-medium text-black font-cabin mb-3">Activity visibility</h3>
+                <h3 className="text-lg font-medium text-black font-cabin mb-3">
+                  Activity visibility
+                </h3>
                 <div className="flex gap-2">
                   {["All", "Followers", "Club members"].map((option) => (
                     <button
                       key={option}
-                      onClick={() => setFormData({...formData, visibility: option})}
+                      onClick={() =>
+                        setFormData({ ...formData, visibility: option })
+                      }
                       className={`px-4 py-2 rounded-lg border border-black font-bold text-sm font-cabin ${
                         formData.visibility === option
                           ? "bg-explore-green text-white"
@@ -320,10 +402,17 @@ export default function CreateCycling() {
 
               {/* Special comments */}
               <div className="mb-8">
-                <h3 className="text-lg font-medium text-black font-cabin mb-3">Special comments</h3>
+                <h3 className="text-lg font-medium text-black font-cabin mb-3">
+                  Special comments
+                </h3>
                 <textarea
                   value={formData.specialComments}
-                  onChange={(e) => setFormData({...formData, specialComments: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      specialComments: e.target.value,
+                    })
+                  }
                   className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin h-32 resize-none"
                   placeholder="Write down additional plans of the day here ..."
                 />

@@ -19,13 +19,21 @@ export default function Chat() {
 
   const getAvatarImage = (sender: string) => {
     const avatars = {
-      "Coach Holly Peristiani": "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=60&h=60&fit=crop&crop=face",
-      "Ben Stuart": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
-      "Dan Smith": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
-      "UCLMC": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=60&h=60&fit=crop",
-      "Maggie Chang": "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=60&h=60&fit=crop&crop=face",
+      "Coach Holly Peristiani":
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=60&h=60&fit=crop&crop=face",
+      "Ben Stuart":
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
+      "Dan Smith":
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
+      UCLMC:
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=60&h=60&fit=crop",
+      "Maggie Chang":
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=60&h=60&fit=crop&crop=face",
     };
-    return avatars[sender as keyof typeof avatars] || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face";
+    return (
+      avatars[sender as keyof typeof avatars] ||
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face"
+    );
   };
 
   return (
@@ -40,8 +48,17 @@ export default function Chat() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none"/>
-            <rect x="23" y="6" width="2" height="4" rx="1" fill="black"/>
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
+            <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
       </div>
@@ -67,7 +84,12 @@ export default function Chat() {
         {/* Chat Messages */}
         <div className="space-y-4">
           {chatMessages.map((message) => (
-            <ChatItem key={message.id} message={message} getTimeAgo={getTimeAgo} getAvatarImage={getAvatarImage} />
+            <ChatItem
+              key={message.id}
+              message={message}
+              getTimeAgo={getTimeAgo}
+              getAvatarImage={getAvatarImage}
+            />
           ))}
         </div>
       </div>
@@ -78,7 +100,13 @@ export default function Chat() {
   );
 }
 
-function FilterChip({ label, active = false }: { label: string; active?: boolean }) {
+function FilterChip({
+  label,
+  active = false,
+}: {
+  label: string;
+  active?: boolean;
+}) {
   return (
     <div
       className={`px-5 py-2 rounded-lg border border-black font-bold text-sm font-cabin whitespace-nowrap ${
@@ -92,17 +120,17 @@ function FilterChip({ label, active = false }: { label: string; active?: boolean
   );
 }
 
-function ChatItem({ 
-  message, 
-  getTimeAgo, 
-  getAvatarImage 
-}: { 
+function ChatItem({
+  message,
+  getTimeAgo,
+  getAvatarImage,
+}: {
   message: any;
   getTimeAgo: (timestamp: Date) => string;
   getAvatarImage: (sender: string) => string;
 }) {
   const hasNotification = message.sender === "UCLMC";
-  
+
   return (
     <div className="flex items-center gap-3 py-2 relative">
       {/* Avatar */}
@@ -116,17 +144,19 @@ function ChatItem({
       <div className="flex-1">
         <div className="flex items-start justify-between">
           <div>
-            <h3 className={`font-cabin text-lg ${message.type === 'join_request' ? 'font-bold text-explore-green' : 'font-normal text-black'}`}>
+            <h3
+              className={`font-cabin text-lg ${message.type === "join_request" ? "font-bold text-explore-green" : "font-normal text-black"}`}
+            >
               {message.sender}
             </h3>
             <p className="text-gray-500 text-lg font-cabin">
-              {message.type === 'join_request' && message.activityTitle
+              {message.type === "join_request" && message.activityTitle
                 ? `Requested to join "${message.activityTitle}": ${message.content}`
-                : message.content
-              } · {getTimeAgo(message.timestamp)}
+                : message.content}{" "}
+              · {getTimeAgo(message.timestamp)}
             </p>
           </div>
-          
+
           {/* Notification dot */}
           {hasNotification && (
             <div className="w-2.5 h-2.5 bg-blue-500 rounded-full ml-2 flex-shrink-0"></div>
