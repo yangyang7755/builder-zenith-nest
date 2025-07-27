@@ -405,6 +405,7 @@ function MixedActivitiesSection({
                   pace={activity.pace}
                   elevation={activity.elevation}
                   difficulty="Intermediate"
+                  activityId={activity.type === "cycling" ? "sunday-morning-ride" : "westway-womens-climb"}
                 />
               ))
             )
