@@ -2,13 +2,36 @@ import { Search, Menu, MapPin, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
+import FilterSystem, { FilterOptions } from "../components/FilterSystem";
+import MapView from "../components/MapView";
 
 export default function Index() {
   const { activities, searchActivities } = useActivities();
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredActivities, setFilteredActivities] = useState(activities);
   const [isSearching, setIsSearching] = useState(false);
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [showMapView, setShowMapView] = useState(false);
+  const [filters, setFilters] = useState<FilterOptions>({
+    activityType: ["Cycling", "Climbing"],
+    numberOfPeople: { min: 1, max: 50 },
+    location: "",
+    date: { start: "", end: "" },
+    gender: [],
+    age: { min: 16, max: 80 },
+    gear: [],
+    pace: { min: 0, max: 100 },
+    distance: { min: 0, max: 200 },
+    elevation: { min: 0, max: 5000 },
+  });
+
+  const applyFilters = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
+  };
+
+  const handleActivitySelect = (activity: any) => {
+    setShowMapView(false);
+    // Navigate to activity details if needed
+  };
 
   useEffect(() => {
     let filtered = activities;
@@ -20,15 +43,40 @@ export default function Index() {
       setIsSearching(false);
     }
 
-    // Apply activity type filter
-    if (activeFilter === "Cycling") {
-      filtered = filtered.filter(activity => activity.type === "cycling");
-    } else if (activeFilter === "Climbing") {
-      filtered = filtered.filter(activity => activity.type === "climbing");
+    // Apply comprehensive filters
+    if (filters.activityType.length > 0) {
+      filtered = filtered.filter(activity =>
+        filters.activityType.some(type =>
+          activity.type === type.toLowerCase() ||
+          (type === "Cycling" && activity.type === "cycling") ||
+          (type === "Climbing" && activity.type === "climbing")
+        )
+      );
+    }
+
+    // Filter by location
+    if (filters.location) {
+      filtered = filtered.filter(activity =>
+        activity.location.toLowerCase().includes(filters.location.toLowerCase()) ||
+        activity.meetupLocation.toLowerCase().includes(filters.location.toLowerCase())
+      );
+    }
+
+    // Filter by number of people
+    filtered = filtered.filter(activity => {
+      const maxPeople = parseInt(activity.maxParticipants) || 50;
+      return maxPeople >= filters.numberOfPeople.min && maxPeople <= filters.numberOfPeople.max;
+    });
+
+    // Filter by gender
+    if (filters.gender.length > 0) {
+      filtered = filtered.filter(activity =>
+        filters.gender.includes(activity.gender || "All genders")
+      );
     }
 
     setFilteredActivities(filtered);
-  }, [searchQuery, activities, searchActivities, activeFilter]);
+  }, [searchQuery, activities, searchActivities, filters]);
 
   const handleSearchClick = () => {
     const searchInput = document.getElementById(
@@ -89,34 +137,12 @@ export default function Index() {
           <ChevronDown className="w-6 h-6 text-black" />
         </div>
 
-        {/* Search Bar */}
-        <div className="relative mb-6">
-          <div className="bg-explore-green rounded-full h-12 flex items-center px-5">
-            <Search className="w-6 h-6 text-white" />
-            <input
-              id="search-input"
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search activities..."
-              className="bg-transparent text-white text-xl font-cabin ml-6 flex-1 placeholder-white/70 focus:outline-none"
-              onClick={handleSearchClick}
-            />
-            <div className="ml-auto">
-              <Menu className="w-6 h-6 text-white" />
-            </div>
-          </div>
-        </div>
-
-        {/* Filter Chips */}
-        <div className="flex gap-1 mb-8 overflow-x-auto pb-1">
-          <FilterChip label="All" active={activeFilter === "All"} onClick={() => setActiveFilter("All")} />
-          <FilterChip label="Cycling" active={activeFilter === "Cycling"} onClick={() => setActiveFilter("Cycling")} />
-          <FilterChip label="Climbing" active={activeFilter === "Climbing"} onClick={() => setActiveFilter("Climbing")} />
-          <FilterChip label="Time" active={activeFilter === "Time"} onClick={() => setActiveFilter("Time")} />
-          <FilterChip label="Location" active={activeFilter === "Location"} onClick={() => setActiveFilter("Location")} />
-          <FilterChip label="Clubs" active={activeFilter === "Clubs"} onClick={() => setActiveFilter("Clubs")} />
-        </div>
+        {/* Filter System */}
+        <FilterSystem
+          onFiltersChange={applyFilters}
+          onShowMap={() => setShowMapView(true)}
+          currentFilters={filters}
+        />
 
         {/* Activities Section */}
         <div className="mb-8">
