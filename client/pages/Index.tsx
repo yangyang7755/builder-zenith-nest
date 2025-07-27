@@ -405,7 +405,11 @@ function MixedActivitiesSection({
                   pace={activity.pace}
                   elevation={activity.elevation}
                   difficulty="Intermediate"
-                  activityId={activity.type === "cycling" ? "sunday-morning-ride" : "westway-womens-climb"}
+                  activityId={
+                    activity.type === "cycling"
+                      ? "sunday-morning-ride"
+                      : "westway-womens-climb"
+                  }
                 />
               ))
             )
@@ -434,7 +438,13 @@ function MixedActivitiesSection({
                     elevation={activity.elevation}
                     difficulty={activity.difficulty}
                     isFirstCard={activity.isFirstCard}
-                    activityId={activity.type === "climbing" ? "westway-womens-climb" : activity.type === "cycling" ? "sunday-morning-ride" : "westway-womens-climb"}
+                    activityId={
+                      activity.type === "climbing"
+                        ? "westway-womens-climb"
+                        : activity.type === "cycling"
+                          ? "sunday-morning-ride"
+                          : "westway-womens-climb"
+                    }
                   />
                 ))}
 
@@ -455,7 +465,11 @@ function MixedActivitiesSection({
                   pace={activity.pace}
                   elevation={activity.elevation}
                   difficulty="Intermediate"
-                  activityId={activity.type === "cycling" ? "sunday-morning-ride" : "westway-womens-climb"}
+                  activityId={
+                    activity.type === "cycling"
+                      ? "sunday-morning-ride"
+                      : "westway-womens-climb"
+                  }
                 />
               ))}
             </>
@@ -494,7 +508,9 @@ function MixedActivitiesSection({
                   pace={activity.pace}
                   elevation={activity.elevation}
                   difficulty={activity.difficulty}
-                  activityId={index === 0 ? "sunday-morning-ride" : "chaingang-training"}
+                  activityId={
+                    index === 0 ? "sunday-morning-ride" : "chaingang-training"
+                  }
                 />
               ))}
           </div>
@@ -530,7 +546,9 @@ function MixedActivitiesSection({
                   type={activity.type}
                   difficulty={activity.difficulty}
                   isFirstCard={activity.isFirstCard}
-                  activityId={index === 0 ? "westway-womens-climb" : "peak-district-climb"}
+                  activityId={
+                    index === 0 ? "westway-womens-climb" : "peak-district-climb"
+                  }
                 />
               ))}
           </div>
