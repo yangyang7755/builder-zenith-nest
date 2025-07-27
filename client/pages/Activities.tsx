@@ -60,10 +60,16 @@ const activitiesData = [
 
 export default function Activities() {
   const { activities } = useActivities();
+  const location = useLocation();
   const [showMapView, setShowMapView] = useState(false);
   const [filteredActivities, setFilteredActivities] = useState(activities);
+
+  // Check URL parameters for specific activity filter
+  const urlParams = new URLSearchParams(location.search);
+  const filterParam = urlParams.get('filter');
+
   const [filters, setFilters] = useState<FilterOptions>({
-    activityType: ["Cycling", "Climbing"],
+    activityType: filterParam ? [filterParam.charAt(0).toUpperCase() + filterParam.slice(1)] : ["Cycling", "Climbing"],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     date: { start: "", end: "" },
