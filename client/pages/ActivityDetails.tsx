@@ -122,7 +122,7 @@ export default function ActivityDetails() {
         <button
           onClick={handleJoin}
           disabled={!agreedToRequirements}
-          className={`w-full py-4 rounded-lg text-xl font-cabin font-medium transition-colors ${
+          className={`w-full py-3 rounded-lg text-lg font-cabin font-medium transition-colors ${
             agreedToRequirements
               ? 'bg-explore-green text-white hover:bg-explore-green-light'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
