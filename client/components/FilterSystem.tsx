@@ -375,6 +375,22 @@ export default function FilterSystem({ onFiltersChange, onShowMap, currentFilter
                   </div>
                 </div>
               </div>
+
+              {/* Club Only */}
+              <div>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={filters.clubOnly}
+                    onChange={(e) => updateFilter('clubOnly', e.target.checked)}
+                    className="w-4 h-4"
+                  />
+                  <span className="font-bold text-black font-cabin">Club activities only</span>
+                </label>
+                <p className="text-xs text-gray-500 font-cabin mt-1">
+                  Show only activities from clubs you're a member of
+                </p>
+              </div>
             </div>
             
             <div className="p-4 border-t bg-gray-50 sticky bottom-0">
