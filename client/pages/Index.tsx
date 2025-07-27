@@ -358,6 +358,235 @@ export default function Index() {
   );
 }
 
+function CyclingExploreSection() {
+  const groupRides = [
+    {
+      title: "Sunday Morning Social Ride",
+      date: "📅 Sunday, 8:00 AM",
+      location: "📍Richmond Park, London",
+      organizer: "Richmond Cycling Club",
+      distance: "25km",
+      pace: "20 kph",
+      elevation: "150m",
+      difficulty: "Beginner",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      title: "Intermediate Chaingang",
+      date: "📅 Tuesday, 6:30 PM",
+      location: "📍Box Hill, Surrey",
+      organizer: "Surrey Road Cycling",
+      distance: "40km",
+      pace: "32 kph",
+      elevation: "420m",
+      difficulty: "Intermediate",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    }
+  ];
+
+  const sportives = [
+    {
+      title: "London to Brighton Challenge",
+      date: "📅 Saturday, 7:00 AM",
+      location: "📍Clapham Common, London",
+      organizer: "British Heart Foundation",
+      distance: "54 miles",
+      pace: "Self-paced",
+      elevation: "900m",
+      difficulty: "Challenge",
+      fee: "£45",
+      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      title: "Cotswolds Century",
+      date: "📅 Sunday, 8:00 AM",
+      location: "📍Chipping Campden",
+      organizer: "Sportive Series",
+      distance: "100 miles",
+      pace: "Self-paced",
+      elevation: "1850m",
+      difficulty: "Epic",
+      fee: "£38",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    }
+  ];
+
+  const bikepacking = [
+    {
+      title: "South Downs Way Bikepacking",
+      date: "📅 Fri-Sun, July 15-17",
+      location: "📍Winchester to Eastbourne",
+      organizer: "Adventure Cycling UK",
+      distance: "160km over 3 days",
+      pace: "Touring pace",
+      elevation: "2100m total",
+      difficulty: "Multi-day",
+      gear: "Camping required",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    }
+  ];
+
+  const training = [
+    {
+      title: "Hill Climbing Intervals",
+      date: "📅 Thursday, 6:00 PM",
+      location: "📍Leith Hill, Surrey",
+      organizer: "Watts Cycling Club",
+      distance: "35km",
+      pace: "Interval training",
+      elevation: "650m",
+      difficulty: "Advanced",
+      focus: "Power & climbing",
+      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    }
+  ];
+
+  return (
+    <div className="space-y-8">
+      {/* Group Rides Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-black font-poppins">Group Rides</h2>
+          <span className="text-sm text-gray-500 font-cabin">Social & Club rides</span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {groupRides.map((ride, index) => (
+            <CyclingActivityCard key={index} activity={ride} />
+          ))}
+        </div>
+      </div>
+
+      {/* Sportives Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-black font-poppins">Sportives & Events</h2>
+          <span className="text-sm text-gray-500 font-cabin">Organized events</span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {sportives.map((event, index) => (
+            <CyclingActivityCard key={index} activity={event} />
+          ))}
+        </div>
+      </div>
+
+      {/* Bikepacking Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-black font-poppins">Bikepacking Adventures</h2>
+          <span className="text-sm text-gray-500 font-cabin">Multi-day tours</span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {bikepacking.map((adventure, index) => (
+            <CyclingActivityCard key={index} activity={adventure} />
+          ))}
+        </div>
+      </div>
+
+      {/* Training Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-black font-poppins">Training Sessions</h2>
+          <span className="text-sm text-gray-500 font-cabin">Structured workouts</span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {training.map((session, index) => (
+            <CyclingActivityCard key={index} activity={session} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CyclingActivityCard({ activity }: { activity: any }) {
+  return (
+    <div className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="font-bold text-explore-green font-cabin text-base line-clamp-2 leading-tight flex-1 pr-2">
+          {activity.title}
+        </h3>
+        <div className="flex-shrink-0">
+          <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${
+            activity.difficulty === 'Beginner' ? 'bg-green-100 text-green-700' :
+            activity.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-700' :
+            activity.difficulty === 'Advanced' ? 'bg-red-100 text-red-700' :
+            activity.difficulty === 'Epic' ? 'bg-purple-100 text-purple-700' :
+            activity.difficulty === 'Challenge' ? 'bg-blue-100 text-blue-700' :
+            'bg-gray-100 text-gray-700'
+          }`}>
+            {activity.difficulty}
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex gap-3 mb-4">
+        <img
+          src={activity.imageSrc}
+          alt="Organizer"
+          className="w-12 h-12 rounded-full border border-black object-cover flex-shrink-0"
+        />
+        <div className="flex-1 min-w-0">
+          <div className="text-xs text-gray-600 font-cabin mb-1 truncate">
+            By {activity.organizer}
+          </div>
+          <div className="text-sm text-explore-green font-cabin mb-1 truncate">
+            {activity.date}
+          </div>
+          <div className="text-sm text-explore-green font-cabin truncate">
+            {activity.location}
+          </div>
+        </div>
+      </div>
+
+      {/* Cycling Details */}
+      <div className="space-y-2 mb-4">
+        <div className="grid grid-cols-3 gap-2 text-xs font-cabin">
+          <div className="text-center">
+            <div className="text-gray-500">Distance</div>
+            <div className="font-medium text-black">🚴 {activity.distance}</div>
+          </div>
+          <div className="text-center">
+            <div className="text-gray-500">Pace</div>
+            <div className="font-medium text-black">⚡ {activity.pace}</div>
+          </div>
+          <div className="text-center">
+            <div className="text-gray-500">Elevation</div>
+            <div className="font-medium text-black">⛰️ {activity.elevation}</div>
+          </div>
+        </div>
+
+        {/* Additional Info */}
+        {(activity.fee || activity.gear || activity.focus) && (
+          <div className="flex flex-wrap gap-1 mt-2">
+            {activity.fee && (
+              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-cabin">
+                💰 {activity.fee}
+              </span>
+            )}
+            {activity.gear && (
+              <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded font-cabin">
+                🎒 {activity.gear}
+              </span>
+            )}
+            {activity.focus && (
+              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-cabin">
+                🎯 {activity.focus}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Action Button */}
+      <button className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors">
+        Request to join
+      </button>
+    </div>
+  );
+}
+
 function ActivityCard({
   title,
   date,
