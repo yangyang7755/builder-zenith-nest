@@ -6,7 +6,7 @@ import {
   Bike,
   Mountain,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
