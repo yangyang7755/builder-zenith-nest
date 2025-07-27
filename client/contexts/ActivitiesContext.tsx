@@ -28,6 +28,7 @@ export interface Activity {
   ageMin?: string;
   ageMax?: string;
   visibility?: string;
+  club?: string; // Club ID if this is a club activity
   createdAt: Date;
 }
 
