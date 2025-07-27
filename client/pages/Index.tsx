@@ -320,8 +320,8 @@ function PartnerCard({
             {location}
           </div>
         </div>
-        <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-base font-cabin">
-          Join
+        <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin">
+          Request to join
         </button>
       </div>
     </div>
