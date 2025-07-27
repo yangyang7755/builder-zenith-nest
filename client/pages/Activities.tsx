@@ -7,6 +7,7 @@ import {
   Mountain,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState, useMemo } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
 
 const activitiesData = [
@@ -57,6 +58,16 @@ const activitiesData = [
 
 export default function Activities() {
   const { activities } = useActivities();
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  const filteredActivities = useMemo(() => {
+    if (activeFilter === "Cycling") {
+      return activities.filter(activity => activity.type === "cycling");
+    } else if (activeFilter === "Climbing") {
+      return activities.filter(activity => activity.type === "climbing");
+    }
+    return activities;
+  }, [activities, activeFilter]);
 
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
