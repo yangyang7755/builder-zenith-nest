@@ -48,7 +48,7 @@ export default function Index() {
         </div>
 
         {/* Filter Chips */}
-        <div className="flex gap-1 mb-8 overflow-x-auto">
+        <div className="flex gap-1 mb-8 overflow-x-auto pb-1">
           <FilterChip label="All" active />
           <FilterChip label="Primary" />
           <FilterChip label="General" />
