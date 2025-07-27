@@ -8,16 +8,27 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredActivities, setFilteredActivities] = useState(activities);
   const [isSearching, setIsSearching] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("All");
 
   useEffect(() => {
+    let filtered = activities;
+
     if (searchQuery.trim()) {
-      setFilteredActivities(searchActivities(searchQuery));
+      filtered = searchActivities(searchQuery);
       setIsSearching(true);
     } else {
-      setFilteredActivities(activities);
       setIsSearching(false);
     }
-  }, [searchQuery, activities, searchActivities]);
+
+    // Apply activity type filter
+    if (activeFilter === "Cycling") {
+      filtered = filtered.filter(activity => activity.type === "cycling");
+    } else if (activeFilter === "Climbing") {
+      filtered = filtered.filter(activity => activity.type === "climbing");
+    }
+
+    setFilteredActivities(filtered);
+  }, [searchQuery, activities, searchActivities, activeFilter]);
 
   const handleSearchClick = () => {
     const searchInput = document.getElementById(
