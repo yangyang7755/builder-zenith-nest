@@ -9,6 +9,7 @@ export default function ActivityDetails() {
   const [agreedToRequirements, setAgreedToRequirements] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleRequestToJoin = () => {
     if (agreedToRequirements) {
