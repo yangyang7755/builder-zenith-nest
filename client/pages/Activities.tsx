@@ -91,7 +91,7 @@ export default function Activities() {
         </div>
 
         {/* Activities List */}
-        <div className="space-y-4">
+        <div className="space-y-2">
           {activitiesData.map((activity) => (
             <ActivityItem 
               key={activity.id} 
