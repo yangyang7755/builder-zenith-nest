@@ -404,7 +404,7 @@ function ClubLogo({
 
   return (
     <div
-      className={`w-16 h-16 rounded-full border-2 overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 ${
+      className={`relative w-16 h-16 rounded-full border-2 overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 ${
         isMember ? 'border-explore-green shadow-lg' : 'border-gray-300 hover:border-explore-green'
       }`}
       onClick={handleClick}
