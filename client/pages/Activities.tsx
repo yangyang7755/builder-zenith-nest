@@ -124,6 +124,151 @@ export default function Activities() {
   );
 }
 
+function CreatedActivityItem({ activity }: { activity: any }) {
+  return (
+    <div className="bg-explore-gray border-2 border-explore-green rounded-lg p-4 mb-3">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-explore-green rounded-full flex items-center justify-center flex-shrink-0">
+            {activity.type === 'cycling' ? (
+              <Bike className="w-6 h-6 text-white" />
+            ) : (
+              <Mountain className="w-6 h-6 text-white" />
+            )}
+          </div>
+          <div>
+            <h3 className="font-bold text-explore-green font-cabin text-base">
+              {activity.title}
+            </h3>
+            <p className="text-xs text-gray-600 font-cabin">
+              By {activity.organizer}
+            </p>
+          </div>
+        </div>
+        <button className="bg-explore-green text-white px-4 py-2 rounded-lg text-base font-cabin font-medium">
+          Join
+        </button>
+      </div>
+
+      {/* Date and Time */}
+      <div className="grid grid-cols-2 gap-4 mb-3">
+        <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-explore-green" />
+          <span className="text-sm text-black font-cabin">{activity.date}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 flex items-center justify-center">
+            <span className="text-explore-green text-xs">🕒</span>
+          </div>
+          <span className="text-sm text-black font-cabin">{activity.time}</span>
+        </div>
+      </div>
+
+      {/* Location */}
+      <div className="flex items-center gap-2 mb-3">
+        <MapPin className="w-4 h-4 text-explore-green" />
+        <span className="text-sm text-black font-cabin">{activity.location}</span>
+      </div>
+
+      {/* Activity specific metrics */}
+      {activity.type === 'cycling' && (
+        <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
+          {activity.distance && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 flex items-center justify-center">
+                <span className="text-explore-green text-xs">📍</span>
+              </div>
+              <span className="text-black font-cabin">
+                {activity.distance} {activity.distanceUnit}
+              </span>
+            </div>
+          )}
+          {activity.elevation && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 flex items-center justify-center">
+                <span className="text-explore-green text-xs">⛰️</span>
+              </div>
+              <span className="text-black font-cabin">
+                {activity.elevation} {activity.elevationUnit}
+              </span>
+            </div>
+          )}
+          {activity.pace && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 flex items-center justify-center">
+                <span className="text-explore-green text-xs">🚴</span>
+              </div>
+              <span className="text-black font-cabin">
+                {activity.pace} {activity.paceUnit}
+              </span>
+            </div>
+          )}
+          {activity.maxParticipants && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 flex items-center justify-center">
+                <span className="text-explore-green text-xs">👥</span>
+              </div>
+              <span className="text-black font-cabin">
+                Max {activity.maxParticipants} riders
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {activity.type === 'climbing' && (
+        <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
+          {activity.climbingLevel && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 flex items-center justify-center">
+                <span className="text-explore-green text-xs">📊</span>
+              </div>
+              <span className="text-black font-cabin">Level: {activity.climbingLevel}</span>
+            </div>
+          )}
+          {activity.maxParticipants && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 flex items-center justify-center">
+                <span className="text-explore-green text-xs">👥</span>
+              </div>
+              <span className="text-black font-cabin">
+                Max {activity.maxParticipants} people
+              </span>
+            </div>
+          )}
+          {activity.languages && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 flex items-center justify-center">
+                <span className="text-explore-green text-xs">🗣️</span>
+              </div>
+              <span className="text-black font-cabin">{activity.languages}</span>
+            </div>
+          )}
+          {activity.gearRequired && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 flex items-center justify-center">
+                <span className="text-explore-green text-xs">⚙️</span>
+              </div>
+              <span className="text-black font-cabin">{activity.gearRequired}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Special comments */}
+      {activity.specialComments && (
+        <div className="mt-3 p-3 bg-white rounded-lg">
+          <p className="text-sm text-black font-cabin">
+            <span className="font-bold text-explore-green">Special comments:</span><br />
+            {activity.specialComments}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ActivityItem({ activity }: { activity: (typeof activitiesData)[0] }) {
   return (
     <div className="flex items-center gap-3 py-4">
