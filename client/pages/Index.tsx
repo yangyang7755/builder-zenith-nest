@@ -311,6 +311,10 @@ function ActivityCard({
   imageSrc,
   isFirstCard = false,
   organizer = "Community",
+  type = "climbing",
+  distance,
+  pace,
+  elevation
 }: {
   title: string;
   date: string;
@@ -318,41 +322,55 @@ function ActivityCard({
   imageSrc: string;
   isFirstCard?: boolean;
   organizer?: string;
+  type?: string;
+  distance?: string;
+  pace?: string;
+  elevation?: string;
 }) {
   return (
-    <div className="min-w-60 w-60 h-32 border-2 border-explore-green rounded-lg p-3 flex-shrink-0 bg-white">
-      <h3 className="font-bold text-explore-green font-cabin text-base mb-2">
+    <div className="min-w-60 w-60 h-36 border-2 border-explore-green rounded-lg p-3 flex-shrink-0 bg-white">
+      <h3 className="font-bold text-explore-green font-cabin text-base mb-2 line-clamp-2 leading-tight">
         {title}
       </h3>
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-3 h-full">
         <img
           src={imageSrc}
           alt="Profile"
-          className="w-10 h-10 rounded-full border border-black object-cover"
+          className="w-10 h-10 rounded-full border border-black object-cover flex-shrink-0"
         />
-        <div className="flex-1">
-          <div className="text-xs text-gray-600 font-cabin mb-1">
+        <div className="flex-1 min-w-0">
+          <div className="text-xs text-gray-600 font-cabin mb-1 truncate">
             By {organizer}
           </div>
-          <div className="text-sm text-explore-green font-cabin mb-1">
+          <div className="text-sm text-explore-green font-cabin mb-1 truncate">
             {date}
           </div>
-          <div className="text-sm text-explore-green font-cabin">
+          <div className="text-sm text-explore-green font-cabin mb-1 truncate">
             {location}
           </div>
+          {/* Cycling-specific details */}
+          {type === "cycling" && (distance || pace || elevation) && (
+            <div className="text-xs text-gray-500 font-cabin space-y-0.5">
+              {distance && <div>🚴 {distance}</div>}
+              {pace && <div>⚡ {pace}</div>}
+              {elevation && <div>⛰️ {elevation}</div>}
+            </div>
+          )}
         </div>
-        {isFirstCard ? (
-          <Link
-            to="/activity/westway-womens-climb"
-            className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin inline-block text-center"
-          >
-            Request to join
-          </Link>
-        ) : (
-          <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin">
-            Request to join
-          </button>
-        )}
+        <div className="flex-shrink-0">
+          {isFirstCard ? (
+            <Link
+              to="/activity/westway-womens-climb"
+              className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin inline-block text-center whitespace-nowrap"
+            >
+              Request to join
+            </Link>
+          ) : (
+            <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin whitespace-nowrap">
+              Request to join
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
