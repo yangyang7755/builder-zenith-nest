@@ -263,6 +263,9 @@ function ActivityCard({
           className="w-10 h-10 rounded-full border border-black object-cover"
         />
         <div className="flex-1">
+          <div className="text-xs text-gray-600 font-cabin mb-1">
+            By {organizer}
+          </div>
           <div className="text-sm text-explore-green font-cabin mb-1">
             {date}
           </div>
