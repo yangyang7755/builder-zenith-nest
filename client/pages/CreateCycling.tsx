@@ -364,9 +364,19 @@ export default function CreateCycling() {
                 <h3 className="text-lg font-medium text-black font-cabin mb-3">
                   Gender
                 </h3>
-                <button className="bg-explore-green text-white px-6 py-2 rounded-lg font-bold text-sm font-cabin">
-                  Female only
-                </button>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.femaleOnly}
+                    onChange={(e) =>
+                      setFormData({ ...formData, femaleOnly: e.target.checked })
+                    }
+                    className="w-5 h-5 border-2 border-gray-300 rounded"
+                  />
+                  <span className="text-lg font-medium text-black font-cabin">
+                    Female only
+                  </span>
+                </label>
               </div>
 
               {/* Age range */}
