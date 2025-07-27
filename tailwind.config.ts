@@ -23,6 +23,12 @@ export default {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+        explore: {
+          green: "#1F381F",
+          "green-light": "#2A4A2A",
+          gray: "#F5F5F5",
+          "text-light": "rgba(0, 0, 0, 0.34)",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
