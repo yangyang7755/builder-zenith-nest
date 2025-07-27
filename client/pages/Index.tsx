@@ -61,7 +61,7 @@ export default function Index() {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-black font-poppins">Recent activities nearby</h2>
-            <a href="#" className="text-sm text-black underline font-poppins">See all</a>
+            <Link to="/activities" className="text-sm text-black underline font-poppins">See all</Link>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
             <ActivityCard
@@ -84,7 +84,7 @@ export default function Index() {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-black font-poppins">Partner requests</h2>
-            <a href="#" className="text-sm text-black underline font-poppins">See all</a>
+            <Link to="/activities" className="text-sm text-black underline font-poppins">See all</Link>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
             <PartnerCard
