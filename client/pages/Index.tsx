@@ -1043,7 +1043,8 @@ function ActivityCard({
   distance,
   pace,
   elevation,
-  difficulty
+  difficulty,
+  activityId
 }: {
   title: string;
   date: string;
@@ -1056,7 +1057,24 @@ function ActivityCard({
   pace?: string;
   elevation?: string;
   difficulty?: string;
+  activityId?: string;
 }) {
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (activityId) {
+      navigate(`/activity/${activityId}`);
+    } else {
+      // For default activities without specific IDs, navigate to westway-womens-climb as example
+      navigate("/activity/westway-womens-climb");
+    }
+  };
+
+  const handleRequestClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    setShowRequestModal(true);
+  };
   // Determine difficulty level and color
   const getDifficultyBadge = () => {
     if (!difficulty && type === "cycling") {
@@ -1106,7 +1124,7 @@ function ActivityCard({
         <div className="flex items-center gap-2">
           <span className="text-orange-500 text-base">📅</span>
           <span className="text-sm text-black font-cabin">
-            {date.replace("📅 ", "")}
+            {date.replace("��� ", "")}
           </span>
         </div>
         <div className="flex items-center gap-2">
