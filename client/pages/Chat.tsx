@@ -3,6 +3,7 @@ import { useChat } from "../contexts/ChatContext";
 
 export default function Chat() {
   const { chatMessages } = useChat();
+  const navigate = useNavigate();
 
   const getTimeAgo = (timestamp: Date) => {
     const now = new Date();
