@@ -83,19 +83,38 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     };
     setJoinRequests((prev) => [newRequest, ...prev]);
 
-    // Also add to chat messages
-    const chatMessage: ChatMessage = {
-      id: Date.now().toString() + "_chat",
-      type: "join_request",
-      sender: requestData.requesterName,
-      content:
-        requestData.message ||
-        `Requested to join "${requestData.activityTitle}"`,
-      timestamp: new Date(),
-      activityTitle: requestData.activityTitle,
-      activityOrganizer: requestData.activityOrganizer,
-    };
-    setChatMessages((prev) => [chatMessage, ...prev]);
+    // Check if there's already a chat with this organizer
+    const existingChatIndex = chatMessages.findIndex(
+      (msg) => msg.sender === requestData.activityOrganizer && msg.type === "join_request"
+    );
+
+    if (existingChatIndex !== -1) {
+      // Update existing chat message with the new request
+      setChatMessages((prev) => {
+        const updated = [...prev];
+        updated[existingChatIndex] = {
+          ...updated[existingChatIndex],
+          content: requestData.message || `Requested to join "${requestData.activityTitle}"`,
+          timestamp: new Date(),
+          activityTitle: requestData.activityTitle,
+        };
+        return updated;
+      });
+    } else {
+      // Create new chat message for this organizer
+      const chatMessage: ChatMessage = {
+        id: Date.now().toString() + "_chat",
+        type: "join_request",
+        sender: requestData.activityOrganizer,
+        content:
+          requestData.message ||
+          `You requested to join "${requestData.activityTitle}"`,
+        timestamp: new Date(),
+        activityTitle: requestData.activityTitle,
+        activityOrganizer: requestData.activityOrganizer,
+      };
+      setChatMessages((prev) => [chatMessage, ...prev]);
+    }
   };
 
   const addChatMessage = (
