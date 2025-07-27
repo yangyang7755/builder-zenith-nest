@@ -380,10 +380,41 @@ function PartnerCard({
   );
 }
 
-function ClubLogo({ src, alt }: { src: string; alt: string }) {
+function ClubLogo({
+  src,
+  alt,
+  isMember,
+  clubId
+}: {
+  src: string;
+  alt: string;
+  isMember: boolean;
+  clubId: string;
+}) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (isMember) {
+      navigate(`/club/${clubId}`);
+    } else {
+      // For non-member clubs, could show a "Request to join" modal
+      alert(`Request to join ${alt}?`);
+    }
+  };
+
   return (
-    <div className="w-16 h-16 rounded-full border border-black overflow-hidden">
+    <div
+      className={`w-16 h-16 rounded-full border-2 overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 ${
+        isMember ? 'border-explore-green shadow-lg' : 'border-gray-300 hover:border-explore-green'
+      }`}
+      onClick={handleClick}
+    >
       <img src={src} alt={alt} className="w-full h-full object-cover" />
+      {isMember && (
+        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-explore-green rounded-full flex items-center justify-center">
+          <span className="text-white text-xs">✓</span>
+        </div>
+      )}
     </div>
   );
 }
