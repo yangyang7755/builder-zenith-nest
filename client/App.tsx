@@ -13,6 +13,9 @@ import SignUp from "./pages/SignUp";
 import Index from "./pages/Index";
 import Activities from "./pages/Activities";
 import ActivityDetails from "./pages/ActivityDetails";
+import CreateActivity from "./pages/CreateActivity";
+import CreateCycling from "./pages/CreateCycling";
+import CreateClimbing from "./pages/CreateClimbing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
