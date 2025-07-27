@@ -232,15 +232,25 @@ export default function CreateCycling() {
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
                 Meetup location
               </h3>
-              <input
-                type="text"
-                value={formData.meetupLocation}
-                onChange={(e) =>
-                  setFormData({ ...formData, meetupLocation: e.target.value })
-                }
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter meetup location"
-              />
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={formData.meetupLocation}
+                  onChange={(e) =>
+                    setFormData({ ...formData, meetupLocation: e.target.value })
+                  }
+                  className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+                  placeholder="Enter meetup location"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowLocationMap(true)}
+                  className="w-full flex items-center justify-center gap-2 border-2 border-explore-green text-explore-green rounded-lg py-3 px-4 font-cabin font-medium hover:bg-explore-green hover:text-white transition-colors"
+                >
+                  <MapPin className="w-5 h-5" />
+                  Drop pin on map
+                </button>
+              </div>
             </div>
 
             {/* Date and Time */}
