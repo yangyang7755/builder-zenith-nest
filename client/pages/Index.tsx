@@ -110,11 +110,12 @@ export default function Index() {
 
         {/* Filter Chips */}
         <div className="flex gap-1 mb-8 overflow-x-auto pb-1">
-          <FilterChip label="All" active />
-          <FilterChip label="Primary" />
-          <FilterChip label="General" />
-          <FilterChip label="Requests" />
-          <FilterChip label="Clubs" />
+          <FilterChip label="All" active={activeFilter === "All"} onClick={() => setActiveFilter("All")} />
+          <FilterChip label="Cycling" active={activeFilter === "Cycling"} onClick={() => setActiveFilter("Cycling")} />
+          <FilterChip label="Climbing" active={activeFilter === "Climbing"} onClick={() => setActiveFilter("Climbing")} />
+          <FilterChip label="Time" active={activeFilter === "Time"} onClick={() => setActiveFilter("Time")} />
+          <FilterChip label="Location" active={activeFilter === "Location"} onClick={() => setActiveFilter("Location")} />
+          <FilterChip label="Clubs" active={activeFilter === "Clubs"} onClick={() => setActiveFilter("Clubs")} />
         </div>
 
         {/* Activities Section */}
