@@ -132,12 +132,12 @@ export default function Activities() {
         {/* Activities List */}
         <div className="space-y-2">
           {/* User Created Activities */}
-          {activities.map((activity) => (
+          {filteredActivities.map((activity) => (
             <CreatedActivityItem key={activity.id} activity={activity} />
           ))}
 
-          {/* Default Activities */}
-          {activitiesData.map((activity) => (
+          {/* Default Activities - only show if All filter is active */}
+          {activeFilter === "All" && activitiesData.map((activity) => (
             <ActivityItem key={activity.id} activity={activity} />
           ))}
         </div>
