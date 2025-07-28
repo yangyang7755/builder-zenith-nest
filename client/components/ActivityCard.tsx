@@ -117,16 +117,31 @@ export default function ActivityCard({
         className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
         onClick={handleCardClick}
       >
-        {/* Header with title and difficulty badge */}
+        {/* Header with title, save button, and difficulty badge */}
         <div className="flex justify-between items-start mb-4">
           <h3 className="font-bold text-black font-cabin text-lg line-clamp-2 leading-tight flex-1 pr-2">
             {title}
           </h3>
-          <span
-            className={`text-xs px-3 py-1 rounded-full font-cabin font-medium flex-shrink-0 ${difficultyBadge.color}`}
-          >
-            {difficultyBadge.label}
-          </span>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={handleSaveClick}
+              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              title={isActivitySaved(activityId || `${title}-${organizer}`.replace(/\s+/g, '-').toLowerCase()) ? "Unsave activity" : "Save activity"}
+            >
+              <Bookmark
+                className={`w-5 h-5 ${
+                  isActivitySaved(activityId || `${title}-${organizer}`.replace(/\s+/g, '-').toLowerCase())
+                    ? "fill-explore-green text-explore-green"
+                    : "text-gray-400 hover:text-gray-600"
+                }`}
+              />
+            </button>
+            <span
+              className={`text-xs px-3 py-1 rounded-full font-cabin font-medium ${difficultyBadge.color}`}
+            >
+              {difficultyBadge.label}
+            </span>
+          </div>
         </div>
 
         {/* Organizer info */}
