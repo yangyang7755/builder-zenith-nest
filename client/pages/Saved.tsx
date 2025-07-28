@@ -1,26 +1,68 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Bookmark, Clock, MapPin, Users } from "lucide-react";
+import { Bookmark, Clock, MapPin, Users, CheckCircle } from "lucide-react";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { Activity } from "../contexts/ActivitiesContext";
 
 export default function Saved() {
   const { savedActivities, unsaveActivity } = useSavedActivities();
+  const [selectedTab, setSelectedTab] = useState("Saved");
 
   // Sort activities by date (future vs past)
   const now = new Date();
   const today = now.toISOString().split('T')[0];
 
-  const upcomingActivities = savedActivities.filter(activity => {
+  const upcomingSavedActivities = savedActivities.filter(activity => {
     const activityDate = new Date(activity.date);
     const activityDateString = activityDate.toISOString().split('T')[0];
     return activityDateString >= today;
   });
 
-  const pastActivities = savedActivities.filter(activity => {
+  const pastSavedActivities = savedActivities.filter(activity => {
     const activityDate = new Date(activity.date);
     const activityDateString = activityDate.toISOString().split('T')[0];
     return activityDateString < today;
   });
+
+  // Sample joined activities (activities the user has joined)
+  const joinedActivities = [
+    {
+      id: "joined-1",
+      title: "Westway Women's+ Climbing Morning",
+      date: "2025-01-26",
+      time: "10:00",
+      location: "Westway Climbing Centre",
+      organizer: "Coach Holly Peristiani",
+      type: "climbing",
+      status: "confirmed",
+      maxParticipants: "12",
+      specialComments: "",
+      meetupLocation: "Westway Climbing Centre",
+      gender: "Female only",
+      visibility: "All",
+      createdAt: new Date(),
+    },
+    {
+      id: "joined-2",
+      title: "Sunday Morning Social Ride",
+      date: "2025-02-02",
+      time: "08:00",
+      location: "Richmond Park",
+      organizer: "Richmond Cycling Club",
+      type: "cycling",
+      status: "pending",
+      distance: "25",
+      distanceUnit: "km",
+      pace: "20",
+      paceUnit: "kph",
+      maxParticipants: "15",
+      specialComments: "",
+      meetupLocation: "Richmond Park Main Gate",
+      gender: "All genders",
+      visibility: "All",
+      createdAt: new Date(),
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
