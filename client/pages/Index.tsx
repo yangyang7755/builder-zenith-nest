@@ -462,7 +462,7 @@ function MixedActivitiesSection({
                 <ActivityCard
                   key={activity.id}
                   title={activity.title}
-                  date={`📅 ${activity.date}`}
+                  date={`📅 ${formatActivityDate(activity.date)}`}
                   location={`📍${activity.location}`}
                   imageSrc={
                     activity.imageSrc ||
