@@ -59,41 +59,50 @@ export default function Saved() {
             </h1>
           </div>
 
-          {/* Upcoming Activities */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-black font-cabin mb-4">
-              Upcoming Activities
-            </h2>
-            <div className="space-y-4">
-              {upcomingActivities.map((activity) => (
-                <ActivityCard key={activity.id} activity={activity} />
-              ))}
+          {/* No saved activities message */}
+          {savedActivities.length === 0 && (
+            <div className="text-center py-8">
+              <div className="text-gray-400 mb-4">
+                <Bookmark className="w-16 h-16 mx-auto" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No saved activities yet</h3>
+              <p className="text-gray-500 mb-4">Save activities from the explore page to see them here</p>
+              <Link
+                to="/explore"
+                className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+              >
+                Explore Activities
+              </Link>
             </div>
-          </div>
+          )}
 
-          {/* Happening Now */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-black font-cabin mb-4">
-              Happening Now
-            </h2>
-            <div className="space-y-4">
-              {happeningNow.map((activity) => (
-                <ActivityCard key={activity.id} activity={activity} />
-              ))}
+          {/* Upcoming Activities */}
+          {upcomingActivities.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold text-black font-cabin mb-4">
+                Upcoming Activities ({upcomingActivities.length})
+              </h2>
+              <div className="space-y-4">
+                {upcomingActivities.map((activity) => (
+                  <ActivityCard key={activity.id} activity={activity} onUnsave={unsaveActivity} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Past Activities */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-black font-cabin mb-4">
-              Past Activities
-            </h2>
-            <div className="space-y-4">
-              {pastActivities.map((activity) => (
-                <ActivityCard key={activity.id} activity={activity} />
-              ))}
+          {pastActivities.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold text-black font-cabin mb-4">
+                Past Activities ({pastActivities.length})
+              </h2>
+              <div className="space-y-4">
+                {pastActivities.map((activity) => (
+                  <ActivityCard key={activity.id} activity={activity} onUnsave={unsaveActivity} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
