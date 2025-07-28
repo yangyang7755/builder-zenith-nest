@@ -21,8 +21,8 @@ export default function CreateActivity() {
       id: "running",
       name: "Running",
       icon: Users,
-      available: false,
-      route: "#",
+      available: true,
+      route: "/create/running",
     },
     {
       id: "climbing",
