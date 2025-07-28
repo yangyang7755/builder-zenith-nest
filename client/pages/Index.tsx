@@ -11,10 +11,10 @@ export default function Index() {
 
   const formatActivityDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     });
   };
   const [searchQuery, setSearchQuery] = useState("");
@@ -75,7 +75,9 @@ export default function Index() {
     if (filters.date.start || filters.date.end) {
       filtered = filtered.filter((activity) => {
         const activityDate = new Date(activity.date);
-        const startDate = filters.date.start ? new Date(filters.date.start) : null;
+        const startDate = filters.date.start
+          ? new Date(filters.date.start)
+          : null;
         const endDate = filters.date.end ? new Date(filters.date.end) : null;
 
         if (startDate && activityDate < startDate) return false;
@@ -486,14 +488,14 @@ function MixedActivitiesSection({
             <>
               {/* Mixed default activities */}
               {mixedActivities
-                .filter(
-                  (activity) =>
-                    filters.activityType.some(type =>
+                .filter((activity) =>
+                  filters.activityType.some(
+                    (type) =>
                       type.toLowerCase() === activity.type ||
                       (type === "Cycling" && activity.type === "cycling") ||
                       (type === "Climbing" && activity.type === "climbing") ||
-                      (type === "Running" && activity.type === "running")
-                    )
+                      (type === "Running" && activity.type === "running"),
+                  ),
                 )
                 .map((activity, index) => (
                   <ActivityCard
@@ -839,7 +841,11 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
 
   const handleCardClick = () => {
     // Navigate to appropriate climbing activity based on type
-    if (activity.title?.includes("Peak") || activity.title?.includes("Sport") || activity.title?.includes("Outdoor")) {
+    if (
+      activity.title?.includes("Peak") ||
+      activity.title?.includes("Sport") ||
+      activity.title?.includes("Outdoor")
+    ) {
       navigate("/activity/peak-district-climb");
     } else {
       navigate("/activity/westway-womens-climb");
@@ -1141,7 +1147,11 @@ function CyclingActivityCard({ activity }: { activity: any }) {
 
   const handleCardClick = () => {
     // Navigate to appropriate cycling activity based on type
-    if (activity.title?.includes("Chaingang") || activity.title?.includes("Training") || activity.title?.includes("Hill")) {
+    if (
+      activity.title?.includes("Chaingang") ||
+      activity.title?.includes("Training") ||
+      activity.title?.includes("Hill")
+    ) {
       navigate("/activity/chaingang-training");
     } else {
       navigate("/activity/sunday-morning-ride");
@@ -1633,9 +1643,7 @@ function CarShareCard({
       {/* Trip details */}
       <div className="space-y-2 mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-blue-800 font-cabin">
-            {date}
-          </span>
+          <span className="text-sm text-blue-800 font-cabin">{date}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-blue-800 font-cabin">

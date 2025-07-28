@@ -13,7 +13,9 @@ export default function ClubRapha() {
 
   const handleSendJoinRequest = () => {
     if (joinMessage.trim() || confirm("Send join request without a message?")) {
-      alert("Join request sent to Rapha Cycling Club London! You'll receive a notification when the admin responds.");
+      alert(
+        "Join request sent to Rapha Cycling Club London! You'll receive a notification when the admin responds.",
+      );
       navigate("/explore");
     }
   };
@@ -48,7 +50,7 @@ export default function ClubRapha() {
       {/* Main Content */}
       <div className="px-6 pb-20">
         {/* Back button */}
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 mt-4 mb-4 text-explore-green font-cabin"
         >
@@ -58,8 +60,8 @@ export default function ClubRapha() {
         {/* Club Header */}
         <div className="text-center mb-6">
           <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=96&h=96&fit=crop" 
+            <img
+              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=96&h=96&fit=crop"
               alt="Rapha Cycling Club London"
               className="w-full h-full object-cover"
             />
@@ -85,10 +87,16 @@ export default function ClubRapha() {
             About the Club
           </h3>
           <p className="text-sm text-black font-cabin leading-relaxed mb-4">
-            Welcome to Rapha Cycling Club London - where passion meets performance. We're a community of dedicated cyclists who share a love for the road, the challenge, and the camaraderie that comes with two wheels.
+            Welcome to Rapha Cycling Club London - where passion meets
+            performance. We're a community of dedicated cyclists who share a
+            love for the road, the challenge, and the camaraderie that comes
+            with two wheels.
           </p>
           <p className="text-sm text-black font-cabin leading-relaxed">
-            From weekend social rides through Richmond Park to challenging sportives in the Surrey Hills, we cater to all levels of cyclists. Our club focuses on building friendships, improving skills, and exploring the beautiful cycling routes in and around London.
+            From weekend social rides through Richmond Park to challenging
+            sportives in the Surrey Hills, we cater to all levels of cyclists.
+            Our club focuses on building friendships, improving skills, and
+            exploring the beautiful cycling routes in and around London.
           </p>
         </div>
 
@@ -97,7 +105,9 @@ export default function ClubRapha() {
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Calendar className="w-4 h-4 text-explore-green" />
-              <h4 className="font-bold text-black font-cabin text-sm">Weekly Rides</h4>
+              <h4 className="font-bold text-black font-cabin text-sm">
+                Weekly Rides
+              </h4>
             </div>
             <p className="text-xs text-gray-600 font-cabin">
               3-4 organized rides per week
@@ -106,7 +116,9 @@ export default function ClubRapha() {
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <MapPin className="w-4 h-4 text-explore-green" />
-              <h4 className="font-bold text-black font-cabin text-sm">Ride Areas</h4>
+              <h4 className="font-bold text-black font-cabin text-sm">
+                Ride Areas
+              </h4>
             </div>
             <p className="text-xs text-gray-600 font-cabin">
               London & Surrey Hills
@@ -121,15 +133,23 @@ export default function ClubRapha() {
           </h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-lg font-bold text-explore-green font-cabin">245</div>
+              <div className="text-lg font-bold text-explore-green font-cabin">
+                245
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Members</div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-explore-green font-cabin">52</div>
-              <div className="text-xs text-gray-600 font-cabin">Rides/Month</div>
+              <div className="text-lg font-bold text-explore-green font-cabin">
+                52
+              </div>
+              <div className="text-xs text-gray-600 font-cabin">
+                Rides/Month
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-explore-green font-cabin">4.8</div>
+              <div className="text-lg font-bold text-explore-green font-cabin">
+                4.8
+              </div>
               <div className="text-xs text-gray-600 font-cabin">★ Rating</div>
             </div>
           </div>
@@ -159,7 +179,8 @@ export default function ClubRapha() {
                 Membership Required
               </h4>
               <p className="text-xs text-blue-700 font-cabin">
-                You need to be a club member to view activities and join rides. Send a join request to get started!
+                You need to be a club member to view activities and join rides.
+                Send a join request to get started!
               </p>
             </div>
           </div>

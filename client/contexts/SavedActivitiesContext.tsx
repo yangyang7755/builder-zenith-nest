@@ -8,9 +8,9 @@ interface SavedActivitiesContextType {
   isActivitySaved: (activityId: string) => boolean;
 }
 
-const SavedActivitiesContext = createContext<SavedActivitiesContextType | undefined>(
-  undefined,
-);
+const SavedActivitiesContext = createContext<
+  SavedActivitiesContextType | undefined
+>(undefined);
 
 export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
   const [savedActivities, setSavedActivities] = useState<Activity[]>([]);
@@ -26,7 +26,7 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
 
   const unsaveActivity = (activityId: string) => {
     setSavedActivities((prev) =>
-      prev.filter((activity) => activity.id !== activityId)
+      prev.filter((activity) => activity.id !== activityId),
     );
   };
 
@@ -46,7 +46,9 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
 export function useSavedActivities() {
   const context = useContext(SavedActivitiesContext);
   if (context === undefined) {
-    throw new Error("useSavedActivities must be used within a SavedActivitiesProvider");
+    throw new Error(
+      "useSavedActivities must be used within a SavedActivitiesProvider",
+    );
   }
   return context;
 }

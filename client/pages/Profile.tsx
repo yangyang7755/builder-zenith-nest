@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MapPin, CheckCircle, Circle, Star, Settings, Trophy, Award } from "lucide-react";
+import {
+  MapPin,
+  CheckCircle,
+  Circle,
+  Star,
+  Settings,
+  Trophy,
+  Award,
+} from "lucide-react";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Climb");
@@ -11,7 +19,8 @@ export default function Profile() {
     name: "Ben Stuart",
     bio: "Weekend warrior. Always up for some mountain adventures",
     location: "Notting Hill, London",
-    profileImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F23fa8ee56cbe4c7e834fbdf7cdf6cfd3?format=webp&width=800",
+    profileImage:
+      "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F23fa8ee56cbe4c7e834fbdf7cdf6cfd3?format=webp&width=800",
     followers: 100,
     following: 105,
     overallRating: 4.8,
@@ -19,52 +28,85 @@ export default function Profile() {
     sports: ["climbing", "cycling", "running"],
     skillLevels: {
       climbing: "Intermediate",
-      cycling: "Advanced", 
-      running: "Beginner"
-    }
+      cycling: "Advanced",
+      running: "Beginner",
+    },
   };
 
   const reviews = [
     {
       id: 1,
       reviewer: "Sarah Chen",
-      reviewerImage: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
+      reviewerImage:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
       rating: 5,
       comment: "Great climbing partner! Very supportive and reliable.",
       activity: "Westway Women's Climb",
-      date: "2025-01-15"
+      date: "2025-01-15",
     },
     {
       id: 2,
-      reviewer: "Mike Johnson", 
-      reviewerImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      reviewer: "Mike Johnson",
+      reviewerImage:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       rating: 5,
       comment: "Excellent cyclist, kept great pace throughout the ride.",
       activity: "Richmond Park Social",
-      date: "2025-01-20"
+      date: "2025-01-20",
     },
     {
       id: 3,
       reviewer: "Emma Wilson",
-      reviewerImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",
+      reviewerImage:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",
       rating: 4,
       comment: "Fun running companion, very motivating!",
       activity: "Hyde Park Morning Run",
-      date: "2025-01-28"
-    }
+      date: "2025-01-28",
+    },
   ];
 
   const climbingData = {
     activities: {
       created: [
-        { id: 1, title: "Beginner Sport Climbing", date: "2025-02-05", participants: 8, location: "Westway" },
-        { id: 2, title: "Trad Climbing Workshop", date: "2025-01-22", participants: 6, location: "Peak District" }
+        {
+          id: 1,
+          title: "Beginner Sport Climbing",
+          date: "2025-02-05",
+          participants: 8,
+          location: "Westway",
+        },
+        {
+          id: 2,
+          title: "Trad Climbing Workshop",
+          date: "2025-01-22",
+          participants: 6,
+          location: "Peak District",
+        },
       ],
       participated: [
-        { id: 1, title: "Westway Women's+ Climb", date: "2025-01-26", organizer: "Coach Holly", rating: 5 },
-        { id: 2, title: "Portland Sport Trip", date: "2025-01-15", organizer: "Peak Adventures", rating: 5 },
-        { id: 3, title: "Indoor Bouldering Session", date: "2025-01-08", organizer: "The Castle", rating: 4 }
-      ]
+        {
+          id: 1,
+          title: "Westway Women's+ Climb",
+          date: "2025-01-26",
+          organizer: "Coach Holly",
+          rating: 5,
+        },
+        {
+          id: 2,
+          title: "Portland Sport Trip",
+          date: "2025-01-15",
+          organizer: "Peak Adventures",
+          rating: 5,
+        },
+        {
+          id: 3,
+          title: "Indoor Bouldering Session",
+          date: "2025-01-08",
+          organizer: "The Castle",
+          rating: 4,
+        },
+      ],
     },
     gear: [
       { name: "Lead belay", owned: true, icon: "🧗" },
@@ -72,26 +114,56 @@ export default function Profile() {
       { name: "Trad rack", owned: false, icon: "🔧" },
       { name: "Rope", owned: false, icon: "🪢" },
       { name: "Quickdraws", owned: false, icon: "🔗" },
-      { name: "Helmet", owned: false, icon: "⛑️" }
+      { name: "Helmet", owned: false, icon: "⛑️" },
     ],
     stats: {
       totalClimbs: 18,
       favoriteGrades: ["5.8", "5.9", "5.10a"],
-      preferredTerrain: ["Indoor", "Sport"]
-    }
+      preferredTerrain: ["Indoor", "Sport"],
+    },
   };
 
   const cyclingData = {
     activities: {
       created: [
-        { id: 1, title: "Weekend Gravel Ride", date: "2025-02-08", participants: 12, location: "Surrey Hills" },
-        { id: 2, title: "Morning Commuter Ride", date: "2025-01-30", participants: 15, location: "Hyde Park" }
+        {
+          id: 1,
+          title: "Weekend Gravel Ride",
+          date: "2025-02-08",
+          participants: 12,
+          location: "Surrey Hills",
+        },
+        {
+          id: 2,
+          title: "Morning Commuter Ride",
+          date: "2025-01-30",
+          participants: 15,
+          location: "Hyde Park",
+        },
       ],
       participated: [
-        { id: 1, title: "Sunday Morning Social", date: "2025-02-02", organizer: "Richmond Cycling", rating: 5 },
-        { id: 2, title: "Intermediate Chaingang", date: "2025-01-28", organizer: "Surrey Road Cycling", rating: 4 },
-        { id: 3, title: "London to Brighton", date: "2025-01-20", organizer: "British Heart Foundation", rating: 5 }
-      ]
+        {
+          id: 1,
+          title: "Sunday Morning Social",
+          date: "2025-02-02",
+          organizer: "Richmond Cycling",
+          rating: 5,
+        },
+        {
+          id: 2,
+          title: "Intermediate Chaingang",
+          date: "2025-01-28",
+          organizer: "Surrey Road Cycling",
+          rating: 4,
+        },
+        {
+          id: 3,
+          title: "London to Brighton",
+          date: "2025-01-20",
+          organizer: "British Heart Foundation",
+          rating: 5,
+        },
+      ],
     },
     gear: [
       { name: "Road bike", owned: true, icon: "🚴" },
@@ -99,26 +171,50 @@ export default function Profile() {
       { name: "Cycling shoes", owned: true, icon: "👟" },
       { name: "Power meter", owned: false, icon: "⚡" },
       { name: "GPS computer", owned: true, icon: "📱" },
-      { name: "Repair kit", owned: false, icon: "🔧" }
+      { name: "Repair kit", owned: false, icon: "🔧" },
     ],
     stats: {
       totalRides: 24,
       totalDistance: "1,250 km",
       averageSpeed: "25 kph",
-      preferredTypes: ["Road cycling", "Sportives", "Social rides"]
-    }
+      preferredTypes: ["Road cycling", "Sportives", "Social rides"],
+    },
   };
 
   const runningData = {
     activities: {
       created: [
-        { id: 1, title: "Beginner's Running Group", date: "2025-02-10", participants: 10, location: "Regent's Park" }
+        {
+          id: 1,
+          title: "Beginner's Running Group",
+          date: "2025-02-10",
+          participants: 10,
+          location: "Regent's Park",
+        },
       ],
       participated: [
-        { id: 1, title: "Hyde Park Morning Run", date: "2025-01-28", organizer: "London Runners", rating: 4 },
-        { id: 2, title: "Parkrun Richmond", date: "2025-01-25", organizer: "Parkrun", rating: 5 },
-        { id: 3, title: "Half Marathon Training", date: "2025-01-18", organizer: "Running Club", rating: 4 }
-      ]
+        {
+          id: 1,
+          title: "Hyde Park Morning Run",
+          date: "2025-01-28",
+          organizer: "London Runners",
+          rating: 4,
+        },
+        {
+          id: 2,
+          title: "Parkrun Richmond",
+          date: "2025-01-25",
+          organizer: "Parkrun",
+          rating: 5,
+        },
+        {
+          id: 3,
+          title: "Half Marathon Training",
+          date: "2025-01-18",
+          organizer: "Running Club",
+          rating: 4,
+        },
+      ],
     },
     gear: [
       { name: "Running shoes", owned: true, icon: "👟" },
@@ -126,18 +222,18 @@ export default function Profile() {
       { name: "Running belt", owned: false, icon: "🎽" },
       { name: "Hydration pack", owned: false, icon: "💧" },
       { name: "Reflective gear", owned: true, icon: "🦺" },
-      { name: "Heart rate monitor", owned: false, icon: "❤️" }
+      { name: "Heart rate monitor", owned: false, icon: "❤️" },
     ],
     stats: {
       totalRuns: 12,
       totalDistance: "185 km",
       personalBests: {
         "5K": "22:15",
-        "10K": "46:30", 
-        "Half Marathon": "1:42:00"
+        "10K": "46:30",
+        "Half Marathon": "1:42:00",
       },
-      preferredTypes: ["Park runs", "Trail running", "Social runs"]
-    }
+      preferredTypes: ["Park runs", "Trail running", "Social runs"],
+    },
   };
 
   const clubs = [
@@ -154,11 +250,15 @@ export default function Profile() {
   ];
 
   const getCurrentSportData = () => {
-    switch(selectedTab) {
-      case "Climb": return climbingData;
-      case "Ride": return cyclingData;
-      case "Run": return runningData;
-      default: return climbingData;
+    switch (selectedTab) {
+      case "Climb":
+        return climbingData;
+      case "Ride":
+        return cyclingData;
+      case "Run":
+        return runningData;
+      default:
+        return climbingData;
     }
   };
 
@@ -176,9 +276,9 @@ export default function Profile() {
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <Star 
-        key={i} 
-        className={`w-4 h-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+      <Star
+        key={i}
+        className={`w-4 h-4 ${i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
       />
     ));
   };
@@ -197,7 +297,16 @@ export default function Profile() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -236,14 +345,15 @@ export default function Profile() {
                     {userProfile.following} Following
                   </button>
                 </div>
-                
+
                 {/* Rating */}
                 <div className="flex items-center gap-2">
                   <div className="flex">
                     {renderStars(Math.floor(userProfile.overallRating))}
                   </div>
                   <span className="text-sm text-gray-600 font-cabin">
-                    {userProfile.overallRating} ({userProfile.totalReviews} reviews)
+                    {userProfile.overallRating} ({userProfile.totalReviews}{" "}
+                    reviews)
                   </span>
                 </div>
               </div>
@@ -254,7 +364,7 @@ export default function Profile() {
               <button className="px-4 py-2 border-2 border-explore-green rounded-lg text-explore-green text-sm font-cabin">
                 Share
               </button>
-              <button 
+              <button
                 onClick={handleSettingsClick}
                 className="p-2 border-2 border-explore-green rounded-lg text-explore-green hover:bg-explore-green hover:text-white transition-colors"
               >
@@ -309,23 +419,33 @@ export default function Profile() {
                 {selectedTab === "Climb" && (
                   <>
                     <div>
-                      <div className="text-2xl font-bold text-explore-green">{currentSportData.stats.totalClimbs}</div>
+                      <div className="text-2xl font-bold text-explore-green">
+                        {currentSportData.stats.totalClimbs}
+                      </div>
                       <div className="text-sm text-gray-600">Total Climbs</div>
                     </div>
                     <div>
-                      <div className="text-lg font-medium text-explore-green">{currentSportData.stats.favoriteGrades.join(", ")}</div>
-                      <div className="text-sm text-gray-600">Favorite Grades</div>
+                      <div className="text-lg font-medium text-explore-green">
+                        {currentSportData.stats.favoriteGrades.join(", ")}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Favorite Grades
+                      </div>
                     </div>
                   </>
                 )}
                 {selectedTab === "Ride" && (
                   <>
                     <div>
-                      <div className="text-2xl font-bold text-explore-green">{currentSportData.stats.totalRides}</div>
+                      <div className="text-2xl font-bold text-explore-green">
+                        {currentSportData.stats.totalRides}
+                      </div>
                       <div className="text-sm text-gray-600">Total Rides</div>
                     </div>
                     <div>
-                      <div className="text-lg font-medium text-explore-green">{currentSportData.stats.totalDistance}</div>
+                      <div className="text-lg font-medium text-explore-green">
+                        {currentSportData.stats.totalDistance}
+                      </div>
                       <div className="text-sm text-gray-600">Distance</div>
                     </div>
                   </>
@@ -333,11 +453,15 @@ export default function Profile() {
                 {selectedTab === "Run" && (
                   <>
                     <div>
-                      <div className="text-2xl font-bold text-explore-green">{currentSportData.stats.totalRuns}</div>
+                      <div className="text-2xl font-bold text-explore-green">
+                        {currentSportData.stats.totalRuns}
+                      </div>
                       <div className="text-sm text-gray-600">Total Runs</div>
                     </div>
                     <div>
-                      <div className="text-lg font-medium text-explore-green">{currentSportData.stats.totalDistance}</div>
+                      <div className="text-lg font-medium text-explore-green">
+                        {currentSportData.stats.totalDistance}
+                      </div>
                       <div className="text-sm text-gray-600">Distance</div>
                     </div>
                   </>
@@ -353,9 +477,14 @@ export default function Profile() {
               </h3>
               <div className="space-y-3">
                 {currentSportData.activities.created.map((activity) => (
-                  <div key={activity.id} className="border-2 border-gray-200 rounded-lg p-4">
+                  <div
+                    key={activity.id}
+                    className="border-2 border-gray-200 rounded-lg p-4"
+                  >
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-black font-cabin">{activity.title}</h4>
+                      <h4 className="font-medium text-black font-cabin">
+                        {activity.title}
+                      </h4>
                       <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
                         {activity.participants} joined
                       </span>
@@ -376,12 +505,15 @@ export default function Profile() {
               </h3>
               <div className="space-y-3">
                 {currentSportData.activities.participated.map((activity) => (
-                  <div key={activity.id} className="border-2 border-gray-200 rounded-lg p-4">
+                  <div
+                    key={activity.id}
+                    className="border-2 border-gray-200 rounded-lg p-4"
+                  >
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-black font-cabin">{activity.title}</h4>
-                      <div className="flex">
-                        {renderStars(activity.rating)}
-                      </div>
+                      <h4 className="font-medium text-black font-cabin">
+                        {activity.title}
+                      </h4>
+                      <div className="flex">{renderStars(activity.rating)}</div>
                     </div>
                     <div className="text-sm text-gray-600 font-cabin">
                       {activity.date} • By {activity.organizer}
@@ -398,7 +530,10 @@ export default function Profile() {
               </h3>
               <div className="grid grid-cols-2 gap-3">
                 {currentSportData.gear.map((item, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                  >
                     <span className="text-lg">{item.icon}</span>
                     <span className="text-sm text-black font-cabin flex-1">
                       {item.name}
@@ -421,7 +556,10 @@ export default function Profile() {
             </h3>
             <div className="space-y-4">
               {reviews.slice(0, 3).map((review) => (
-                <div key={review.id} className="border-2 border-gray-200 rounded-lg p-4">
+                <div
+                  key={review.id}
+                  className="border-2 border-gray-200 rounded-lg p-4"
+                >
                   <div className="flex items-start gap-3 mb-3">
                     <img
                       src={review.reviewerImage}
@@ -433,9 +571,7 @@ export default function Profile() {
                         <span className="font-medium text-black font-cabin text-sm">
                           {review.reviewer}
                         </span>
-                        <div className="flex">
-                          {renderStars(review.rating)}
-                        </div>
+                        <div className="flex">{renderStars(review.rating)}</div>
                       </div>
                       <div className="text-xs text-gray-500 font-cabin">
                         {review.activity} • {review.date}
@@ -469,7 +605,9 @@ export default function Profile() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-sm font-cabin text-black hover:text-explore-green transition-colors">{club.name}</span>
+                  <span className="text-sm font-cabin text-black hover:text-explore-green transition-colors">
+                    {club.name}
+                  </span>
                 </Link>
               ))}
             </div>

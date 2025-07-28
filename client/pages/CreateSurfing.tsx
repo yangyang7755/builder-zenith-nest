@@ -51,35 +51,58 @@ export default function CreateSurfing() {
   const surfingTypes = {
     "Beginner Session": {
       icon: "🏄‍♀️",
-      description: "Learn to surf with foam boards in safe conditions"
+      description: "Learn to surf with foam boards in safe conditions",
     },
-    "Intermediate": {
-      icon: "🏄", 
-      description: "Improve technique and catch unbroken waves"
+    Intermediate: {
+      icon: "🏄",
+      description: "Improve technique and catch unbroken waves",
     },
-    "Advanced": {
+    Advanced: {
       icon: "🏄‍♂️",
-      description: "Challenge yourself on bigger waves and reef breaks"
+      description: "Challenge yourself on bigger waves and reef breaks",
     },
     "Dawn Patrol": {
       icon: "🌅",
-      description: "Early morning surf session at sunrise"
+      description: "Early morning surf session at sunrise",
     },
-    "Longboard": {
+    Longboard: {
       icon: "🏇",
-      description: "Classic longboard surfing and nose riding"
+      description: "Classic longboard surfing and nose riding",
     },
     "Surf & SUP": {
       icon: "🚤",
-      description: "Combined surfing and stand-up paddleboarding"
-    }
+      description: "Combined surfing and stand-up paddleboarding",
+    },
   };
 
-  const surfLevels = ["Complete Beginner", "Beginner", "Intermediate", "Advanced", "Expert"];
+  const surfLevels = [
+    "Complete Beginner",
+    "Beginner",
+    "Intermediate",
+    "Advanced",
+    "Expert",
+  ];
   const difficultyLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
-  const boardRentalOptions = ["Available", "Included", "Own board required", "Specific boards provided"];
-  const equipmentOptions = ["Bring own", "Rental available", "All provided", "Wetsuit only"];
-  const waveHeightOptions = ["0.5-1m", "1-1.5m", "1.5-2m", "2-3m", "3m+", "Variable"];
+  const boardRentalOptions = [
+    "Available",
+    "Included",
+    "Own board required",
+    "Specific boards provided",
+  ];
+  const equipmentOptions = [
+    "Bring own",
+    "Rental available",
+    "All provided",
+    "Wetsuit only",
+  ];
+  const waveHeightOptions = [
+    "0.5-1m",
+    "1-1.5m",
+    "1.5-2m",
+    "2-3m",
+    "3m+",
+    "Variable",
+  ];
 
   const handleSubmit = () => {
     if (
@@ -137,7 +160,8 @@ export default function CreateSurfing() {
       backup_location: formData.backup_location,
       transport: formData.transport,
       refreshments: formData.refreshments,
-      imageSrc: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=40&h=40&fit=crop&crop=face",
     });
 
     alert("Surfing activity created successfully!");
@@ -156,7 +180,16 @@ export default function CreateSurfing() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -188,10 +221,14 @@ export default function CreateSurfing() {
                     }`}
                   >
                     <div className="text-2xl mb-2">{details.icon}</div>
-                    <div className="font-bold text-sm font-cabin mb-1">{type}</div>
-                    <div className={`text-xs font-cabin leading-tight ${
-                      selectedType === type ? "text-white" : "text-gray-600"
-                    }`}>
+                    <div className="font-bold text-sm font-cabin mb-1">
+                      {type}
+                    </div>
+                    <div
+                      className={`text-xs font-cabin leading-tight ${
+                        selectedType === type ? "text-white" : "text-gray-600"
+                      }`}
+                    >
                       {details.description}
                     </div>
                   </button>
@@ -440,7 +477,10 @@ export default function CreateSurfing() {
                     type="checkbox"
                     checked={formData.safetyBriefing}
                     onChange={(e) =>
-                      setFormData({ ...formData, safetyBriefing: e.target.checked })
+                      setFormData({
+                        ...formData,
+                        safetyBriefing: e.target.checked,
+                      })
                     }
                     className="w-5 h-5 border-2 border-gray-300 rounded"
                   />
@@ -453,7 +493,10 @@ export default function CreateSurfing() {
                     type="checkbox"
                     checked={formData.wetsuitRequired}
                     onChange={(e) =>
-                      setFormData({ ...formData, wetsuitRequired: e.target.checked })
+                      setFormData({
+                        ...formData,
+                        wetsuitRequired: e.target.checked,
+                      })
                     }
                     className="w-5 h-5 border-2 border-gray-300 rounded"
                   />

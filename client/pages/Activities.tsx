@@ -8,7 +8,8 @@ import MapView from "../components/MapView";
 
 export default function Activities() {
   const { activities } = useActivities();
-  const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
+  const { saveActivity, unsaveActivity, isActivitySaved } =
+    useSavedActivities();
   const location = useLocation();
   const navigate = useNavigate();
   const [showMapView, setShowMapView] = useState(false);
@@ -36,10 +37,10 @@ export default function Activities() {
 
   const formatActivityDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-GB', { 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric' 
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     });
   };
 
@@ -75,7 +76,9 @@ export default function Activities() {
     if (filters.date.start || filters.date.end) {
       filtered = filtered.filter((activity) => {
         const activityDate = new Date(activity.date);
-        const startDate = filters.date.start ? new Date(filters.date.start) : null;
+        const startDate = filters.date.start
+          ? new Date(filters.date.start)
+          : null;
         const endDate = filters.date.end ? new Date(filters.date.end) : null;
 
         if (startDate && activityDate < startDate) return false;
@@ -128,7 +131,16 @@ export default function Activities() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -159,10 +171,14 @@ export default function Activities() {
               <div className="text-gray-400 mb-4">
                 <Users className="w-16 h-16 mx-auto" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No activities found</h3>
-              <p className="text-gray-500 mb-4">Try adjusting your filters or create a new activity</p>
-              <Link 
-                to="/create" 
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                No activities found
+              </h3>
+              <p className="text-gray-500 mb-4">
+                Try adjusting your filters or create a new activity
+              </p>
+              <Link
+                to="/create"
                 className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
               >
                 Create Activity
@@ -170,9 +186,9 @@ export default function Activities() {
             </div>
           ) : (
             filteredActivities.map((activity) => (
-              <ActivityCard 
-                key={activity.id} 
-                activity={activity} 
+              <ActivityCard
+                key={activity.id}
+                activity={activity}
                 formatActivityDate={formatActivityDate}
               />
             ))
@@ -182,7 +198,9 @@ export default function Activities() {
         {/* Show sample activities if no user activities */}
         {activities.length === 0 && (
           <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Sample Activities</h3>
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+              Sample Activities
+            </h3>
             <div className="space-y-4">
               <SampleActivityCard
                 title="Westway Women's Climbing Morning"
@@ -223,19 +241,20 @@ export default function Activities() {
   );
 }
 
-function ActivityCard({ 
-  activity, 
-  formatActivityDate 
-}: { 
-  activity: any; 
+function ActivityCard({
+  activity,
+  formatActivityDate,
+}: {
+  activity: any;
   formatActivityDate: (date: string) => string;
 }) {
-  const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
+  const { saveActivity, unsaveActivity, isActivitySaved } =
+    useSavedActivities();
   const navigate = useNavigate();
 
   const handleSaveClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (isActivitySaved(activity.id)) {
       unsaveActivity(activity.id);
     } else {
@@ -254,25 +273,33 @@ function ActivityCard({
   };
 
   const getActivityIcon = (type: string) => {
-    switch(type) {
-      case "cycling": return "🚴";
-      case "climbing": return "🧗";
-      case "running": return "👟";
-      default: return "⚡";
+    switch (type) {
+      case "cycling":
+        return "🚴";
+      case "climbing":
+        return "🧗";
+      case "running":
+        return "👟";
+      default:
+        return "⚡";
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
-    switch(difficulty?.toLowerCase()) {
-      case "beginner": return "bg-green-100 text-green-700";
-      case "intermediate": return "bg-yellow-100 text-yellow-700";
-      case "advanced": return "bg-red-100 text-red-700";
-      default: return "bg-gray-100 text-gray-700";
+    switch (difficulty?.toLowerCase()) {
+      case "beginner":
+        return "bg-green-100 text-green-700";
+      case "intermediate":
+        return "bg-yellow-100 text-yellow-700";
+      case "advanced":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
   return (
-    <div 
+    <div
       className="border-2 border-gray-200 rounded-lg p-4 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
       onClick={handleCardClick}
     >
@@ -288,7 +315,9 @@ function ActivityCard({
           <button
             onClick={handleSaveClick}
             className="p-1 hover:bg-gray-100 rounded transition-colors"
-            title={isActivitySaved(activity.id) ? "Unsave activity" : "Save activity"}
+            title={
+              isActivitySaved(activity.id) ? "Unsave activity" : "Save activity"
+            }
           >
             <Bookmark
               className={`w-5 h-5 ${
@@ -299,7 +328,9 @@ function ActivityCard({
             />
           </button>
           {activity.difficulty && (
-            <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}>
+            <span
+              className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}
+            >
               {activity.difficulty}
             </span>
           )}
@@ -339,7 +370,8 @@ function ActivityCard({
         <div className="mt-3 flex gap-4">
           {activity.distance && (
             <div className="text-sm text-gray-600">
-              🚴 {activity.distance}{activity.distanceUnit}
+              🚴 {activity.distance}
+              {activity.distanceUnit}
             </div>
           )}
           {activity.pace && (
@@ -362,7 +394,8 @@ function ActivityCard({
         <div className="mt-3 flex gap-4">
           {activity.distance && (
             <div className="text-sm text-gray-600">
-              🏃 {activity.distance}{activity.distanceUnit}
+              🏃 {activity.distance}
+              {activity.distanceUnit}
             </div>
           )}
           {activity.pace && (
@@ -406,25 +439,33 @@ function SampleActivityCard({
   };
 
   const getActivityIcon = (type: string) => {
-    switch(type) {
-      case "cycling": return "🚴";
-      case "climbing": return "🧗";
-      case "running": return "👟";
-      default: return "⚡";
+    switch (type) {
+      case "cycling":
+        return "🚴";
+      case "climbing":
+        return "🧗";
+      case "running":
+        return "👟";
+      default:
+        return "⚡";
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
-    switch(difficulty?.toLowerCase()) {
-      case "beginner": return "bg-green-100 text-green-700";
-      case "intermediate": return "bg-yellow-100 text-yellow-700";
-      case "advanced": return "bg-red-100 text-red-700";
-      default: return "bg-gray-100 text-gray-700";
+    switch (difficulty?.toLowerCase()) {
+      case "beginner":
+        return "bg-green-100 text-green-700";
+      case "intermediate":
+        return "bg-yellow-100 text-yellow-700";
+      case "advanced":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
   return (
-    <div 
+    <div
       className="border-2 border-gray-200 rounded-lg p-4 bg-gray-50 cursor-pointer hover:shadow-lg transition-shadow duration-200"
       onClick={handleClick}
     >
@@ -436,30 +477,26 @@ function SampleActivityCard({
             {title}
           </h3>
         </div>
-        <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(difficulty)}`}>
+        <span
+          className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(difficulty)}`}
+        >
           {difficulty}
         </span>
       </div>
 
       {/* Organizer */}
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-sm text-gray-600 font-cabin">
-          By {organizer}
-        </span>
+        <span className="text-sm text-gray-600 font-cabin">By {organizer}</span>
       </div>
 
       {/* Details */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-700 font-cabin">
-            📅 {date}
-          </span>
+          <span className="text-sm text-gray-700 font-cabin">📅 {date}</span>
         </div>
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-gray-500" />
-          <span className="text-sm text-gray-700 font-cabin">
-            {location}
-          </span>
+          <span className="text-sm text-gray-700 font-cabin">{location}</span>
         </div>
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-gray-500" />

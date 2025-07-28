@@ -50,38 +50,67 @@ export default function CreateTennis() {
   const { addActivity } = useActivities();
 
   const tennisTypes = {
-    "Singles": {
+    Singles: {
       icon: "🎾",
-      description: "One-on-one tennis match"
+      description: "One-on-one tennis match",
     },
-    "Doubles": {
-      icon: "👥", 
-      description: "Two-on-two tennis match"
+    Doubles: {
+      icon: "👥",
+      description: "Two-on-two tennis match",
     },
     "Mixed Doubles": {
       icon: "⚥",
-      description: "Mixed gender doubles match"
+      description: "Mixed gender doubles match",
     },
     "Practice Session": {
       icon: "🏃",
-      description: "Casual practice and drills"
+      description: "Casual practice and drills",
     },
-    "Coaching": {
+    Coaching: {
       icon: "🎓",
-      description: "Professional tennis coaching session"
+      description: "Professional tennis coaching session",
     },
-    "Tournament": {
+    Tournament: {
       icon: "🏆",
-      description: "Competitive tournament play"
-    }
+      description: "Competitive tournament play",
+    },
   };
 
-  const skillLevels = ["Beginner", "Intermediate", "Advanced", "Club player", "County level", "Professional"];
+  const skillLevels = [
+    "Beginner",
+    "Intermediate",
+    "Advanced",
+    "Club player",
+    "County level",
+    "Professional",
+  ];
   const difficultyLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
-  const courtTypes = ["Hard court", "Clay court", "Grass court", "Indoor", "Artificial grass"];
-  const courtBookingOptions = ["Required", "Included", "Not needed", "Book on arrival"];
-  const equipmentOptions = ["Bring own", "Rental available", "All provided", "Racket only"];
-  const matchFormats = ["Best of 3 sets", "Best of 5 sets", "Pro set to 8", "Timed match", "Practice only"];
+  const courtTypes = [
+    "Hard court",
+    "Clay court",
+    "Grass court",
+    "Indoor",
+    "Artificial grass",
+  ];
+  const courtBookingOptions = [
+    "Required",
+    "Included",
+    "Not needed",
+    "Book on arrival",
+  ];
+  const equipmentOptions = [
+    "Bring own",
+    "Rental available",
+    "All provided",
+    "Racket only",
+  ];
+  const matchFormats = [
+    "Best of 3 sets",
+    "Best of 5 sets",
+    "Pro set to 8",
+    "Timed match",
+    "Practice only",
+  ];
 
   const handleSubmit = () => {
     if (
@@ -140,7 +169,8 @@ export default function CreateTennis() {
       refreshments: formData.refreshments,
       afterMatch: formData.afterMatch,
       parkingInfo: formData.parkingInfo,
-      imageSrc: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=40&h=40&fit=crop&crop=face",
     });
 
     alert("Tennis activity created successfully!");
@@ -159,7 +189,16 @@ export default function CreateTennis() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -191,10 +230,14 @@ export default function CreateTennis() {
                     }`}
                   >
                     <div className="text-2xl mb-2">{details.icon}</div>
-                    <div className="font-bold text-sm font-cabin mb-1">{type}</div>
-                    <div className={`text-xs font-cabin leading-tight ${
-                      selectedType === type ? "text-white" : "text-gray-600"
-                    }`}>
+                    <div className="font-bold text-sm font-cabin mb-1">
+                      {type}
+                    </div>
+                    <div
+                      className={`text-xs font-cabin leading-tight ${
+                        selectedType === type ? "text-white" : "text-gray-600"
+                      }`}
+                    >
                       {details.description}
                     </div>
                   </button>
@@ -465,7 +508,10 @@ export default function CreateTennis() {
                     type="checkbox"
                     checked={formData.ballsProvided}
                     onChange={(e) =>
-                      setFormData({ ...formData, ballsProvided: e.target.checked })
+                      setFormData({
+                        ...formData,
+                        ballsProvided: e.target.checked,
+                      })
                     }
                     className="w-5 h-5 border-2 border-gray-300 rounded"
                   />
@@ -504,7 +550,10 @@ export default function CreateTennis() {
                     type="checkbox"
                     checked={formData.weatherBackup}
                     onChange={(e) =>
-                      setFormData({ ...formData, weatherBackup: e.target.checked })
+                      setFormData({
+                        ...formData,
+                        weatherBackup: e.target.checked,
+                      })
                     }
                     className="w-5 h-5 border-2 border-gray-300 rounded"
                   />

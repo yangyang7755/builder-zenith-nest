@@ -36,7 +36,8 @@ export default function ActivityCard({
 }: ActivityCardProps) {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const navigate = useNavigate();
-  const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
+  const { saveActivity, unsaveActivity, isActivitySaved } =
+    useSavedActivities();
 
   const handleCardClick = () => {
     // Show request modal instead of navigating to activity details
@@ -50,7 +51,8 @@ export default function ActivityCard({
 
   const handleSaveClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
-    const currentActivityId = activityId || `${title}-${organizer}`.replace(/\s+/g, '-').toLowerCase();
+    const currentActivityId =
+      activityId || `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase();
 
     if (isActivitySaved(currentActivityId)) {
       unsaveActivity(currentActivityId);
@@ -62,8 +64,12 @@ export default function ActivityCard({
         title,
         date: date.includes("📅") ? date.replace("📅 ", "") : date,
         time: "09:00", // Default time
-        location: location.includes("📍") ? location.replace("📍", "") : location,
-        meetupLocation: location.includes("📍") ? location.replace("📍", "") : location,
+        location: location.includes("📍")
+          ? location.replace("📍", "")
+          : location,
+        meetupLocation: location.includes("📍")
+          ? location.replace("📍", "")
+          : location,
         organizer,
         distance,
         elevation,
@@ -122,11 +128,23 @@ export default function ActivityCard({
             <button
               onClick={handleSaveClick}
               className="p-1 hover:bg-gray-100 rounded transition-colors"
-              title={isActivitySaved(activityId || `${title}-${organizer}`.replace(/\s+/g, '-').toLowerCase()) ? "Unsave activity" : "Save activity"}
+              title={
+                isActivitySaved(
+                  activityId ||
+                    `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase(),
+                )
+                  ? "Unsave activity"
+                  : "Save activity"
+              }
             >
               <Bookmark
                 className={`w-5 h-5 ${
-                  isActivitySaved(activityId || `${title}-${organizer}`.replace(/\s+/g, '-').toLowerCase())
+                  isActivitySaved(
+                    activityId ||
+                      `${title}-${organizer}`
+                        .replace(/\s+/g, "-")
+                        .toLowerCase(),
+                  )
                     ? "fill-explore-green text-explore-green"
                     : "text-gray-400 hover:text-gray-600"
                 }`}
@@ -163,14 +181,10 @@ export default function ActivityCard({
         {/* Date and Location */}
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-black font-cabin">
-              {date}
-            </span>
+            <span className="text-sm text-black font-cabin">{date}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-black font-cabin">
-              {location}
-            </span>
+            <span className="text-sm text-black font-cabin">{location}</span>
           </div>
         </div>
 

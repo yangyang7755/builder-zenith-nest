@@ -58,13 +58,13 @@ export default function CoachHolly() {
 
       {/* Header */}
       <div className="p-6 text-center">
-        <button 
-          onClick={() => navigate(-1)} 
+        <button
+          onClick={() => navigate(-1)}
           className="absolute left-6 top-16 text-explore-green"
         >
           <ArrowLeft className="w-6 h-6" />
         </button>
-        
+
         <img
           src="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=120&h=120&fit=crop&crop=face"
           alt="Coach Holly Peristiani"
@@ -73,14 +73,16 @@ export default function CoachHolly() {
         <h2 className="text-xl font-bold text-black font-cabin">
           Coach Holly Peristiani
         </h2>
-        <p className="text-gray-600 text-sm font-cabin mt-1">{profileData.location}</p>
-        
+        <p className="text-gray-600 text-sm font-cabin mt-1">
+          {profileData.location}
+        </p>
+
         <div className="flex justify-center gap-3 mt-4">
-          <button 
+          <button
             onClick={handleFollowToggle}
             className={`flex items-center gap-2 px-6 py-2 rounded-lg text-sm font-cabin font-medium transition-colors ${
-              isFollowing 
-                ? "bg-gray-200 text-gray-700 hover:bg-gray-300" 
+              isFollowing
+                ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 : "bg-explore-green text-white hover:bg-explore-green-dark"
             }`}
           >
@@ -96,7 +98,7 @@ export default function CoachHolly() {
               </>
             )}
           </button>
-          <Link 
+          <Link
             to="/chat/coach-holly"
             className="px-6 py-2 border border-explore-green text-explore-green rounded-lg text-sm font-cabin font-medium hover:bg-explore-green hover:text-white transition-colors"
           >
@@ -109,7 +111,9 @@ export default function CoachHolly() {
       <div className="px-6 space-y-6">
         {/* Bio */}
         <div>
-          <h3 className="text-lg font-bold text-black font-cabin mb-2">About</h3>
+          <h3 className="text-lg font-bold text-black font-cabin mb-2">
+            About
+          </h3>
           <p className="text-sm text-gray-700 font-cabin leading-relaxed">
             {profileData.bio}
           </p>
@@ -117,7 +121,9 @@ export default function CoachHolly() {
 
         {/* Tags */}
         <div>
-          <h3 className="text-lg font-bold text-black font-cabin mb-3">Specialties</h3>
+          <h3 className="text-lg font-bold text-black font-cabin mb-3">
+            Specialties
+          </h3>
           <div className="flex gap-2 flex-wrap">
             {profileData.tags.map((tag, index) => (
               <span
@@ -132,7 +138,9 @@ export default function CoachHolly() {
 
         {/* Activities - Clickable */}
         <div>
-          <h3 className="text-lg font-bold text-black font-cabin mb-3">Activities & Expertise</h3>
+          <h3 className="text-lg font-bold text-black font-cabin mb-3">
+            Activities & Expertise
+          </h3>
           <div className="flex gap-2 flex-wrap">
             {profileData.activities.map((activity, index) => (
               <button
@@ -148,13 +156,17 @@ export default function CoachHolly() {
 
         {/* Stats */}
         <div>
-          <h3 className="text-lg font-bold text-black font-cabin mb-3">Stats</h3>
+          <h3 className="text-lg font-bold text-black font-cabin mb-3">
+            Stats
+          </h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-gray-50 rounded-lg">
               <div className="text-xl font-bold text-explore-green font-cabin">
                 {profileData.joinedActivities}
               </div>
-              <div className="text-sm text-gray-600 font-cabin">Activities Led</div>
+              <div className="text-sm text-gray-600 font-cabin">
+                Activities Led
+              </div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
               <div className="text-xl font-bold text-explore-green font-cabin">
@@ -167,7 +179,9 @@ export default function CoachHolly() {
 
         {/* Preferred Terrain */}
         <div>
-          <h3 className="text-lg font-bold text-black font-cabin mb-3">Preferred Terrain</h3>
+          <h3 className="text-lg font-bold text-black font-cabin mb-3">
+            Preferred Terrain
+          </h3>
           <div className="flex gap-2 flex-wrap">
             {profileData.preferredTerrain.map((terrain, index) => (
               <span
@@ -182,10 +196,15 @@ export default function CoachHolly() {
 
         {/* Gear & Skills */}
         <div>
-          <h3 className="text-lg font-bold text-black font-cabin mb-3">Gear & Skills</h3>
+          <h3 className="text-lg font-bold text-black font-cabin mb-3">
+            Gear & Skills
+          </h3>
           <div className="grid grid-cols-2 gap-2">
             {profileData.gear.map((item, index) => (
-              <div key={index} className="flex items-center gap-2 text-sm font-cabin">
+              <div
+                key={index}
+                className="flex items-center gap-2 text-sm font-cabin"
+              >
                 <span className="text-explore-green">✓</span>
                 <span>{item}</span>
               </div>
@@ -195,10 +214,15 @@ export default function CoachHolly() {
 
         {/* Clubs */}
         <div className="pb-20">
-          <h3 className="text-lg font-bold text-black font-cabin mb-3">Clubs</h3>
+          <h3 className="text-lg font-bold text-black font-cabin mb-3">
+            Clubs
+          </h3>
           <div className="space-y-2">
             {profileData.clubs.map((club, index) => (
-              <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <div
+                key={index}
+                className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+              >
                 <div className="w-10 h-10 bg-explore-green rounded-full flex items-center justify-center">
                   <span className="text-white font-bold font-cabin text-sm">
                     {club.charAt(0)}

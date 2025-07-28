@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, Users, Calendar, Trophy, Heart } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Users,
+  Calendar,
+  Trophy,
+  Heart,
+} from "lucide-react";
 
 export default function ClubThames() {
   const [isFollowing, setIsFollowing] = useState(false);
@@ -47,7 +54,9 @@ export default function ClubThames() {
         <button onClick={() => navigate(-1)}>
           <ArrowLeft className="w-6 h-6 text-black" />
         </button>
-        <h1 className="text-xl font-bold text-black font-cabin">Thames Path Cyclists</h1>
+        <h1 className="text-xl font-bold text-black font-cabin">
+          Thames Path Cyclists
+        </h1>
         <div className="w-6"></div>
       </div>
 
@@ -60,11 +69,11 @@ export default function ClubThames() {
             alt="Thames Path Cyclists"
             className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-explore-green"
           />
-          
+
           <h2 className="text-2xl font-bold text-black font-cabin mb-2">
             Thames Path Cyclists
           </h2>
-          
+
           <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
             <MapPin className="w-4 h-4" />
             <span className="text-sm font-cabin">Thames Path, London</span>
@@ -72,15 +81,23 @@ export default function ClubThames() {
 
           <div className="flex items-center justify-center gap-6 mb-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-explore-green font-cabin">180</div>
+              <div className="text-2xl font-bold text-explore-green font-cabin">
+                180
+              </div>
               <div className="text-sm text-gray-600 font-cabin">Members</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-explore-green font-cabin">22</div>
-              <div className="text-sm text-gray-600 font-cabin">Events/month</div>
+              <div className="text-2xl font-bold text-explore-green font-cabin">
+                22
+              </div>
+              <div className="text-sm text-gray-600 font-cabin">
+                Events/month
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-explore-green font-cabin">4.9</div>
+              <div className="text-2xl font-bold text-explore-green font-cabin">
+                4.9
+              </div>
               <div className="text-sm text-gray-600 font-cabin">Rating</div>
             </div>
           </div>
@@ -95,10 +112,12 @@ export default function ClubThames() {
                   : "bg-explore-green text-white hover:bg-explore-green-dark"
               }`}
             >
-              <Heart className={`w-5 h-5 ${isFollowing ? "fill-current" : ""}`} />
+              <Heart
+                className={`w-5 h-5 ${isFollowing ? "fill-current" : ""}`}
+              />
               {isFollowing ? "Following" : "Follow"}
             </button>
-            
+
             <button
               onClick={handleJoinRequest}
               className="flex-1 bg-explore-green text-white py-3 px-4 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
@@ -110,34 +129,50 @@ export default function ClubThames() {
 
         {/* About Section */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">About</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            About
+          </h3>
           <p className="text-gray-700 font-cabin leading-relaxed">
-            Thames Path Cyclists is dedicated to exploring London's scenic riverside routes and beyond. We organize regular rides along the Thames Path and surrounding areas, catering to all levels from leisurely paced group rides to challenging sportives. Join us to discover hidden gems along London's waterways.
+            Thames Path Cyclists is dedicated to exploring London's scenic
+            riverside routes and beyond. We organize regular rides along the
+            Thames Path and surrounding areas, catering to all levels from
+            leisurely paced group rides to challenging sportives. Join us to
+            discover hidden gems along London's waterways.
           </p>
         </div>
 
         {/* Activities */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">Activities</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            Activities
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gray-50 rounded-lg p-4 text-center">
               <div className="text-2xl mb-2">🚴‍♂️</div>
-              <div className="text-sm font-medium text-black font-cabin">Thames Rides</div>
+              <div className="text-sm font-medium text-black font-cabin">
+                Thames Rides
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Weekends</div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4 text-center">
               <div className="text-2xl mb-2">🌊</div>
-              <div className="text-sm font-medium text-black font-cabin">Riverside Tours</div>
+              <div className="text-sm font-medium text-black font-cabin">
+                Riverside Tours
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Saturdays</div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4 text-center">
               <div className="text-2xl mb-2">🏆</div>
-              <div className="text-sm font-medium text-black font-cabin">Sportives</div>
+              <div className="text-sm font-medium text-black font-cabin">
+                Sportives
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Monthly</div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4 text-center">
               <div className="text-2xl mb-2">☕</div>
-              <div className="text-sm font-medium text-black font-cabin">Cafe Rides</div>
+              <div className="text-sm font-medium text-black font-cabin">
+                Cafe Rides
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Sundays</div>
             </div>
           </div>
@@ -145,12 +180,18 @@ export default function ClubThames() {
 
         {/* Upcoming Events */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">Upcoming Events</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            Upcoming Events
+          </h3>
           <div className="space-y-3">
             <div className="border-2 border-gray-200 rounded-lg p-4">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="font-medium text-black font-cabin">Thames Path Discovery Ride</h4>
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Open</span>
+                <h4 className="font-medium text-black font-cabin">
+                  Thames Path Discovery Ride
+                </h4>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                  Open
+                </span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                 <Calendar className="w-4 h-4" />
@@ -164,8 +205,12 @@ export default function ClubThames() {
 
             <div className="border-2 border-gray-200 rounded-lg p-4">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="font-medium text-black font-cabin">Sunday Cafe Ride</h4>
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Open</span>
+                <h4 className="font-medium text-black font-cabin">
+                  Sunday Cafe Ride
+                </h4>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                  Open
+                </span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                 <Calendar className="w-4 h-4" />
@@ -181,7 +226,9 @@ export default function ClubThames() {
 
         {/* Club Leaders */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">Club Leaders</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            Club Leaders
+          </h3>
           <div className="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg">
             <img
               src="https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
@@ -189,8 +236,12 @@ export default function ClubThames() {
               className="w-12 h-12 rounded-full border border-black"
             />
             <div className="flex-1">
-              <div className="font-medium text-black font-cabin">Emma Thompson</div>
-              <div className="text-sm text-gray-600 font-cabin">Ride Leader</div>
+              <div className="font-medium text-black font-cabin">
+                Emma Thompson
+              </div>
+              <div className="text-sm text-gray-600 font-cabin">
+                Ride Leader
+              </div>
             </div>
             <div className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
               <Trophy className="w-3 h-3 inline mr-1" />
@@ -201,20 +252,30 @@ export default function ClubThames() {
 
         {/* Route Highlights */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">Popular Routes</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            Popular Routes
+          </h3>
           <div className="space-y-3">
             <div className="bg-blue-50 rounded-lg p-4">
-              <h4 className="font-medium text-black font-cabin mb-2">🌊 Thames Path East</h4>
-              <p className="text-sm text-gray-600 font-cabin mb-2">Tower Bridge → Greenwich • 12km</p>
+              <h4 className="font-medium text-black font-cabin mb-2">
+                🌊 Thames Path East
+              </h4>
+              <p className="text-sm text-gray-600 font-cabin mb-2">
+                Tower Bridge → Greenwich • 12km
+              </p>
               <div className="flex justify-between text-xs text-gray-500">
                 <span>Easy • Flat</span>
                 <span>Historic sights</span>
               </div>
             </div>
-            
+
             <div className="bg-green-50 rounded-lg p-4">
-              <h4 className="font-medium text-black font-cabin mb-2">🌳 Thames Path West</h4>
-              <p className="text-sm text-gray-600 font-cabin mb-2">Putney → Hampton Court • 18km</p>
+              <h4 className="font-medium text-black font-cabin mb-2">
+                🌳 Thames Path West
+              </h4>
+              <p className="text-sm text-gray-600 font-cabin mb-2">
+                Putney → Hampton Court • 18km
+              </p>
               <div className="flex justify-between text-xs text-gray-500">
                 <span>Moderate • Rolling</span>
                 <span>Parks & palaces</span>
@@ -231,7 +292,7 @@ export default function ClubThames() {
             <h3 className="text-xl font-bold text-explore-green font-cabin mb-4 text-center">
               Join Thames Path Cyclists
             </h3>
-            
+
             <div className="text-center mb-6">
               <img
                 src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=80&h=80&fit=crop"
@@ -239,7 +300,8 @@ export default function ClubThames() {
                 className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-explore-green"
               />
               <p className="text-gray-700 font-cabin">
-                Your membership request will be sent to the club administrators for review.
+                Your membership request will be sent to the club administrators
+                for review.
               </p>
             </div>
 

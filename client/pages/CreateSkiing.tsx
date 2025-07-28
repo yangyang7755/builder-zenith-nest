@@ -47,35 +47,52 @@ export default function CreateSkiing() {
   const skiingTypes = {
     "Alpine Skiing": {
       icon: "⛷️",
-      description: "Downhill skiing on groomed slopes and pistes"
+      description: "Downhill skiing on groomed slopes and pistes",
     },
     "Cross Country": {
-      icon: "🎿", 
-      description: "Nordic skiing across flat or rolling terrain"
+      icon: "🎿",
+      description: "Nordic skiing across flat or rolling terrain",
     },
-    "Backcountry": {
+    Backcountry: {
       icon: "🏔️",
-      description: "Off-piste skiing in unmarked natural terrain"
+      description: "Off-piste skiing in unmarked natural terrain",
     },
-    "Freestyle": {
+    Freestyle: {
       icon: "🤸",
-      description: "Tricks, jumps and terrain park skiing"
+      description: "Tricks, jumps and terrain park skiing",
     },
     "Ski Touring": {
       icon: "🗻",
-      description: "Uphill skiing with touring equipment"
+      description: "Uphill skiing with touring equipment",
     },
-    "Snowboarding": {
+    Snowboarding: {
       icon: "🏂",
-      description: "Snowboarding on slopes and terrain parks"
-    }
+      description: "Snowboarding on slopes and terrain parks",
+    },
   };
 
-  const skiLevels = ["Beginner", "Intermediate", "Advanced", "Expert", "Professional"];
+  const skiLevels = [
+    "Beginner",
+    "Intermediate",
+    "Advanced",
+    "Expert",
+    "Professional",
+  ];
   const difficultyLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
   const liftPassOptions = ["Required", "Included", "Optional", "Not needed"];
-  const equipmentOptions = ["Own gear", "Rental available", "Included", "Bring specific items"];
-  const meetingPoints = ["Base station", "Resort entrance", "Specific lift", "Car park", "Other"];
+  const equipmentOptions = [
+    "Own gear",
+    "Rental available",
+    "Included",
+    "Bring specific items",
+  ];
+  const meetingPoints = [
+    "Base station",
+    "Resort entrance",
+    "Specific lift",
+    "Car park",
+    "Other",
+  ];
 
   const handleSubmit = () => {
     if (
@@ -129,7 +146,8 @@ export default function CreateSkiing() {
       offPiste: formData.offPiste,
       avalancheRisk: formData.avalancheRisk,
       insurance: formData.insurance,
-      imageSrc: "https://images.unsplash.com/photo-1551524164-687a55dd1126?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1551524164-687a55dd1126?w=40&h=40&fit=crop&crop=face",
     });
 
     alert("Skiing activity created successfully!");
@@ -148,7 +166,16 @@ export default function CreateSkiing() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -180,10 +207,14 @@ export default function CreateSkiing() {
                     }`}
                   >
                     <div className="text-2xl mb-2">{details.icon}</div>
-                    <div className="font-bold text-sm font-cabin mb-1">{type}</div>
-                    <div className={`text-xs font-cabin leading-tight ${
-                      selectedType === type ? "text-white" : "text-gray-600"
-                    }`}>
+                    <div className="font-bold text-sm font-cabin mb-1">
+                      {type}
+                    </div>
+                    <div
+                      className={`text-xs font-cabin leading-tight ${
+                        selectedType === type ? "text-white" : "text-gray-600"
+                      }`}
+                    >
                       {details.description}
                     </div>
                   </button>

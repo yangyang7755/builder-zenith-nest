@@ -152,7 +152,8 @@ export default function ActivityDetails() {
   const navigate = useNavigate();
   const { activityId } = useParams();
   const { addJoinRequest } = useChat();
-  const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
+  const { saveActivity, unsaveActivity, isActivitySaved } =
+    useSavedActivities();
   const [agreedToRequirements, setAgreedToRequirements] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
@@ -281,7 +282,11 @@ export default function ActivityDetails() {
               <button
                 onClick={handleSaveActivity}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                title={isActivitySaved(activity.id) ? "Unsave activity" : "Save activity"}
+                title={
+                  isActivitySaved(activity.id)
+                    ? "Unsave activity"
+                    : "Save activity"
+                }
               >
                 <Bookmark
                   className={`w-6 h-6 ${
@@ -319,7 +324,9 @@ export default function ActivityDetails() {
               {activity.organizer.name}
             </h2>
             {activity.organizer.name === "Coach Holly Peristiani" && (
-              <p className="text-xs text-gray-500 font-cabin">Click to view profile</p>
+              <p className="text-xs text-gray-500 font-cabin">
+                Click to view profile
+              </p>
             )}
           </div>
         </div>

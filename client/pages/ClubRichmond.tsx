@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, Users, Calendar, Trophy, Heart } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Users,
+  Calendar,
+  Trophy,
+  Heart,
+} from "lucide-react";
 
 export default function ClubRichmond() {
   const [isFollowing, setIsFollowing] = useState(false);
@@ -47,7 +54,9 @@ export default function ClubRichmond() {
         <button onClick={() => navigate(-1)}>
           <ArrowLeft className="w-6 h-6 text-black" />
         </button>
-        <h1 className="text-xl font-bold text-black font-cabin">Richmond Park Runners</h1>
+        <h1 className="text-xl font-bold text-black font-cabin">
+          Richmond Park Runners
+        </h1>
         <div className="w-6"></div>
       </div>
 
@@ -60,11 +69,11 @@ export default function ClubRichmond() {
             alt="Richmond Park Runners"
             className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-explore-green"
           />
-          
+
           <h2 className="text-2xl font-bold text-black font-cabin mb-2">
             Richmond Park Runners
           </h2>
-          
+
           <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
             <MapPin className="w-4 h-4" />
             <span className="text-sm font-cabin">Richmond Park, London</span>
@@ -72,15 +81,23 @@ export default function ClubRichmond() {
 
           <div className="flex items-center justify-center gap-6 mb-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-explore-green font-cabin">245</div>
+              <div className="text-2xl font-bold text-explore-green font-cabin">
+                245
+              </div>
               <div className="text-sm text-gray-600 font-cabin">Members</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-explore-green font-cabin">18</div>
-              <div className="text-sm text-gray-600 font-cabin">Events/month</div>
+              <div className="text-2xl font-bold text-explore-green font-cabin">
+                18
+              </div>
+              <div className="text-sm text-gray-600 font-cabin">
+                Events/month
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-explore-green font-cabin">4.8</div>
+              <div className="text-2xl font-bold text-explore-green font-cabin">
+                4.8
+              </div>
               <div className="text-sm text-gray-600 font-cabin">Rating</div>
             </div>
           </div>
@@ -95,10 +112,12 @@ export default function ClubRichmond() {
                   : "bg-explore-green text-white hover:bg-explore-green-dark"
               }`}
             >
-              <Heart className={`w-5 h-5 ${isFollowing ? "fill-current" : ""}`} />
+              <Heart
+                className={`w-5 h-5 ${isFollowing ? "fill-current" : ""}`}
+              />
               {isFollowing ? "Following" : "Follow"}
             </button>
-            
+
             <button
               onClick={handleJoinRequest}
               className="flex-1 bg-explore-green text-white py-3 px-4 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
@@ -110,34 +129,50 @@ export default function ClubRichmond() {
 
         {/* About Section */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">About</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            About
+          </h3>
           <p className="text-gray-700 font-cabin leading-relaxed">
-            Richmond Park Runners is London's premier running community, offering everything from casual social runs to competitive training sessions. Our beautiful routes through Richmond Park provide the perfect setting for runners of all levels to improve their fitness and meet like-minded people.
+            Richmond Park Runners is London's premier running community,
+            offering everything from casual social runs to competitive training
+            sessions. Our beautiful routes through Richmond Park provide the
+            perfect setting for runners of all levels to improve their fitness
+            and meet like-minded people.
           </p>
         </div>
 
         {/* Activities */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">Activities</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            Activities
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gray-50 rounded-lg p-4 text-center">
               <div className="text-2xl mb-2">🏃‍♂️</div>
-              <div className="text-sm font-medium text-black font-cabin">Social Runs</div>
+              <div className="text-sm font-medium text-black font-cabin">
+                Social Runs
+              </div>
               <div className="text-xs text-gray-600 font-cabin">All Paces</div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4 text-center">
               <div className="text-2xl mb-2">🏃‍♀️</div>
-              <div className="text-sm font-medium text-black font-cabin">Women's Runs</div>
+              <div className="text-sm font-medium text-black font-cabin">
+                Women's Runs
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Wednesdays</div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4 text-center">
               <div className="text-2xl mb-2">⚡</div>
-              <div className="text-sm font-medium text-black font-cabin">Speed Training</div>
+              <div className="text-sm font-medium text-black font-cabin">
+                Speed Training
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Tuesdays</div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4 text-center">
               <div className="text-2xl mb-2">🏆</div>
-              <div className="text-sm font-medium text-black font-cabin">Race Training</div>
+              <div className="text-sm font-medium text-black font-cabin">
+                Race Training
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Thursdays</div>
             </div>
           </div>
@@ -145,12 +180,18 @@ export default function ClubRichmond() {
 
         {/* Upcoming Events */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">Upcoming Events</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            Upcoming Events
+          </h3>
           <div className="space-y-3">
             <div className="border-2 border-gray-200 rounded-lg p-4">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="font-medium text-black font-cabin">Sunday Long Run</h4>
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Open</span>
+                <h4 className="font-medium text-black font-cabin">
+                  Sunday Long Run
+                </h4>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                  Open
+                </span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                 <Calendar className="w-4 h-4" />
@@ -164,8 +205,12 @@ export default function ClubRichmond() {
 
             <div className="border-2 border-gray-200 rounded-lg p-4">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="font-medium text-black font-cabin">Speed Session</h4>
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Open</span>
+                <h4 className="font-medium text-black font-cabin">
+                  Speed Session
+                </h4>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                  Open
+                </span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                 <Calendar className="w-4 h-4" />
@@ -181,7 +226,9 @@ export default function ClubRichmond() {
 
         {/* Club Leaders */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold text-black font-cabin mb-3">Club Leaders</h3>
+          <h3 className="text-xl font-semibold text-black font-cabin mb-3">
+            Club Leaders
+          </h3>
           <div className="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg">
             <img
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
@@ -189,8 +236,12 @@ export default function ClubRichmond() {
               className="w-12 h-12 rounded-full border border-black"
             />
             <div className="flex-1">
-              <div className="font-medium text-black font-cabin">James Mitchell</div>
-              <div className="text-sm text-gray-600 font-cabin">Club Captain</div>
+              <div className="font-medium text-black font-cabin">
+                James Mitchell
+              </div>
+              <div className="text-sm text-gray-600 font-cabin">
+                Club Captain
+              </div>
             </div>
             <div className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
               <Trophy className="w-3 h-3 inline mr-1" />
@@ -207,7 +258,7 @@ export default function ClubRichmond() {
             <h3 className="text-xl font-bold text-explore-green font-cabin mb-4 text-center">
               Join Richmond Park Runners
             </h3>
-            
+
             <div className="text-center mb-6">
               <img
                 src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=80&h=80&fit=crop"
@@ -215,7 +266,8 @@ export default function ClubRichmond() {
                 className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-explore-green"
               />
               <p className="text-gray-700 font-cabin">
-                Your membership request will be sent to the club administrators for review.
+                Your membership request will be sent to the club administrators
+                for review.
               </p>
             </div>
 

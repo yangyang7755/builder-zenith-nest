@@ -10,17 +10,17 @@ export default function Saved() {
 
   // Sort activities by date (future vs past)
   const now = new Date();
-  const today = now.toISOString().split('T')[0];
+  const today = now.toISOString().split("T")[0];
 
-  const upcomingSavedActivities = savedActivities.filter(activity => {
+  const upcomingSavedActivities = savedActivities.filter((activity) => {
     const activityDate = new Date(activity.date);
-    const activityDateString = activityDate.toISOString().split('T')[0];
+    const activityDateString = activityDate.toISOString().split("T")[0];
     return activityDateString >= today;
   });
 
-  const pastSavedActivities = savedActivities.filter(activity => {
+  const pastSavedActivities = savedActivities.filter((activity) => {
     const activityDate = new Date(activity.date);
-    const activityDateString = activityDate.toISOString().split('T')[0];
+    const activityDateString = activityDate.toISOString().split("T")[0];
     return activityDateString < today;
   });
 
@@ -61,7 +61,7 @@ export default function Saved() {
       gender: "All genders",
       visibility: "All",
       createdAt: new Date(),
-    }
+    },
   ];
 
   return (
@@ -127,8 +127,12 @@ export default function Saved() {
                   <div className="text-gray-400 mb-4">
                     <Bookmark className="w-16 h-16 mx-auto" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-600 mb-2">No saved activities yet</h3>
-                  <p className="text-gray-500 mb-4">Save activities from the explore page to see them here</p>
+                  <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                    No saved activities yet
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Save activities from the explore page to see them here
+                  </p>
                   <Link
                     to="/explore"
                     className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
@@ -146,7 +150,12 @@ export default function Saved() {
                       </h2>
                       <div className="space-y-4">
                         {upcomingSavedActivities.map((activity) => (
-                          <ActivityCard key={activity.id} activity={activity} onUnsave={unsaveActivity} showSaveButton={true} />
+                          <ActivityCard
+                            key={activity.id}
+                            activity={activity}
+                            onUnsave={unsaveActivity}
+                            showSaveButton={true}
+                          />
                         ))}
                       </div>
                     </div>
@@ -160,7 +169,12 @@ export default function Saved() {
                       </h2>
                       <div className="space-y-4">
                         {pastSavedActivities.map((activity) => (
-                          <ActivityCard key={activity.id} activity={activity} onUnsave={unsaveActivity} showSaveButton={true} />
+                          <ActivityCard
+                            key={activity.id}
+                            activity={activity}
+                            onUnsave={unsaveActivity}
+                            showSaveButton={true}
+                          />
                         ))}
                       </div>
                     </div>
@@ -178,8 +192,12 @@ export default function Saved() {
                   <div className="text-gray-400 mb-4">
                     <CheckCircle className="w-16 h-16 mx-auto" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-600 mb-2">No joined activities yet</h3>
-                  <p className="text-gray-500 mb-4">Join activities from the explore page to see them here</p>
+                  <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                    No joined activities yet
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Join activities from the explore page to see them here
+                  </p>
                   <Link
                     to="/explore"
                     className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
@@ -190,7 +208,11 @@ export default function Saved() {
               ) : (
                 <div className="space-y-4">
                   {joinedActivities.map((activity) => (
-                    <ActivityCard key={activity.id} activity={activity} showJoinedStatus={true} />
+                    <ActivityCard
+                      key={activity.id}
+                      activity={activity}
+                      showJoinedStatus={true}
+                    />
                   ))}
                 </div>
               )}
@@ -209,7 +231,7 @@ function ActivityCard({
   activity,
   onUnsave,
   showSaveButton = false,
-  showJoinedStatus = false
+  showJoinedStatus = false,
 }: {
   activity: Activity | any;
   onUnsave?: (id: string) => void;
@@ -239,36 +261,44 @@ function ActivityCard({
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-GB', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long'
+    return date.toLocaleDateString("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
     });
   };
 
   const formatTime = (timeStr: string) => {
-    const [hours, minutes] = timeStr.split(':');
+    const [hours, minutes] = timeStr.split(":");
     const hour24 = parseInt(hours);
     const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
-    const ampm = hour24 >= 12 ? 'PM' : 'AM';
+    const ampm = hour24 >= 12 ? "PM" : "AM";
     return `${hour12}:${minutes} ${ampm}`;
   };
 
   const getActivityIcon = (type: string) => {
-    switch(type) {
-      case "cycling": return "🚴";
-      case "climbing": return "🧗";
-      case "running": return "👟";
-      default: return "⚡";
+    switch (type) {
+      case "cycling":
+        return "🚴";
+      case "climbing":
+        return "🧗";
+      case "running":
+        return "👟";
+      default:
+        return "⚡";
     }
   };
 
   const getStatusColor = (status: string) => {
-    switch(status) {
-      case "confirmed": return "bg-green-100 text-green-700";
-      case "pending": return "bg-yellow-100 text-yellow-700";
-      case "cancelled": return "bg-red-100 text-red-700";
-      default: return "bg-gray-100 text-gray-700";
+    switch (status) {
+      case "confirmed":
+        return "bg-green-100 text-green-700";
+      case "pending":
+        return "bg-yellow-100 text-yellow-700";
+      case "cancelled":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -286,8 +316,11 @@ function ActivityCard({
         </div>
         <div className="flex items-center gap-2">
           {showJoinedStatus && activity.status && (
-            <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getStatusColor(activity.status)}`}>
-              {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
+            <span
+              className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getStatusColor(activity.status)}`}
+            >
+              {activity.status.charAt(0).toUpperCase() +
+                activity.status.slice(1)}
             </span>
           )}
           {showSaveButton && (
@@ -325,27 +358,39 @@ function ActivityCard({
         )}
 
         {/* Activity-specific metrics */}
-        {activity.type === "cycling" && (activity.distance || activity.pace) && (
-          <div className="flex gap-4 text-sm text-gray-600 mt-2">
-            {activity.distance && (
-              <span>🚴 {activity.distance}{activity.distanceUnit}</span>
-            )}
-            {activity.pace && (
-              <span>⚡ {activity.pace} {activity.paceUnit}</span>
-            )}
-          </div>
-        )}
+        {activity.type === "cycling" &&
+          (activity.distance || activity.pace) && (
+            <div className="flex gap-4 text-sm text-gray-600 mt-2">
+              {activity.distance && (
+                <span>
+                  🚴 {activity.distance}
+                  {activity.distanceUnit}
+                </span>
+              )}
+              {activity.pace && (
+                <span>
+                  ⚡ {activity.pace} {activity.paceUnit}
+                </span>
+              )}
+            </div>
+          )}
 
-        {activity.type === "running" && (activity.distance || activity.pace) && (
-          <div className="flex gap-4 text-sm text-gray-600 mt-2">
-            {activity.distance && (
-              <span>🏃 {activity.distance}{activity.distanceUnit}</span>
-            )}
-            {activity.pace && (
-              <span>⚡ {activity.pace} {activity.paceUnit}</span>
-            )}
-          </div>
-        )}
+        {activity.type === "running" &&
+          (activity.distance || activity.pace) && (
+            <div className="flex gap-4 text-sm text-gray-600 mt-2">
+              {activity.distance && (
+                <span>
+                  🏃 {activity.distance}
+                  {activity.distanceUnit}
+                </span>
+              )}
+              {activity.pace && (
+                <span>
+                  ⚡ {activity.pace} {activity.paceUnit}
+                </span>
+              )}
+            </div>
+          )}
       </div>
 
       {/* Status Button for Joined Activities */}
@@ -357,13 +402,15 @@ function ActivityCard({
               activity.status === "confirmed"
                 ? "bg-green-100 text-green-700 cursor-default"
                 : activity.status === "pending"
-                ? "bg-yellow-100 text-yellow-700 cursor-default"
-                : "bg-gray-100 text-gray-700 cursor-default"
+                  ? "bg-yellow-100 text-yellow-700 cursor-default"
+                  : "bg-gray-100 text-gray-700 cursor-default"
             }`}
           >
-            {activity.status === "confirmed" ? "✓ Joined" :
-             activity.status === "pending" ? "⏳ Pending" :
-             "Request Status"}
+            {activity.status === "confirmed"
+              ? "✓ Joined"
+              : activity.status === "pending"
+                ? "⏳ Pending"
+                : "Request Status"}
           </button>
         </div>
       )}

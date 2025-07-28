@@ -54,8 +54,10 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       meetupLocation: "Westway Climbing Centre",
       organizer: "Coach Holly Peristiani",
       maxParticipants: "12",
-      specialComments: "This session is perfect for meeting fellow climbers and boosting your confidence.",
-      imageSrc: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
+      specialComments:
+        "This session is perfect for meeting fellow climbers and boosting your confidence.",
+      imageSrc:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
       climbingLevel: "Intermediate",
       gender: "Female only",
       visibility: "All",
@@ -77,8 +79,10 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       elevation: "150",
       elevationUnit: "m",
       maxParticipants: "15",
-      specialComments: "Join us for a friendly social ride through Richmond Park.",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      specialComments:
+        "Join us for a friendly social ride through Richmond Park.",
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       gender: "All genders",
       visibility: "All",
       createdAt: new Date(),
@@ -99,8 +103,10 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       elevation: "420",
       elevationUnit: "m",
       maxParticipants: "12",
-      specialComments: "High-intensity training session for intermediate to advanced cyclists.",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      specialComments:
+        "High-intensity training session for intermediate to advanced cyclists.",
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       gender: "All genders",
       visibility: "All",
       createdAt: new Date(),
@@ -116,12 +122,13 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       organizer: "Peak Adventures",
       maxParticipants: "8",
       specialComments: "Weekend climbing adventure in the Peak District.",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       climbingLevel: "Advanced",
       gender: "All genders",
       visibility: "All",
       createdAt: new Date(),
-    }
+    },
   ]);
 
   const addActivity = (activityData: Omit<Activity, "id" | "createdAt">) => {

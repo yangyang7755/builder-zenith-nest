@@ -42,27 +42,46 @@ export default function CreateRunning() {
   const { addActivity } = useActivities();
 
   const runningTypes = {
-    "Trail": {
+    Trail: {
       icon: "🌲",
-      description: "Off-road running through nature trails, forests, and hills"
+      description: "Off-road running through nature trails, forests, and hills",
     },
-    "Track": {
-      icon: "🏟️", 
-      description: "Structured running on athletics track with specific workouts"
+    Track: {
+      icon: "🏟️",
+      description:
+        "Structured running on athletics track with specific workouts",
     },
-    "Road": {
+    Road: {
       icon: "🛣️",
-      description: "Running on paved roads, streets, and paths in urban/suburban areas"
+      description:
+        "Running on paved roads, streets, and paths in urban/suburban areas",
     },
-    "Race": {
+    Race: {
       icon: "🏁",
-      description: "Competitive running events with timing and official results"
-    }
+      description:
+        "Competitive running events with timing and official results",
+    },
   };
 
-  const terrainOptions = ["Flat", "Hilly", "Mountain", "Mixed", "Urban", "Beach", "Forest"];
+  const terrainOptions = [
+    "Flat",
+    "Hilly",
+    "Mountain",
+    "Mixed",
+    "Urban",
+    "Beach",
+    "Forest",
+  ];
   const difficultyLevels = ["Beginner", "Intermediate", "Advanced", "Elite"];
-  const raceCategories = ["5K", "10K", "Half Marathon", "Marathon", "Ultra", "Fun Run", "Parkrun"];
+  const raceCategories = [
+    "5K",
+    "10K",
+    "Half Marathon",
+    "Marathon",
+    "Ultra",
+    "Fun Run",
+    "Parkrun",
+  ];
 
   const handleSubmit = () => {
     if (
@@ -116,7 +135,8 @@ export default function CreateRunning() {
       prizes: formData.prizes,
       cutoffTime: formData.cutoffTime,
       startWave: formData.startWave,
-      imageSrc: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=40&h=40&fit=crop&crop=face",
     });
 
     alert("Running activity created successfully!");
@@ -135,7 +155,16 @@ export default function CreateRunning() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -169,10 +198,14 @@ export default function CreateRunning() {
                     }`}
                   >
                     <div className="text-2xl mb-2">{details.icon}</div>
-                    <div className="font-bold text-sm font-cabin mb-1">{type}</div>
-                    <div className={`text-xs font-cabin leading-tight ${
-                      selectedType === type ? "text-white" : "text-gray-600"
-                    }`}>
+                    <div className="font-bold text-sm font-cabin mb-1">
+                      {type}
+                    </div>
+                    <div
+                      className={`text-xs font-cabin leading-tight ${
+                        selectedType === type ? "text-white" : "text-gray-600"
+                      }`}
+                    >
                       {details.description}
                     </div>
                   </button>
@@ -206,7 +239,10 @@ export default function CreateRunning() {
             {/* Distance */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Distance {selectedType === "Race" && <span className="text-red-500">*</span>}
+                Distance{" "}
+                {selectedType === "Race" && (
+                  <span className="text-red-500">*</span>
+                )}
               </h3>
               <div className="flex gap-2">
                 <input
@@ -311,7 +347,9 @@ export default function CreateRunning() {
             </div>
 
             {/* Elevation (for Trail and Mountain runs) */}
-            {(selectedType === "Trail" || formData.terrain.includes("Mountain") || formData.terrain.includes("Hilly")) && (
+            {(selectedType === "Trail" ||
+              formData.terrain.includes("Mountain") ||
+              formData.terrain.includes("Hilly")) && (
               <div>
                 <h3 className="text-xl font-medium text-black font-cabin mb-3">
                   Elevation Gain
@@ -426,7 +464,10 @@ export default function CreateRunning() {
                     type="text"
                     value={formData.registrationFee}
                     onChange={(e) =>
-                      setFormData({ ...formData, registrationFee: e.target.value })
+                      setFormData({
+                        ...formData,
+                        registrationFee: e.target.value,
+                      })
                     }
                     className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
                     placeholder="e.g., £25 or Free"

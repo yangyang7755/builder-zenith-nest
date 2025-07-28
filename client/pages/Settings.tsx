@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { 
-  ArrowLeft, 
-  User, 
-  Mail, 
-  Lock, 
-  Shield, 
-  Bell, 
-  Globe, 
-  Eye, 
-  MapPin, 
+import {
+  ArrowLeft,
+  User,
+  Mail,
+  Lock,
+  Shield,
+  Bell,
+  Globe,
+  Eye,
+  MapPin,
   Smartphone,
   CreditCard,
   HelpCircle,
@@ -18,7 +18,7 @@ import {
   ChevronRight,
   Moon,
   Sun,
-  Volume2
+  Volume2,
 } from "lucide-react";
 
 export default function Settings() {
@@ -30,13 +30,13 @@ export default function Settings() {
     sms: false,
     activities: true,
     messages: true,
-    reviews: true
+    reviews: true,
   });
   const [privacy, setPrivacy] = useState({
     profileVisible: "public",
     showLocation: true,
     showActivities: true,
-    messageRequests: "everyone"
+    messageRequests: "everyone",
   });
 
   const navigate = useNavigate();
@@ -62,35 +62,39 @@ export default function Settings() {
     navigate("/auth");
   };
 
-  const SettingsSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  const SettingsSection = ({
+    title,
+    children,
+  }: {
+    title: string;
+    children: React.ReactNode;
+  }) => (
     <div className="mb-8">
-      <h3 className="text-lg font-semibold text-black font-cabin mb-4">{title}</h3>
-      <div className="space-y-2">
-        {children}
-      </div>
+      <h3 className="text-lg font-semibold text-black font-cabin mb-4">
+        {title}
+      </h3>
+      <div className="space-y-2">{children}</div>
     </div>
   );
 
-  const SettingsItem = ({ 
-    icon, 
-    title, 
-    subtitle, 
-    onClick, 
-    rightContent 
-  }: { 
-    icon: React.ReactNode; 
-    title: string; 
-    subtitle?: string; 
+  const SettingsItem = ({
+    icon,
+    title,
+    subtitle,
+    onClick,
+    rightContent,
+  }: {
+    icon: React.ReactNode;
+    title: string;
+    subtitle?: string;
     onClick?: () => void;
     rightContent?: React.ReactNode;
   }) => (
-    <div 
+    <div
       className="flex items-center gap-3 p-4 bg-white border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
       onClick={onClick}
     >
-      <div className="text-explore-green">
-        {icon}
-      </div>
+      <div className="text-explore-green">{icon}</div>
       <div className="flex-1">
         <div className="font-medium text-black font-cabin">{title}</div>
         {subtitle && (
@@ -101,22 +105,22 @@ export default function Settings() {
     </div>
   );
 
-  const ToggleSwitch = ({ 
-    enabled, 
-    onChange 
-  }: { 
-    enabled: boolean; 
+  const ToggleSwitch = ({
+    enabled,
+    onChange,
+  }: {
+    enabled: boolean;
     onChange: (enabled: boolean) => void;
   }) => (
-    <div 
+    <div
       className={`w-12 h-6 rounded-full transition-colors cursor-pointer ${
-        enabled ? 'bg-explore-green' : 'bg-gray-300'
+        enabled ? "bg-explore-green" : "bg-gray-300"
       }`}
       onClick={() => onChange(!enabled)}
     >
-      <div 
+      <div
         className={`w-5 h-5 bg-white rounded-full transition-transform duration-200 ${
-          enabled ? 'translate-x-6' : 'translate-x-0.5'
+          enabled ? "translate-x-6" : "translate-x-0.5"
         } mt-0.5`}
       />
     </div>
@@ -134,7 +138,16 @@ export default function Settings() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -151,7 +164,6 @@ export default function Settings() {
 
       {/* Scrollable Content */}
       <div className="overflow-y-auto pb-20 px-6 pt-6">
-        
         {/* Profile Settings */}
         <SettingsSection title="Profile">
           <SettingsItem
@@ -191,11 +203,18 @@ export default function Settings() {
           <SettingsItem
             icon={<Eye className="w-5 h-5" />}
             title="Profile Visibility"
-            subtitle={privacy.profileVisible === "public" ? "Public" : "Private"}
+            subtitle={
+              privacy.profileVisible === "public" ? "Public" : "Private"
+            }
             rightContent={
-              <ToggleSwitch 
+              <ToggleSwitch
                 enabled={privacy.profileVisible === "public"}
-                onChange={(enabled) => setPrivacy({...privacy, profileVisible: enabled ? "public" : "private"})}
+                onChange={(enabled) =>
+                  setPrivacy({
+                    ...privacy,
+                    profileVisible: enabled ? "public" : "private",
+                  })
+                }
               />
             }
           />
@@ -204,9 +223,11 @@ export default function Settings() {
             title="Show Location"
             subtitle="Let others see your location"
             rightContent={
-              <ToggleSwitch 
+              <ToggleSwitch
                 enabled={privacy.showLocation}
-                onChange={(enabled) => setPrivacy({...privacy, showLocation: enabled})}
+                onChange={(enabled) =>
+                  setPrivacy({ ...privacy, showLocation: enabled })
+                }
               />
             }
           />
@@ -215,9 +236,11 @@ export default function Settings() {
             title="Activity Visibility"
             subtitle="Show your activities to others"
             rightContent={
-              <ToggleSwitch 
+              <ToggleSwitch
                 enabled={privacy.showActivities}
-                onChange={(enabled) => setPrivacy({...privacy, showActivities: enabled})}
+                onChange={(enabled) =>
+                  setPrivacy({ ...privacy, showActivities: enabled })
+                }
               />
             }
           />
@@ -230,9 +253,11 @@ export default function Settings() {
             title="Push Notifications"
             subtitle="Receive notifications on your device"
             rightContent={
-              <ToggleSwitch 
+              <ToggleSwitch
                 enabled={notifications.push}
-                onChange={(enabled) => setNotifications({...notifications, push: enabled})}
+                onChange={(enabled) =>
+                  setNotifications({ ...notifications, push: enabled })
+                }
               />
             }
           />
@@ -241,9 +266,11 @@ export default function Settings() {
             title="Email Notifications"
             subtitle="Receive notifications via email"
             rightContent={
-              <ToggleSwitch 
+              <ToggleSwitch
                 enabled={notifications.email}
-                onChange={(enabled) => setNotifications({...notifications, email: enabled})}
+                onChange={(enabled) =>
+                  setNotifications({ ...notifications, email: enabled })
+                }
               />
             }
           />
@@ -252,9 +279,11 @@ export default function Settings() {
             title="SMS Notifications"
             subtitle="Receive notifications via SMS"
             rightContent={
-              <ToggleSwitch 
+              <ToggleSwitch
                 enabled={notifications.sms}
-                onChange={(enabled) => setNotifications({...notifications, sms: enabled})}
+                onChange={(enabled) =>
+                  setNotifications({ ...notifications, sms: enabled })
+                }
               />
             }
           />
@@ -263,9 +292,11 @@ export default function Settings() {
             title="Activity Updates"
             subtitle="Get notified about new activities"
             rightContent={
-              <ToggleSwitch 
+              <ToggleSwitch
                 enabled={notifications.activities}
-                onChange={(enabled) => setNotifications({...notifications, activities: enabled})}
+                onChange={(enabled) =>
+                  setNotifications({ ...notifications, activities: enabled })
+                }
               />
             }
           />
@@ -274,14 +305,17 @@ export default function Settings() {
         {/* App Preferences */}
         <SettingsSection title="App Preferences">
           <SettingsItem
-            icon={darkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+            icon={
+              darkMode ? (
+                <Moon className="w-5 h-5" />
+              ) : (
+                <Sun className="w-5 h-5" />
+              )
+            }
             title="Dark Mode"
             subtitle="Switch between light and dark themes"
             rightContent={
-              <ToggleSwitch 
-                enabled={darkMode}
-                onChange={setDarkMode}
-              />
+              <ToggleSwitch enabled={darkMode} onChange={setDarkMode} />
             }
           />
           <SettingsItem
@@ -294,12 +328,7 @@ export default function Settings() {
             icon={<Volume2 className="w-5 h-5" />}
             title="Sound Effects"
             subtitle="App sounds and feedback"
-            rightContent={
-              <ToggleSwitch 
-                enabled={true}
-                onChange={() => {}}
-              />
-            }
+            rightContent={<ToggleSwitch enabled={true} onChange={() => {}} />}
           />
         </SettingsSection>
 
@@ -381,7 +410,8 @@ export default function Settings() {
                 Delete Account
               </h3>
               <p className="text-gray-600 font-cabin">
-                Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.
+                Are you sure you want to delete your account? This action cannot
+                be undone and all your data will be permanently removed.
               </p>
             </div>
 

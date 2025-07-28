@@ -45,31 +45,40 @@ export default function CreateHiking() {
   const hikingTypes = {
     "Day Hike": {
       icon: "🥾",
-      description: "Single-day hiking adventure with return the same day"
+      description: "Single-day hiking adventure with return the same day",
     },
     "Multi-day": {
-      icon: "🏕️", 
-      description: "Multi-day hiking expedition with overnight camping"
+      icon: "🏕️",
+      description: "Multi-day hiking expedition with overnight camping",
     },
     "Nature Walk": {
       icon: "🌿",
-      description: "Easy-paced walk through nature reserves and parks"
+      description: "Easy-paced walk through nature reserves and parks",
     },
     "Peak Bagging": {
       icon: "⛰️",
-      description: "Challenging hikes to summit mountain peaks"
+      description: "Challenging hikes to summit mountain peaks",
     },
     "Coastal Walk": {
       icon: "🌊",
-      description: "Scenic hiking along coastlines and clifftops"
+      description: "Scenic hiking along coastlines and clifftops",
     },
     "Forest Trail": {
       icon: "🌲",
-      description: "Hiking through woodland and forest paths"
-    }
+      description: "Hiking through woodland and forest paths",
+    },
   };
 
-  const terrainOptions = ["Mountain", "Coastal", "Forest", "Moorland", "Desert", "Valley", "Ridge", "Canyon"];
+  const terrainOptions = [
+    "Mountain",
+    "Coastal",
+    "Forest",
+    "Moorland",
+    "Desert",
+    "Valley",
+    "Ridge",
+    "Canyon",
+  ];
   const difficultyLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
   const trailTypes = ["Circular", "Linear", "Loop", "Out & Back", "Traverse"];
 
@@ -126,7 +135,8 @@ export default function CreateHiking() {
       photoSpots: formData.photoSpots,
       permits: formData.permits,
       emergencyContact: formData.emergencyContact,
-      imageSrc: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=40&h=40&fit=crop&crop=face",
     });
 
     alert("Hiking activity created successfully!");
@@ -145,7 +155,16 @@ export default function CreateHiking() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -177,10 +196,14 @@ export default function CreateHiking() {
                     }`}
                   >
                     <div className="text-2xl mb-2">{details.icon}</div>
-                    <div className="font-bold text-sm font-cabin mb-1">{type}</div>
-                    <div className={`text-xs font-cabin leading-tight ${
-                      selectedType === type ? "text-white" : "text-gray-600"
-                    }`}>
+                    <div className="font-bold text-sm font-cabin mb-1">
+                      {type}
+                    </div>
+                    <div
+                      className={`text-xs font-cabin leading-tight ${
+                        selectedType === type ? "text-white" : "text-gray-600"
+                      }`}
+                    >
                       {details.description}
                     </div>
                   </button>
@@ -471,7 +494,10 @@ export default function CreateHiking() {
                     type="checkbox"
                     checked={formData.weatherDependency}
                     onChange={(e) =>
-                      setFormData({ ...formData, weatherDependency: e.target.checked })
+                      setFormData({
+                        ...formData,
+                        weatherDependency: e.target.checked,
+                      })
                     }
                     className="w-5 h-5 border-2 border-gray-300 rounded"
                   />

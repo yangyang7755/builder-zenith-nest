@@ -13,7 +13,9 @@ export default function ClubVauxwall() {
 
   const handleSendJoinRequest = () => {
     if (joinMessage.trim() || confirm("Send join request without a message?")) {
-      alert("Join request sent to VauxWall East Climbing Centre! You'll receive a notification when the admin responds.");
+      alert(
+        "Join request sent to VauxWall East Climbing Centre! You'll receive a notification when the admin responds.",
+      );
       navigate("/explore");
     }
   };
@@ -48,7 +50,7 @@ export default function ClubVauxwall() {
       {/* Main Content */}
       <div className="px-6 pb-20">
         {/* Back button */}
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 mt-4 mb-4 text-explore-green font-cabin"
         >
@@ -58,8 +60,8 @@ export default function ClubVauxwall() {
         {/* Club Header */}
         <div className="text-center mb-6">
           <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=96&h=96&fit=crop" 
+            <img
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=96&h=96&fit=crop"
               alt="VauxWall East Climbing Centre"
               className="w-full h-full object-cover"
             />
@@ -85,10 +87,17 @@ export default function ClubVauxwall() {
             About the Club
           </h3>
           <p className="text-sm text-black font-cabin leading-relaxed mb-4">
-            VauxWall East Climbing Centre is London's premier bouldering and top-rope climbing facility. Located in the heart of Vauxhall, we offer state-of-the-art climbing walls and a vibrant community of climbers.
+            VauxWall East Climbing Centre is London's premier bouldering and
+            top-rope climbing facility. Located in the heart of Vauxhall, we
+            offer state-of-the-art climbing walls and a vibrant community of
+            climbers.
           </p>
           <p className="text-sm text-black font-cabin leading-relaxed">
-            Whether you're a complete beginner or an experienced climber, our club provides coaching, social sessions, and competitive opportunities. We pride ourselves on creating an inclusive environment where everyone can push their limits and achieve their climbing goals.
+            Whether you're a complete beginner or an experienced climber, our
+            club provides coaching, social sessions, and competitive
+            opportunities. We pride ourselves on creating an inclusive
+            environment where everyone can push their limits and achieve their
+            climbing goals.
           </p>
         </div>
 
@@ -97,7 +106,9 @@ export default function ClubVauxwall() {
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Calendar className="w-4 h-4 text-explore-green" />
-              <h4 className="font-bold text-black font-cabin text-sm">Weekly Sessions</h4>
+              <h4 className="font-bold text-black font-cabin text-sm">
+                Weekly Sessions
+              </h4>
             </div>
             <p className="text-xs text-gray-600 font-cabin">
               5-6 club sessions per week
@@ -106,7 +117,9 @@ export default function ClubVauxwall() {
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Trophy className="w-4 h-4 text-explore-green" />
-              <h4 className="font-bold text-black font-cabin text-sm">Disciplines</h4>
+              <h4 className="font-bold text-black font-cabin text-sm">
+                Disciplines
+              </h4>
             </div>
             <p className="text-xs text-gray-600 font-cabin">
               Bouldering & Top-rope
@@ -154,15 +167,23 @@ export default function ClubVauxwall() {
           </h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-lg font-bold text-explore-green font-cabin">180</div>
+              <div className="text-lg font-bold text-explore-green font-cabin">
+                180
+              </div>
               <div className="text-xs text-gray-600 font-cabin">Members</div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-explore-green font-cabin">25</div>
-              <div className="text-xs text-gray-600 font-cabin">Sessions/Week</div>
+              <div className="text-lg font-bold text-explore-green font-cabin">
+                25
+              </div>
+              <div className="text-xs text-gray-600 font-cabin">
+                Sessions/Week
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-explore-green font-cabin">4.7</div>
+              <div className="text-lg font-bold text-explore-green font-cabin">
+                4.7
+              </div>
               <div className="text-xs text-gray-600 font-cabin">★ Rating</div>
             </div>
           </div>
@@ -192,7 +213,8 @@ export default function ClubVauxwall() {
                 Membership Required
               </h4>
               <p className="text-xs text-blue-700 font-cabin">
-                You need to be a club member to view climbing sessions and competitions. Send a join request to get started!
+                You need to be a club member to view climbing sessions and
+                competitions. Send a join request to get started!
               </p>
             </div>
           </div>
