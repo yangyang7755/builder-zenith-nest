@@ -66,6 +66,7 @@ const App = () => (
               <Route path="/club/thames-cyclists" element={<ClubThames />} />
               <Route path="/saved" element={<Saved />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/followers" element={<Followers />} />
               <Route path="/following" element={<Following />} />
               <Route
