@@ -57,6 +57,7 @@ const App = () => (
               <Route path="/create" element={<CreateActivity />} />
               <Route path="/create/cycling" element={<CreateCycling />} />
               <Route path="/create/climbing" element={<CreateClimbing />} />
+              <Route path="/create/running" element={<CreateRunning />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/chat/:userId" element={<IndividualChat />} />
               <Route path="/club/westway" element={<ClubWestway />} />
