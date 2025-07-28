@@ -98,7 +98,13 @@ export default function ActivityCard({
           <img
             src={imageSrc}
             alt="Organizer"
-            className="w-12 h-12 rounded-full border border-black object-cover flex-shrink-0"
+            className="w-12 h-12 rounded-full border border-black object-cover flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (organizer === "Coach Holly Peristiani") {
+                navigate("/profile/coach-holly");
+              }
+            }}
           />
           <div className="flex-1 min-w-0">
             <div className="text-sm text-gray-600 font-cabin">
