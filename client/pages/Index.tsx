@@ -1305,7 +1305,10 @@ function ActivityCard({
   const difficultyBadge = getDifficultyBadge();
 
   return (
-    <div className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white">
+    <div
+      className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      onClick={handleCardClick}
+    >
       {/* Header with title and difficulty badge */}
       <div className="flex justify-between items-start mb-4">
         <h3 className="font-bold text-black font-cabin text-lg line-clamp-2 leading-tight flex-1 pr-2">
