@@ -71,6 +71,19 @@ export default function Index() {
       );
     }
 
+    // Filter by date range
+    if (filters.date.start || filters.date.end) {
+      filtered = filtered.filter((activity) => {
+        const activityDate = new Date(activity.date);
+        const startDate = filters.date.start ? new Date(filters.date.start) : null;
+        const endDate = filters.date.end ? new Date(filters.date.end) : null;
+
+        if (startDate && activityDate < startDate) return false;
+        if (endDate && activityDate > endDate) return false;
+        return true;
+      });
+    }
+
     // Filter by location
     if (filters.location) {
       filtered = filtered.filter(
