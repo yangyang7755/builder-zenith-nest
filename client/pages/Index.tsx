@@ -211,13 +211,13 @@ export default function Index() {
             <PartnerCard
               title="Looking for a belay partner..."
               date="📅 Friday evenings"
-              location="📍Westway"
+              location="📍 Westway"
               imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
             />
             <PartnerCard
               title="Looking for a belay partner..."
               date="📅 Monday evenings"
-              location="📍The Castle"
+              location="📍 The Castle"
               imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
             />
           </div>
