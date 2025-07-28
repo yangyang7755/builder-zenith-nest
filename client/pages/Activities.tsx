@@ -240,7 +240,7 @@ function ActivityCard({
     switch(type) {
       case "cycling": return "🚴";
       case "climbing": return "🧗";
-      case "running": return "🏃";
+      case "running": return "👟";
       default: return "⚡";
     }
   };
@@ -392,7 +392,7 @@ function SampleActivityCard({
     switch(type) {
       case "cycling": return "🚴";
       case "climbing": return "🧗";
-      case "running": return "🏃";
+      case "running": return "👟";
       default: return "⚡";
     }
   };
