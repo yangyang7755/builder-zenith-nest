@@ -33,8 +33,11 @@ export default function FilterSystem({
     "Cycling",
     "Climbing",
     "Running",
-    "Swimming",
     "Hiking",
+    "Skiing",
+    "Surfing",
+    "Tennis",
+    "Swimming",
     "Yoga",
   ];
   const genderOptions = ["All genders", "Female only", "Male only", "Mixed"];
@@ -157,7 +160,7 @@ export default function FilterSystem({
 
           {filters.location && (
             <div className="flex items-center gap-1 bg-explore-green text-white px-3 py-1 rounded-full text-sm font-cabin whitespace-nowrap">
-              📍 {filters.location}
+              ��� {filters.location}
               <button onClick={() => updateFilter("location", "")}>
                 <X className="w-3 h-3" />
               </button>
