@@ -302,12 +302,14 @@ function MixedActivitiesSection({
   isSearching,
   searchQuery,
   activities,
+  formatActivityDate,
 }: {
   filters: any;
   filteredActivities: any[];
   isSearching: boolean;
   searchQuery: string;
   activities: any[];
+  formatActivityDate: (dateStr: string) => string;
 }) {
   // Mixed activities with alternating cycling and climbing
   const mixedActivities = [
