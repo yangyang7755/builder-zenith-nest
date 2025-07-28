@@ -155,64 +155,225 @@ export default function Profile() {
             ))}
           </div>
 
-          {/* Content Grid */}
-          <div className="grid grid-cols-2 gap-6">
-            {/* Left Column */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-4">
-                Activities joined
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <div className="text-lg font-medium text-explore-green font-cabin">
-                    18 climbs
-                  </div>
-                  <div className="text-sm text-explore-green font-cabin">
-                    Preferred terrain:
-                  </div>
-                  <ul className="text-sm text-explore-green font-cabin ml-4">
-                    <li>• Indoor</li>
-                    <li>• Sport</li>
-                  </ul>
-                </div>
-
-                {/* Past Activity */}
-                <div className="mt-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 bg-explore-green rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs">🧗</span>
+          {/* Content Grid - Dynamic based on selected tab */}
+          {selectedTab === "Climb" && (
+            <div className="grid grid-cols-2 gap-6">
+              {/* Left Column */}
+              <div>
+                <h3 className="text-xl font-medium text-black font-cabin mb-4">
+                  Activities joined
+                </h3>
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-lg font-medium text-explore-green font-cabin">
+                      18 climbs
                     </div>
-                    <span className="text-sm font-medium text-black font-cabin">
-                      Portland sport trip
-                    </span>
+                    <div className="text-sm text-explore-green font-cabin">
+                      Preferred terrain:
+                    </div>
+                    <ul className="text-sm text-explore-green font-cabin ml-4">
+                      <li>• Indoor</li>
+                      <li>• Sport</li>
+                    </ul>
                   </div>
-                  <div className="text-xs text-gray-500 font-cabin">17.06</div>
+
+                  {/* Past Activity */}
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-6 h-6 bg-explore-green rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs">🧗</span>
+                      </div>
+                      <span className="text-sm font-medium text-black font-cabin">
+                        Portland sport trip
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 font-cabin">17.06</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div>
+                <h3 className="text-xl font-medium text-black font-cabin mb-4">
+                  Gear & skills
+                </h3>
+                <div className="space-y-3">
+                  {gearSkills.map((skill, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <span className="text-lg">{skill.icon}</span>
+                      <span className="text-sm text-black font-cabin flex-1">
+                        {skill.name}
+                      </span>
+                      {skill.completed ? (
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      ) : (
+                        <Circle className="w-4 h-4 text-gray-300" />
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
+          )}
 
-            {/* Right Column */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-4">
-                Gear & skills
-              </h3>
-              <div className="space-y-3">
-                {gearSkills.map((skill, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <span className="text-lg">{skill.icon}</span>
-                    <span className="text-sm text-black font-cabin flex-1">
-                      {skill.name}
-                    </span>
-                    {skill.completed ? (
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                    ) : (
-                      <Circle className="w-4 h-4 text-gray-300" />
-                    )}
+          {selectedTab === "Ride" && (
+            <div className="grid grid-cols-2 gap-6">
+              {/* Left Column */}
+              <div>
+                <h3 className="text-xl font-medium text-black font-cabin mb-4">
+                  Cycling Stats
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-lg font-medium text-explore-green font-cabin">
+                      24 rides
+                    </div>
+                    <div className="text-sm text-explore-green font-cabin">
+                      Total distance: 1,250 km
+                    </div>
                   </div>
-                ))}
+
+                  <div>
+                    <div className="text-sm text-explore-green font-cabin">
+                      Preferred types:
+                    </div>
+                    <ul className="text-sm text-explore-green font-cabin ml-4">
+                      <li>• Road cycling</li>
+                      <li>• Sportives</li>
+                      <li>• Social rides</li>
+                    </ul>
+                  </div>
+
+                  {/* Recent Ride */}
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-6 h-6 bg-explore-green rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs">🚴</span>
+                      </div>
+                      <span className="text-sm font-medium text-black font-cabin">
+                        Richmond Park Social
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 font-cabin">25km • 02.02</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div>
+                <h3 className="text-xl font-medium text-black font-cabin mb-4">
+                  Bike & Equipment
+                </h3>
+                <div className="space-y-3">
+                  {[
+                    { name: "Road bike", completed: true, icon: "🚴" },
+                    { name: "Helmet", completed: true, icon: "⛑️" },
+                    { name: "Cycling shoes", completed: true, icon: "👟" },
+                    { name: "Power meter", completed: false, icon: "⚡" },
+                    { name: "GPS computer", completed: true, icon: "📱" },
+                    { name: "Repair kit", completed: false, icon: "🔧" },
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <span className="text-lg">{item.icon}</span>
+                      <span className="text-sm text-black font-cabin flex-1">
+                        {item.name}
+                      </span>
+                      {item.completed ? (
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      ) : (
+                        <Circle className="w-4 h-4 text-gray-300" />
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
+
+          {selectedTab === "Run" && (
+            <div className="grid grid-cols-2 gap-6">
+              {/* Left Column */}
+              <div>
+                <h3 className="text-xl font-medium text-black font-cabin mb-4">
+                  Running Stats
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-lg font-medium text-explore-green font-cabin">
+                      12 runs
+                    </div>
+                    <div className="text-sm text-explore-green font-cabin">
+                      Total distance: 185 km
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-explore-green font-cabin">
+                      Preferred types:
+                    </div>
+                    <ul className="text-sm text-explore-green font-cabin ml-4">
+                      <li>• Park runs</li>
+                      <li>• Trail running</li>
+                      <li>• Social runs</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-explore-green font-cabin">
+                      Personal Bests:
+                    </div>
+                    <ul className="text-sm text-explore-green font-cabin ml-4">
+                      <li>• 5K: 22:15</li>
+                      <li>• 10K: 46:30</li>
+                      <li>• Half Marathon: 1:42:00</li>
+                    </ul>
+                  </div>
+
+                  {/* Recent Run */}
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-6 h-6 bg-explore-green rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs">🏃</span>
+                      </div>
+                      <span className="text-sm font-medium text-black font-cabin">
+                        Hyde Park Morning Run
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 font-cabin">8km • 28.01</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div>
+                <h3 className="text-xl font-medium text-black font-cabin mb-4">
+                  Running Gear
+                </h3>
+                <div className="space-y-3">
+                  {[
+                    { name: "Running shoes", completed: true, icon: "👟" },
+                    { name: "GPS watch", completed: true, icon: "⌚" },
+                    { name: "Running belt", completed: false, icon: "🎽" },
+                    { name: "Hydration pack", completed: false, icon: "💧" },
+                    { name: "Reflective gear", completed: true, icon: "🦺" },
+                    { name: "Heart rate monitor", completed: false, icon: "❤️" },
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <span className="text-lg">{item.icon}</span>
+                      <span className="text-sm text-black font-cabin flex-1">
+                        {item.name}
+                      </span>
+                      {item.completed ? (
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      ) : (
+                        <Circle className="w-4 h-4 text-gray-300" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Clubs Section */}
           <div className="mt-8">
