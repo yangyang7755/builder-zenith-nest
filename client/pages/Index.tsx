@@ -61,7 +61,12 @@ export default function Index() {
           (type) =>
             activity.type === type.toLowerCase() ||
             (type === "Cycling" && activity.type === "cycling") ||
-            (type === "Climbing" && activity.type === "climbing"),
+            (type === "Climbing" && activity.type === "climbing") ||
+            (type === "Running" && activity.type === "running") ||
+            (type === "Hiking" && activity.type === "hiking") ||
+            (type === "Skiing" && activity.type === "skiing") ||
+            (type === "Surfing" && activity.type === "surfing") ||
+            (type === "Tennis" && activity.type === "tennis"),
         ),
       );
     }
