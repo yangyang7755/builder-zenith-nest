@@ -393,7 +393,7 @@ function MixedActivitiesSection({
     {
       title: "Intermediate Chaingang",
       date: `📅 ${formatActivityDate("2025-01-28")}`,
-      location: "📍Box Hill, Surrey",
+      location: "📍 Box Hill, Surrey",
       imageSrc:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       type: "cycling",
