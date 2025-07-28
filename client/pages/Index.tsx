@@ -383,7 +383,7 @@ function MixedActivitiesSection({
 
         <div className="flex gap-2 overflow-x-auto pb-2">
           {/* Show mixed activities or search results */}
-          {isSearching ? (
+          {filteredActivities.length > 0 ? (
             filteredActivities.length === 0 ? (
               <div className="text-center py-8 text-gray-500 w-full">
                 No activities found matching "{searchQuery}"
