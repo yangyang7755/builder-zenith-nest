@@ -1399,14 +1399,17 @@ function ActivityCard({
       {/* Request to join button */}
       <div className="w-full">
         {isFirstCard ? (
-          <Link
-            to="/activity/westway-womens-climb"
-            className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium inline-block text-center hover:bg-explore-green-dark transition-colors"
+          <button
+            onClick={handleRequestClick}
+            className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
           >
             Request to join
-          </Link>
+          </button>
         ) : (
-          <button className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors">
+          <button
+            onClick={handleRequestClick}
+            className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+          >
             Request to join
           </button>
         )}
