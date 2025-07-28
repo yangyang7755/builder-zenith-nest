@@ -112,17 +112,36 @@ export default function Saved() {
   );
 }
 
-function ActivityCard({ activity }: { activity: any }) {
+function ActivityCard({ activity, onUnsave }: { activity: Activity; onUnsave: (id: string) => void }) {
+  const handleUnsave = () => {
+    onUnsave(activity.id);
+  };
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
+    });
+  };
+
+  const formatTime = (timeStr: string) => {
+    const [hours, minutes] = timeStr.split(':');
+    const hour24 = parseInt(hours);
+    const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+    const ampm = hour24 >= 12 ? 'PM' : 'AM';
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
   return (
     <div className="border-2 border-gray-200 rounded-lg p-4 bg-white">
       <div className="flex justify-between items-start mb-3">
         <h3 className="text-lg font-semibold text-black font-cabin flex-1">
           {activity.title}
         </h3>
-        <button className="p-1">
-          <Bookmark
-            className={`w-5 h-5 ${activity.saved ? "fill-explore-green text-explore-green" : "text-gray-400"}`}
-          />
+        <button className="p-1 hover:bg-gray-100 rounded transition-colors" onClick={handleUnsave}>
+          <Bookmark className="w-5 h-5 fill-explore-green text-explore-green" />
         </button>
       </div>
 
@@ -130,7 +149,7 @@ function ActivityCard({ activity }: { activity: any }) {
         <div className="flex items-center gap-2 text-gray-600">
           <Clock className="w-4 h-4" />
           <span className="text-sm font-cabin">
-            {activity.date} • {activity.time}
+            {formatDate(activity.date)} • {formatTime(activity.time)}
           </span>
         </div>
 
@@ -140,9 +159,16 @@ function ActivityCard({ activity }: { activity: any }) {
         </div>
 
         <div className="flex items-center gap-2 text-gray-600">
-          <span className="text-lg">{activity.icon}</span>
-          <span className="text-sm font-cabin">{activity.type}</span>
+          <span className="text-lg">{activity.type === "cycling" ? "🚴" : "🧗"}</span>
+          <span className="text-sm font-cabin capitalize">{activity.type}</span>
         </div>
+
+        {activity.organizer && (
+          <div className="flex items-center gap-2 text-gray-600">
+            <Users className="w-4 h-4" />
+            <span className="text-sm font-cabin">By {activity.organizer}</span>
+          </div>
+        )}
       </div>
     </div>
   );
