@@ -20,6 +20,8 @@ import Chat from "./pages/Chat";
 import IndividualChat from "./pages/IndividualChat";
 import ClubWestway from "./pages/ClubWestway";
 import ClubOxford from "./pages/ClubOxford";
+import ClubRapha from "./pages/ClubRapha";
+import ClubVauxwall from "./pages/ClubVauxwall";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
 import Followers from "./pages/Followers";
