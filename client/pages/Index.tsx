@@ -288,7 +288,7 @@ export default function Index() {
           <div className="flex gap-2 overflow-x-auto pb-2">
             <CarShareCard
               destination="Peak District"
-              date="📅 Saturday, 2 February"
+              date="📅 2 February 2025"
               time="7:00 AM"
               driver="Mike Johnson"
               availableSeats={3}
@@ -297,7 +297,7 @@ export default function Index() {
             />
             <CarShareCard
               destination="Snowdonia"
-              date="📅 Sunday, 9 February"
+              date="📅 9 February 2025"
               time="6:00 AM"
               driver="Sarah Chen"
               availableSeats={2}
@@ -306,7 +306,7 @@ export default function Index() {
             />
             <CarShareCard
               destination="Brighton Beach"
-              date="📅 Saturday, 15 February"
+              date="📅 15 February 2025"
               time="8:00 AM"
               driver="Alex Rodriguez"
               availableSeats={4}
