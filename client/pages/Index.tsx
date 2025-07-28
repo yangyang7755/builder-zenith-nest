@@ -313,7 +313,7 @@ function MixedActivitiesSection({
     // Climbing activity
     {
       title: "Westway women's+ climbing morning",
-      date: "📅 Wednesday, 10:00 AM",
+      date: `📅 ${formatActivityDate("2025-01-26")}`,
       location: "📍London, UK",
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
@@ -325,7 +325,7 @@ function MixedActivitiesSection({
     // Cycling activity
     {
       title: "Sunday Morning Social Ride",
-      date: "📅 Sunday, 8:00 AM",
+      date: `📅 ${formatActivityDate("2025-02-02")}`,
       location: "📍Richmond Park, London",
       imageSrc:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
@@ -339,7 +339,7 @@ function MixedActivitiesSection({
     // Climbing activity
     {
       title: "Sport climbing trip",
-      date: "📅 Weekend, July 22-23",
+      date: `📅 ${formatActivityDate("2025-02-15")}`,
       location: "📍Malham cove, UK",
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
@@ -350,7 +350,7 @@ function MixedActivitiesSection({
     // Cycling activity
     {
       title: "Intermediate Chaingang",
-      date: "📅 Tuesday, 6:30 PM",
+      date: `📅 ${formatActivityDate("2025-01-28")}`,
       location: "📍Box Hill, Surrey",
       imageSrc:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
