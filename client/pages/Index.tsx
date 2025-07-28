@@ -377,7 +377,7 @@ function MixedActivitiesSection({
         {/* No Activities Message */}
         {filteredActivities.length === 0 && (
           <div className="text-center py-4 text-gray-500 font-cabin">
-            Change filters to see more activities...
+{isSearching ? `No activities found matching "${searchQuery}"` : "Change filters to see more activities..."}
           </div>
         )}
 
