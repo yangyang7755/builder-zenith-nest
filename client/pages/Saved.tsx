@@ -216,9 +216,24 @@ function ActivityCard({
   showSaveButton?: boolean;
   showJoinedStatus?: boolean;
 }) {
+  const navigate = useNavigate();
+
   const handleUnsave = () => {
     if (onUnsave) {
       onUnsave(activity.id);
+    }
+  };
+
+  const handleCardClick = () => {
+    // Navigate to activity details based on activity type
+    if (activity.type === "cycling") {
+      navigate("/activity/sunday-morning-ride");
+    } else if (activity.type === "climbing") {
+      navigate("/activity/westway-womens-climb");
+    } else if (activity.type === "running") {
+      navigate("/activity/westway-womens-climb"); // Default for now
+    } else {
+      navigate("/activity/westway-womens-climb"); // Default
     }
   };
 
