@@ -36,6 +36,7 @@ export default function ActivityCard({
 }: ActivityCardProps) {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const navigate = useNavigate();
+  const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
 
   const handleCardClick = () => {
     if (activityId) {
