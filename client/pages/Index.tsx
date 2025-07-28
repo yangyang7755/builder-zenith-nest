@@ -488,10 +488,12 @@ function MixedActivitiesSection({
               {mixedActivities
                 .filter(
                   (activity) =>
-                    (filters.activityType.includes("Cycling") &&
-                      activity.type === "cycling") ||
-                    (filters.activityType.includes("Climbing") &&
-                      activity.type === "climbing"),
+                    filters.activityType.some(type =>
+                      type.toLowerCase() === activity.type ||
+                      (type === "Cycling" && activity.type === "cycling") ||
+                      (type === "Climbing" && activity.type === "climbing") ||
+                      (type === "Running" && activity.type === "running")
+                    )
                 )
                 .map((activity, index) => (
                   <ActivityCard
