@@ -261,7 +261,7 @@ export default function ClubVauxwall() {
 
 function BottomNavigation() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around border-t border-gray-200 max-w-md mx-auto">
+    <div className="fixed bottom-0 left-0 right-0 bg-white h-14 flex items-center justify-around border-t border-gray-200 max-w-md mx-auto">
       {/* Home Icon */}
       <Link to="/explore" className="p-2">
         <svg className="w-8 h-7" viewBox="0 0 35 31" fill="none">
