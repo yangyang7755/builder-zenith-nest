@@ -27,6 +27,7 @@ import ClubThames from "./pages/ClubThames";
 import CoachHolly from "./pages/CoachHolly";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import Followers from "./pages/Followers";
 import Following from "./pages/Following";
 import NotFound from "./pages/NotFound";
