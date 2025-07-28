@@ -375,15 +375,15 @@ function MixedActivitiesSection({
         </div>
 
         {/* No Activities Message */}
-        {filteredActivities.length === 0 && (
+        {!isSearching && filteredActivities.length === 0 && (
           <div className="text-center py-4 text-gray-500 font-cabin">
-{isSearching ? `No activities found matching "${searchQuery}"` : "Change filters to see more activities..."}
+            Change filters to see more activities...
           </div>
         )}
 
         <div className="flex gap-2 overflow-x-auto pb-2">
           {/* Show mixed activities or search results */}
-          {filteredActivities.length > 0 ? (
+          {isSearching ? (
             filteredActivities.length === 0 ? (
               <div className="text-center py-8 text-gray-500 w-full">
                 No activities found matching "{searchQuery}"
