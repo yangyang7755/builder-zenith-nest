@@ -109,7 +109,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       id: "sample-peak-climb",
       type: "climbing",
       title: "Peak District Sport Climbing",
-      date: "2024-01-27",
+      date: "2025-02-15",
       time: "09:00",
       location: "Stanage Edge & Burbage",
       meetupLocation: "Stanage Edge car park",
