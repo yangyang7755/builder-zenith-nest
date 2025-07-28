@@ -39,12 +39,8 @@ export default function ActivityCard({
   const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
 
   const handleCardClick = () => {
-    if (activityId) {
-      navigate(`/activity/${activityId}`);
-    } else {
-      // For default activities without specific IDs, navigate to westway-womens-climb as example
-      navigate("/activity/westway-womens-climb");
-    }
+    // Show request modal instead of navigating to activity details
+    setShowRequestModal(true);
   };
 
   const handleRequestClick = (e: React.MouseEvent) => {
