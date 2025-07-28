@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Bookmark, Clock, MapPin, Users, CheckCircle } from "lucide-react";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { Activity } from "../contexts/ActivitiesContext";
