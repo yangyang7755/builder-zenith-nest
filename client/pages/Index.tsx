@@ -241,16 +241,16 @@ export default function Index() {
           </h2>
           <div className="flex gap-4 justify-start flex-wrap">
             <ClubLogo
-              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
-              alt="Gorp Girls"
+              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
+              alt="Rapha Cycling Club London"
               isMember={false}
-              clubId="gorp-girls"
+              clubId="rapha-cycling"
             />
             <ClubLogo
-              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
-              alt="London Climbing Club"
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
+              alt="VauxWall East Climbing Centre"
               isMember={false}
-              clubId="london-climbing"
+              clubId="vauxwall-climbing"
             />
             <ClubLogo
               src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
