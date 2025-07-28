@@ -221,9 +221,10 @@ export default function Profile() {
             </h3>
             <div className="flex gap-4">
               {clubs.map((club, index) => (
-                <div
+                <Link
                   key={index}
-                  className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg"
+                  to={club.path}
+                  className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
                 >
                   <div className="w-6 h-6 rounded-full overflow-hidden">
                     <img
@@ -232,8 +233,8 @@ export default function Profile() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-sm font-cabin">{club.name}</span>
-                </div>
+                  <span className="text-sm font-cabin text-black hover:text-explore-green transition-colors">{club.name}</span>
+                </Link>
               ))}
             </div>
           </div>
