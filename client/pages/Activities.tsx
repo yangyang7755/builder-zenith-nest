@@ -617,7 +617,10 @@ function CreatedActivityItem({ activity }: { activity: any }) {
             </p>
           </div>
         </div>
-        <button className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin font-medium">
+        <button
+          onClick={handleRequestClick}
+          className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+        >
           Request to join
         </button>
       </div>
