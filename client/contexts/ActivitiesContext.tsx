@@ -48,7 +48,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       id: "sample-westway-climb",
       type: "climbing",
       title: "Westway women's+ climbing morning",
-      date: "2024-01-17",
+      date: "2025-01-26",
       time: "10:00",
       location: "Westway Climbing Centre",
       meetupLocation: "Westway Climbing Centre",
