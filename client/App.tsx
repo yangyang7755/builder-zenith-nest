@@ -54,6 +54,8 @@ const App = () => (
               <Route path="/chat/:userId" element={<IndividualChat />} />
               <Route path="/club/westway" element={<ClubWestway />} />
               <Route path="/club/oxford-cycling" element={<ClubOxford />} />
+              <Route path="/club/rapha-cycling" element={<ClubRapha />} />
+              <Route path="/club/vauxwall-climbing" element={<ClubVauxwall />} />
               <Route path="/saved" element={<Saved />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/followers" element={<Followers />} />
