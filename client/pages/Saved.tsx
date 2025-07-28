@@ -4,44 +4,23 @@ import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { Activity } from "../contexts/ActivitiesContext";
 
 export default function Saved() {
-  const upcomingActivities = [
-    {
-      id: "1",
-      title: "Thursday Evening Ride",
-      date: "Thursday, 12 September",
-      time: "18:00",
-      location: "Oxford, UK",
-      type: "Road",
-      icon: "🚴",
-      saved: true,
-    },
-  ];
+  const { savedActivities, unsaveActivity } = useSavedActivities();
 
-  const happeningNow = [
-    {
-      id: "2",
-      title: "Sunday Spin",
-      date: "Sunday, 18 August",
-      time: "09:00",
-      location: "Wallingford, UK",
-      type: "Road",
-      icon: "🚴",
-      saved: true,
-    },
-  ];
+  // Sort activities by date (future vs past)
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
 
-  const pastActivities = [
-    {
-      id: "3",
-      title: "Tuesday Interval Session",
-      date: "Tuesday, 30 July",
-      time: "19:00",
-      location: "Didcot, UK",
-      type: "Road",
-      icon: "🚴",
-      saved: true,
-    },
-  ];
+  const upcomingActivities = savedActivities.filter(activity => {
+    const activityDate = new Date(activity.date);
+    const activityDateString = activityDate.toISOString().split('T')[0];
+    return activityDateString >= today;
+  });
+
+  const pastActivities = savedActivities.filter(activity => {
+    const activityDate = new Date(activity.date);
+    const activityDateString = activityDate.toISOString().split('T')[0];
+    return activityDateString < today;
+  });
 
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
