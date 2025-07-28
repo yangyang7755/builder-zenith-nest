@@ -6,7 +6,7 @@ import {
   Bike,
   Mountain,
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
@@ -695,7 +695,7 @@ function CreatedActivityItem({ activity }: { activity: any }) {
           {activity.climbingLevel && (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">📊</span>
+                <span className="text-explore-green text-xs">����</span>
               </div>
               <span className="text-black font-cabin">
                 Level: {activity.climbingLevel}
