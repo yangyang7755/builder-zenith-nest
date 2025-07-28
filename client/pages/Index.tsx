@@ -1406,15 +1406,8 @@ function ClubLogo({
     if (isMember) {
       navigate(`/club/${clubId}`);
     } else {
-      // For non-member clubs, show a "Request to join" confirmation
-      const confirmed = confirm(
-        `Request to join ${alt}?\n\nYour request will be sent to the club admin for approval. You'll be notified once it's reviewed.`,
-      );
-      if (confirmed) {
-        alert(
-          `Join request sent to ${alt}! You'll receive a notification when the admin responds.`,
-        );
-      }
+      // For non-member clubs, navigate to club detail page
+      navigate(`/club/${clubId}`);
     }
   };
 
