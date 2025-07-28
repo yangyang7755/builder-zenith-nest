@@ -190,6 +190,7 @@ export default function Index() {
             isSearching={isSearching}
             searchQuery={searchQuery}
             activities={activities}
+            formatActivityDate={formatActivityDate}
           />
         )}
 
