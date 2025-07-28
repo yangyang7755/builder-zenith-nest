@@ -16,6 +16,7 @@ import ActivityDetails from "./pages/ActivityDetails";
 import CreateActivity from "./pages/CreateActivity";
 import CreateCycling from "./pages/CreateCycling";
 import CreateClimbing from "./pages/CreateClimbing";
+import CreateRunning from "./pages/CreateRunning";
 import Chat from "./pages/Chat";
 import IndividualChat from "./pages/IndividualChat";
 import ClubWestway from "./pages/ClubWestway";
