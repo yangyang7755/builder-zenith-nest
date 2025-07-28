@@ -206,6 +206,34 @@ export default function ActivityDetails() {
     }
   };
 
+  const handleSaveActivity = () => {
+    if (!activity) return;
+
+    // Create a simplified activity object for saving
+    const activityToSave = {
+      id: activity.id,
+      title: activity.title,
+      type: activity.type,
+      date: "2025-01-26", // Use the activity schedule as date
+      time: "10:00", // Extract time from schedule
+      location: activity.location,
+      organizer: activity.organizer.name,
+      difficulty: activity.difficulty,
+      maxParticipants: activity.capacity.toString(),
+      imageSrc: activity.organizer.image,
+      specialComments: "",
+      gender: "All genders",
+      visibility: "All",
+      createdAt: new Date(),
+    };
+
+    if (isActivitySaved(activity.id)) {
+      unsaveActivity(activity.id);
+    } else {
+      saveActivity(activityToSave);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
       {/* Status Bar */}
