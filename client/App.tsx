@@ -30,6 +30,7 @@ import Following from "./pages/Following";
 import NotFound from "./pages/NotFound";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
 import { ChatProvider } from "./contexts/ChatContext";
+import { SavedActivitiesProvider } from "./contexts/SavedActivitiesContext";
 
 const queryClient = new QueryClient();
 
