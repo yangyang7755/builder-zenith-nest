@@ -255,7 +255,14 @@ export default function ActivityDetails() {
         </div>
 
         {/* Organizer Section */}
-        <div className="flex items-center gap-3 mb-6">
+        <div
+          className="flex items-center gap-3 mb-6 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+          onClick={() => {
+            if (activity.organizer.name === "Coach Holly Peristiani") {
+              navigate("/profile/coach-holly");
+            }
+          }}
+        >
           <img
             src={activity.organizer.image}
             alt={activity.organizer.name}
@@ -265,6 +272,9 @@ export default function ActivityDetails() {
             <h2 className="text-lg font-bold text-black font-cabin">
               {activity.organizer.name}
             </h2>
+            {activity.organizer.name === "Coach Holly Peristiani" && (
+              <p className="text-xs text-gray-500 font-cabin">Click to view profile</p>
+            )}
           </div>
         </div>
 
