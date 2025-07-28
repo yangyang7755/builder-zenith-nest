@@ -767,7 +767,12 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate("/activity/westway-womens-climb");
+    // Navigate to appropriate climbing activity based on type
+    if (activity.title?.includes("Peak") || activity.title?.includes("Sport") || activity.title?.includes("Outdoor")) {
+      navigate("/activity/peak-district-climb");
+    } else {
+      navigate("/activity/westway-womens-climb");
+    }
   };
 
   return (
