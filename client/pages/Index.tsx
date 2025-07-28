@@ -1069,7 +1069,12 @@ function CyclingActivityCard({ activity }: { activity: any }) {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate("/activity/sunday-morning-ride");
+    // Navigate to appropriate cycling activity based on type
+    if (activity.title?.includes("Chaingang") || activity.title?.includes("Training") || activity.title?.includes("Hill")) {
+      navigate("/activity/chaingang-training");
+    } else {
+      navigate("/activity/sunday-morning-ride");
+    }
   };
 
   return (
