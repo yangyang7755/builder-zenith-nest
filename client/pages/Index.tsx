@@ -382,7 +382,7 @@ function MixedActivitiesSection({
     {
       title: "Sport climbing trip",
       date: `📅 ${formatActivityDate("2025-02-15")}`,
-      location: "📍Malham cove, UK",
+      location: "📍 Malham Cove, UK",
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
