@@ -64,7 +64,7 @@ const chatData: Record<string, Message[]> = {
   "coach-holly": [
     {
       id: "1",
-      content: "Holly, want to head to the climbing gym tonight?",
+      content: "Ben, want to head to the climbing gym tonight",
       timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
       isFromMe: false,
       status: "read",
