@@ -8,6 +8,15 @@ import ActivityCard from "../components/ActivityCard";
 
 export default function Index() {
   const { activities, searchActivities } = useActivities();
+
+  const formatActivityDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredActivities, setFilteredActivities] = useState(activities);
   const [isSearching, setIsSearching] = useState(false);
