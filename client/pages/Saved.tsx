@@ -97,52 +97,103 @@ export default function Saved() {
           {/* Title */}
           <div className="text-center py-6">
             <h1 className="text-4xl font-bold text-explore-green font-cabin">
-              Saved
+              My Activities
             </h1>
           </div>
 
-          {/* No saved activities message */}
-          {savedActivities.length === 0 && (
-            <div className="text-center py-8">
-              <div className="text-gray-400 mb-4">
-                <Bookmark className="w-16 h-16 mx-auto" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No saved activities yet</h3>
-              <p className="text-gray-500 mb-4">Save activities from the explore page to see them here</p>
-              <Link
-                to="/explore"
-                className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+          {/* Tab Navigation */}
+          <div className="flex gap-2 mb-6">
+            {["Saved", "Joined"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setSelectedTab(tab)}
+                className={`flex-1 py-3 px-4 rounded-lg border-2 font-cabin font-medium transition-colors ${
+                  selectedTab === tab
+                    ? "bg-explore-green text-white border-explore-green"
+                    : "bg-white text-explore-green border-explore-green hover:bg-gray-50"
+                }`}
               >
-                Explore Activities
-              </Link>
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Saved Activities Tab */}
+          {selectedTab === "Saved" && (
+            <div>
+              {/* No saved activities message */}
+              {savedActivities.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="text-gray-400 mb-4">
+                    <Bookmark className="w-16 h-16 mx-auto" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-600 mb-2">No saved activities yet</h3>
+                  <p className="text-gray-500 mb-4">Save activities from the explore page to see them here</p>
+                  <Link
+                    to="/explore"
+                    className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+                  >
+                    Explore Activities
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {/* Upcoming Saved Activities */}
+                  {upcomingSavedActivities.length > 0 && (
+                    <div>
+                      <h2 className="text-xl font-semibold text-black font-cabin mb-4">
+                        Upcoming ({upcomingSavedActivities.length})
+                      </h2>
+                      <div className="space-y-4">
+                        {upcomingSavedActivities.map((activity) => (
+                          <ActivityCard key={activity.id} activity={activity} onUnsave={unsaveActivity} showSaveButton={true} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Past Saved Activities */}
+                  {pastSavedActivities.length > 0 && (
+                    <div>
+                      <h2 className="text-xl font-semibold text-black font-cabin mb-4">
+                        Past ({pastSavedActivities.length})
+                      </h2>
+                      <div className="space-y-4">
+                        {pastSavedActivities.map((activity) => (
+                          <ActivityCard key={activity.id} activity={activity} onUnsave={unsaveActivity} showSaveButton={true} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
-          {/* Upcoming Activities */}
-          {upcomingActivities.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold text-black font-cabin mb-4">
-                Upcoming Activities ({upcomingActivities.length})
-              </h2>
-              <div className="space-y-4">
-                {upcomingActivities.map((activity) => (
-                  <ActivityCard key={activity.id} activity={activity} onUnsave={unsaveActivity} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Past Activities */}
-          {pastActivities.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold text-black font-cabin mb-4">
-                Past Activities ({pastActivities.length})
-              </h2>
-              <div className="space-y-4">
-                {pastActivities.map((activity) => (
-                  <ActivityCard key={activity.id} activity={activity} onUnsave={unsaveActivity} />
-                ))}
-              </div>
+          {/* Joined Activities Tab */}
+          {selectedTab === "Joined" && (
+            <div>
+              {joinedActivities.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="text-gray-400 mb-4">
+                    <CheckCircle className="w-16 h-16 mx-auto" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-600 mb-2">No joined activities yet</h3>
+                  <p className="text-gray-500 mb-4">Join activities from the explore page to see them here</p>
+                  <Link
+                    to="/explore"
+                    className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+                  >
+                    Explore Activities
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {joinedActivities.map((activity) => (
+                    <ActivityCard key={activity.id} activity={activity} showJoinedStatus={true} />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
