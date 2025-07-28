@@ -1,66 +1,16 @@
-import {
-  Search,
-  SlidersHorizontal,
-  Calendar,
-  MapPin,
-  Bike,
-  Mountain,
-} from "lucide-react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useMemo, useEffect } from "react";
+import { MapPin, Users, Star, Bookmark } from "lucide-react";
 import { useActivities } from "../contexts/ActivitiesContext";
+import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
 
-const activitiesData = [
-  {
-    id: 1,
-    title: "Westway women's+ climbing ses...",
-    date: "Wednesday",
-    location: "",
-    isWestway: true,
-  },
-  {
-    id: 2,
-    title: "Sport climbing taster session",
-    date: "17.06",
-    location: "Malham",
-  },
-  {
-    id: 3,
-    title: "Lead climbing at Parthian",
-    date: "Friday",
-    location: "Manchester",
-  },
-  {
-    id: 4,
-    title: "Westway women's+ climbing ses...",
-    date: "19.06",
-    location: "London, UK",
-  },
-  {
-    id: 5,
-    title: "Sports climbing taster session",
-    date: "Monday",
-    location: "Gower",
-  },
-  {
-    id: 6,
-    title: "Climbing at Parthian, Matchworks",
-    date: "Thursday",
-    location: "Parthian Matchworks",
-  },
-  {
-    id: 7,
-    title: "Sports climbing with new friends",
-    date: "Sunday",
-    location: "Llanberis",
-  },
-];
-
 export default function Activities() {
   const { activities } = useActivities();
+  const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
   const location = useLocation();
+  const navigate = useNavigate();
   const [showMapView, setShowMapView] = useState(false);
   const [filteredActivities, setFilteredActivities] = useState(activities);
 
@@ -71,7 +21,7 @@ export default function Activities() {
   const [filters, setFilters] = useState<FilterOptions>({
     activityType: filterParam
       ? [filterParam.charAt(0).toUpperCase() + filterParam.slice(1)]
-      : ["Cycling", "Climbing"],
+      : ["Cycling", "Climbing", "Running"],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     date: { start: "", end: "" },
@@ -84,13 +34,21 @@ export default function Activities() {
     clubOnly: false,
   });
 
+  const formatActivityDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    });
+  };
+
   const applyFilters = (newFilters: FilterOptions) => {
     setFilters(newFilters);
   };
 
   const handleActivitySelect = (activity: any) => {
     setShowMapView(false);
-    // Navigate to activity details if needed
   };
 
   useEffect(() => {
@@ -103,7 +61,8 @@ export default function Activities() {
           (type) =>
             activity.type === type.toLowerCase() ||
             (type === "Cycling" && activity.type === "cycling") ||
-            (type === "Climbing" && activity.type === "climbing"),
+            (type === "Climbing" && activity.type === "climbing") ||
+            (type === "Running" && activity.type === "running"),
         ),
       );
     }
@@ -152,16 +111,7 @@ export default function Activities() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect
-              x="1"
-              y="3"
-              width="22"
-              height="10"
-              rx="2"
-              stroke="black"
-              strokeWidth="1"
-              fill="none"
-            />
+            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -174,7 +124,7 @@ export default function Activities() {
           <h1 className="text-3xl font-bold text-explore-green font-cabin">
             {filterParam
               ? `${filterParam.charAt(0).toUpperCase() + filterParam.slice(1)} Activities`
-              : "Activities"}
+              : "All Activities"}
           </h1>
         </div>
 
@@ -185,25 +135,58 @@ export default function Activities() {
           currentFilters={filters}
         />
 
-        {/* Activities Content - Climbing or Cycling specific or mixed */}
-        {filters.activityType.length === 1 &&
-        filters.activityType.includes("Climbing") ? (
-          <AllClimbingActivities userActivities={filteredActivities} />
-        ) : filters.activityType.length === 1 &&
-          filters.activityType.includes("Cycling") ? (
-          <AllCyclingActivities userActivities={filteredActivities} />
-        ) : (
-          /* Mixed Activities List */
-          <div className="space-y-2">
-            {/* User Created Activities */}
-            {filteredActivities.map((activity) => (
-              <CreatedActivityItem key={activity.id} activity={activity} />
-            ))}
+        {/* Activities List */}
+        <div className="space-y-4 mt-6">
+          {filteredActivities.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-gray-400 mb-4">
+                <Users className="w-16 h-16 mx-auto" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No activities found</h3>
+              <p className="text-gray-500 mb-4">Try adjusting your filters or create a new activity</p>
+              <Link 
+                to="/create" 
+                className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+              >
+                Create Activity
+              </Link>
+            </div>
+          ) : (
+            filteredActivities.map((activity) => (
+              <ActivityCard 
+                key={activity.id} 
+                activity={activity} 
+                formatActivityDate={formatActivityDate}
+              />
+            ))
+          )}
+        </div>
 
-            {/* Default Activities */}
-            {activitiesData.map((activity) => (
-              <ActivityItem key={activity.id} activity={activity} />
-            ))}
+        {/* Show sample activities if no user activities */}
+        {activities.length === 0 && (
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">Sample Activities</h3>
+            <div className="space-y-4">
+              <SampleActivityCard
+                title="Westway Women's Climbing Morning"
+                type="climbing"
+                date="26 January 2025"
+                location="Westway Climbing Centre"
+                organizer="Coach Holly Peristiani"
+                participants="8/12"
+                difficulty="Intermediate"
+              />
+              <SampleActivityCard
+                title="Sunday Morning Social Ride"
+                type="cycling"
+                date="2 February 2025"
+                location="Richmond Park"
+                organizer="Richmond Cycling Club"
+                participants="12/15"
+                difficulty="Beginner"
+                distance="25km"
+              />
+            </div>
           </div>
         )}
       </div>
@@ -223,586 +206,258 @@ export default function Activities() {
   );
 }
 
-function AllClimbingActivities({ userActivities }: { userActivities: any[] }) {
-  const partnerRequests = [
-    {
-      id: "partner1",
-      title: "Looking for belay partner",
-      date: "Tonight",
-      time: "7:00 PM",
-      location: "Westway Climbing Centre",
-      organizer: "Sarah Chen",
-      type: "climbing",
-      climbingLevel: "5.9 - 5.11a",
-      maxParticipants: "2",
-    },
-    {
-      id: "partner2",
-      title: "Lead climbing session",
-      date: "Friday evenings",
-      time: "6:30 PM",
-      location: "The Castle Climbing Centre",
-      organizer: "Alex Rodriguez",
-      type: "climbing",
-      climbingLevel: "6a - 6c",
-      maxParticipants: "4",
-    },
-    {
-      id: "partner3",
-      title: "Weekend bouldering buddy",
-      date: "Saturday",
-      time: "2:00 PM",
-      location: "VauxWall East",
-      organizer: "Mike Johnson",
-      type: "climbing",
-      climbingLevel: "V3 - V6",
-      maxParticipants: "3",
-    },
-  ];
+function ActivityCard({ 
+  activity, 
+  formatActivityDate 
+}: { 
+  activity: any; 
+  formatActivityDate: (date: string) => string;
+}) {
+  const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
+  const navigate = useNavigate();
 
-  const gymActivities = [
-    {
-      id: "gym1",
-      title: "Women's+ Climbing Morning",
-      date: "Every Wednesday",
-      time: "10:00 AM",
-      location: "Westway Climbing Centre",
-      organizer: "Coach Holly Peristiani",
-      type: "climbing",
-      climbingLevel: "Competent top-rope climbers",
-      maxParticipants: "15",
-      isWestway: true,
-    },
-    {
-      id: "gym2",
-      title: "Bouldering Competition Training",
-      date: "Saturday",
-      time: "2:00 PM",
-      location: "The Arch Climbing Wall",
-      organizer: "The Arch Coaching Team",
-      type: "climbing",
-      climbingLevel: "V4 - V8",
-      maxParticipants: "12",
-    },
-    {
-      id: "gym3",
-      title: "Youth Climbing Club",
-      date: "Saturday",
-      time: "11:00 AM",
-      location: "VauxWall East",
-      organizer: "Youth Development Team",
-      type: "climbing",
-      climbingLevel: "Beginner to 6a",
-      maxParticipants: "20",
-    },
-  ];
+  const handleSaveClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (isActivitySaved(activity.id)) {
+      unsaveActivity(activity.id);
+    } else {
+      saveActivity(activity);
+    }
+  };
 
-  const competitions = [
-    {
-      id: "comp1",
-      title: "London Bouldering League",
-      date: "Monthly",
-      time: "Next: July 20, 6:00 PM",
-      location: "Various London gyms",
-      organizer: "London Climbing Coalition",
-      type: "climbing",
-      climbingLevel: "V0 - V12",
-      maxParticipants: "150",
-    },
-    {
-      id: "comp2",
-      title: "Lead Climbing Championships",
-      date: "Saturday, August 5",
-      time: "9:00 AM",
-      location: "Westway Climbing Centre",
-      organizer: "British Mountaineering Council",
-      type: "climbing",
-      climbingLevel: "5.10a - 5.13d",
-      maxParticipants: "80",
-    },
-  ];
+  const handleCardClick = () => {
+    if (activity.type === "cycling") {
+      navigate("/activity/sunday-morning-ride");
+    } else if (activity.type === "climbing") {
+      navigate("/activity/westway-womens-climb");
+    } else {
+      navigate("/activity/westway-womens-climb"); // Default
+    }
+  };
 
-  const outdoorTrips = [
-    {
-      id: "trip1",
-      title: "Peak District Sport Climbing",
-      date: "Weekend, July 22-23",
-      time: "6:00 AM departure",
-      location: "Stanage Edge & Burbage",
-      organizer: "Peak Adventures",
-      type: "climbing",
-      climbingLevel: "E1 - E4 / 5.6 - 5.10",
-      maxParticipants: "8",
-    },
-    {
-      id: "trip2",
-      title: "Multi-pitch Climbing Course",
-      date: "3 days, Aug 12-14",
-      time: "All day",
-      location: "Lake District",
-      organizer: "Mountain Skills Academy",
-      type: "climbing",
-      climbingLevel: "Multi-pitch routes",
-      maxParticipants: "6",
-    },
-    {
-      id: "trip3",
-      title: "Portland Sport Trip",
-      date: "Long weekend, Sept 15-18",
-      time: "All weekend",
-      location: "Portland, Dorset",
-      organizer: "South Coast Climbing",
-      type: "climbing",
-      climbingLevel: "5.8 - 5.12",
-      maxParticipants: "12",
-    },
-  ];
+  const getActivityIcon = (type: string) => {
+    switch(type) {
+      case "cycling": return "🚴";
+      case "climbing": return "🧗";
+      case "running": return "🏃";
+      default: return "⚡";
+    }
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch(difficulty?.toLowerCase()) {
+      case "beginner": return "bg-green-100 text-green-700";
+      case "intermediate": return "bg-yellow-100 text-yellow-700";
+      case "advanced": return "bg-red-100 text-red-700";
+      default: return "bg-gray-100 text-gray-700";
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      {/* User Created Activities */}
-      {userActivities.length > 0 && (
-        <div>
-          <h2 className="text-lg font-bold text-black font-poppins mb-4">
-            Your Activities
-          </h2>
-          <div className="space-y-3">
-            {userActivities.map((activity) => (
-              <CreatedActivityItem key={activity.id} activity={activity} />
-            ))}
+    <div 
+      className="border-2 border-gray-200 rounded-lg p-4 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      onClick={handleCardClick}
+    >
+      {/* Header */}
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex items-center gap-2 flex-1">
+          <span className="text-xl">{getActivityIcon(activity.type)}</span>
+          <h3 className="font-bold text-black font-cabin text-lg line-clamp-2 leading-tight flex-1">
+            {activity.title}
+          </h3>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={handleSaveClick}
+            className="p-1 hover:bg-gray-100 rounded transition-colors"
+            title={isActivitySaved(activity.id) ? "Unsave activity" : "Save activity"}
+          >
+            <Bookmark
+              className={`w-5 h-5 ${
+                isActivitySaved(activity.id)
+                  ? "fill-explore-green text-explore-green"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+            />
+          </button>
+          {activity.difficulty && (
+            <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}>
+              {activity.difficulty}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Organizer */}
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-sm text-gray-600 font-cabin">
+          By {activity.organizer}
+        </span>
+      </div>
+
+      {/* Details */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-700 font-cabin">
+            📅 {formatActivityDate(activity.date)}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-gray-500" />
+          <span className="text-sm text-gray-700 font-cabin">
+            {activity.location}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-gray-500" />
+          <span className="text-sm text-gray-700 font-cabin">
+            Max {activity.maxParticipants} participants
+          </span>
+        </div>
+      </div>
+
+      {/* Activity-specific metrics */}
+      {activity.type === "cycling" && (activity.distance || activity.pace) && (
+        <div className="mt-3 flex gap-4">
+          {activity.distance && (
+            <div className="text-sm text-gray-600">
+              🚴 {activity.distance}{activity.distanceUnit}
+            </div>
+          )}
+          {activity.pace && (
+            <div className="text-sm text-gray-600">
+              ⚡ {activity.pace} {activity.paceUnit}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activity.type === "climbing" && activity.climbingLevel && (
+        <div className="mt-3">
+          <div className="text-sm text-gray-600">
+            🧗 Level: {activity.climbingLevel}
           </div>
         </div>
       )}
 
-      {/* Partner Requests */}
-      <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">
-          Partner Requests
-        </h2>
-        <div className="space-y-3">
-          {partnerRequests.map((activity) => (
-            <CreatedActivityItem key={activity.id} activity={activity} />
-          ))}
-        </div>
-      </div>
-
-      {/* Gym Activities */}
-      <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">
-          Climbing Gym Activities
-        </h2>
-        <div className="space-y-3">
-          {gymActivities.map((activity) => (
-            <CreatedActivityItem key={activity.id} activity={activity} />
-          ))}
-        </div>
-      </div>
-
-      {/* Competitions */}
-      <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">
-          Competitions
-        </h2>
-        <div className="space-y-3">
-          {competitions.map((activity) => (
-            <CreatedActivityItem key={activity.id} activity={activity} />
-          ))}
-        </div>
-      </div>
-
-      {/* Outdoor Trips */}
-      <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">
-          Climbing Trips
-        </h2>
-        <div className="space-y-3">
-          {outdoorTrips.map((activity) => (
-            <CreatedActivityItem key={activity.id} activity={activity} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
-  const groupRides = [
-    {
-      id: "group1",
-      title: "Sunday Morning Social Ride",
-      date: "Sunday",
-      time: "8:00 AM",
-      location: "Richmond Park, London",
-      organizer: "Richmond Cycling Club",
-      type: "cycling",
-      distance: "25",
-      distanceUnit: "km",
-      pace: "20",
-      paceUnit: "kph",
-      elevation: "150",
-      elevationUnit: "m",
-      maxParticipants: "15",
-    },
-    {
-      id: "group2",
-      title: "Intermediate Chaingang",
-      date: "Tuesday",
-      time: "6:30 PM",
-      location: "Box Hill, Surrey",
-      organizer: "Surrey Road Cycling",
-      type: "cycling",
-      distance: "40",
-      distanceUnit: "km",
-      pace: "32",
-      paceUnit: "kph",
-      elevation: "420",
-      elevationUnit: "m",
-      maxParticipants: "12",
-    },
-  ];
-
-  const sportives = [
-    {
-      id: "sportive1",
-      title: "London to Brighton Challenge",
-      date: "Saturday",
-      time: "7:00 AM",
-      location: "Clapham Common, London",
-      organizer: "British Heart Foundation",
-      type: "cycling",
-      distance: "54",
-      distanceUnit: "miles",
-      elevation: "900",
-      elevationUnit: "m",
-      maxParticipants: "2000",
-    },
-    {
-      id: "sportive2",
-      title: "Cotswolds Century",
-      date: "Sunday",
-      time: "8:00 AM",
-      location: "Chipping Campden",
-      organizer: "Sportive Series",
-      type: "cycling",
-      distance: "100",
-      distanceUnit: "miles",
-      elevation: "1850",
-      elevationUnit: "m",
-      maxParticipants: "500",
-    },
-  ];
-
-  const training = [
-    {
-      id: "training1",
-      title: "Hill Climbing Intervals",
-      date: "Thursday",
-      time: "6:00 PM",
-      location: "Leith Hill, Surrey",
-      organizer: "Watts Cycling Club",
-      type: "cycling",
-      distance: "35",
-      distanceUnit: "km",
-      elevation: "650",
-      elevationUnit: "m",
-      maxParticipants: "8",
-    },
-  ];
-
-  return (
-    <div className="space-y-6">
-      {/* User Created Activities */}
-      {userActivities.length > 0 && (
-        <div>
-          <h2 className="text-lg font-bold text-black font-poppins mb-4">
-            Your Activities
-          </h2>
-          <div className="space-y-3">
-            {userActivities.map((activity) => (
-              <CreatedActivityItem key={activity.id} activity={activity} />
-            ))}
-          </div>
+      {activity.type === "running" && (activity.distance || activity.pace) && (
+        <div className="mt-3 flex gap-4">
+          {activity.distance && (
+            <div className="text-sm text-gray-600">
+              🏃 {activity.distance}{activity.distanceUnit}
+            </div>
+          )}
+          {activity.pace && (
+            <div className="text-sm text-gray-600">
+              ⚡ {activity.pace} {activity.paceUnit}
+            </div>
+          )}
         </div>
       )}
-
-      {/* Group Rides */}
-      <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">
-          Group Rides
-        </h2>
-        <div className="space-y-3">
-          {groupRides.map((activity) => (
-            <CreatedActivityItem key={activity.id} activity={activity} />
-          ))}
-        </div>
-      </div>
-
-      {/* Sportives */}
-      <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">
-          Sportives & Events
-        </h2>
-        <div className="space-y-3">
-          {sportives.map((activity) => (
-            <CreatedActivityItem key={activity.id} activity={activity} />
-          ))}
-        </div>
-      </div>
-
-      {/* Training */}
-      <div>
-        <h2 className="text-lg font-bold text-black font-poppins mb-4">
-          Training Sessions
-        </h2>
-        <div className="space-y-3">
-          {training.map((activity) => (
-            <CreatedActivityItem key={activity.id} activity={activity} />
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
 
-function CreatedActivityItem({ activity }: { activity: any }) {
+function SampleActivityCard({
+  title,
+  type,
+  date,
+  location,
+  organizer,
+  participants,
+  difficulty,
+  distance,
+}: {
+  title: string;
+  type: string;
+  date: string;
+  location: string;
+  organizer: string;
+  participants: string;
+  difficulty: string;
+  distance?: string;
+}) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    // Navigate to appropriate activity detail page based on activity type
-    if (activity.organizer === "Coach Holly Peristiani" || activity.title.includes("Westway")) {
-      navigate("/activity/westway-womens-climb");
-    } else if (activity.type === "cycling") {
-      if (activity.title.includes("Chaingang") || activity.title.includes("Training")) {
-        navigate("/activity/chaingang-training");
-      } else {
-        navigate("/activity/sunday-morning-ride");
-      }
-    } else if (activity.type === "climbing") {
-      if (activity.title.includes("Peak") || activity.title.includes("Sport") || activity.title.includes("Outdoor")) {
-        navigate("/activity/peak-district-climb");
-      } else {
-        navigate("/activity/westway-womens-climb");
-      }
+    if (type === "cycling") {
+      navigate("/activity/sunday-morning-ride");
     } else {
       navigate("/activity/westway-womens-climb");
     }
   };
 
-  const handleRequestClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    alert(`Request to join ${activity.title}`);
+  const getActivityIcon = (type: string) => {
+    switch(type) {
+      case "cycling": return "🚴";
+      case "climbing": return "🧗";
+      case "running": return "🏃";
+      default: return "⚡";
+    }
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch(difficulty?.toLowerCase()) {
+      case "beginner": return "bg-green-100 text-green-700";
+      case "intermediate": return "bg-yellow-100 text-yellow-700";
+      case "advanced": return "bg-red-100 text-red-700";
+      default: return "bg-gray-100 text-gray-700";
+    }
   };
 
   return (
-    <div
-      className="bg-explore-gray border-2 border-explore-green rounded-lg p-4 mb-3 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+    <div 
+      className="border-2 border-gray-200 rounded-lg p-4 bg-gray-50 cursor-pointer hover:shadow-lg transition-shadow duration-200"
       onClick={handleClick}
     >
       {/* Header */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-explore-green rounded-full flex items-center justify-center flex-shrink-0">
-            {activity.type === "cycling" ? (
-              <Bike className="w-6 h-6 text-white" />
-            ) : (
-              <Mountain className="w-6 h-6 text-white" />
-            )}
-          </div>
-          <div>
-            <h3 className="font-bold text-explore-green font-cabin text-base">
-              {activity.title}
-            </h3>
-            <p className="text-xs text-gray-600 font-cabin">
-              By {activity.organizer}
-            </p>
-          </div>
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex items-center gap-2 flex-1">
+          <span className="text-xl">{getActivityIcon(type)}</span>
+          <h3 className="font-bold text-black font-cabin text-lg line-clamp-2 leading-tight flex-1">
+            {title}
+          </h3>
         </div>
-        <button
-          onClick={handleRequestClick}
-          className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
-        >
-          Request to join
-        </button>
-      </div>
-
-      {/* Date and Time */}
-      <div className="grid grid-cols-2 gap-4 mb-3">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-explore-green" />
-          <span className="text-sm text-black font-cabin">{activity.date}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 flex items-center justify-center">
-            <span className="text-explore-green text-xs">🕒</span>
-          </div>
-          <span className="text-sm text-black font-cabin">{activity.time}</span>
-        </div>
-      </div>
-
-      {/* Location */}
-      <div className="flex items-center gap-2 mb-3">
-        <MapPin className="w-4 h-4 text-explore-green" />
-        <span className="text-sm text-black font-cabin">
-          {activity.location}
+        <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(difficulty)}`}>
+          {difficulty}
         </span>
       </div>
 
-      {/* Activity specific metrics */}
-      {activity.type === "cycling" && (
-        <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
-          {activity.distance && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">📍</span>
-              </div>
-              <span className="text-black font-cabin">
-                {activity.distance} {activity.distanceUnit}
-              </span>
-            </div>
-          )}
-          {activity.elevation && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">⛰️</span>
-              </div>
-              <span className="text-black font-cabin">
-                {activity.elevation} {activity.elevationUnit}
-              </span>
-            </div>
-          )}
-          {activity.pace && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">🚴</span>
-              </div>
-              <span className="text-black font-cabin">
-                {activity.pace} {activity.paceUnit}
-              </span>
-            </div>
-          )}
-          {activity.maxParticipants && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">👥</span>
-              </div>
-              <span className="text-black font-cabin">
-                Max {activity.maxParticipants} riders
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-
-      {activity.type === "climbing" && (
-        <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
-          {activity.climbingLevel && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">����</span>
-              </div>
-              <span className="text-black font-cabin">
-                Level: {activity.climbingLevel}
-              </span>
-            </div>
-          )}
-          {activity.maxParticipants && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">👥</span>
-              </div>
-              <span className="text-black font-cabin">
-                Max {activity.maxParticipants} people
-              </span>
-            </div>
-          )}
-          {activity.languages && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">🗣️</span>
-              </div>
-              <span className="text-black font-cabin">
-                {activity.languages}
-              </span>
-            </div>
-          )}
-          {activity.gearRequired && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-explore-green text-xs">⚙️</span>
-              </div>
-              <span className="text-black font-cabin">
-                {activity.gearRequired}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Special comments */}
-      {activity.specialComments && (
-        <div className="mt-3 p-3 bg-white rounded-lg">
-          <p className="text-sm text-black font-cabin">
-            <span className="font-bold text-explore-green">
-              Special comments:
-            </span>
-            <br />
-            {activity.specialComments}
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ActivityItem({ activity }: { activity: (typeof activitiesData)[0] }) {
-  return (
-    <div className="flex items-center gap-3 py-4">
-      {/* Activity Icon */}
-      <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-        <svg
-          className="w-6 h-6 text-white"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M12 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm1 14v6h-2v-6H8.5l2-8h3l2 8H13z" />
-        </svg>
+      {/* Organizer */}
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-sm text-gray-600 font-cabin">
+          By {organizer}
+        </span>
       </div>
 
-      {/* Activity Details */}
-      <div className="flex-1">
-        <h3 className="font-bold text-black font-cabin text-base mb-2">
-          {activity.title}
-        </h3>
-        <div className="space-y-1">
-          <div className="flex items-center gap-1">
-            <Calendar className="w-4 h-4 text-black" />
-            <span className="text-sm text-black font-cabin">
-              {activity.date}
-            </span>
+      {/* Details */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-700 font-cabin">
+            📅 {date}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-gray-500" />
+          <span className="text-sm text-gray-700 font-cabin">
+            {location}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-gray-500" />
+          <span className="text-sm text-gray-700 font-cabin">
+            {participants} participants
+          </span>
+        </div>
+      </div>
+
+      {distance && (
+        <div className="mt-3">
+          <div className="text-sm text-gray-600">
+            {getActivityIcon(type)} {distance}
           </div>
-          {activity.location && (
-            <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4 text-black" />
-              <span className="text-sm text-black font-cabin">
-                {activity.location}
-              </span>
-            </div>
-          )}
         </div>
-      </div>
-
-      {/* Join Button */}
-      {activity.isWestway ? (
-        <Link
-          to="/activity/westway-womens-climb"
-          className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin font-medium"
-        >
-          Request to join
-        </Link>
-      ) : (
-        <button className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin font-medium">
-          Request to join
-        </button>
       )}
     </div>
   );
