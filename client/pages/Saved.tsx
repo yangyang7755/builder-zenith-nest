@@ -273,7 +273,10 @@ function ActivityCard({
   };
 
   return (
-    <div className="border-2 border-gray-200 rounded-lg p-4 bg-white">
+    <div
+      className="border-2 border-gray-200 rounded-lg p-4 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      onClick={handleCardClick}
+    >
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2 flex-1">
           <span className="text-xl">{getActivityIcon(activity.type)}</span>
@@ -288,7 +291,13 @@ function ActivityCard({
             </span>
           )}
           {showSaveButton && (
-            <button className="p-1 hover:bg-gray-100 rounded transition-colors" onClick={handleUnsave}>
+            <button
+              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUnsave();
+              }}
+            >
               <Bookmark className="w-5 h-5 fill-explore-green text-explore-green" />
             </button>
           )}
