@@ -110,15 +110,13 @@ export default function ActivityCard({
         {/* Date and Location */}
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-orange-500 text-base">📅</span>
             <span className="text-sm text-black font-cabin">
-              {date.replace("📅 ", "")}
+              {date}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-red-500 text-base">📍</span>
             <span className="text-sm text-black font-cabin">
-              {location.replace("📍", "")}
+              {location}
             </span>
           </div>
         </div>
