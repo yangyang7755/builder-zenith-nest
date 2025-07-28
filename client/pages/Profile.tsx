@@ -29,10 +29,12 @@ export default function Profile() {
     {
       name: "Westway",
       logo: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800",
+      path: "/club/westway",
     },
     {
       name: "CULMC",
       logo: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=50&h=50&fit=crop",
+      path: "/club/oxford-cycling",
     },
   ];
 
