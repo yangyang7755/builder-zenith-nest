@@ -347,6 +347,26 @@ function ActivityCard({
           </div>
         )}
       </div>
+
+      {/* Status Button for Joined Activities */}
+      {showJoinedStatus && (
+        <div className="mt-4 pt-3 border-t border-gray-200">
+          <button
+            onClick={(e) => e.stopPropagation()}
+            className={`w-full py-2 rounded-lg text-sm font-cabin font-medium transition-colors ${
+              activity.status === "confirmed"
+                ? "bg-green-100 text-green-700 cursor-default"
+                : activity.status === "pending"
+                ? "bg-yellow-100 text-yellow-700 cursor-default"
+                : "bg-gray-100 text-gray-700 cursor-default"
+            }`}
+          >
+            {activity.status === "confirmed" ? "✓ Joined" :
+             activity.status === "pending" ? "⏳ Pending" :
+             "Request Status"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
