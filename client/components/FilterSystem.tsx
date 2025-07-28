@@ -107,6 +107,10 @@ export default function FilterSystem({
               type="text"
               placeholder="Search activities..."
               className="flex-1 bg-transparent text-black font-cabin focus:outline-none"
+              onChange={(e) => {
+                // For now, we'll implement this later
+                console.log("Search:", e.target.value);
+              }}
             />
           </div>
         </div>
@@ -160,7 +164,7 @@ export default function FilterSystem({
 
           {filters.location && (
             <div className="flex items-center gap-1 bg-explore-green text-white px-3 py-1 rounded-full text-sm font-cabin whitespace-nowrap">
-              ��� {filters.location}
+              📍 {filters.location}
               <button onClick={() => updateFilter("location", "")}>
                 <X className="w-3 h-3" />
               </button>
