@@ -22,6 +22,8 @@ import ClubWestway from "./pages/ClubWestway";
 import ClubOxford from "./pages/ClubOxford";
 import ClubRapha from "./pages/ClubRapha";
 import ClubVauxwall from "./pages/ClubVauxwall";
+import ClubRichmond from "./pages/ClubRichmond";
+import ClubThames from "./pages/ClubThames";
 import CoachHolly from "./pages/CoachHolly";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
