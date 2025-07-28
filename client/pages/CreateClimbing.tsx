@@ -176,38 +176,12 @@ export default function CreateClimbing() {
             </div>
 
             {/* Date and Time */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                  Date
-                </h3>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={formData.date}
-                    onChange={(e) =>
-                      setFormData({ ...formData, date: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin pr-10"
-                    placeholder="dd/mm/yyyy"
-                  />
-                  <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                  Time
-                </h3>
-                <input
-                  type="time"
-                  value={formData.time}
-                  onChange={(e) =>
-                    setFormData({ ...formData, time: e.target.value })
-                  }
-                  className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                />
-              </div>
-            </div>
+            <DateTimePicker
+              date={formData.date}
+              time={formData.time}
+              onDateChange={(date) => setFormData({ ...formData, date })}
+              onTimeChange={(time) => setFormData({ ...formData, time })}
+            />
 
             {/* Climbing level */}
             <div>
