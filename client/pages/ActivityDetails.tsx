@@ -10,8 +10,10 @@ import {
   Users,
   Target,
   Trophy,
+  Bookmark,
 } from "lucide-react";
 import { useChat } from "../contexts/ChatContext";
+import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 
 // Activity data structure
 const activitiesData = {
