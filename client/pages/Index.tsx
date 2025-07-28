@@ -1560,3 +1560,79 @@ function BottomNavigation() {
     </div>
   );
 }
+
+function CarShareCard({
+  destination,
+  date,
+  time,
+  driver,
+  availableSeats,
+  cost,
+  imageSrc,
+}: {
+  destination: string;
+  date: string;
+  time: string;
+  driver: string;
+  availableSeats: number;
+  cost: string;
+  imageSrc: string;
+}) {
+  return (
+    <div className="min-w-72 w-72 border-2 border-blue-300 rounded-lg p-4 flex-shrink-0 bg-blue-50 cursor-pointer hover:shadow-lg transition-shadow duration-200">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="font-bold text-blue-800 font-cabin text-lg line-clamp-2 leading-tight flex-1 pr-2">
+          🚗 {destination}
+        </h3>
+        <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded-full font-cabin font-medium">
+          {availableSeats} seats
+        </span>
+      </div>
+
+      {/* Driver info */}
+      <div className="flex items-center gap-3 mb-4">
+        <img
+          src={imageSrc}
+          alt={driver}
+          className="w-10 h-10 rounded-full border border-blue-600 object-cover flex-shrink-0"
+        />
+        <div className="flex-1 min-w-0">
+          <div className="text-sm text-blue-700 font-cabin font-medium">
+            Driver: {driver}
+          </div>
+        </div>
+      </div>
+
+      {/* Trip details */}
+      <div className="space-y-2 mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-blue-800 font-cabin">
+            {date}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-blue-800 font-cabin">
+            🕐 Departure: {time}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-blue-800 font-cabin font-medium">
+            💰 {cost}
+          </span>
+        </div>
+      </div>
+
+      {/* Request button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          alert(`Request seat for ${destination} trip`);
+        }}
+        className="w-full bg-blue-600 text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-blue-700 transition-colors"
+      >
+        Request seat
+      </button>
+    </div>
+  );
+}
