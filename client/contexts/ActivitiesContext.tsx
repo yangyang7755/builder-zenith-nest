@@ -87,7 +87,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       id: "sample-chaingang",
       type: "cycling",
       title: "Intermediate Chaingang",
-      date: "2024-01-23",
+      date: "2025-01-28",
       time: "18:30",
       location: "Box Hill, Surrey",
       meetupLocation: "Box Hill car park",
