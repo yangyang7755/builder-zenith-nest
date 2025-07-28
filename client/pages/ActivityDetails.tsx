@@ -277,11 +277,26 @@ export default function ActivityDetails() {
             <h1 className="text-2xl font-bold text-explore-green font-cabin leading-tight flex-1 pr-4">
               {activity.title}
             </h1>
-            <span
-              className={`text-sm px-3 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}
-            >
-              {activity.difficulty}
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSaveActivity}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                title={isActivitySaved(activity.id) ? "Unsave activity" : "Save activity"}
+              >
+                <Bookmark
+                  className={`w-6 h-6 ${
+                    isActivitySaved(activity.id)
+                      ? "fill-explore-green text-explore-green"
+                      : "text-gray-400 hover:text-gray-600"
+                  }`}
+                />
+              </button>
+              <span
+                className={`text-sm px-3 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}
+              >
+                {activity.difficulty}
+              </span>
+            </div>
           </div>
         </div>
 
