@@ -565,8 +565,39 @@ function AllCyclingActivities({ userActivities }: { userActivities: any[] }) {
 }
 
 function CreatedActivityItem({ activity }: { activity: any }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    // Navigate to appropriate activity detail page based on activity type
+    if (activity.organizer === "Coach Holly Peristiani" || activity.title.includes("Westway")) {
+      navigate("/activity/westway-womens-climb");
+    } else if (activity.type === "cycling") {
+      if (activity.title.includes("Chaingang") || activity.title.includes("Training")) {
+        navigate("/activity/chaingang-training");
+      } else {
+        navigate("/activity/sunday-morning-ride");
+      }
+    } else if (activity.type === "climbing") {
+      if (activity.title.includes("Peak") || activity.title.includes("Sport") || activity.title.includes("Outdoor")) {
+        navigate("/activity/peak-district-climb");
+      } else {
+        navigate("/activity/westway-womens-climb");
+      }
+    } else {
+      navigate("/activity/westway-womens-climb");
+    }
+  };
+
+  const handleRequestClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    alert(`Request to join ${activity.title}`);
+  };
+
   return (
-    <div className="bg-explore-gray border-2 border-explore-green rounded-lg p-4 mb-3">
+    <div
+      className="bg-explore-gray border-2 border-explore-green rounded-lg p-4 mb-3 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      onClick={handleClick}
+    >
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
