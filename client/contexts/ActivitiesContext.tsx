@@ -65,7 +65,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       id: "sample-sunday-ride",
       type: "cycling",
       title: "Sunday Morning Social Ride",
-      date: "2024-01-21",
+      date: "2025-02-02",
       time: "08:00",
       location: "Richmond Park",
       meetupLocation: "Richmond Park Main Gate",
