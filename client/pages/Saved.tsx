@@ -205,9 +205,21 @@ export default function Saved() {
   );
 }
 
-function ActivityCard({ activity, onUnsave }: { activity: Activity; onUnsave: (id: string) => void }) {
+function ActivityCard({
+  activity,
+  onUnsave,
+  showSaveButton = false,
+  showJoinedStatus = false
+}: {
+  activity: Activity | any;
+  onUnsave?: (id: string) => void;
+  showSaveButton?: boolean;
+  showJoinedStatus?: boolean;
+}) {
   const handleUnsave = () => {
-    onUnsave(activity.id);
+    if (onUnsave) {
+      onUnsave(activity.id);
+    }
   };
 
   const formatDate = (dateStr: string) => {
@@ -227,15 +239,45 @@ function ActivityCard({ activity, onUnsave }: { activity: Activity; onUnsave: (i
     return `${hour12}:${minutes} ${ampm}`;
   };
 
+  const getActivityIcon = (type: string) => {
+    switch(type) {
+      case "cycling": return "🚴";
+      case "climbing": return "🧗";
+      case "running": return "🏃";
+      default: return "⚡";
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch(status) {
+      case "confirmed": return "bg-green-100 text-green-700";
+      case "pending": return "bg-yellow-100 text-yellow-700";
+      case "cancelled": return "bg-red-100 text-red-700";
+      default: return "bg-gray-100 text-gray-700";
+    }
+  };
+
   return (
     <div className="border-2 border-gray-200 rounded-lg p-4 bg-white">
       <div className="flex justify-between items-start mb-3">
-        <h3 className="text-lg font-semibold text-black font-cabin flex-1">
-          {activity.title}
-        </h3>
-        <button className="p-1 hover:bg-gray-100 rounded transition-colors" onClick={handleUnsave}>
-          <Bookmark className="w-5 h-5 fill-explore-green text-explore-green" />
-        </button>
+        <div className="flex items-center gap-2 flex-1">
+          <span className="text-xl">{getActivityIcon(activity.type)}</span>
+          <h3 className="text-lg font-semibold text-black font-cabin flex-1">
+            {activity.title}
+          </h3>
+        </div>
+        <div className="flex items-center gap-2">
+          {showJoinedStatus && activity.status && (
+            <span className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getStatusColor(activity.status)}`}>
+              {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
+            </span>
+          )}
+          {showSaveButton && (
+            <button className="p-1 hover:bg-gray-100 rounded transition-colors" onClick={handleUnsave}>
+              <Bookmark className="w-5 h-5 fill-explore-green text-explore-green" />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-2 mb-3">
@@ -251,15 +293,33 @@ function ActivityCard({ activity, onUnsave }: { activity: Activity; onUnsave: (i
           <span className="text-sm font-cabin">{activity.location}</span>
         </div>
 
-        <div className="flex items-center gap-2 text-gray-600">
-          <span className="text-lg">{activity.type === "cycling" ? "🚴" : "🧗"}</span>
-          <span className="text-sm font-cabin capitalize">{activity.type}</span>
-        </div>
-
         {activity.organizer && (
           <div className="flex items-center gap-2 text-gray-600">
             <Users className="w-4 h-4" />
             <span className="text-sm font-cabin">By {activity.organizer}</span>
+          </div>
+        )}
+
+        {/* Activity-specific metrics */}
+        {activity.type === "cycling" && (activity.distance || activity.pace) && (
+          <div className="flex gap-4 text-sm text-gray-600 mt-2">
+            {activity.distance && (
+              <span>🚴 {activity.distance}{activity.distanceUnit}</span>
+            )}
+            {activity.pace && (
+              <span>⚡ {activity.pace} {activity.paceUnit}</span>
+            )}
+          </div>
+        )}
+
+        {activity.type === "running" && (activity.distance || activity.pace) && (
+          <div className="flex gap-4 text-sm text-gray-600 mt-2">
+            {activity.distance && (
+              <span>🏃 {activity.distance}{activity.distanceUnit}</span>
+            )}
+            {activity.pace && (
+              <span>⚡ {activity.pace} {activity.paceUnit}</span>
+            )}
           </div>
         )}
       </div>
