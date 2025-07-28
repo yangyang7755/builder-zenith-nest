@@ -279,6 +279,45 @@ export default function Index() {
             Request to join clubs to see their activities and events
           </p>
         </div>
+
+        {/* Car Sharing Section */}
+        <div className="mb-8">
+          <h2 className="text-base font-semibold text-black font-poppins mb-3">
+            Car sharing for trips
+          </h2>
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            <CarShareCard
+              destination="Peak District"
+              date="📅 Saturday, 2 February"
+              time="7:00 AM"
+              driver="Mike Johnson"
+              availableSeats={3}
+              cost="£15 per person"
+              imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+            />
+            <CarShareCard
+              destination="Snowdonia"
+              date="📅 Sunday, 9 February"
+              time="6:00 AM"
+              driver="Sarah Chen"
+              availableSeats={2}
+              cost="£25 per person"
+              imageSrc="https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+            />
+            <CarShareCard
+              destination="Brighton Beach"
+              date="📅 Saturday, 15 February"
+              time="8:00 AM"
+              driver="Alex Rodriguez"
+              availableSeats={4}
+              cost="£12 per person"
+              imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+            />
+          </div>
+          <p className="text-xs text-gray-500 font-cabin mt-2">
+            Share transport costs and meet fellow adventurers
+          </p>
+        </div>
       </div>
 
       {/* Map View */}
