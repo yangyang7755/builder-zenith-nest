@@ -368,7 +368,7 @@ function MixedActivitiesSection({
     {
       title: "Sunday Morning Social Ride",
       date: `📅 ${formatActivityDate("2025-02-02")}`,
-      location: "📍Richmond Park, London",
+      location: "📍 Richmond Park, London",
       imageSrc:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       organizer: "Richmond Cycling Club",
@@ -1015,7 +1015,7 @@ function CyclingExploreSection() {
     {
       title: "South Downs Way Bikepacking",
       date: "📅 Fri-Sun, July 15-17",
-      location: "���Winchester to Eastbourne",
+      location: "📍Winchester to Eastbourne",
       organizer: "Adventure Cycling UK",
       distance: "160km over 3 days",
       pace: "Touring pace",
