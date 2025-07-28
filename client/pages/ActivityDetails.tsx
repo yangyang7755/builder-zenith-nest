@@ -152,6 +152,7 @@ export default function ActivityDetails() {
   const navigate = useNavigate();
   const { activityId } = useParams();
   const { addJoinRequest } = useChat();
+  const { saveActivity, unsaveActivity, isActivitySaved } = useSavedActivities();
   const [agreedToRequirements, setAgreedToRequirements] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
