@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Bookmark } from "lucide-react";
 import RequestJoinModal from "./RequestJoinModal";
+import { useSavedActivities } from "../contexts/SavedActivitiesContext";
+import { Activity } from "../contexts/ActivitiesContext";
 
 interface ActivityCardProps {
   title: string;
