@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Bookmark, Clock, MapPin, Users } from "lucide-react";
+import { useSavedActivities } from "../contexts/SavedActivitiesContext";
+import { Activity } from "../contexts/ActivitiesContext";
 
 export default function Saved() {
   const upcomingActivities = [
