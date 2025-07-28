@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Calendar } from "lucide-react";
 import { useActivities } from "../contexts/ActivitiesContext";
+import DateTimePicker from "../components/DateTimePicker";
 
 export default function CreateClimbing() {
   const navigate = useNavigate();
