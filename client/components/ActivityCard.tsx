@@ -52,6 +52,38 @@ export default function ActivityCard({
     setShowRequestModal(true);
   };
 
+  const handleSaveClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    const currentActivityId = activityId || `${title}-${organizer}`.replace(/\s+/g, '-').toLowerCase();
+
+    if (isActivitySaved(currentActivityId)) {
+      unsaveActivity(currentActivityId);
+    } else {
+      // Create activity object for saving
+      const activityToSave: Activity = {
+        id: currentActivityId,
+        type: type as "cycling" | "climbing",
+        title,
+        date: date.includes("📅") ? date.replace("📅 ", "") : date,
+        time: "09:00", // Default time
+        location: location.includes("📍") ? location.replace("📍", "") : location,
+        meetupLocation: location.includes("📍") ? location.replace("📍", "") : location,
+        organizer,
+        distance,
+        elevation,
+        pace,
+        maxParticipants: "10",
+        specialComments: "",
+        imageSrc,
+        climbingLevel: difficulty,
+        gender: "All genders",
+        visibility: "All",
+        createdAt: new Date(),
+      };
+      saveActivity(activityToSave);
+    }
+  };
+
   // Determine difficulty level and color
   const getDifficultyBadge = () => {
     if (!difficulty && type === "cycling") {
