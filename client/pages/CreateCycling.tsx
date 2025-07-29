@@ -4,6 +4,7 @@ import { Calendar, ChevronDown, MapPin, X, ArrowLeft } from "lucide-react";
 import { useActivities } from "../contexts/ActivitiesContext";
 import { useActivityDraft } from "../contexts/ActivityDraftContext";
 import DateTimePicker from "../components/DateTimePicker";
+import BottomNavigation from "../components/BottomNavigation";
 
 export default function CreateCycling() {
   const navigate = useNavigate();
