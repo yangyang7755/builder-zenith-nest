@@ -97,6 +97,9 @@ const App = () => (
                   path="/carshare/:carShareId"
                   element={<CarShareDetails />}
                 />
+                <Route path="/club-chat/oxford" element={<ClubChatOxford />} />
+                <Route path="/club-chat/westway" element={<ClubChatWestway />} />
+                <Route path="/club-chat/richmond" element={<ClubChatRichmond />} />
                 <Route path="/profile/coach-holly" element={<CoachHolly />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
