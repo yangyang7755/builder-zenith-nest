@@ -21,6 +21,7 @@ import CreateHiking from "./pages/CreateHiking";
 import CreateSkiing from "./pages/CreateSkiing";
 import CreateSurfing from "./pages/CreateSurfing";
 import CreateTennis from "./pages/CreateTennis";
+import CarShareDetails from "./pages/CarShareDetails";
 import Chat from "./pages/Chat";
 import IndividualChat from "./pages/IndividualChat";
 import ClubWestway from "./pages/ClubWestway";
