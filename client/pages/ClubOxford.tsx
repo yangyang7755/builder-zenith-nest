@@ -41,6 +41,9 @@ export default function ClubOxford() {
       avatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       type: "cycling",
+      location: "Radcliffe Camera, Oxford",
+      distance: "45km",
+      pace: "25 kph"
     },
     {
       id: 2,
@@ -50,6 +53,9 @@ export default function ClubOxford() {
       avatar:
         "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
       type: "cycling",
+      location: "Iffley Road Track",
+      distance: "20km",
+      pace: "Intervals"
     },
     {
       id: 3,
@@ -59,8 +65,41 @@ export default function ClubOxford() {
       avatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
       type: "cycling",
+      location: "Port Meadow",
+      distance: "25km",
+      pace: "Leisurely"
     },
   ];
+
+  const handleEventClick = (event: any) => {
+    // Navigate to activity details page
+    navigate("/activity/sunday-morning-ride");
+  };
+
+  const handleLeaveClub = () => {
+    setShowLeaveConfirm(true);
+  };
+
+  const confirmLeaveClub = () => {
+    setIsMember(false);
+    setShowLeaveConfirm(false);
+    alert("You have left Oxford University Cycling Club");
+    navigate(-1);
+  };
+
+  const handleSendMessage = () => {
+    if (chatMessage.trim()) {
+      const newMessage = {
+        id: chatMessages.length + 1,
+        user: "You",
+        message: chatMessage,
+        time: "Just now",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      };
+      setChatMessages([...chatMessages, newMessage]);
+      setChatMessage("");
+    }
+  };
 
   const members = [
     {
