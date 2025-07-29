@@ -368,11 +368,11 @@ function ActivityCard({
       </div>
 
       {/* Activity-specific metrics */}
-      {activity.type === "cycling" && (activity.distance || activity.pace) && (
+      {(activity.type === "cycling" || activity.type === "running") && (activity.distance || activity.pace) && (
         <div className="mt-3 flex gap-4">
           {activity.distance && (
             <div className="text-sm text-gray-600">
-              🚴 {activity.distance}
+              {getActivityIcon(activity.type)} {activity.distance}
               {activity.distanceUnit}
             </div>
           )}
@@ -392,19 +392,26 @@ function ActivityCard({
         </div>
       )}
 
-      {activity.type === "running" && (activity.distance || activity.pace) && (
+      {activity.type === "hiking" && (activity.distance || activity.elevation) && (
         <div className="mt-3 flex gap-4">
           {activity.distance && (
             <div className="text-sm text-gray-600">
-              🏃 {activity.distance}
-              {activity.distanceUnit}
+              🥾 {activity.distance}{activity.distanceUnit}
             </div>
           )}
-          {activity.pace && (
+          {activity.elevation && (
             <div className="text-sm text-gray-600">
-              ⚡ {activity.pace} {activity.paceUnit}
+              ⛰️ {activity.elevation}{activity.elevationUnit}
             </div>
           )}
+        </div>
+      )}
+
+      {(activity.type === "skiing" || activity.type === "surfing" || activity.type === "tennis") && activity.difficulty && (
+        <div className="mt-3">
+          <div className="text-sm text-gray-600">
+            {getActivityIcon(activity.type)} {activity.difficulty} level
+          </div>
         </div>
       )}
     </div>
