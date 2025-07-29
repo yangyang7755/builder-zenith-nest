@@ -174,11 +174,7 @@ export default function Profile() {
       ],
     },
     gear: [
-      { name: "Road bike", owned: true, icon: "🚴" },
       { name: "Helmet", owned: true, icon: "⛑️" },
-      { name: "Cycling shoes", owned: true, icon: "👟" },
-      { name: "Power meter", owned: false, icon: "⚡" },
-      { name: "GPS computer", owned: true, icon: "📱" },
       { name: "Repair kit", owned: false, icon: "🔧" },
     ],
     stats: {
