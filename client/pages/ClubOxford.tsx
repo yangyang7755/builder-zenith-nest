@@ -26,7 +26,7 @@ export default function ClubOxford() {
     {
       id: 3,
       user: "You",
-      message: "Sounds great! Count me in 🚴‍♂️",
+      message: "Sounds great! Count me in 🚴��♂️",
       time: "30 minutes ago",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
     }
@@ -277,29 +277,43 @@ export default function ClubOxford() {
               {upcomingEvents.map((event) => (
                 <div
                   key={event.id}
-                  className="border-2 border-gray-200 rounded-lg p-4 flex items-center justify-between"
+                  className="border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                  onClick={() => handleEventClick(event)}
                 >
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={event.avatar}
-                      alt="Organizer"
-                      className="w-10 h-10 rounded-full border border-black object-cover"
-                    />
-                    <div>
-                      <h4 className="font-medium text-black font-cabin">
-                        {event.title}
-                      </h4>
-                      <div className="flex items-center gap-2 text-sm text-gray-600 font-cabin">
-                        <Calendar className="w-4 h-4" />
-                        <span>
-                          {event.date} {event.time}
-                        </span>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={event.avatar}
+                        alt="Organizer"
+                        className="w-10 h-10 rounded-full border border-black object-cover"
+                      />
+                      <div>
+                        <h4 className="font-medium text-black font-cabin">
+                          {event.title}
+                        </h4>
+                        <div className="flex items-center gap-2 text-sm text-gray-600 font-cabin">
+                          <Calendar className="w-4 h-4" />
+                          <span>
+                            {event.date} {event.time}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                    <button
+                      className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin hover:bg-explore-green-dark transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alert(`Joined ${event.title}!`);
+                      }}
+                    >
+                      Join
+                    </button>
                   </div>
-                  <button className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-cabin">
-                    Join
-                  </button>
+                  <div className="flex gap-4 text-xs text-gray-600 font-cabin pl-13">
+                    <span>📍 {event.location}</span>
+                    <span>🚴 {event.distance}</span>
+                    <span>⚡ {event.pace}</span>
+                  </div>
                 </div>
               ))}
             </div>
