@@ -17,7 +17,7 @@ export default function Profile() {
   // Sample user data - this would normally come from a context or API
   const userProfile = {
     name: "Maddie Wei",
-    bio: "Weekend warrior. Always up for some mountain adventures",
+
     location: "Notting Hill, London",
     profileImage:
       "https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&crop=face",
@@ -38,7 +38,7 @@ export default function Profile() {
       nationality: "Spanish",
       profession: "Student",
       institution: "Oxford University",
-      languages: ["English", "Spanish", "French"],
+      languages: ["🇬🇧", "🇪🇸", "🇫🇷"],
       joinedDate: "January 2024",
     },
   };
@@ -396,10 +396,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Bio */}
-          <p className="text-lg text-explore-green font-cabin mb-6">
-            {userProfile.bio}
-          </p>
+
 
           {/* User Details Box */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
