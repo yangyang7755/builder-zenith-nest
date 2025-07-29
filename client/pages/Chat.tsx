@@ -217,6 +217,8 @@ export default function Chat() {
                       navigate("/club-chat/oxford");
                     } else if (club.id === "westway-climbing") {
                       navigate("/club-chat/westway");
+                    } else if (club.id === "uclmc") {
+                      navigate("/club-chat/uclmc");
                     } else if (club.id === "richmond-runners") {
                       navigate("/club-chat/richmond");
                     }
