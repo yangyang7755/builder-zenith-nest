@@ -194,11 +194,27 @@ export default function CreateCycling() {
       {/* Scrollable Content */}
       <div className="overflow-y-auto pb-20">
         <div className="px-6">
+          {/* Back Button */}
+          <div className="flex items-center py-4">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-2 text-explore-green font-cabin hover:underline"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Back
+            </button>
+          </div>
+
           {/* Title */}
-          <div className="text-center py-4">
+          <div className="text-center py-2">
             <h1 className="text-3xl font-bold text-explore-green font-cabin">
               New ride!
             </h1>
+            {hasDraft("cycling") && (
+              <p className="text-sm text-gray-600 font-cabin mt-1">
+                Draft loaded - continue editing
+              </p>
+            )}
           </div>
 
           <div className="space-y-6">
