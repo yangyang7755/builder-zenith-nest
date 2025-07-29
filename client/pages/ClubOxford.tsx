@@ -311,7 +311,7 @@ export default function ClubOxford() {
                   </div>
                   <div className="flex gap-4 text-xs text-gray-600 font-cabin pl-13">
                     <span>📍 {event.location}</span>
-                    <span>🚴 {event.distance}</span>
+                    <span>��� {event.distance}</span>
                     <span>⚡ {event.pace}</span>
                   </div>
                 </div>
@@ -463,7 +463,7 @@ function BottomNavigation() {
       </Link>
 
       {/* Clock Icon */}
-      <div className="p-2">
+      <Link to="/saved" className="p-2">
         <svg
           className="w-7 h-7"
           viewBox="0 0 30 30"
@@ -476,7 +476,7 @@ function BottomNavigation() {
           <circle cx="15" cy="15" r="12.5" />
           <path d="M15 7.5V15L20 17.5" />
         </svg>
-      </div>
+      </Link>
 
       {/* Plus Icon */}
       <Link to="/create" className="p-2">
@@ -504,14 +504,14 @@ function BottomNavigation() {
       </Link>
 
       {/* Profile Icon */}
-      <div className="p-2">
+      <Link to="/profile" className="p-2">
         <svg className="w-8 h-8" viewBox="0 0 35 35" fill="none">
           <path
             d="M17.5 17.4999C15.8958 17.4999 14.5225 16.9287 13.3802 15.7864C12.2378 14.644 11.6666 13.2708 11.6666 11.6666C11.6666 10.0624 12.2378 8.68915 13.3802 7.54679C14.5225 6.40443 15.8958 5.83325 17.5 5.83325C19.1041 5.83325 20.4774 6.40443 21.6198 7.54679C22.7621 8.68915 23.3333 10.0624 23.3333 11.6666C23.3333 13.2708 22.7621 14.644 21.6198 15.7864C20.4774 16.9287 19.1041 17.4999 17.5 17.4999ZM5.83331 29.1666V25.0833C5.83331 24.2569 6.04599 23.4973 6.47133 22.8046C6.89668 22.1119 7.46179 21.5833 8.16665 21.2187C9.67359 20.4652 11.2048 19.9001 12.7604 19.5234C14.316 19.1466 15.8958 18.9583 17.5 18.9583C19.1041 18.9583 20.684 19.1466 22.2396 19.5234C23.7951 19.9001 25.3264 20.4652 26.8333 21.2187C27.5382 21.5833 28.1033 22.1119 28.5286 22.8046C28.954 23.4973 29.1666 24.2569 29.1666 25.0833V29.1666H5.83331Z"
             fill="#1D1B20"
           />
         </svg>
-      </div>
+      </Link>
 
       {/* Navigation Indicator */}
       <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white border border-explore-green rounded-full"></div>
