@@ -136,13 +136,13 @@ export default function Chat() {
                   club={club}
                   getTimeAgo={getTimeAgo}
                   onClick={() => {
-                    // Navigate to club page instead of individual chat
+                    // Navigate to group chat pages
                     if (club.id === "oxford-cycling") {
-                      navigate("/club/oxford-cycling");
+                      navigate("/club-chat/oxford");
                     } else if (club.id === "westway-climbing") {
-                      navigate("/club/westway");
+                      navigate("/club-chat/westway");
                     } else if (club.id === "richmond-runners") {
-                      navigate("/club/richmond-runners");
+                      navigate("/club-chat/richmond");
                     }
                   }}
                 />
