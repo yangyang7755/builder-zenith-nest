@@ -205,7 +205,7 @@ export default function Activities() {
               <SampleActivityCard
                 title="Westway Women's Climbing Morning"
                 type="climbing"
-                date="26 January 2025"
+                date="6 August 2025"
                 location="Westway Climbing Centre"
                 organizer="Coach Holly Peristiani"
                 participants="8/12"
@@ -214,7 +214,7 @@ export default function Activities() {
               <SampleActivityCard
                 title="Sunday Morning Social Ride"
                 type="cycling"
-                date="2 February 2025"
+                date="10 August 2025"
                 location="Richmond Park"
                 organizer="Richmond Cycling Club"
                 participants="12/15"
