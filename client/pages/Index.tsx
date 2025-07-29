@@ -408,6 +408,61 @@ export default function Index() {
         </div>
       </div>
 
+      {/* Location Selection Modal */}
+      {showLocationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-sm p-6">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold text-black font-cabin mb-2">
+                Choose Location
+              </h3>
+              <p className="text-gray-600 font-cabin">
+                Select your preferred location for finding activities
+              </p>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              <button
+                onClick={requestCurrentLocation}
+                disabled={isGettingLocation}
+                className="w-full py-3 bg-explore-green text-white rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors flex items-center justify-center gap-2"
+              >
+                <MapPin className="w-4 h-4" />
+                {isGettingLocation ? "Getting location..." : "Use Current Location"}
+              </button>
+
+              <div className="text-center text-sm text-gray-500 font-cabin">or choose from popular areas</div>
+
+              {[
+                "Notting hill, London",
+                "Shoreditch, London",
+                "Camden, London",
+                "Westminster, London",
+                "Canary Wharf, London",
+                "Greenwich, London",
+                "Richmond, London",
+                "Clapham, London"
+              ].map((location) => (
+                <button
+                  key={location}
+                  onClick={() => handleLocationChange(location)}
+                  className="w-full py-2 text-left px-3 rounded-lg hover:bg-gray-100 transition-colors font-cabin"
+                >
+                  {location}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setShowLocationModal(false)}
+              className="w-full py-2 text-gray-500 font-cabin hover:underline"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Map View */}
       {showMapView && (
         <MapView
