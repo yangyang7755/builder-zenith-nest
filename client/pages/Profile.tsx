@@ -221,12 +221,7 @@ export default function Profile() {
       ],
     },
     gear: [
-      { name: "Running shoes", owned: true, icon: "👟" },
-      { name: "GPS watch", owned: true, icon: "⌚" },
-      { name: "Running belt", owned: false, icon: "🎽" },
-      { name: "Hydration pack", owned: false, icon: "💧" },
-      { name: "Reflective gear", owned: true, icon: "🦺" },
-      { name: "Heart rate monitor", owned: false, icon: "❤️" },
+      { name: "Helmet", owned: false, icon: "⛑️" },
     ],
     stats: {
       totalRuns: 12,
