@@ -8,6 +8,7 @@ import {
   Waves,
   Zap,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 export default function CreateActivity() {
   const activities = [
