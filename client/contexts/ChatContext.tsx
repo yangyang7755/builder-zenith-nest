@@ -45,7 +45,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     {
       id: "2",
       type: "general",
-      sender: "Ben Stuart",
+      sender: "Maddie Wei",
       content: "Liked a message . 2h",
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
     },
