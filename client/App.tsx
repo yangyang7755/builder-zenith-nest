@@ -37,6 +37,7 @@ import ClubRichmond from "./pages/ClubRichmond";
 import ClubThames from "./pages/ClubThames";
 import CoachHolly from "./pages/CoachHolly";
 import ProfileCoachHolly from "./pages/ProfileCoachHolly";
+import ProfileDanSmith from "./pages/ProfileDanSmith";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
