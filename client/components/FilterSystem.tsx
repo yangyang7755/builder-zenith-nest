@@ -5,6 +5,7 @@ export interface FilterOptions {
   activityType: string[];
   numberOfPeople: { min: number; max: number };
   location: string;
+  locationRange: number;
   date: { start: string; end: string };
   gender: string[];
   age: { min: number; max: number };
@@ -27,6 +28,7 @@ export default function FilterSystem({
   currentFilters,
 }: FilterSystemProps) {
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>(currentFilters);
 
   const activityTypes = [
@@ -37,8 +39,6 @@ export default function FilterSystem({
     "Skiing",
     "Surfing",
     "Tennis",
-    "Swimming",
-    "Yoga",
   ];
   const genderOptions = ["All genders", "Female only", "Male only", "Mixed"];
   const gearOptions = [
@@ -63,6 +63,7 @@ export default function FilterSystem({
       activityType: ["Cycling", "Climbing"], // Keep default activity types
       numberOfPeople: { min: 1, max: 50 },
       location: "",
+      locationRange: 10,
       date: { start: "", end: "" },
       gender: [],
       age: { min: 16, max: 80 },
