@@ -274,16 +274,43 @@ export default function Index() {
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
             <PartnerCard
+              id="partner-1"
               title="Looking for a belay partner..."
+              name="Sarah K."
+              age={28}
+              climbingLevel="5.9-5.11"
               date="📅 Friday evenings"
-              location="📍 Westway"
-              imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+              location="📍 Westway Climbing Centre"
+              description="Looking for a regular climbing partner for Friday evening sessions. I'm working on lead climbing and could use someone experienced."
+              availability="Fridays 6-9pm"
+              experience="2 years indoor, 6 months outdoor"
+              imageSrc="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
             />
             <PartnerCard
-              title="Looking for a belay partner..."
+              id="partner-2"
+              title="Climbing buddy needed!"
+              name="Alex M."
+              age={35}
+              climbingLevel="V4-V6 Bouldering"
               date="📅 Monday evenings"
-              location="📍 The Castle"
-              imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+              location="📍 The Castle Climbing Centre"
+              description="Experienced boulderer looking for motivation and someone to work projects with. Happy to share beta and spot!"
+              availability="Monday & Wednesday 7-10pm"
+              experience="5 years climbing, love outdoor bouldering"
+              imageSrc="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
+            />
+            <PartnerCard
+              id="partner-3"
+              title="Lead climbing partner wanted"
+              name="Emma R."
+              age={26}
+              climbingLevel="6a-6c Sport"
+              date="📅 Weekend mornings"
+              location="📍 VauxWall East"
+              description="Keen sport climber seeking a reliable partner for weekend sessions. Planning outdoor trips to Portland and Peak District."
+              availability="Saturdays 9am-1pm"
+              experience="3 years indoor, outdoor certified"
+              imageSrc="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
             />
           </div>
         </div>
@@ -1180,7 +1207,7 @@ function CyclingExploreSection() {
     {
       title: "Hill Climbing Intervals",
       date: "📅 Thursday, 6:00 PM",
-      location: "📍Leith Hill, Surrey",
+      location: "��Leith Hill, Surrey",
       organizer: "Watts Cycling Club",
       distance: "35km",
       pace: "Interval training",
