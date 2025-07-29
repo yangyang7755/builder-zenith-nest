@@ -21,7 +21,7 @@ export default function Chat() {
       name: "Westway Climbing Centre",
       lastMessage: "New routes set this week! Come check them out 🧗‍♀️",
       timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-      avatar: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=60&fit=crop",
+      avatar: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800",
       unread: true,
       type: "club"
     },
