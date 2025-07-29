@@ -354,7 +354,7 @@ export default function IndividualChat() {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.isFromMe ? "justify-end" : "justify-start"}`}
+            className={`flex ${message.isFromMe ? "justify-end" : "justify-start"} group`}
           >
             <div className="relative max-w-xs lg:max-w-md">
               <div
