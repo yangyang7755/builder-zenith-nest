@@ -146,35 +146,13 @@ export default function Profile() {
 
   const runningData = {
     activities: {
-      created: [
-        {
-          id: 1,
-          title: "Beginner's Running Group",
-          date: "2025-02-10",
-          participants: 10,
-          location: "Regent's Park",
-        },
-      ],
+      created: [],
       participated: [
         {
-          id: 1,
-          title: "Hyde Park Morning Run",
+          id: "morning-trail-run",
+          title: "Morning Trail Run",
           date: "2025-01-28",
           organizer: "London Runners",
-          rating: 4,
-        },
-        {
-          id: 2,
-          title: "Parkrun Richmond",
-          date: "2025-01-25",
-          organizer: "Parkrun",
-          rating: 5,
-        },
-        {
-          id: 3,
-          title: "Half Marathon Training",
-          date: "2025-01-18",
-          organizer: "Running Club",
           rating: 4,
         },
       ],
