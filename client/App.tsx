@@ -43,6 +43,7 @@ import NotFound from "./pages/NotFound";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
 import { ChatProvider } from "./contexts/ChatContext";
 import { SavedActivitiesProvider } from "./contexts/SavedActivitiesContext";
+import { ActivityDraftProvider } from "./contexts/ActivityDraftContext";
 
 const queryClient = new QueryClient();
 
