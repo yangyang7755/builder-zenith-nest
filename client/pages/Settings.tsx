@@ -202,19 +202,19 @@ export default function Settings() {
             icon={<Mail className="w-5 h-5" />}
             title="Email"
             subtitle="ben.stuart@email.com"
-            onClick={() => alert("Email change feature coming soon")}
+            onClick={handleEmailChange}
           />
           <SettingsItem
             icon={<Lock className="w-5 h-5" />}
             title="Change Password"
             subtitle="Update your account password"
-            onClick={() => alert("Password change feature coming soon")}
+            onClick={handlePasswordChange}
           />
           <SettingsItem
             icon={<MapPin className="w-5 h-5" />}
             title="Location"
             subtitle="Notting Hill, London"
-            onClick={() => alert("Location change feature coming soon")}
+            onClick={handleLocationChange}
           />
         </SettingsSection>
 
