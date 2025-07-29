@@ -9,6 +9,7 @@ import {
   Trophy,
   Award,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Climb");
