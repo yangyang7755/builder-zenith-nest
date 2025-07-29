@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MapPin, ArrowLeft, Users, Calendar } from "lucide-react";
+import { MapPin, ArrowLeft, Users, Calendar, LogOut, Send } from "lucide-react";
 
 export default function ClubOxford() {
   const navigate = useNavigate();
