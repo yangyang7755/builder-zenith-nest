@@ -5,6 +5,37 @@ export default function Chat() {
   const { chatMessages } = useChat();
   const navigate = useNavigate();
 
+  // Club chats data
+  const clubChats = [
+    {
+      id: "oxford-cycling",
+      name: "Oxford University Cycling Club",
+      lastMessage: "Training ride tomorrow! Meet at Radcliffe Camera 7am",
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      avatar: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60&h=60&fit=crop",
+      unread: false,
+      type: "club"
+    },
+    {
+      id: "westway-climbing",
+      name: "Westway Climbing Centre",
+      lastMessage: "New routes set this week! Come check them out 🧗‍♀️",
+      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+      avatar: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=60&fit=crop",
+      unread: true,
+      type: "club"
+    },
+    {
+      id: "richmond-runners",
+      name: "Richmond Runners",
+      lastMessage: "Park Run this Saturday - who's joining? 🏃‍♂️",
+      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      avatar: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=60&h=60&fit=crop",
+      unread: false,
+      type: "club"
+    }
+  ];
+
   const getTimeAgo = (timestamp: Date) => {
     const now = new Date();
     const diffMs = now.getTime() - timestamp.getTime();
