@@ -262,25 +262,25 @@ function ChatItem({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 py-2 relative hover:bg-gray-50 rounded-lg px-2 transition-colors text-left"
+      className="w-full flex items-center gap-3 py-3 relative hover:bg-gray-50 rounded-lg px-2 transition-colors text-left"
     >
       {/* Avatar */}
       <img
         src={getAvatarImage(message.sender)}
         alt={message.sender}
-        className="w-15 h-15 rounded-full border border-black object-cover flex-shrink-0"
+        className="w-12 h-12 rounded-full border border-black object-cover flex-shrink-0"
       />
 
       {/* Message Content */}
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between">
-          <div>
+          <div className="flex-1 min-w-0">
             <h3
-              className={`font-cabin text-lg ${message.type === "join_request" ? "font-bold text-explore-green" : "font-normal text-black"}`}
+              className={`font-cabin text-base ${message.type === "join_request" ? "font-bold text-explore-green" : "font-medium text-black"} truncate`}
             >
               {message.sender}
             </h3>
-            <p className="text-gray-500 text-lg font-cabin">
+            <p className="text-gray-500 text-sm font-cabin truncate">
               {message.type === "join_request" && message.activityTitle
                 ? `You: ${message.content}`
                 : message.content}{" "}
