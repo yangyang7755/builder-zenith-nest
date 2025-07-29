@@ -36,6 +36,7 @@ import ClubVauxwall from "./pages/ClubVauxwall";
 import ClubRichmond from "./pages/ClubRichmond";
 import ClubThames from "./pages/ClubThames";
 import CoachHolly from "./pages/CoachHolly";
+import ProfileCoachHolly from "./pages/ProfileCoachHolly";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -116,7 +117,10 @@ const App = () => (
                     path="/club-chat/richmond"
                     element={<ClubChatRichmond />}
                   />
-                  <Route path="/club-chat/uclmc" element={<ClubChatUCLMC />} />
+                  <Route
+                    path="/club-chat/uclmc"
+                    element={<ClubChatUCLMC />}
+                  />
                   <Route
                     path="/partner/:partnerId"
                     element={<PartnerDetails />}
