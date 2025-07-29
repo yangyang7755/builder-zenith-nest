@@ -152,11 +152,31 @@ export default function Chat() {
 
         {/* Filter Chips */}
         <div className="flex gap-1 mb-8 overflow-x-auto pb-1">
-          <FilterChip label="All" active />
-          <FilterChip label="Primary" />
-          <FilterChip label="General" />
-          <FilterChip label="Requests" />
-          <FilterChip label="Clubs" />
+          <FilterChip
+            label="All"
+            active={activeFilter === "All"}
+            onClick={() => setActiveFilter("All")}
+          />
+          <FilterChip
+            label="Unread"
+            active={activeFilter === "Unread"}
+            onClick={() => setActiveFilter("Unread")}
+          />
+          <FilterChip
+            label="Clubs"
+            active={activeFilter === "Clubs"}
+            onClick={() => setActiveFilter("Clubs")}
+          />
+          <FilterChip
+            label="Requests"
+            active={activeFilter === "Requests"}
+            onClick={() => setActiveFilter("Requests")}
+          />
+          <FilterChip
+            label="Following"
+            active={activeFilter === "Following"}
+            onClick={() => setActiveFilter("Following")}
+          />
         </div>
 
         {/* Chat Messages */}
