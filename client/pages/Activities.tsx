@@ -22,7 +22,7 @@ export default function Activities() {
   const [filters, setFilters] = useState<FilterOptions>({
     activityType: filterParam
       ? [filterParam.charAt(0).toUpperCase() + filterParam.slice(1)]
-      : ["Cycling", "Climbing", "Running"],
+      : ["Cycling", "Climbing", "Running", "Hiking", "Skiing", "Surfing", "Tennis"],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     date: { start: "", end: "" },
