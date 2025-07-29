@@ -7,7 +7,11 @@ import DateTimePicker from "../components/DateTimePicker";
 
 export default function CreateCycling() {
   const navigate = useNavigate();
+  const { addActivity } = useActivities();
+  const { getDraft, saveDraft, deleteDraft, hasDraft } = useActivityDraft();
   const [selectedType, setSelectedType] = useState("Road");
+  const [showLocationMap, setShowLocationMap] = useState(false);
+  const [showBackModal, setShowBackModal] = useState(false);
   const [formData, setFormData] = useState({
     maxRiders: "10",
     distance: "",
@@ -29,9 +33,87 @@ export default function CreateCycling() {
     specialComments: "",
   });
 
-  const [showLocationMap, setShowLocationMap] = useState(false);
+  // Load draft on component mount
+  useEffect(() => {
+    const draft = getDraft("cycling");
+    if (draft) {
+      setFormData({
+        maxRiders: draft.maxParticipants || "10",
+        distance: draft.distance || "",
+        distanceUnit: (draft.distanceUnit as "km" | "miles") || "km",
+        elevation: draft.elevation || "",
+        elevationUnit: (draft.elevationUnit as "m" | "feet") || "m",
+        pace: draft.pace || "",
+        paceUnit: (draft.paceUnit as "kph" | "mph") || "kph",
+        meetupLocation: draft.meetupLocation || "",
+        coordinates: { lat: 51.5074, lng: -0.1278 },
+        date: draft.date || "",
+        time: draft.time || "",
+        cafeStop: draft.cafeStop || "",
+        routeLink: draft.routeLink || "",
+        femaleOnly: draft.gender === "Female only",
+        ageMin: draft.ageMin || "",
+        ageMax: draft.ageMax || "",
+        visibility: draft.visibility || "All",
+        specialComments: draft.specialComments || "",
+      });
+      if (draft.subtype) {
+        setSelectedType(draft.subtype);
+      }
+    }
+  }, [getDraft]);
 
-  const { addActivity } = useActivities();
+  const hasFormData = () => {
+    return Object.values(formData).some(value =>
+      typeof value === "string" ? value.trim() !== "" :
+      typeof value === "boolean" ? value :
+      false
+    ) || selectedType !== "Road";
+  };
+
+  const handleBack = () => {
+    if (hasFormData()) {
+      setShowBackModal(true);
+    } else {
+      navigate("/create");
+    }
+  };
+
+  const handleSaveDraft = () => {
+    const draftData = {
+      activityType: "cycling",
+      title: `${selectedType} ride`,
+      maxParticipants: formData.maxRiders,
+      distance: formData.distance,
+      distanceUnit: formData.distanceUnit,
+      elevation: formData.elevation,
+      elevationUnit: formData.elevationUnit,
+      pace: formData.pace,
+      paceUnit: formData.paceUnit,
+      meetupLocation: formData.meetupLocation,
+      date: formData.date,
+      time: formData.time,
+      cafeStop: formData.cafeStop,
+      routeLink: formData.routeLink,
+      gender: formData.femaleOnly ? "Female only" : "All genders",
+      ageMin: formData.ageMin,
+      ageMax: formData.ageMax,
+      visibility: formData.visibility,
+      specialComments: formData.specialComments,
+      subtype: selectedType,
+      organizer: "You",
+      location: formData.meetupLocation,
+    };
+
+    saveDraft("cycling", draftData);
+    setShowBackModal(false);
+    navigate("/create");
+  };
+
+  const handleAbandon = () => {
+    setShowBackModal(false);
+    navigate("/create");
+  };
 
   const handleSubmit = () => {
     if (
