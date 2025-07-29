@@ -1605,6 +1605,7 @@ function CarShareCard({
   availableSeats,
   cost,
   imageSrc,
+  carShareId,
 }: {
   destination: string;
   date: string;
@@ -1613,9 +1614,19 @@ function CarShareCard({
   availableSeats: number;
   cost: string;
   imageSrc: string;
+  carShareId: string;
 }) {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/carshare/${carShareId}`);
+  };
+
   return (
-    <div className="min-w-72 w-72 border-2 border-blue-300 rounded-lg p-4 flex-shrink-0 bg-blue-50 cursor-pointer hover:shadow-lg transition-shadow duration-200">
+    <div
+      className="min-w-72 w-72 border-2 border-blue-300 rounded-lg p-4 flex-shrink-0 bg-blue-50 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      onClick={handleCardClick}
+    >
       {/* Header */}
       <div className="flex justify-between items-start mb-3">
         <h3 className="font-bold text-blue-800 font-cabin text-lg line-clamp-2 leading-tight flex-1 pr-2">
@@ -1661,11 +1672,11 @@ function CarShareCard({
       <button
         onClick={(e) => {
           e.stopPropagation();
-          alert(`Request seat for ${destination} trip`);
+          navigate(`/carshare/${carShareId}`);
         }}
         className="w-full bg-blue-600 text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-blue-700 transition-colors"
       >
-        Request seat
+        View Details
       </button>
     </div>
   );
