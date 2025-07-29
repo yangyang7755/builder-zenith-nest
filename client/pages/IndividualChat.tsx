@@ -167,7 +167,6 @@ export default function IndividualChat() {
     chatData[userId || ""] || [],
   );
   const [newMessage, setNewMessage] = useState("");
-  const [showProfile, setShowProfile] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState<string | null>(null);
 
   const emojis = ["❤️", "👍", "😂", "😮", "😢", "😡", "👏", "🔥"];
