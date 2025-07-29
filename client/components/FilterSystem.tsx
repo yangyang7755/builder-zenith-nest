@@ -600,6 +600,122 @@ export default function FilterSystem({
           </div>
         </div>
       )}
+
+      {/* Location Selection Modal */}
+      {showLocationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-lg max-h-[90vh] overflow-hidden">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-xl font-bold text-explore-green font-cabin">
+                Select Location
+              </h3>
+              <button
+                onClick={() => setShowLocationModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-4 space-y-4">
+              {/* Search Input */}
+              <div>
+                <label className="text-sm font-cabin text-gray-600 mb-2 block">
+                  Search for a location
+                </label>
+                <input
+                  type="text"
+                  value={filters.location}
+                  onChange={(e) => updateFilter("location", e.target.value)}
+                  placeholder="Enter location name..."
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                />
+              </div>
+
+              {/* Map Placeholder */}
+              <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center border-2 border-dashed border-gray-300">
+                <div className="text-center">
+                  <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-500 font-cabin text-sm">
+                    Interactive map will show here
+                  </p>
+                  <p className="text-gray-400 font-cabin text-xs mt-1">
+                    Click on the map to select a location
+                  </p>
+                </div>
+              </div>
+
+              {/* Current Location Button */}
+              <button
+                onClick={() => {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                        const { latitude, longitude } = position.coords;
+                        updateFilter("location", `Current Location (${latitude.toFixed(3)}, ${longitude.toFixed(3)})`);
+                      },
+                      (error) => {
+                        console.error("Error getting location:", error);
+                        alert("Unable to get your current location. Please ensure location services are enabled.");
+                      }
+                    );
+                  } else {
+                    alert("Geolocation is not supported by this browser.");
+                  }
+                }}
+                className="w-full bg-explore-green text-white py-2 px-4 rounded-lg font-cabin font-medium hover:bg-green-600 transition-colors"
+              >
+                📍 Use Current Location
+              </button>
+
+              {/* Popular Locations */}
+              <div>
+                <label className="text-sm font-cabin text-gray-600 mb-2 block">
+                  Popular locations
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    "Central London",
+                    "Oxford",
+                    "Cambridge",
+                    "Surrey Hills",
+                    "Peak District",
+                    "Lake District",
+                  ].map((location) => (
+                    <button
+                      key={location}
+                      onClick={() => updateFilter("location", location)}
+                      className="text-left px-3 py-2 border border-gray-300 rounded hover:border-explore-green hover:bg-green-50 transition-colors text-sm font-cabin"
+                    >
+                      {location}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t bg-gray-50">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    updateFilter("location", "");
+                    setShowLocationModal(false);
+                  }}
+                  className="flex-1 py-2 border-2 border-gray-300 rounded-lg text-gray-600 font-cabin font-medium"
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={() => setShowLocationModal(false)}
+                  className="flex-1 py-2 bg-explore-green text-white rounded-lg font-cabin font-medium"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
