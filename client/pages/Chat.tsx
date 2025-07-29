@@ -80,6 +80,40 @@ export default function Chat() {
     return userIds[sender as keyof typeof userIds] || "unknown";
   };
 
+  const getFilteredClubChats = () => {
+    if (activeFilter === "All" || activeFilter === "Clubs") {
+      return clubChats.sort((a, b) => {
+        // Prioritize unread messages
+        if (a.unread && !b.unread) return -1;
+        if (!a.unread && b.unread) return 1;
+        return b.timestamp.getTime() - a.timestamp.getTime();
+      });
+    }
+    return [];
+  };
+
+  const getFilteredMessages = () => {
+    let filtered = chatMessages;
+
+    if (activeFilter === "Clubs") {
+      return []; // Only show club chats
+    }
+
+    if (activeFilter === "Requests") {
+      filtered = chatMessages.filter(msg => msg.type === "join_request");
+    }
+
+    // Sort: unread first, then by timestamp
+    return filtered.sort((a, b) => {
+      const aUnread = a.sender === "UCLMC";
+      const bUnread = b.sender === "UCLMC";
+
+      if (aUnread && !bUnread) return -1;
+      if (!aUnread && bUnread) return 1;
+      return b.timestamp.getTime() - a.timestamp.getTime();
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
       {/* Status Bar */}
