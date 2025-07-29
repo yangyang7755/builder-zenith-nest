@@ -162,11 +162,15 @@ const chatData: Record<string, Message[]> = {
 
 export default function IndividualChat() {
   const { userId } = useParams<{ userId: string }>();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>(
     chatData[userId || ""] || [],
   );
   const [newMessage, setNewMessage] = useState("");
   const [showProfile, setShowProfile] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState<string | null>(null);
+
+  const emojis = ["❤️", "👍", "😂", "😮", "😢", "😡", "👏", "🔥"];
 
   const user = users[userId || ""];
 
