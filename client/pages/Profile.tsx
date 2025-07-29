@@ -157,9 +157,7 @@ export default function Profile() {
         },
       ],
     },
-    gear: [
-      { name: "Helmet", owned: false, icon: "⛑️" },
-    ],
+    gear: [{ name: "Helmet", owned: false, icon: "⛑️" }],
     stats: {
       totalRuns: 12,
       totalDistance: "185 km",
@@ -321,8 +319,6 @@ export default function Profile() {
               Runner • {userProfile.skillLevels.running}
             </div>
           </div>
-
-
 
           {/* User Details Box */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6">

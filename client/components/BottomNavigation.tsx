@@ -47,8 +47,8 @@ export default function BottomNavigation() {
       </Link>
 
       {/* Plus Icon */}
-      <Link 
-        to="/create" 
+      <Link
+        to="/create"
         className={`p-2 rounded-full ${getCreateIconActive() ? "bg-explore-green" : ""}`}
       >
         <svg
@@ -75,8 +75,8 @@ export default function BottomNavigation() {
       </Link>
 
       {/* Profile Icon */}
-      <Link 
-        to="/profile" 
+      <Link
+        to="/profile"
         className={`p-2 rounded-full ${getProfileIconActive() ? "bg-explore-green" : ""}`}
       >
         <svg className="w-8 h-8" viewBox="0 0 35 35" fill="none">
