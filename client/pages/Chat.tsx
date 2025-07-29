@@ -209,29 +209,29 @@ function ClubChatItem({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 py-2 relative hover:bg-gray-50 rounded-lg px-2 transition-colors text-left"
+      className="w-full flex items-center gap-3 py-3 relative hover:bg-gray-50 rounded-lg px-2 transition-colors text-left"
     >
       {/* Club Avatar */}
       <div className="relative flex-shrink-0">
         <img
           src={club.avatar}
           alt={club.name}
-          className="w-15 h-15 rounded-full border border-black object-cover"
+          className="w-12 h-12 rounded-full border border-black object-cover"
         />
         {/* Club indicator */}
-        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-explore-green rounded-full border-2 border-white flex items-center justify-center">
+        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-explore-green rounded-full border border-white flex items-center justify-center">
           <span className="text-xs text-white">🏛️</span>
         </div>
       </div>
 
       {/* Club Content */}
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between">
-          <div>
-            <h3 className="font-cabin text-lg font-medium text-black">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-cabin text-base font-medium text-black truncate">
               {club.name}
             </h3>
-            <p className="text-gray-500 text-sm font-cabin">
+            <p className="text-gray-500 text-sm font-cabin truncate">
               {club.lastMessage} · {getTimeAgo(club.timestamp)}
             </p>
           </div>
