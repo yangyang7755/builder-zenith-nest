@@ -30,6 +30,16 @@ export default function Chat() {
       type: "club",
     },
     {
+      id: "uclmc",
+      name: "UCLMC",
+      lastMessage: "lewis_tay: Let's do it",
+      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+      avatar:
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=60&h=60&fit=crop",
+      unread: true,
+      type: "club",
+    },
+    {
       id: "richmond-runners",
       name: "Richmond Runners",
       lastMessage: "Park Run this Saturday - who's joining? 🏃‍♂️",
