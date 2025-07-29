@@ -295,15 +295,39 @@ export default function FilterSystem({
               {/* Location */}
               <div>
                 <h4 className="font-bold text-black font-cabin mb-3">
-                  Location
+                  Location & Range
                 </h4>
-                <input
-                  type="text"
-                  value={filters.location}
-                  onChange={(e) => updateFilter("location", e.target.value)}
-                  placeholder="Enter location or area"
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                />
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setShowLocationModal(true)}
+                    className="w-full border-2 border-gray-300 rounded-lg px-3 py-3 text-left flex items-center justify-between hover:border-explore-green transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm font-cabin">
+                        {filters.location || "Select location on map"}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-gray-500" />
+                  </button>
+
+                  <div>
+                    <label className="text-sm font-cabin text-gray-600 mb-2 block">
+                      Search Range
+                    </label>
+                    <select
+                      value={filters.locationRange}
+                      onChange={(e) => updateFilter("locationRange", parseInt(e.target.value))}
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                    >
+                      {locationRangeOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
 
               {/* Date Range */}
