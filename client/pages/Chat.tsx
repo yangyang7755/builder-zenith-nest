@@ -197,6 +197,55 @@ function FilterChip({
   );
 }
 
+function ClubChatItem({
+  club,
+  getTimeAgo,
+  onClick,
+}: {
+  club: any;
+  getTimeAgo: (timestamp: Date) => string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3 py-2 relative hover:bg-gray-50 rounded-lg px-2 transition-colors text-left"
+    >
+      {/* Club Avatar */}
+      <div className="relative flex-shrink-0">
+        <img
+          src={club.avatar}
+          alt={club.name}
+          className="w-15 h-15 rounded-full border border-black object-cover"
+        />
+        {/* Club indicator */}
+        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-explore-green rounded-full border-2 border-white flex items-center justify-center">
+          <span className="text-xs text-white">🏛️</span>
+        </div>
+      </div>
+
+      {/* Club Content */}
+      <div className="flex-1">
+        <div className="flex items-start justify-between">
+          <div>
+            <h3 className="font-cabin text-lg font-medium text-black">
+              {club.name}
+            </h3>
+            <p className="text-gray-500 text-sm font-cabin">
+              {club.lastMessage} · {getTimeAgo(club.timestamp)}
+            </p>
+          </div>
+
+          {/* Unread indicator */}
+          {club.unread && (
+            <div className="w-2.5 h-2.5 bg-explore-green rounded-full ml-2 flex-shrink-0"></div>
+          )}
+        </div>
+      </div>
+    </button>
+  );
+}
+
 function ChatItem({
   message,
   getTimeAgo,
