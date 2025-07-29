@@ -215,18 +215,21 @@ export default function Index() {
         </div>
 
         {/* Location Selector */}
-        <div className="flex items-center gap-2 mb-6">
+        <button
+          onClick={() => setShowLocationModal(true)}
+          className="flex items-center gap-2 mb-6 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors"
+        >
           <MapPin className="w-6 h-6 text-black" />
-          <div className="flex-1">
-            <span className="text-xs text-black font-poppins">
+          <div className="flex-1 text-left">
+            <div className="text-xs text-black font-poppins">
               Chosen location
-            </span>
-            <span className="text-sm text-explore-text-light font-poppins ml-2">
-              Notting hill, London
-            </span>
+            </div>
+            <div className="text-sm text-explore-text-light font-poppins">
+              {currentLocation}
+            </div>
           </div>
           <ChevronDown className="w-6 h-6 text-black" />
-        </div>
+        </button>
 
         {/* Filter System */}
         <FilterSystem
