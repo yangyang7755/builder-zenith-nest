@@ -318,8 +318,8 @@ export default function IndividualChat() {
         </Link>
 
         <button
-          onClick={() => setShowProfile(true)}
-          className="flex items-center gap-3 flex-1"
+          onClick={() => navigate(`/profile/${userId}`)}
+          className="flex items-center gap-3 flex-1 hover:bg-gray-50 rounded-lg p-2 transition-colors"
         >
           <img
             src={user.avatar}
