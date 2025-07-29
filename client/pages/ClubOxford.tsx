@@ -5,6 +5,32 @@ import { MapPin, ArrowLeft, Users, Calendar, LogOut, Send } from "lucide-react";
 export default function ClubOxford() {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("events");
+  const [isMember, setIsMember] = useState(true);
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      user: "Tom",
+      message: "Training ride tomorrow! Meet at Radcliffe Camera 7am",
+      time: "2 hours ago",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      id: 2,
+      user: "Emma",
+      message: "I'll be there! What's the route?",
+      time: "1 hour ago",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+    },
+    {
+      id: 3,
+      user: "You",
+      message: "Sounds great! Count me in 🚴‍♂️",
+      time: "30 minutes ago",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+    }
+  ]);
 
   const upcomingEvents = [
     {
