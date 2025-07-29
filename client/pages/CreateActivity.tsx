@@ -99,7 +99,7 @@ export default function CreateActivity() {
         </div>
 
         {/* Activity Grid */}
-        <div className="grid grid-cols-3 gap-8 mt-16">
+        <div className="grid grid-cols-3 gap-6 mt-12">
           {activities.map((activity) => {
             const IconComponent = activity.icon;
 
