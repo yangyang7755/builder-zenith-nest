@@ -47,6 +47,45 @@ export default function Index() {
     // Navigate to activity details if needed
   };
 
+  const requestCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    setIsGettingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          // Use reverse geocoding to get location name (simplified version)
+          const locationName = `${latitude.toFixed(3)}, ${longitude.toFixed(3)}`;
+          setCurrentLocation(`Current Location (${locationName})`);
+          setShowLocationModal(false);
+        } catch (error) {
+          setCurrentLocation("Current Location");
+          setShowLocationModal(false);
+        }
+        setIsGettingLocation(false);
+      },
+      (error) => {
+        setIsGettingLocation(false);
+        alert("Unable to get your location. Please check your location settings.");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000
+      }
+    );
+  };
+
+  const handleLocationChange = (newLocation: string) => {
+    setCurrentLocation(newLocation);
+    setShowLocationModal(false);
+  };
+
   useEffect(() => {
     let filtered = activities;
 
@@ -553,7 +592,7 @@ function MixedActivitiesSection({
                   key={activity.id}
                   title={activity.title}
                   date={`📅 ${formatActivityDate(activity.date)}`}
-                  location={`���� ${activity.location}`}
+                  location={`📍 ${activity.location}`}
                   imageSrc={
                     activity.imageSrc ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
