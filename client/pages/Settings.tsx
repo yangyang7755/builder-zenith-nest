@@ -62,6 +62,32 @@ export default function Settings() {
     navigate("/auth");
   };
 
+  const handleEmailChange = () => {
+    const newEmail = prompt("Enter new email address:", "ben.stuart@email.com");
+    if (newEmail && newEmail.includes("@")) {
+      alert(`Email will be changed to ${newEmail}. Please check your inbox for verification.`);
+    }
+  };
+
+  const handlePasswordChange = () => {
+    const currentPassword = prompt("Enter current password:");
+    if (currentPassword) {
+      const newPassword = prompt("Enter new password:");
+      if (newPassword && newPassword.length >= 6) {
+        alert("Password updated successfully!");
+      } else if (newPassword) {
+        alert("Password must be at least 6 characters long.");
+      }
+    }
+  };
+
+  const handleLocationChange = () => {
+    const newLocation = prompt("Enter new location:", "Notting Hill, London");
+    if (newLocation) {
+      alert(`Location updated to: ${newLocation}`);
+    }
+  };
+
   const SettingsSection = ({
     title,
     children,
