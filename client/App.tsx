@@ -52,7 +52,8 @@ const App = () => (
     <TooltipProvider>
       <ActivitiesProvider>
         <SavedActivitiesProvider>
-          <ChatProvider>
+          <ActivityDraftProvider>
+            <ChatProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -106,7 +107,8 @@ const App = () => (
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
-          </ChatProvider>
+            </ChatProvider>
+          </ActivityDraftProvider>
         </SavedActivitiesProvider>
       </ActivitiesProvider>
     </TooltipProvider>
