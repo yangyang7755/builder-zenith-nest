@@ -25,6 +25,7 @@ import CarShareDetails from "./pages/CarShareDetails";
 import ClubChatOxford from "./pages/ClubChatOxford";
 import ClubChatWestway from "./pages/ClubChatWestway";
 import ClubChatRichmond from "./pages/ClubChatRichmond";
+import PartnerDetails from "./pages/PartnerDetails";
 import Chat from "./pages/Chat";
 import IndividualChat from "./pages/IndividualChat";
 import ClubWestway from "./pages/ClubWestway";
