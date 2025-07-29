@@ -64,11 +64,15 @@ export default function CreateCycling() {
   }, [getDraft]);
 
   const hasFormData = () => {
-    return Object.values(formData).some(value =>
-      typeof value === "string" ? value.trim() !== "" :
-      typeof value === "boolean" ? value :
-      false
-    ) || selectedType !== "Road";
+    return (
+      Object.values(formData).some((value) =>
+        typeof value === "string"
+          ? value.trim() !== ""
+          : typeof value === "boolean"
+            ? value
+            : false,
+      ) || selectedType !== "Road"
+    );
   };
 
   const handleBack = () => {
@@ -640,7 +644,8 @@ export default function CreateCycling() {
                 Save Your Progress?
               </h3>
               <p className="text-gray-600 font-cabin">
-                You have unsaved changes. Would you like to save as draft or abandon your progress?
+                You have unsaved changes. Would you like to save as draft or
+                abandon your progress?
               </p>
             </div>
 

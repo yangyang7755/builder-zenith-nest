@@ -36,9 +36,9 @@ interface ActivityDraftContextType {
   hasDraft: (activityType: string) => boolean;
 }
 
-const ActivityDraftContext = createContext<ActivityDraftContextType | undefined>(
-  undefined,
-);
+const ActivityDraftContext = createContext<
+  ActivityDraftContextType | undefined
+>(undefined);
 
 export function ActivityDraftProvider({ children }: { children: ReactNode }) {
   const [drafts, setDrafts] = useState<{ [key: string]: ActivityDraft }>(() => {
@@ -98,7 +98,9 @@ export function ActivityDraftProvider({ children }: { children: ReactNode }) {
 export function useActivityDraft() {
   const context = useContext(ActivityDraftContext);
   if (context === undefined) {
-    throw new Error("useActivityDraft must be used within an ActivityDraftProvider");
+    throw new Error(
+      "useActivityDraft must be used within an ActivityDraftProvider",
+    );
   }
   return context;
 }

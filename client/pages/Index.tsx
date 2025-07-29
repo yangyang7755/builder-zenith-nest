@@ -21,7 +21,9 @@ export default function Index() {
   const [filteredActivities, setFilteredActivities] = useState(activities);
   const [isSearching, setIsSearching] = useState(false);
   const [showMapView, setShowMapView] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState("Notting hill, London");
+  const [currentLocation, setCurrentLocation] = useState(
+    "Notting hill, London",
+  );
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
@@ -71,13 +73,15 @@ export default function Index() {
       },
       (error) => {
         setIsGettingLocation(false);
-        alert("Unable to get your location. Please check your location settings.");
+        alert(
+          "Unable to get your location. Please check your location settings.",
+        );
       },
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 300000
-      }
+        maximumAge: 300000,
+      },
     );
   };
 
@@ -455,10 +459,14 @@ export default function Index() {
                 className="w-full py-3 bg-explore-green text-white rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors flex items-center justify-center gap-2"
               >
                 <MapPin className="w-4 h-4" />
-                {isGettingLocation ? "Getting location..." : "Use Current Location"}
+                {isGettingLocation
+                  ? "Getting location..."
+                  : "Use Current Location"}
               </button>
 
-              <div className="text-center text-sm text-gray-500 font-cabin">or choose from popular areas</div>
+              <div className="text-center text-sm text-gray-500 font-cabin">
+                or choose from popular areas
+              </div>
 
               {[
                 "Notting hill, London",
@@ -468,7 +476,7 @@ export default function Index() {
                 "Canary Wharf, London",
                 "Greenwich, London",
                 "Richmond, London",
-                "Clapham, London"
+                "Clapham, London",
               ].map((location) => (
                 <button
                   key={location}
@@ -1669,12 +1677,8 @@ function PartnerCard({
 
       {/* Details */}
       <div className="space-y-1 mb-3">
-        <div className="text-sm text-explore-green font-cabin">
-          {date}
-        </div>
-        <div className="text-sm text-explore-green font-cabin">
-          {location}
-        </div>
+        <div className="text-sm text-explore-green font-cabin">{date}</div>
+        <div className="text-sm text-explore-green font-cabin">{location}</div>
         <div className="text-xs text-gray-600 font-cabin">
           Available: {availability}
         </div>

@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, Camera, DollarSign, MapPin, Calendar } from "lucide-react";
+import {
+  ArrowLeft,
+  Send,
+  Camera,
+  DollarSign,
+  MapPin,
+  Calendar,
+} from "lucide-react";
 
 export default function ClubChatRichmond() {
   const navigate = useNavigate();
@@ -10,10 +17,12 @@ export default function ClubChatRichmond() {
     {
       id: 1,
       user: "Lisa",
-      message: "Park Run this Saturday - who's joining? 🏃‍♀️ Meeting at 8:45am sharp!",
+      message:
+        "Park Run this Saturday - who's joining? 🏃‍♀️ Meeting at 8:45am sharp!",
       time: "4 hours ago",
       type: "text",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 2,
@@ -21,15 +30,18 @@ export default function ClubChatRichmond() {
       message: "Count me in! What's the weather looking like?",
       time: "3 hours ago",
       type: "text",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 3,
       user: "Jenny",
-      message: "Great run yesterday everyone! Here are some photos from our trail run 📸",
+      message:
+        "Great run yesterday everyone! Here are some photos from our trail run 📸",
       time: "2 hours ago",
       type: "text",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 4,
@@ -37,26 +49,32 @@ export default function ClubChatRichmond() {
       message: "",
       time: "2 hours ago",
       type: "image",
-      imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+      imageUrl:
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 5,
       user: "David",
-      message: "Beautiful shots! That was such a good route through the park 🌳",
+      message:
+        "Beautiful shots! That was such a good route through the park 🌳",
       time: "1 hour ago",
       type: "text",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 6,
       user: "Mark",
-      message: "💰 Post-run breakfast split: Cafe bill for 6 people - £54 total = £9 each",
+      message:
+        "💰 Post-run breakfast split: Cafe bill for 6 people - £54 total = £9 each",
       time: "45 minutes ago",
       type: "bill",
       billAmount: "£9",
       billDescription: "Post-run breakfast",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 7,
@@ -64,15 +82,18 @@ export default function ClubChatRichmond() {
       message: "I'm in for Saturday! Let's aim for a sub-25 minute 5K 💪",
       time: "30 minutes ago",
       type: "text",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 8,
       user: "You",
-      message: "Definitely joining Saturday! And happy to pay my share for the breakfast 🥞",
+      message:
+        "Definitely joining Saturday! And happy to pay my share for the breakfast 🥞",
       time: "Just now",
       type: "text",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
   ]);
 
@@ -92,7 +113,8 @@ export default function ClubChatRichmond() {
         message: newMessage,
         time: "Just now",
         type: "text" as const,
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+        avatar:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       };
       setMessages([...messages, message]);
       setNewMessage("");
@@ -103,7 +125,10 @@ export default function ClubChatRichmond() {
     const isOwnMessage = message.user === "You";
 
     return (
-      <div key={message.id} className={`flex gap-3 mb-4 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
+      <div
+        key={message.id}
+        className={`flex gap-3 mb-4 ${isOwnMessage ? "flex-row-reverse" : ""}`}
+      >
         {!isOwnMessage && (
           <img
             src={message.avatar}
@@ -111,22 +136,28 @@ export default function ClubChatRichmond() {
             className="w-8 h-8 rounded-full border border-gray-300 object-cover flex-shrink-0"
           />
         )}
-        
-        <div className={`max-w-xs lg:max-w-md ${isOwnMessage ? 'items-end' : ''}`}>
+
+        <div
+          className={`max-w-xs lg:max-w-md ${isOwnMessage ? "items-end" : ""}`}
+        >
           {!isOwnMessage && (
-            <div className="text-xs text-gray-500 font-cabin mb-1">{message.user}</div>
+            <div className="text-xs text-gray-500 font-cabin mb-1">
+              {message.user}
+            </div>
           )}
-          
+
           {message.type === "text" && (
-            <div className={`rounded-lg p-3 ${
-              isOwnMessage 
-                ? 'bg-explore-green text-white' 
-                : 'bg-gray-100 text-black'
-            }`}>
+            <div
+              className={`rounded-lg p-3 ${
+                isOwnMessage
+                  ? "bg-explore-green text-white"
+                  : "bg-gray-100 text-black"
+              }`}
+            >
               <p className="text-sm font-cabin">{message.message}</p>
             </div>
           )}
-          
+
           {message.type === "image" && (
             <div className="rounded-lg overflow-hidden border border-gray-200">
               <img
@@ -136,21 +167,29 @@ export default function ClubChatRichmond() {
               />
             </div>
           )}
-          
+
           {message.type === "bill" && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
               <div className="flex items-center gap-2 mb-2">
                 <DollarSign className="w-4 h-4 text-yellow-600" />
-                <span className="text-sm font-medium text-yellow-800 font-cabin">Bill Split</span>
+                <span className="text-sm font-medium text-yellow-800 font-cabin">
+                  Bill Split
+                </span>
               </div>
-              <p className="text-sm text-black font-cabin mb-1">{message.billDescription}</p>
-              <p className="text-lg font-bold text-yellow-800 font-cabin">{message.billAmount} per person</p>
+              <p className="text-sm text-black font-cabin mb-1">
+                {message.billDescription}
+              </p>
+              <p className="text-lg font-bold text-yellow-800 font-cabin">
+                {message.billAmount} per person
+              </p>
             </div>
           )}
-          
-          <div className="text-xs text-gray-400 font-cabin mt-1">{message.time}</div>
+
+          <div className="text-xs text-gray-400 font-cabin mt-1">
+            {message.time}
+          </div>
         </div>
-        
+
         {isOwnMessage && (
           <img
             src={message.avatar}
@@ -174,7 +213,16 @@ export default function ClubChatRichmond() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -193,7 +241,9 @@ export default function ClubChatRichmond() {
               className="w-10 h-10 rounded-full border border-black object-cover"
             />
             <div>
-              <h1 className="text-lg font-bold text-black font-cabin">Richmond Runners</h1>
+              <h1 className="text-lg font-bold text-black font-cabin">
+                Richmond Runners
+              </h1>
               <p className="text-sm text-gray-500 font-cabin">87 members</p>
             </div>
           </div>
@@ -218,7 +268,7 @@ export default function ClubChatRichmond() {
           <button className="p-2 text-gray-500 hover:text-gray-700 transition-colors">
             <Camera className="w-5 h-5" />
           </button>
-          
+
           <div className="flex-1 flex gap-2">
             <input
               type="text"

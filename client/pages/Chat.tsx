@@ -13,28 +13,31 @@ export default function Chat() {
       name: "Oxford University Cycling Club",
       lastMessage: "Training ride tomorrow! Meet at Radcliffe Camera 7am",
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      avatar: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60&h=60&fit=crop",
+      avatar:
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60&h=60&fit=crop",
       unread: false,
-      type: "club"
+      type: "club",
     },
     {
       id: "westway-climbing",
       name: "Westway Climbing Centre",
       lastMessage: "New routes set this week! Come check them out 🧗‍♀️",
       timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-      avatar: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800",
+      avatar:
+        "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800",
       unread: true,
-      type: "club"
+      type: "club",
     },
     {
       id: "richmond-runners",
       name: "Richmond Runners",
       lastMessage: "Park Run this Saturday - who's joining? 🏃‍♂️",
       timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      avatar: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=60&h=60&fit=crop",
+      avatar:
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=60&h=60&fit=crop",
       unread: false,
-      type: "club"
-    }
+      type: "club",
+    },
   ];
 
   const getTimeAgo = (timestamp: Date) => {
@@ -100,7 +103,7 @@ export default function Chat() {
     }
 
     if (activeFilter === "Requests") {
-      filtered = chatMessages.filter(msg => msg.type === "join_request");
+      filtered = chatMessages.filter((msg) => msg.type === "join_request");
     }
 
     // Sort: unread first, then by timestamp
@@ -186,7 +189,11 @@ export default function Chat() {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-700 font-cabin px-2">
                 Club Chats
-                {activeFilter === "Clubs" && <span className="text-sm text-gray-500 ml-2">(Clubs only)</span>}
+                {activeFilter === "Clubs" && (
+                  <span className="text-sm text-gray-500 ml-2">
+                    (Clubs only)
+                  </span>
+                )}
               </h2>
               {getFilteredClubChats().map((club) => (
                 <ClubChatItem
@@ -213,8 +220,16 @@ export default function Chat() {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-700 font-cabin px-2">
                 Direct Messages
-                {activeFilter === "Requests" && <span className="text-sm text-gray-500 ml-2">(Requests only)</span>}
-                {activeFilter === "Unread" && <span className="text-sm text-gray-500 ml-2">(Unread only)</span>}
+                {activeFilter === "Requests" && (
+                  <span className="text-sm text-gray-500 ml-2">
+                    (Requests only)
+                  </span>
+                )}
+                {activeFilter === "Unread" && (
+                  <span className="text-sm text-gray-500 ml-2">
+                    (Unread only)
+                  </span>
+                )}
               </h2>
               {getFilteredMessages().map((message) => (
                 <ChatItem
@@ -232,24 +247,38 @@ export default function Chat() {
           )}
 
           {/* Empty State */}
-          {getFilteredClubChats().length === 0 && getFilteredMessages().length === 0 && (
-            <div className="text-center py-8">
-              <div className="text-gray-400 mb-4">
-                <svg className="w-16 h-16 mx-auto" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" strokeWidth="2" fill="none"/>
-                </svg>
+          {getFilteredClubChats().length === 0 &&
+            getFilteredMessages().length === 0 && (
+              <div className="text-center py-8">
+                <div className="text-gray-400 mb-4">
+                  <svg
+                    className="w-16 h-16 mx-auto"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                  No {activeFilter.toLowerCase()} messages
+                </h3>
+                <p className="text-gray-500">
+                  {activeFilter === "Unread" &&
+                    "All caught up! No unread messages."}
+                  {activeFilter === "Clubs" &&
+                    "Join some clubs to see group chats here."}
+                  {activeFilter === "Requests" &&
+                    "No pending requests at the moment."}
+                  {activeFilter === "Following" &&
+                    "No messages from people you follow."}
+                </p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                No {activeFilter.toLowerCase()} messages
-              </h3>
-              <p className="text-gray-500">
-                {activeFilter === "Unread" && "All caught up! No unread messages."}
-                {activeFilter === "Clubs" && "Join some clubs to see group chats here."}
-                {activeFilter === "Requests" && "No pending requests at the moment."}
-                {activeFilter === "Following" && "No messages from people you follow."}
-              </p>
-            </div>
-          )}
+            )}
         </div>
       </div>
 

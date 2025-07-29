@@ -25,7 +25,8 @@ const partnersData = {
     title: "Looking for a belay partner...",
     organizer: {
       name: "Sarah K.",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face",
+      image:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face",
     },
     description:
       "Looking for a regular climbing partner for Friday evening sessions. I'm working on lead climbing and could use someone experienced with belaying and safety checks. Love trying new routes and pushing my limits safely!",
@@ -55,7 +56,12 @@ const partnersData = {
       warning:
         "Looking for someone who takes safety seriously and is committed to improving together. New climbers welcome if you're dedicated to learning proper techniques.",
     },
-    tags: ["Lead climbing", "Sport routes", "Technique focused", "Regular partner"],
+    tags: [
+      "Lead climbing",
+      "Sport routes",
+      "Technique focused",
+      "Regular partner",
+    ],
     preferences: {
       ageRange: "25-35",
       experience: "1+ years climbing",
@@ -75,7 +81,8 @@ const partnersData = {
     title: "Climbing buddy needed!",
     organizer: {
       name: "Alex M.",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+      image:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
     },
     description:
       "Experienced boulderer looking for motivation and someone to work projects with. Happy to share beta and spot! I love the problem-solving aspect of bouldering and enjoy working on technical sequences.",
@@ -125,7 +132,8 @@ const partnersData = {
     title: "Lead climbing partner wanted",
     organizer: {
       name: "Emma R.",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face",
+      image:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face",
     },
     description:
       "Keen sport climber seeking a reliable partner for weekend sessions. Planning outdoor trips to Portland and Peak District. Love the flow and endurance aspects of sport climbing!",
@@ -155,7 +163,12 @@ const partnersData = {
       warning:
         "Planning regular outdoor trips so looking for someone who can commit to weekends away. Must be comfortable with lead falls and outdoor climbing environments.",
     },
-    tags: ["Sport climbing", "Outdoor trips", "Lead climbing", "Weekend warrior"],
+    tags: [
+      "Sport climbing",
+      "Outdoor trips",
+      "Lead climbing",
+      "Weekend warrior",
+    ],
     preferences: {
       ageRange: "22-35",
       experience: "2+ years sport climbing",
@@ -205,7 +218,9 @@ export default function PartnerDetails() {
       activityTitle: `Partner request to ${partner.name}`,
       activityOrganizer: partner.name,
       requesterName: "You",
-      message: requestMessage || `Hi ${partner.name}! I'd like to be your climbing partner.`,
+      message:
+        requestMessage ||
+        `Hi ${partner.name}! I'd like to be your climbing partner.`,
     });
 
     setShowRequestModal(false);
@@ -335,7 +350,9 @@ export default function PartnerDetails() {
           <div className="col-span-2">
             <div className="flex items-center gap-3 mb-1">
               <Clock className="w-5 h-5 text-gray-400" />
-              <h3 className="text-xl font-bold text-black font-cabin">Availability</h3>
+              <h3 className="text-xl font-bold text-black font-cabin">
+                Availability
+              </h3>
             </div>
             <p className="text-sm text-black font-cabin ml-8">
               {partner.schedule}
@@ -346,9 +363,7 @@ export default function PartnerDetails() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Trophy className="w-4 h-4 text-purple-500" />
-              <h4 className="text-lg font-bold text-black font-cabin">
-                Style
-              </h4>
+              <h4 className="text-lg font-bold text-black font-cabin">Style</h4>
             </div>
             <p className="text-sm text-black font-cabin ml-6">
               {partner.climbingStyle}
@@ -359,9 +374,7 @@ export default function PartnerDetails() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Target className="w-4 h-4 text-green-500" />
-              <h4 className="text-lg font-bold text-black font-cabin">
-                Goals
-              </h4>
+              <h4 className="text-lg font-bold text-black font-cabin">Goals</h4>
             </div>
             <p className="text-sm text-black font-cabin ml-6">
               {partner.goals}
@@ -371,12 +384,16 @@ export default function PartnerDetails() {
 
         {/* Achievements */}
         <div className="mb-6">
-          <h3 className="text-xl font-bold text-black font-cabin mb-3">Achievements</h3>
+          <h3 className="text-xl font-bold text-black font-cabin mb-3">
+            Achievements
+          </h3>
           <div className="space-y-2">
             {partner.achievements.map((achievement, index) => (
               <div key={index} className="flex items-center gap-2">
                 <Award className="w-4 h-4 text-yellow-500" />
-                <span className="text-sm font-cabin text-black">{achievement}</span>
+                <span className="text-sm font-cabin text-black">
+                  {achievement}
+                </span>
               </div>
             ))}
           </div>
@@ -384,7 +401,9 @@ export default function PartnerDetails() {
 
         {/* Personal Info */}
         <div className="mb-6">
-          <h3 className="text-xl font-bold text-black font-cabin mb-3">Personal Info</h3>
+          <h3 className="text-xl font-bold text-black font-cabin mb-3">
+            Personal Info
+          </h3>
           <div className="bg-gray-50 rounded-lg p-4 space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-600 font-cabin">Languages:</span>
@@ -409,23 +428,39 @@ export default function PartnerDetails() {
 
         {/* Partner Preferences */}
         <div className="mb-6">
-          <h3 className="text-xl font-bold text-black font-cabin mb-3">Looking For</h3>
+          <h3 className="text-xl font-bold text-black font-cabin mb-3">
+            Looking For
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <span className="text-sm text-gray-600 font-cabin">Age Range:</span>
-              <div className="font-medium text-black font-cabin">{partner.preferences.ageRange}</div>
+              <span className="text-sm text-gray-600 font-cabin">
+                Age Range:
+              </span>
+              <div className="font-medium text-black font-cabin">
+                {partner.preferences.ageRange}
+              </div>
             </div>
             <div>
-              <span className="text-sm text-gray-600 font-cabin">Experience:</span>
-              <div className="font-medium text-black font-cabin">{partner.preferences.experience}</div>
+              <span className="text-sm text-gray-600 font-cabin">
+                Experience:
+              </span>
+              <div className="font-medium text-black font-cabin">
+                {partner.preferences.experience}
+              </div>
             </div>
             <div>
-              <span className="text-sm text-gray-600 font-cabin">Commitment:</span>
-              <div className="font-medium text-black font-cabin">{partner.preferences.commitment}</div>
+              <span className="text-sm text-gray-600 font-cabin">
+                Commitment:
+              </span>
+              <div className="font-medium text-black font-cabin">
+                {partner.preferences.commitment}
+              </div>
             </div>
             <div>
               <span className="text-sm text-gray-600 font-cabin">Style:</span>
-              <div className="font-medium text-black font-cabin">{partner.preferences.style}</div>
+              <div className="font-medium text-black font-cabin">
+                {partner.preferences.style}
+              </div>
             </div>
           </div>
         </div>
@@ -472,9 +507,7 @@ export default function PartnerDetails() {
                 <div className="font-bold text-base mb-2">
                   Partner Requirements
                 </div>
-                <div className="mb-2">
-                  To be a good match, you should have:
-                </div>
+                <div className="mb-2">To be a good match, you should have:</div>
                 <ul className="space-y-1 mb-3">
                   {partner.requirements.details.map((detail, index) => (
                     <li key={index}>• {detail}</li>
@@ -500,7 +533,8 @@ export default function PartnerDetails() {
                 htmlFor="partner-agreement"
                 className="text-sm text-black font-cabin cursor-pointer"
               >
-                I agree that I meet the partner requirements and am committed to being a reliable climbing partner{" "}
+                I agree that I meet the partner requirements and am committed to
+                being a reliable climbing partner{" "}
                 <Info className="inline w-4 h-4 text-gray-400" />
               </label>
             </div>
