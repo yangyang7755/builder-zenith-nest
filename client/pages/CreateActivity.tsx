@@ -56,7 +56,7 @@ export default function CreateActivity() {
     {
       id: "tennis",
       name: "Tennis",
-      icon: Racquet,
+      icon: Zap,
       available: true,
       route: "/create/tennis",
     },
