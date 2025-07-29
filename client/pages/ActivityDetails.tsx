@@ -15,7 +15,7 @@ import {
 import { useChat } from "../contexts/ChatContext";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 
-// Activity data structure
+// Comprehensive activity data structure
 const activitiesData = {
   "westway-womens-climb": {
     id: "westway-womens-climb",
@@ -29,7 +29,7 @@ const activitiesData = {
     description:
       "This session is perfect for meeting fellow climbers and boosting your confidence. Holly can provide expert tips on top-roping, lead climbing, abseiling, fall practice and more. Standard entry fees apply.",
     location: "Westway Climbing Centre",
-    schedule: "Every Wednesday, 10:00-12:00 AM",
+    schedule: "Wednesday, August 6th, 10:00-12:00 AM",
     difficulty: "Intermediate",
     requirements: {
       title: "competent top-rope climbers",
@@ -59,7 +59,7 @@ const activitiesData = {
     description:
       "Join us for a friendly social ride through Richmond Park and surrounding areas. Perfect for cyclists looking to meet new people and explore beautiful routes. Coffee stop included at Roehampton Cafe.",
     location: "Richmond Park Main Gate",
-    schedule: "Sunday, 8:00 AM",
+    schedule: "Sunday, August 10th, 8:00 AM",
     difficulty: "Beginner",
     distance: "25km",
     pace: "20 kph",
@@ -81,38 +81,6 @@ const activitiesData = {
     route: "Richmond Park → Kingston → Roehampton",
     cafeStop: "Roehampton Cafe",
   },
-  "peak-district-climb": {
-    id: "peak-district-climb",
-    type: "climbing",
-    title: "Peak District Sport Climbing",
-    organizer: {
-      name: "Peak Adventures",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-    },
-    description:
-      "Weekend climbing adventure in the Peak District. We'll tackle some classic sport routes at Stanage Edge and Burbage. Perfect for those looking to transition from indoor to outdoor climbing or improve their outdoor skills.",
-    location: "Stanage Edge & Burbage",
-    schedule: "Weekend, July 22-23",
-    difficulty: "Advanced",
-    requirements: {
-      title: "experienced indoor climbers",
-      details: [
-        "Comfortable leading 6a+ routes indoors",
-        "Basic outdoor climbing experience preferred",
-        "Own climbing shoes and harness",
-        "Comfortable with multi-pitch belaying",
-      ],
-      warning:
-        "Outdoor climbing involves additional risks. Weather conditions may affect the trip.",
-    },
-    tags: ["Outdoor", "Sport climbing", "Weekend trip", "Camping"],
-    capacity: 8,
-    currentParticipants: 6,
-    accommodation: "Camping included",
-    transport: "Minibus from London",
-    gradeRange: "E1 - E4 / 5.6 - 5.10",
-  },
   "chaingang-training": {
     id: "chaingang-training",
     type: "cycling",
@@ -125,7 +93,7 @@ const activitiesData = {
     description:
       "High-intensity training session for intermediate to advanced cyclists. We'll focus on paceline skills, hill repeats, and interval training. This is a structured workout designed to improve your cycling performance.",
     location: "Box Hill, Surrey",
-    schedule: "Tuesday, 6:30 PM",
+    schedule: "Tuesday, August 12th, 6:30 PM",
     difficulty: "Intermediate",
     distance: "40km",
     pace: "32 kph",
@@ -145,6 +113,202 @@ const activitiesData = {
     capacity: 12,
     currentParticipants: 9,
     trainingFocus: "Power & climbing",
+  },
+  "peak-district-climb": {
+    id: "peak-district-climb",
+    type: "climbing",
+    title: "Peak District Sport Climbing",
+    organizer: {
+      name: "Peak Adventures",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
+    description:
+      "Weekend climbing adventure in the Peak District. We'll tackle some classic sport routes at Stanage Edge and Burbage. Perfect for those looking to transition from indoor to outdoor climbing or improve their outdoor skills.",
+    location: "Stanage Edge & Burbage",
+    schedule: "Weekend, September 6-7th",
+    difficulty: "Advanced",
+    requirements: {
+      title: "experienced indoor climbers",
+      details: [
+        "Comfortable leading 6a+ routes indoors",
+        "Basic outdoor climbing experience preferred",
+        "Own climbing shoes and harness",
+        "Comfortable with multi-pitch belaying",
+      ],
+      warning:
+        "Outdoor climbing involves additional risks. Weather conditions may affect the trip.",
+    },
+    tags: ["Outdoor", "Sport climbing", "Weekend trip", "Camping"],
+    capacity: 8,
+    currentParticipants: 6,
+    accommodation: "Camping included",
+    transport: "Minibus from London",
+    gradeRange: "E1 - E4 / 5.6 - 5.10",
+  },
+  "morning-trail-run": {
+    id: "morning-trail-run",
+    type: "running",
+    title: "Richmond Park Morning Trail Run",
+    organizer: {
+      name: "Richmond Runners",
+      image:
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=40&h=40&fit=crop&crop=face",
+    },
+    description:
+      "Join us for an energizing trail run through the beautiful paths of Richmond Park. Perfect for intermediate runners looking to improve their trail running skills and meet like-minded fitness enthusiasts.",
+    location: "Richmond Park",
+    schedule: "Friday, August 16th, 7:00 AM",
+    difficulty: "Intermediate",
+    distance: "8km",
+    pace: "5:30 min/km",
+    requirements: {
+      title: "intermediate running fitness",
+      details: [
+        "Comfortable running 5km continuously",
+        "Trail running shoes recommended",
+        "Basic experience with uneven terrain",
+        "Ability to maintain conversational pace",
+      ],
+      warning:
+        "Trail running involves uneven surfaces and potential hazards. Please run within your ability level.",
+    },
+    tags: ["Trail running", "Morning", "Fitness", "Nature"],
+    capacity: 20,
+    currentParticipants: 14,
+    terrain: "Mixed trails and paths",
+    meetupPoint: "Roehampton Gate",
+  },
+  "lake-district-hike": {
+    id: "lake-district-hike",
+    type: "hiking",
+    title: "Lake District Day Hike - Helvellyn",
+    organizer: {
+      name: "Lake District Hiking Club",
+      image:
+        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=40&h=40&fit=crop&crop=face",
+    },
+    description:
+      "Challenging day hike up Helvellyn via Striding Edge. Experience the thrill of one of England's most famous ridge walks with stunning views across the Lake District. This is a full day adventure for experienced hikers.",
+    location: "Lake District - Helvellyn",
+    schedule: "Saturday, August 23rd, 8:00 AM",
+    difficulty: "Advanced",
+    distance: "12km",
+    elevation: "950m",
+    requirements: {
+      title: "experienced mountain hikers",
+      details: [
+        "Comfortable hiking 10+ km with elevation gain",
+        "Proper hiking boots with ankle support",
+        "Experience with scrambling and exposure",
+        "Good physical fitness and endurance",
+      ],
+      warning:
+        "Striding Edge involves scrambling and exposure. Weather conditions can change rapidly in mountains.",
+    },
+    tags: ["Mountain hiking", "Scrambling", "Adventure", "Lake District"],
+    capacity: 15,
+    currentParticipants: 11,
+    route: "Glenridding → Striding Edge → Helvellyn → Swirral Edge",
+    equipment: "Full hiking kit required",
+  },
+  "alps-skiing-weekend": {
+    id: "alps-skiing-weekend",
+    type: "skiing",
+    title: "French Alps Skiing Weekend",
+    organizer: {
+      name: "Alpine Adventures UK",
+      image:
+        "https://images.unsplash.com/photo-1551524164-6cf2ac426081?w=40&h=40&fit=crop&crop=face",
+    },
+    description:
+      "Weekend skiing adventure in Chamonix with stunning views of Mont Blanc. All skill levels welcome with expert instruction available. Equipment rental included. Transport and accommodation arranged.",
+    location: "Chamonix, French Alps",
+    schedule: "Weekend, September 14-15th",
+    difficulty: "Intermediate",
+    requirements: {
+      title: "basic skiing ability",
+      details: [
+        "Comfortable on blue runs",
+        "Basic snow plow and parallel turns",
+        "Valid passport for travel",
+        "Travel insurance recommended",
+      ],
+      warning:
+        "Mountain skiing involves inherent risks. Weather conditions may affect skiing plans.",
+    },
+    tags: ["Alpine skiing", "Weekend trip", "Mont Blanc", "All levels"],
+    capacity: 12,
+    currentParticipants: 8,
+    accommodation: "Chamonix hotel included",
+    transport: "Coach from London",
+    skiPass: "2-day lift pass included",
+    equipment: "Rental available on-site",
+  },
+  "cornwall-surf-session": {
+    id: "cornwall-surf-session",
+    type: "surfing",
+    title: "Cornwall Dawn Patrol Surf",
+    organizer: {
+      name: "Cornwall Surf Collective",
+      image:
+        "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=40&h=40&fit=crop&crop=face",
+    },
+    description:
+      "Early morning surf session at one of Cornwall's most famous breaks. Perfect waves for intermediate surfers. Experience the magic of dawn patrol surfing with cleaner conditions and fewer crowds.",
+    location: "Fistral Beach, Cornwall",
+    schedule: "Saturday, August 30th, 6:30 AM",
+    difficulty: "Intermediate",
+    requirements: {
+      title: "intermediate surfing skills",
+      details: [
+        "Comfortable paddling in ocean conditions",
+        "Able to catch and ride unbroken waves",
+        "Strong swimming ability essential",
+        "Basic surf etiquette knowledge",
+      ],
+      warning:
+        "Ocean surfing involves strong currents and changing conditions. Always respect the ocean and local conditions.",
+    },
+    tags: ["Dawn patrol", "Ocean surfing", "Cornwall", "Beach break"],
+    capacity: 10,
+    currentParticipants: 7,
+    waveHeight: "3-4 feet predicted",
+    tideInfo: "High tide at 7:15 AM",
+    equipment: "Wetsuit and board rental available",
+  },
+  "wimbledon-tennis-singles": {
+    id: "wimbledon-tennis-singles",
+    type: "tennis",
+    title: "Competitive Singles Tournament",
+    organizer: {
+      name: "London Tennis League",
+      image:
+        "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=40&h=40&fit=crop&crop=face",
+    },
+    description:
+      "Competitive singles tournament for advanced players. Round-robin format followed by knockout stages. Prizes for winners and refreshments provided. Great opportunity to test your skills against quality opposition.",
+    location: "Wimbledon Tennis Club",
+    schedule: "Saturday, September 21st, 10:00 AM",
+    difficulty: "Advanced",
+    requirements: {
+      title: "advanced tennis players",
+      details: [
+        "Consistent serve and groundstrokes",
+        "Match play experience required",
+        "Own tennis racquet essential",
+        "Appropriate tennis attire (whites preferred)",
+      ],
+      warning:
+        "This is a competitive tournament. Please ensure you're match fit and prepared for intensive play.",
+    },
+    tags: ["Tournament", "Competitive", "Singles", "Prizes"],
+    capacity: 16,
+    currentParticipants: 12,
+    format: "Round-robin followed by knockout",
+    prizes: "Trophies for top 3 finishers",
+    courtSurface: "Grass courts",
+    refreshments: "Lunch and refreshments provided",
   },
 };
 
@@ -215,7 +379,7 @@ export default function ActivityDetails() {
       id: activity.id,
       title: activity.title,
       type: activity.type,
-      date: "2025-01-26", // Use the activity schedule as date
+      date: "2025-08-06", // Use appropriate date from the schedule
       time: "10:00", // Extract time from schedule
       location: activity.location,
       organizer: activity.organizer.name,
@@ -381,41 +545,78 @@ export default function ActivityDetails() {
           </div>
 
           {/* Activity-specific details */}
-          {activity.type === "cycling" && (
+          {(activity.type === "cycling" || activity.type === "running") && (
             <>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Target className="w-4 h-4 text-green-500" />
-                  <h4 className="text-lg font-bold text-black font-cabin">
-                    Distance
-                  </h4>
+              {activity.distance && (
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Target className="w-4 h-4 text-green-500" />
+                    <h4 className="text-lg font-bold text-black font-cabin">
+                      Distance
+                    </h4>
+                  </div>
+                  <p className="text-sm text-black font-cabin ml-6">
+                    {activity.distance}
+                  </p>
                 </div>
-                <p className="text-sm text-black font-cabin ml-6">
-                  {activity.distance}
-                </p>
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-yellow-500">⚡</span>
-                  <h4 className="text-lg font-bold text-black font-cabin">
-                    Pace
-                  </h4>
+              )}
+              {activity.pace && (
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-yellow-500">⚡</span>
+                    <h4 className="text-lg font-bold text-black font-cabin">
+                      Pace
+                    </h4>
+                  </div>
+                  <p className="text-sm text-black font-cabin ml-6">
+                    {activity.pace}
+                  </p>
                 </div>
-                <p className="text-sm text-black font-cabin ml-6">
-                  {activity.pace}
-                </p>
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-green-600">⛰️</span>
-                  <h4 className="text-lg font-bold text-black font-cabin">
-                    Elevation
-                  </h4>
+              )}
+              {activity.elevation && (
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-green-600">⛰️</span>
+                    <h4 className="text-lg font-bold text-black font-cabin">
+                      Elevation
+                    </h4>
+                  </div>
+                  <p className="text-sm text-black font-cabin ml-6">
+                    {activity.elevation}
+                  </p>
                 </div>
-                <p className="text-sm text-black font-cabin ml-6">
-                  {activity.elevation}
-                </p>
-              </div>
+              )}
+            </>
+          )}
+
+          {activity.type === "hiking" && (
+            <>
+              {activity.distance && (
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Target className="w-4 h-4 text-green-500" />
+                    <h4 className="text-lg font-bold text-black font-cabin">
+                      Distance
+                    </h4>
+                  </div>
+                  <p className="text-sm text-black font-cabin ml-6">
+                    {activity.distance}
+                  </p>
+                </div>
+              )}
+              {activity.elevation && (
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-green-600">⛰️</span>
+                    <h4 className="text-lg font-bold text-black font-cabin">
+                      Elevation
+                    </h4>
+                  </div>
+                  <p className="text-sm text-black font-cabin ml-6">
+                    {activity.elevation}
+                  </p>
+                </div>
+              )}
             </>
           )}
 
@@ -440,7 +641,17 @@ export default function ActivityDetails() {
           activity.transport ||
           activity.cafeStop ||
           activity.route ||
-          activity.trainingFocus) && (
+          activity.trainingFocus ||
+          activity.terrain ||
+          activity.meetupPoint ||
+          activity.equipment ||
+          activity.skiPass ||
+          activity.waveHeight ||
+          activity.tideInfo ||
+          activity.format ||
+          activity.prizes ||
+          activity.courtSurface ||
+          activity.refreshments) && (
           <div className="mb-6">
             <h3 className="text-xl font-bold text-black font-cabin mb-3">
               Additional Information
@@ -491,6 +702,86 @@ export default function ActivityDetails() {
                   <span className="text-red-600">🎯</span>
                   <span className="text-sm font-cabin">
                     Focus: {activity.trainingFocus}
+                  </span>
+                </div>
+              )}
+              {activity.terrain && (
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600">🌲</span>
+                  <span className="text-sm font-cabin">
+                    Terrain: {activity.terrain}
+                  </span>
+                </div>
+              )}
+              {activity.meetupPoint && (
+                <div className="flex items-center gap-2">
+                  <span className="text-red-600">📍</span>
+                  <span className="text-sm font-cabin">
+                    Meetup: {activity.meetupPoint}
+                  </span>
+                </div>
+              )}
+              {activity.equipment && (
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-600">🎒</span>
+                  <span className="text-sm font-cabin">
+                    Equipment: {activity.equipment}
+                  </span>
+                </div>
+              )}
+              {activity.skiPass && (
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-600">🎿</span>
+                  <span className="text-sm font-cabin">
+                    Ski pass: {activity.skiPass}
+                  </span>
+                </div>
+              )}
+              {activity.waveHeight && (
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-600">🌊</span>
+                  <span className="text-sm font-cabin">
+                    Waves: {activity.waveHeight}
+                  </span>
+                </div>
+              )}
+              {activity.tideInfo && (
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-500">🌊</span>
+                  <span className="text-sm font-cabin">
+                    Tide: {activity.tideInfo}
+                  </span>
+                </div>
+              )}
+              {activity.format && (
+                <div className="flex items-center gap-2">
+                  <span className="text-purple-600">🏆</span>
+                  <span className="text-sm font-cabin">
+                    Format: {activity.format}
+                  </span>
+                </div>
+              )}
+              {activity.prizes && (
+                <div className="flex items-center gap-2">
+                  <span className="text-gold-600">🏅</span>
+                  <span className="text-sm font-cabin">
+                    Prizes: {activity.prizes}
+                  </span>
+                </div>
+              )}
+              {activity.courtSurface && (
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600">🎾</span>
+                  <span className="text-sm font-cabin">
+                    Courts: {activity.courtSurface}
+                  </span>
+                </div>
+              )}
+              {activity.refreshments && (
+                <div className="flex items-center gap-2">
+                  <span className="text-orange-600">🍽️</span>
+                  <span className="text-sm font-cabin">
+                    Food: {activity.refreshments}
                   </span>
                 </div>
               )}
