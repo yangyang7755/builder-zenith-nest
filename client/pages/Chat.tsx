@@ -61,7 +61,7 @@ export default function Chat() {
       UCLMC:
         "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=60&h=60&fit=crop",
       "Maggie Chang":
-        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=60&h=60&fit=crop&crop=face",
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face",
     };
     return (
       avatars[sender as keyof typeof avatars] ||
