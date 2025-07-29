@@ -356,32 +356,83 @@ export default function IndividualChat() {
             key={message.id}
             className={`flex ${message.isFromMe ? "justify-end" : "justify-start"}`}
           >
-            <div
-              className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                message.isFromMe
-                  ? "bg-explore-green text-white"
-                  : "bg-gray-200 text-black"
-              }`}
-            >
-              <p className="font-cabin">{message.content}</p>
+            <div className="relative max-w-xs lg:max-w-md">
               <div
-                className={`flex items-center gap-1 mt-1 ${
-                  message.isFromMe ? "justify-end" : "justify-start"
+                className={`px-4 py-2 rounded-lg ${
+                  message.isFromMe
+                    ? "bg-explore-green text-white"
+                    : "bg-gray-200 text-black"
                 }`}
+                onDoubleClick={() => setShowEmojiPicker(message.id)}
               >
-                <span
-                  className={`text-xs font-cabin ${
-                    message.isFromMe ? "text-white/70" : "text-gray-500"
+                <p className="font-cabin">{message.content}</p>
+                <div
+                  className={`flex items-center gap-1 mt-1 ${
+                    message.isFromMe ? "justify-end" : "justify-start"
                   }`}
                 >
-                  {formatTime(message.timestamp)}
-                </span>
-                {message.isFromMe && (
-                  <div className="ml-1">
-                    {renderMessageStatus(message.status)}
-                  </div>
-                )}
+                  <span
+                    className={`text-xs font-cabin ${
+                      message.isFromMe ? "text-white/70" : "text-gray-500"
+                    }`}
+                  >
+                    {formatTime(message.timestamp)}
+                  </span>
+                  {message.isFromMe && (
+                    <div className="ml-1">
+                      {renderMessageStatus(message.status)}
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/* Reactions */}
+              {message.reactions && message.reactions.length > 0 && (
+                <div className="flex gap-1 mt-1 flex-wrap">
+                  {message.reactions.map((reaction, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleAddReaction(message.id, reaction.emoji)}
+                      className={`text-xs px-2 py-1 rounded-full border ${
+                        reaction.byMe
+                          ? "bg-explore-green/20 border-explore-green"
+                          : "bg-gray-100 border-gray-300"
+                      } hover:scale-110 transition-transform`}
+                    >
+                      {reaction.emoji} {reaction.count}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Emoji Picker */}
+              {showEmojiPicker === message.id && (
+                <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-2 flex gap-1 z-10">
+                  {emojis.map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => handleAddReaction(message.id, emoji)}
+                      className="text-lg hover:scale-125 transition-transform p-1"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setShowEmojiPicker(null)}
+                    className="text-gray-400 hover:text-gray-600 ml-2"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {/* Like button for easy access */}
+              <button
+                onClick={() => handleAddReaction(message.id, "❤️")}
+                className="absolute -bottom-2 -right-2 bg-white border border-gray-300 rounded-full p-1 opacity-0 group-hover:opacity-100 hover:scale-110 transition-all shadow-sm"
+              >
+                <Heart className="w-3 h-3 text-red-500" />
+              </button>
             </div>
           </div>
         ))}
