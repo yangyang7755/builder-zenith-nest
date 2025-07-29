@@ -409,6 +409,40 @@ export default function ClubOxford() {
         </div>
       </div>
 
+      {/* Leave Club Confirmation Modal */}
+      {showLeaveConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-sm p-6">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <LogOut className="w-8 h-8 text-red-500" />
+              </div>
+              <h3 className="text-xl font-bold text-black font-cabin mb-2">
+                Leave Club
+              </h3>
+              <p className="text-gray-600 font-cabin">
+                Are you sure you want to leave Oxford University Cycling Club? You'll lose access to club events and chat.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <button
+                onClick={confirmLeaveClub}
+                className="w-full py-3 bg-red-500 text-white rounded-lg font-cabin font-medium hover:bg-red-600 transition-colors"
+              >
+                Yes, Leave Club
+              </button>
+              <button
+                onClick={() => setShowLeaveConfirm(false)}
+                className="w-full py-3 border-2 border-gray-300 rounded-lg text-gray-600 font-cabin font-medium hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
