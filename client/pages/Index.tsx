@@ -308,30 +308,53 @@ export default function Index() {
           <div className="flex gap-2 overflow-x-auto pb-2">
             <CarShareCard
               destination="Peak District"
-              date="📅 2 February 2025"
+              date="📅 10 August 2025"
               time="7:00 AM"
               driver="Mike Johnson"
               availableSeats={3}
               cost="£15 per person"
               imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+              carShareId="peak-district"
             />
             <CarShareCard
               destination="Snowdonia"
-              date="📅 9 February 2025"
+              date="📅 17 August 2025"
               time="6:00 AM"
               driver="Sarah Chen"
               availableSeats={2}
               cost="£25 per person"
-              imageSrc="https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+              imageSrc="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
+              carShareId="snowdonia"
             />
             <CarShareCard
               destination="Brighton Beach"
-              date="📅 15 February 2025"
+              date="📅 24 August 2025"
               time="8:00 AM"
               driver="Alex Rodriguez"
               availableSeats={4}
               cost="£12 per person"
               imageSrc="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+              carShareId="brighton-beach"
+            />
+            <CarShareCard
+              destination="Lake District"
+              date="📅 31 August 2025"
+              time="7:30 AM"
+              driver="Emma Wilson"
+              availableSeats={3}
+              cost="£18 per person"
+              imageSrc="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
+              carShareId="lake-district"
+            />
+            <CarShareCard
+              destination="Wales Coast"
+              date="📅 7 September 2025"
+              time="6:30 AM"
+              driver="David Brown"
+              availableSeats={2}
+              cost="£22 per person"
+              imageSrc="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
+              carShareId="wales-coast"
             />
           </div>
           <p className="text-xs text-gray-500 font-cabin mt-2">
@@ -1041,7 +1064,7 @@ function CyclingExploreSection() {
     {
       title: "South Downs Way Bikepacking",
       date: "📅 Fri-Sun, July 15-17",
-      location: "📍Winchester to Eastbourne",
+      location: "���Winchester to Eastbourne",
       organizer: "Adventure Cycling UK",
       distance: "160km over 3 days",
       pace: "Touring pace",
