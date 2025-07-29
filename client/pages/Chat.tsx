@@ -126,18 +126,48 @@ export default function Chat() {
 
         {/* Chat Messages */}
         <div className="space-y-4">
-          {chatMessages.map((message) => (
-            <ChatItem
-              key={message.id}
-              message={message}
-              getTimeAgo={getTimeAgo}
-              getAvatarImage={getAvatarImage}
-              onClick={() => {
-                const userId = getUserId(message.sender);
-                navigate(`/chat/${userId}`);
-              }}
-            />
-          ))}
+          {/* Club Chats Section */}
+          {clubChats.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-700 font-cabin px-2">Club Chats</h2>
+              {clubChats.map((club) => (
+                <ClubChatItem
+                  key={club.id}
+                  club={club}
+                  getTimeAgo={getTimeAgo}
+                  onClick={() => {
+                    // Navigate to club page instead of individual chat
+                    if (club.id === "oxford-cycling") {
+                      navigate("/club/oxford-cycling");
+                    } else if (club.id === "westway-climbing") {
+                      navigate("/club/westway");
+                    } else if (club.id === "richmond-runners") {
+                      navigate("/club/richmond-runners");
+                    }
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Individual Chats Section */}
+          {chatMessages.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-700 font-cabin px-2">Direct Messages</h2>
+              {chatMessages.map((message) => (
+                <ChatItem
+                  key={message.id}
+                  message={message}
+                  getTimeAgo={getTimeAgo}
+                  getAvatarImage={getAvatarImage}
+                  onClick={() => {
+                    const userId = getUserId(message.sender);
+                    navigate(`/chat/${userId}`);
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
