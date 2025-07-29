@@ -401,6 +401,45 @@ export default function Profile() {
             {userProfile.bio}
           </p>
 
+          {/* User Details Box */}
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <h3 className="text-lg font-bold text-black font-cabin mb-3">
+              Personal Details
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <span className="text-sm text-gray-600 font-cabin">Gender:</span>
+                <div className="font-medium text-black font-cabin">{userProfile.personalDetails.gender}</div>
+              </div>
+              <div>
+                <span className="text-sm text-gray-600 font-cabin">Age:</span>
+                <div className="font-medium text-black font-cabin">{userProfile.personalDetails.age} years old</div>
+              </div>
+              <div>
+                <span className="text-sm text-gray-600 font-cabin">Nationality:</span>
+                <div className="font-medium text-black font-cabin">{userProfile.personalDetails.nationality}</div>
+              </div>
+              <div>
+                <span className="text-sm text-gray-600 font-cabin">Profession:</span>
+                <div className="font-medium text-black font-cabin">{userProfile.personalDetails.profession}</div>
+              </div>
+              <div className="col-span-2">
+                <span className="text-sm text-gray-600 font-cabin">Institution:</span>
+                <div className="font-medium text-black font-cabin">{userProfile.personalDetails.institution}</div>
+              </div>
+              <div className="col-span-2">
+                <span className="text-sm text-gray-600 font-cabin">Languages:</span>
+                <div className="font-medium text-black font-cabin">
+                  {userProfile.personalDetails.languages.join(", ")}
+                </div>
+              </div>
+              <div className="col-span-2">
+                <span className="text-sm text-gray-600 font-cabin">Member since:</span>
+                <div className="font-medium text-black font-cabin">{userProfile.personalDetails.joinedDate}</div>
+              </div>
+            </div>
+          </div>
+
           {/* Activity Filter Tabs */}
           <div className="flex gap-2 mb-6">
             {["Climb", "Ride", "Run"].map((tab) => (
