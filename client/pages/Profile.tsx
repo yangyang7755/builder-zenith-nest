@@ -565,9 +565,10 @@ export default function Profile() {
               </h3>
               <div className="space-y-3">
                 {currentSportData.activities.participated.map((activity) => (
-                  <div
+                  <button
                     key={activity.id}
-                    className="border-2 border-gray-200 rounded-lg p-4"
+                    onClick={() => navigate(`/activity/${activity.id}`)}
+                    className="w-full border-2 border-gray-200 rounded-lg p-4 hover:border-explore-green transition-colors text-left"
                   >
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-medium text-black font-cabin">
@@ -578,7 +579,7 @@ export default function Profile() {
                     <div className="text-sm text-gray-600 font-cabin">
                       {activity.date} • By {activity.organizer}
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
