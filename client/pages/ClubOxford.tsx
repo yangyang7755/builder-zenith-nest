@@ -199,12 +199,27 @@ export default function ClubOxford() {
               rides, races, and social events throughout the year.
             </p>
 
-            {/* Request to Join Button - but user is already member */}
-            <div className="w-48 h-14 flex items-center justify-center bg-gray-100 rounded-lg">
-              <span className="text-explore-green font-cabin font-medium">
-                ✓ Member
-              </span>
-            </div>
+            {/* Member Status and Actions */}
+            {isMember ? (
+              <div className="flex flex-col gap-3">
+                <div className="w-48 h-12 flex items-center justify-center bg-gray-100 rounded-lg">
+                  <span className="text-explore-green font-cabin font-medium">
+                    ✓ Member
+                  </span>
+                </div>
+                <button
+                  onClick={handleLeaveClub}
+                  className="w-48 h-10 flex items-center justify-center gap-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="font-cabin font-medium text-sm">Leave Club</span>
+                </button>
+              </div>
+            ) : (
+              <button className="w-48 h-14 bg-explore-green text-white rounded-lg font-cabin font-medium">
+                Request to Join
+              </button>
+            )}
           </div>
         </div>
 
