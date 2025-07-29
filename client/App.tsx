@@ -17,6 +17,10 @@ import CreateActivity from "./pages/CreateActivity";
 import CreateCycling from "./pages/CreateCycling";
 import CreateClimbing from "./pages/CreateClimbing";
 import CreateRunning from "./pages/CreateRunning";
+import CreateHiking from "./pages/CreateHiking";
+import CreateSkiing from "./pages/CreateSkiing";
+import CreateSurfing from "./pages/CreateSurfing";
+import CreateTennis from "./pages/CreateTennis";
 import Chat from "./pages/Chat";
 import IndividualChat from "./pages/IndividualChat";
 import ClubWestway from "./pages/ClubWestway";
@@ -58,6 +62,10 @@ const App = () => (
                 <Route path="/create/cycling" element={<CreateCycling />} />
                 <Route path="/create/climbing" element={<CreateClimbing />} />
                 <Route path="/create/running" element={<CreateRunning />} />
+                <Route path="/create/hiking" element={<CreateHiking />} />
+                <Route path="/create/skiing" element={<CreateSkiing />} />
+                <Route path="/create/surfing" element={<CreateSurfing />} />
+                <Route path="/create/tennis" element={<CreateTennis />} />
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/chat/:userId" element={<IndividualChat />} />
                 <Route path="/club/westway" element={<ClubWestway />} />
