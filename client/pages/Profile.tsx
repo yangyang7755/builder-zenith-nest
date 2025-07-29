@@ -33,7 +33,7 @@ export default function Profile() {
     },
     // Additional user details
     personalDetails: {
-      gender: "Male",
+      gender: "Female",
       age: 25,
       nationality: "Spanish",
       profession: "Student",
