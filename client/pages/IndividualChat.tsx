@@ -178,6 +178,45 @@ export default function IndividualChat() {
     return <div>User not found</div>;
   }
 
+  const handleAddReaction = (messageId: string, emoji: string) => {
+    setMessages((prev) =>
+      prev.map((msg) => {
+        if (msg.id === messageId) {
+          const reactions = msg.reactions || [];
+          const existingReaction = reactions.find((r) => r.emoji === emoji);
+
+          if (existingReaction) {
+            if (existingReaction.byMe) {
+              // Remove reaction
+              return {
+                ...msg,
+                reactions: reactions.filter((r) => r.emoji !== emoji),
+              };
+            } else {
+              // Add to existing reaction
+              return {
+                ...msg,
+                reactions: reactions.map((r) =>
+                  r.emoji === emoji
+                    ? { ...r, count: r.count + 1, byMe: true }
+                    : r,
+                ),
+              };
+            }
+          } else {
+            // Add new reaction
+            return {
+              ...msg,
+              reactions: [...reactions, { emoji, count: 1, byMe: true }],
+            };
+          }
+        }
+        return msg;
+      }),
+    );
+    setShowEmojiPicker(null);
+  };
+
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 
