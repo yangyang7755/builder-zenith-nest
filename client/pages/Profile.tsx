@@ -115,41 +115,20 @@ export default function Profile() {
     activities: {
       created: [
         {
-          id: 1,
-          title: "Weekend Gravel Ride",
+          id: "sunday-morning-ride",
+          title: "Sunday Morning Social",
           date: "2025-02-08",
           participants: 12,
-          location: "Surrey Hills",
-        },
-        {
-          id: 2,
-          title: "Morning Commuter Ride",
-          date: "2025-01-30",
-          participants: 15,
-          location: "Hyde Park",
+          location: "Richmond Park",
         },
       ],
       participated: [
         {
-          id: 1,
-          title: "Sunday Morning Social",
-          date: "2025-02-02",
-          organizer: "Richmond Cycling",
-          rating: 5,
-        },
-        {
-          id: 2,
+          id: "chaingang-training",
           title: "Intermediate Chaingang",
           date: "2025-01-28",
           organizer: "Surrey Road Cycling",
           rating: 4,
-        },
-        {
-          id: 3,
-          title: "London to Brighton",
-          date: "2025-01-20",
-          organizer: "British Heart Foundation",
-          rating: 5,
         },
       ],
     },
