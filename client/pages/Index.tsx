@@ -269,7 +269,7 @@ export default function Index() {
           <h2 className="text-base font-semibold text-black font-poppins mb-3">
             Discover local clubs
           </h2>
-          <div className="flex gap-4 justify-start flex-wrap">
+          <div className="grid grid-cols-4 gap-4">
             <ClubLogo
               src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
               alt="Rapha Cycling Club London"
@@ -293,6 +293,54 @@ export default function Index() {
               alt="Thames Path Cyclists"
               isMember={false}
               clubId="thames-cyclists"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=70&h=70&fit=crop"
+              alt="London Hiking Society"
+              isMember={false}
+              clubId="london-hiking"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1551524164-6cf2ac426081?w=70&h=70&fit=crop"
+              alt="Alpine Adventures UK"
+              isMember={false}
+              clubId="alpine-adventures"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=70&h=70&fit=crop"
+              alt="London Surf Club"
+              isMember={false}
+              clubId="london-surf"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=70&h=70&fit=crop"
+              alt="Wimbledon Tennis Club"
+              isMember={false}
+              clubId="wimbledon-tennis"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
+              alt="London Marathon Club"
+              isMember={false}
+              clubId="london-marathon"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
+              alt="Regent's Park Cycling"
+              isMember={false}
+              clubId="regents-cycling"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=70&h=70&fit=crop"
+              alt="Castle Climbing Centre"
+              isMember={false}
+              clubId="castle-climbing"
+            />
+            <ClubLogo
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
+              alt="Hyde Park Bootcamp"
+              isMember={false}
+              clubId="hyde-park-bootcamp"
             />
           </div>
           <p className="text-xs text-gray-500 font-cabin mt-2">
@@ -1064,7 +1112,7 @@ function CyclingExploreSection() {
     {
       title: "South Downs Way Bikepacking",
       date: "📅 Fri-Sun, July 15-17",
-      location: "���Winchester to Eastbourne",
+      location: "📍Winchester to Eastbourne",
       organizer: "Adventure Cycling UK",
       distance: "160km over 3 days",
       pace: "Touring pace",
