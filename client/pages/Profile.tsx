@@ -20,7 +20,7 @@ export default function Profile() {
     bio: "Weekend warrior. Always up for some mountain adventures",
     location: "Notting Hill, London",
     profileImage:
-      "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F23fa8ee56cbe4c7e834fbdf7cdf6cfd3?format=webp&width=800",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
     followers: 100,
     following: 105,
     overallRating: 4.8,
@@ -30,6 +30,16 @@ export default function Profile() {
       climbing: "Intermediate",
       cycling: "Advanced",
       running: "Beginner",
+    },
+    // Additional user details
+    personalDetails: {
+      gender: "Male",
+      age: 25,
+      nationality: "Spanish",
+      profession: "Student",
+      institution: "Oxford University",
+      languages: ["English", "Spanish", "French"],
+      joinedDate: "January 2024",
     },
   };
 
