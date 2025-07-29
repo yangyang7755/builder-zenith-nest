@@ -182,10 +182,13 @@ export default function Chat() {
         {/* Chat Messages */}
         <div className="space-y-4">
           {/* Club Chats Section */}
-          {clubChats.length > 0 && (
+          {getFilteredClubChats().length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-700 font-cabin px-2">Club Chats</h2>
-              {clubChats.map((club) => (
+              <h2 className="text-lg font-semibold text-gray-700 font-cabin px-2">
+                Club Chats
+                {activeFilter === "Clubs" && <span className="text-sm text-gray-500 ml-2">(Clubs only)</span>}
+              </h2>
+              {getFilteredClubChats().map((club) => (
                 <ClubChatItem
                   key={club.id}
                   club={club}
@@ -206,10 +209,14 @@ export default function Chat() {
           )}
 
           {/* Individual Chats Section */}
-          {chatMessages.length > 0 && (
+          {getFilteredMessages().length > 0 && activeFilter !== "Clubs" && (
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-700 font-cabin px-2">Direct Messages</h2>
-              {chatMessages.map((message) => (
+              <h2 className="text-lg font-semibold text-gray-700 font-cabin px-2">
+                Direct Messages
+                {activeFilter === "Requests" && <span className="text-sm text-gray-500 ml-2">(Requests only)</span>}
+                {activeFilter === "Unread" && <span className="text-sm text-gray-500 ml-2">(Unread only)</span>}
+              </h2>
+              {getFilteredMessages().map((message) => (
                 <ChatItem
                   key={message.id}
                   message={message}
@@ -221,6 +228,26 @@ export default function Chat() {
                   }}
                 />
               ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {getFilteredClubChats().length === 0 && getFilteredMessages().length === 0 && (
+            <div className="text-center py-8">
+              <div className="text-gray-400 mb-4">
+                <svg className="w-16 h-16 mx-auto" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" strokeWidth="2" fill="none"/>
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                No {activeFilter.toLowerCase()} messages
+              </h3>
+              <p className="text-gray-500">
+                {activeFilter === "Unread" && "All caught up! No unread messages."}
+                {activeFilter === "Clubs" && "Join some clubs to see group chats here."}
+                {activeFilter === "Requests" && "No pending requests at the moment."}
+                {activeFilter === "Following" && "No messages from people you follow."}
+              </p>
             </div>
           )}
         </div>
