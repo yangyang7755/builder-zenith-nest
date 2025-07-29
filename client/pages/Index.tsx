@@ -1207,7 +1207,7 @@ function CyclingExploreSection() {
     {
       title: "Hill Climbing Intervals",
       date: "📅 Thursday, 6:00 PM",
-      location: "��Leith Hill, Surrey",
+      location: "📍Leith Hill, Surrey",
       organizer: "Watts Cycling Club",
       distance: "35km",
       pace: "Interval training",
@@ -1599,39 +1599,97 @@ function ActivityCard({
 }
 
 function PartnerCard({
+  id,
   title,
+  name,
+  age,
+  climbingLevel,
   date,
   location,
+  description,
+  availability,
+  experience,
   imageSrc,
 }: {
+  id: string;
   title: string;
+  name: string;
+  age: number;
+  climbingLevel: string;
   date: string;
   location: string;
+  description: string;
+  availability: string;
+  experience: string;
   imageSrc: string;
 }) {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/partner/${id}`);
+  };
+
   return (
-    <div className="min-w-60 w-60 h-32 border-2 border-explore-green rounded-lg p-3 flex-shrink-0 bg-white">
-      <h3 className="font-bold text-explore-green font-cabin text-base mb-2">
-        {title}
-      </h3>
-      <div className="flex items-start gap-3">
+    <div
+      onClick={handleCardClick}
+      className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
+    >
+      {/* Header */}
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="font-bold text-explore-green font-cabin text-base line-clamp-1 flex-1 pr-2">
+          {title}
+        </h3>
+        <span className="text-xs bg-explore-green bg-opacity-10 text-explore-green px-2 py-1 rounded-full font-cabin font-medium">
+          🧗 {climbingLevel}
+        </span>
+      </div>
+
+      {/* Profile Info */}
+      <div className="flex items-start gap-3 mb-3">
         <img
           src={imageSrc}
-          alt="Profile"
-          className="w-10 h-10 rounded-full border border-black object-cover"
+          alt={name}
+          className="w-12 h-12 rounded-full border border-black object-cover flex-shrink-0"
         />
-        <div className="flex-1">
-          <div className="text-sm text-explore-green font-cabin mb-1">
-            {date}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-medium text-black font-cabin">{name}</span>
+            <span className="text-sm text-gray-600 font-cabin">({age})</span>
           </div>
-          <div className="text-sm text-explore-green font-cabin">
-            {location}
+          <div className="text-sm text-gray-600 font-cabin mb-1">
+            {experience}
           </div>
         </div>
-        <button className="bg-explore-green text-white px-3 py-2 rounded-lg text-sm font-cabin">
-          Request to join
-        </button>
       </div>
+
+      {/* Description */}
+      <p className="text-sm text-gray-700 font-cabin mb-3 line-clamp-2">
+        {description}
+      </p>
+
+      {/* Details */}
+      <div className="space-y-1 mb-3">
+        <div className="text-sm text-explore-green font-cabin">
+          {date}
+        </div>
+        <div className="text-sm text-explore-green font-cabin">
+          {location}
+        </div>
+        <div className="text-xs text-gray-600 font-cabin">
+          Available: {availability}
+        </div>
+      </div>
+
+      {/* Action Button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          alert(`Sent partner request to ${name}!`);
+        }}
+        className="w-full bg-explore-green text-white py-2 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+      >
+        Send Partner Request
+      </button>
     </div>
   );
 }
