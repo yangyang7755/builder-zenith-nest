@@ -35,8 +35,8 @@ const users: Record<string, User> = {
     isOnline: true,
   },
   "ben-stuart": {
-    id: "ben-stuart",
-    name: "Ben Stuart",
+    id: "maddie-wei",
+    name: "Maddie Wei",
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
     isOnline: false,

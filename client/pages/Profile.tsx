@@ -16,11 +16,11 @@ export default function Profile() {
 
   // Sample user data - this would normally come from a context or API
   const userProfile = {
-    name: "Ben Stuart",
+    name: "Maddie Wei",
     bio: "Weekend warrior. Always up for some mountain adventures",
     location: "Notting Hill, London",
     profileImage:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+      "https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&crop=face",
     followers: 100,
     following: 105,
     overallRating: 4.8,

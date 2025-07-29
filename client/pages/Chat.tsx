@@ -57,8 +57,8 @@ export default function Chat() {
     const avatars = {
       "Coach Holly Peristiani":
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=60&h=60&fit=crop&crop=face",
-      "Ben Stuart":
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
+      "Maddie Wei":
+        "https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=60&h=60&fit=crop&crop=face",
       "Dan Smith":
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
       UCLMC:
@@ -75,7 +75,7 @@ export default function Chat() {
   const getUserId = (sender: string) => {
     const userIds = {
       "Coach Holly Peristiani": "coach-holly",
-      "Ben Stuart": "ben-stuart",
+      "Maddie Wei": "maddie-wei",
       "Dan Smith": "dan-smith",
       UCLMC: "uclmc",
       "Maggie Chang": "maggie-chang",
