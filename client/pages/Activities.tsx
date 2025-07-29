@@ -273,7 +273,15 @@ function ActivityCard({
       case "climbing":
         return "🧗";
       case "running":
-        return "👟";
+        return "🏃";
+      case "hiking":
+        return "🥾";
+      case "skiing":
+        return "🎿";
+      case "surfing":
+        return "🏄";
+      case "tennis":
+        return "🎾";
       default:
         return "⚡";
     }
@@ -439,7 +447,15 @@ function SampleActivityCard({
       case "climbing":
         return "🧗";
       case "running":
-        return "👟";
+        return "🏃";
+      case "hiking":
+        return "🥾";
+      case "skiing":
+        return "🎿";
+      case "surfing":
+        return "🏄";
+      case "tennis":
+        return "🎾";
       default:
         return "⚡";
     }
