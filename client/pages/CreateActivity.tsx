@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import {
   Bike,
-  Users,
+  Activity,
   Mountain,
   TreePine,
   Snowflake,
   Waves,
+  Racquet,
 } from "lucide-react";
 
 export default function CreateActivity() {
