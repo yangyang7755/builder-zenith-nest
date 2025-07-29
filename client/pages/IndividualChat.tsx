@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Phone,
@@ -8,6 +8,7 @@ import {
   Send,
   Smile,
   Check,
+  Heart,
 } from "lucide-react";
 
 interface Message {
