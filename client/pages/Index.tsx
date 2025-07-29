@@ -21,6 +21,9 @@ export default function Index() {
   const [filteredActivities, setFilteredActivities] = useState(activities);
   const [isSearching, setIsSearching] = useState(false);
   const [showMapView, setShowMapView] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState("Notting hill, London");
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
     activityType: ["Cycling", "Climbing"],
     numberOfPeople: { min: 1, max: 50 },
@@ -550,7 +553,7 @@ function MixedActivitiesSection({
                   key={activity.id}
                   title={activity.title}
                   date={`📅 ${formatActivityDate(activity.date)}`}
-                  location={`📍 ${activity.location}`}
+                  location={`���� ${activity.location}`}
                   imageSrc={
                     activity.imageSrc ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
