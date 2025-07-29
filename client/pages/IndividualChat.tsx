@@ -17,6 +17,7 @@ interface Message {
   timestamp: Date;
   isFromMe: boolean;
   status: "sending" | "sent" | "delivered" | "read";
+  reactions?: { emoji: string; count: number; byMe: boolean }[];
 }
 
 interface User {
