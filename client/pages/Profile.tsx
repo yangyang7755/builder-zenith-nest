@@ -119,11 +119,9 @@ export default function Profile() {
       ],
     },
     gear: [
-      { name: "Lead belay", owned: true, icon: "🧗" },
-      { name: "Multipitch", owned: true, icon: "⛰️" },
-      { name: "Trad rack", owned: false, icon: "🔧" },
-      { name: "Rope", owned: false, icon: "🪢" },
+      { name: "Bouldering pad", owned: true, icon: "🧗" },
       { name: "Quickdraws", owned: false, icon: "🔗" },
+      { name: "Rope", owned: false, icon: "🪢" },
       { name: "Helmet", owned: false, icon: "⛑️" },
     ],
     stats: {
