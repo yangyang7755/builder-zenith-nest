@@ -65,7 +65,9 @@ export default function Settings() {
   const handleEmailChange = () => {
     const newEmail = prompt("Enter new email address:", "ben.stuart@email.com");
     if (newEmail && newEmail.includes("@")) {
-      alert(`Email will be changed to ${newEmail}. Please check your inbox for verification.`);
+      alert(
+        `Email will be changed to ${newEmail}. Please check your inbox for verification.`,
+      );
     }
   };
 

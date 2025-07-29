@@ -14,22 +14,25 @@ export default function ClubOxford() {
       user: "Tom",
       message: "Training ride tomorrow! Meet at Radcliffe Camera 7am",
       time: "2 hours ago",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 2,
       user: "Emma",
       message: "I'll be there! What's the route?",
       time: "1 hour ago",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face"
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
     },
     {
       id: 3,
       user: "You",
       message: "Sounds great! Count me in 🚴‍♂️",
       time: "30 minutes ago",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-    }
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    },
   ]);
 
   const upcomingEvents = [
@@ -43,7 +46,7 @@ export default function ClubOxford() {
       type: "cycling",
       location: "Radcliffe Camera, Oxford",
       distance: "45km",
-      pace: "25 kph"
+      pace: "25 kph",
     },
     {
       id: 2,
@@ -55,7 +58,7 @@ export default function ClubOxford() {
       type: "cycling",
       location: "Iffley Road Track",
       distance: "20km",
-      pace: "Intervals"
+      pace: "Intervals",
     },
     {
       id: 3,
@@ -67,7 +70,7 @@ export default function ClubOxford() {
       type: "cycling",
       location: "Port Meadow",
       distance: "25km",
-      pace: "Leisurely"
+      pace: "Leisurely",
     },
   ];
 
@@ -94,7 +97,8 @@ export default function ClubOxford() {
         user: "You",
         message: chatMessage,
         time: "Just now",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+        avatar:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       };
       setChatMessages([...chatMessages, newMessage]);
       setChatMessage("");
@@ -212,7 +216,9 @@ export default function ClubOxford() {
                   className="w-48 h-10 flex items-center justify-center gap-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span className="font-cabin font-medium text-sm">Leave Club</span>
+                  <span className="font-cabin font-medium text-sm">
+                    Leave Club
+                  </span>
                 </button>
               </div>
             ) : (
@@ -390,7 +396,7 @@ export default function ClubOxford() {
                       placeholder="Type a message..."
                       className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-cabin focus:outline-none focus:border-explore-green"
                       onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           handleSendMessage();
                         }
                       }}
@@ -421,7 +427,8 @@ export default function ClubOxford() {
                 Leave Club
               </h3>
               <p className="text-gray-600 font-cabin">
-                Are you sure you want to leave Oxford University Cycling Club? You'll lose access to club events and chat.
+                Are you sure you want to leave Oxford University Cycling Club?
+                You'll lose access to club events and chat.
               </p>
             </div>
 
