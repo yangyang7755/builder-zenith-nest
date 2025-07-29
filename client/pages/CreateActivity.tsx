@@ -6,7 +6,7 @@ import {
   TreePine,
   Snowflake,
   Waves,
-  Racquet,
+  Zap,
 } from "lucide-react";
 
 export default function CreateActivity() {
