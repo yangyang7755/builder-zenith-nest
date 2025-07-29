@@ -81,41 +81,20 @@ export default function Profile() {
     activities: {
       created: [
         {
-          id: 1,
-          title: "Beginner Sport Climbing",
+          id: "peak-district-climb",
+          title: "Peak District Sport Climbing",
           date: "2025-02-05",
           participants: 8,
-          location: "Westway",
-        },
-        {
-          id: 2,
-          title: "Trad Climbing Workshop",
-          date: "2025-01-22",
-          participants: 6,
           location: "Peak District",
         },
       ],
       participated: [
         {
-          id: 1,
+          id: "westway-womens-climb",
           title: "Westway Women's+ Climb",
           date: "2025-01-26",
           organizer: "Coach Holly",
           rating: 5,
-        },
-        {
-          id: 2,
-          title: "Portland Sport Trip",
-          date: "2025-01-15",
-          organizer: "Peak Adventures",
-          rating: 5,
-        },
-        {
-          id: 3,
-          title: "Indoor Bouldering Session",
-          date: "2025-01-08",
-          organizer: "The Castle",
-          rating: 4,
         },
       ],
     },
