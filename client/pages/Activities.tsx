@@ -263,13 +263,7 @@ function ActivityCard({
   };
 
   const handleCardClick = () => {
-    if (activity.type === "cycling") {
-      navigate("/activity/sunday-morning-ride");
-    } else if (activity.type === "climbing") {
-      navigate("/activity/westway-womens-climb");
-    } else {
-      navigate("/activity/westway-womens-climb"); // Default
-    }
+    navigate(`/activity/${activity.id}`);
   };
 
   const getActivityIcon = (type: string) => {
