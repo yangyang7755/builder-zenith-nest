@@ -158,6 +158,8 @@ export default function CreateCycling() {
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     });
 
+    // Delete draft on successful creation
+    deleteDraft("cycling");
     alert("Activity created successfully!");
     navigate("/explore");
   };
