@@ -26,7 +26,7 @@ export default function ClubOxford() {
     {
       id: 3,
       user: "You",
-      message: "Sounds great! Count me in 🚴��♂️",
+      message: "Sounds great! Count me in 🚴‍♂️",
       time: "30 minutes ago",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
     }
@@ -356,25 +356,51 @@ export default function ClubOxford() {
               <h3 className="text-lg font-medium text-black font-cabin mb-4">
                 Club Chat
               </h3>
-              <div className="border-2 border-gray-200 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
-                    <span className="text-white font-cabin font-bold text-xs">
-                      OUCC
-                    </span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-medium text-black font-cabin">
-                      Training ride tomorrow!
+              <div className="border-2 border-gray-200 rounded-lg p-4 mb-4">
+                <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
+                  {chatMessages.map((msg) => (
+                    <div key={msg.id} className="flex items-start gap-3">
+                      <img
+                        src={msg.avatar}
+                        alt={msg.user}
+                        className="w-8 h-8 rounded-full border border-gray-300 object-cover"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium text-sm text-black font-cabin">
+                            {msg.user}
+                          </span>
+                          <span className="text-xs text-gray-500 font-cabin">
+                            {msg.time}
+                          </span>
+                        </div>
+                        <div className="text-sm text-black font-cabin">
+                          {msg.message}
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-600 font-cabin">
-                      Meet at Radcliffe Camera 7am
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs text-gray-500 font-cabin">
-                      42 members
-                    </div>
+                  ))}
+                </div>
+                <div className="border-t border-gray-200 pt-3">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={chatMessage}
+                      onChange={(e) => setChatMessage(e.target.value)}
+                      placeholder="Type a message..."
+                      className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-cabin focus:outline-none focus:border-explore-green"
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSendMessage();
+                        }
+                      }}
+                    />
+                    <button
+                      onClick={handleSendMessage}
+                      className="bg-explore-green text-white px-3 py-2 rounded-lg hover:bg-explore-green-dark transition-colors"
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </div>
