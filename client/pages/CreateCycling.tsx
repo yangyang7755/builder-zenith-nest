@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Calendar, ChevronDown, MapPin, X } from "lucide-react";
+import { Calendar, ChevronDown, MapPin, X, ArrowLeft } from "lucide-react";
 import { useActivities } from "../contexts/ActivitiesContext";
+import { useActivityDraft } from "../contexts/ActivityDraftContext";
 import DateTimePicker from "../components/DateTimePicker";
 
 export default function CreateCycling() {
