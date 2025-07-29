@@ -107,23 +107,18 @@ export default function Chat() {
   };
 
   const getFilteredMessages = () => {
-    let filtered = chatMessages;
+    let filtered = chatMessages.filter((msg) => msg.sender !== "UCLMC"); // Remove UCLMC from direct messages
 
     if (activeFilter === "Clubs") {
       return []; // Only show club chats
     }
 
     if (activeFilter === "Requests") {
-      filtered = chatMessages.filter((msg) => msg.type === "join_request");
+      filtered = filtered.filter((msg) => msg.type === "join_request");
     }
 
-    // Sort: unread first, then by timestamp
+    // Sort by timestamp
     return filtered.sort((a, b) => {
-      const aUnread = a.sender === "UCLMC";
-      const bUnread = b.sender === "UCLMC";
-
-      if (aUnread && !bUnread) return -1;
-      if (!aUnread && bUnread) return 1;
       return b.timestamp.getTime() - a.timestamp.getTime();
     });
   };
