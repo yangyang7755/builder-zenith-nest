@@ -631,6 +631,43 @@ export default function CreateCycling() {
         </div>
       )}
 
+      {/* Back Confirmation Modal */}
+      {showBackModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-sm p-6">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold text-black font-cabin mb-2">
+                Save Your Progress?
+              </h3>
+              <p className="text-gray-600 font-cabin">
+                You have unsaved changes. Would you like to save as draft or abandon your progress?
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <button
+                onClick={handleSaveDraft}
+                className="w-full py-3 bg-explore-green text-white rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+              >
+                Save Draft
+              </button>
+              <button
+                onClick={handleAbandon}
+                className="w-full py-3 border-2 border-gray-300 rounded-lg text-gray-600 font-cabin font-medium hover:bg-gray-50 transition-colors"
+              >
+                Abandon Changes
+              </button>
+              <button
+                onClick={() => setShowBackModal(false)}
+                className="w-full py-2 text-gray-500 font-cabin hover:underline"
+              >
+                Continue Editing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
