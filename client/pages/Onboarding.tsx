@@ -213,6 +213,36 @@ export default function Onboarding() {
         return (
           <div className="space-y-6">
             <div className="text-center">
+              <UserCheck className="w-16 h-16 text-explore-green mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-black font-cabin mb-2">
+                What's your gender?
+              </h2>
+              <p className="text-gray-600 font-cabin">
+                This helps us create a better experience for you
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-3">
+              {genderOptions.map((gender) => (
+                <button
+                  key={gender}
+                  onClick={() => setTempData(prev => ({ ...prev, gender }))}
+                  className={`p-4 rounded-lg border-2 font-cabin font-medium transition-all ${
+                    tempData.gender === gender
+                      ? "bg-explore-green text-white border-explore-green"
+                      : "bg-white text-gray-700 border-gray-300 hover:border-explore-green"
+                  }`}
+                >
+                  {gender}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="space-y-6">
+            <div className="text-center">
               <Trophy className="w-16 h-16 text-explore-green mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-black font-cabin mb-2">
                 What sports do you enjoy?
