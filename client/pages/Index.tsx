@@ -9,6 +9,7 @@ import ActivityCard from "../components/ActivityCard";
 
 export default function Index() {
   const { activities, searchActivities } = useActivities();
+  const { showWelcomeMessage, dismissWelcomeMessage, userProfile } = useOnboarding();
 
   const formatActivityDate = (dateStr: string) => {
     const date = new Date(dateStr);
