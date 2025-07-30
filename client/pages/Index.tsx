@@ -509,6 +509,37 @@ export default function Index() {
         />
       )}
 
+      {/* Welcome Message Modal */}
+      {showWelcomeMessage && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-6">
+          <div className="bg-white rounded-lg w-full max-w-sm text-center p-6 relative">
+            <div className="mb-4">
+              <PartyPopper className="w-16 h-16 text-explore-green mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-explore-green font-cabin mb-2">
+                Welcome to Explore!
+              </h2>
+              <p className="text-gray-700 font-cabin mb-4">
+                Thanks for completing onboarding{userProfile.name && `, ${userProfile.name}`}!
+                Now you can explore the different clubs and activities.
+              </p>
+              <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                <p className="text-sm text-gray-600 font-cabin">
+                  🔍 <strong>Discover</strong> activities that match your interests<br/>
+                  🤝 <strong>Connect</strong> with like-minded people<br/>
+                  🏆 <strong>Join</strong> clubs and events near you
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={dismissWelcomeMessage}
+              className="w-full bg-explore-green text-white py-3 rounded-lg font-cabin font-medium hover:bg-green-600 transition-colors"
+            >
+              Start Exploring!
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
