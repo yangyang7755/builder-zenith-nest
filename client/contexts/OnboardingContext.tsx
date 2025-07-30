@@ -3,11 +3,21 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 export interface UserProfile {
   name: string;
   birthday: string;
+  gender: string;
   sports: string[];
   languages: string[];
   country: string;
   profession: string;
   university: string;
+  climbingLevel?: string;
+  cyclingLevel?: string;
+  runningLevel?: string;
+  hikingLevel?: string;
+  skiiingLevel?: string;
+  surfingLevel?: string;
+  tennisLevel?: string;
+  gear?: string[];
+  hideUniversity?: boolean;
 }
 
 interface OnboardingContextType {
