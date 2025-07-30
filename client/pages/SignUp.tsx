@@ -21,8 +21,8 @@ export default function SignUp() {
       return;
     }
     // Handle sign up logic here
-    // For now, just navigate to explore
-    navigate("/explore");
+    // After successful sign up, redirect to onboarding
+    navigate("/onboarding");
   };
 
   return (
