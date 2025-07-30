@@ -37,8 +37,21 @@ export default function Onboarding() {
   });
 
   const availableSports = [
-    "Climbing", "Cycling", "Running", "Hiking", "Swimming", "Tennis", 
-    "Football", "Basketball", "Volleyball", "Skiing", "Surfing", "Yoga"
+    "Climbing", "Cycling", "Running", "Hiking", "Skiing", "Surfing", "Tennis"
+  ];
+
+  const genderOptions = ["Female", "Male", "Non-binary", "Prefer not to say"];
+
+  const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
+
+  const availableGear = [
+    "Bouldering pad", "Quickdraws", "Rope", "Helmet", "Harness", "Climbing shoes",
+    "Road bike", "Mountain bike", "Cycling helmet", "Cycling shoes", "Repair kit",
+    "Running shoes", "GPS watch", "Hydration pack", "Trail running gear",
+    "Hiking boots", "Backpack", "Navigation equipment", "First aid kit",
+    "Skis", "Ski boots", "Ski helmet", "Ski poles", "Ski goggles",
+    "Surfboard", "Wetsuit", "Surf wax", "Leash",
+    "Tennis racket", "Tennis shoes", "Tennis balls"
   ];
 
   const availableLanguages = [
