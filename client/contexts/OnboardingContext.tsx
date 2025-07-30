@@ -43,11 +43,21 @@ const WELCOME_STORAGE_KEY = "explore_app_welcome_shown";
 const defaultProfile: UserProfile = {
   name: "",
   birthday: "",
+  gender: "",
   sports: [],
   languages: [],
   country: "",
   profession: "",
   university: "",
+  climbingLevel: "",
+  cyclingLevel: "",
+  runningLevel: "",
+  hikingLevel: "",
+  skiiingLevel: "",
+  surfingLevel: "",
+  tennisLevel: "",
+  gear: [],
+  hideUniversity: false,
 };
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
