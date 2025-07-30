@@ -49,6 +49,7 @@ import { ActivitiesProvider } from "./contexts/ActivitiesContext";
 import { ChatProvider } from "./contexts/ChatContext";
 import { SavedActivitiesProvider } from "./contexts/SavedActivitiesContext";
 import { ActivityDraftProvider } from "./contexts/ActivityDraftContext";
+import { OnboardingProvider } from "./contexts/OnboardingContext";
 
 const queryClient = new QueryClient();
 
