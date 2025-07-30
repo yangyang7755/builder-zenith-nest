@@ -56,90 +56,93 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <ActivitiesProvider>
-        <SavedActivitiesProvider>
-          <ActivityDraftProvider>
-            <ChatProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<SplashScreen />} />
-                  <Route path="/auth" element={<AuthLanding />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/explore" element={<Index />} />
-                  <Route path="/activities" element={<Activities />} />
-                  <Route path="/create" element={<CreateActivity />} />
-                  <Route path="/create/cycling" element={<CreateCycling />} />
-                  <Route path="/create/climbing" element={<CreateClimbing />} />
-                  <Route path="/create/running" element={<CreateRunning />} />
-                  <Route path="/create/hiking" element={<CreateHiking />} />
-                  <Route path="/create/skiing" element={<CreateSkiing />} />
-                  <Route path="/create/surfing" element={<CreateSurfing />} />
-                  <Route path="/create/tennis" element={<CreateTennis />} />
-                  <Route path="/chat" element={<Chat />} />
-                  <Route path="/chat/:userId" element={<IndividualChat />} />
-                  <Route path="/club/westway" element={<ClubWestway />} />
-                  <Route path="/club/oxford-cycling" element={<ClubOxford />} />
-                  <Route path="/club/rapha-cycling" element={<ClubRapha />} />
-                  <Route
-                    path="/club/vauxwall-climbing"
-                    element={<ClubVauxwall />}
-                  />
-                  <Route
-                    path="/club/richmond-runners"
-                    element={<ClubRichmond />}
-                  />
-                  <Route
-                    path="/club/thames-cyclists"
-                    element={<ClubThames />}
-                  />
-                  <Route path="/saved" element={<Saved />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/profile/edit" element={<ProfileEdit />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/followers" element={<Followers />} />
-                  <Route path="/following" element={<Following />} />
-                  <Route
-                    path="/activity/:activityId"
-                    element={<ActivityDetails />}
-                  />
-                  <Route
-                    path="/carshare/:carShareId"
-                    element={<CarShareDetails />}
-                  />
-                  <Route
-                    path="/club-chat/oxford"
-                    element={<ClubChatOxford />}
-                  />
-                  <Route
-                    path="/club-chat/westway"
-                    element={<ClubChatWestway />}
-                  />
-                  <Route
-                    path="/club-chat/richmond"
-                    element={<ClubChatRichmond />}
-                  />
-                  <Route
-                    path="/club-chat/uclmc"
-                    element={<ClubChatUCLMC />}
-                  />
-                  <Route
-                    path="/partner/:partnerId"
-                    element={<PartnerDetails />}
-                  />
-                  <Route path="/profile/coach-holly" element={<ProfileCoachHolly />} />
-                  <Route path="/profile/dan-smith" element={<ProfileDanSmith />} />
-                  <Route path="/profile/coach-holly-old" element={<CoachHolly />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </ChatProvider>
-          </ActivityDraftProvider>
-        </SavedActivitiesProvider>
-      </ActivitiesProvider>
+      <OnboardingProvider>
+        <ActivitiesProvider>
+          <SavedActivitiesProvider>
+            <ActivityDraftProvider>
+              <ChatProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<SplashScreen />} />
+                    <Route path="/auth" element={<AuthLanding />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/onboarding" element={<Onboarding />} />
+                    <Route path="/explore" element={<Index />} />
+                    <Route path="/activities" element={<Activities />} />
+                    <Route path="/create" element={<CreateActivity />} />
+                    <Route path="/create/cycling" element={<CreateCycling />} />
+                    <Route path="/create/climbing" element={<CreateClimbing />} />
+                    <Route path="/create/running" element={<CreateRunning />} />
+                    <Route path="/create/hiking" element={<CreateHiking />} />
+                    <Route path="/create/skiing" element={<CreateSkiing />} />
+                    <Route path="/create/surfing" element={<CreateSurfing />} />
+                    <Route path="/create/tennis" element={<CreateTennis />} />
+                    <Route path="/chat" element={<Chat />} />
+                    <Route path="/chat/:userId" element={<IndividualChat />} />
+                    <Route path="/club/westway" element={<ClubWestway />} />
+                    <Route path="/club/oxford-cycling" element={<ClubOxford />} />
+                    <Route path="/club/rapha-cycling" element={<ClubRapha />} />
+                    <Route
+                      path="/club/vauxwall-climbing"
+                      element={<ClubVauxwall />}
+                    />
+                    <Route
+                      path="/club/richmond-runners"
+                      element={<ClubRichmond />}
+                    />
+                    <Route
+                      path="/club/thames-cyclists"
+                      element={<ClubThames />}
+                    />
+                    <Route path="/saved" element={<Saved />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/edit" element={<ProfileEdit />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/followers" element={<Followers />} />
+                    <Route path="/following" element={<Following />} />
+                    <Route
+                      path="/activity/:activityId"
+                      element={<ActivityDetails />}
+                    />
+                    <Route
+                      path="/carshare/:carShareId"
+                      element={<CarShareDetails />}
+                    />
+                    <Route
+                      path="/club-chat/oxford"
+                      element={<ClubChatOxford />}
+                    />
+                    <Route
+                      path="/club-chat/westway"
+                      element={<ClubChatWestway />}
+                    />
+                    <Route
+                      path="/club-chat/richmond"
+                      element={<ClubChatRichmond />}
+                    />
+                    <Route
+                      path="/club-chat/uclmc"
+                      element={<ClubChatUCLMC />}
+                    />
+                    <Route
+                      path="/partner/:partnerId"
+                      element={<PartnerDetails />}
+                    />
+                    <Route path="/profile/coach-holly" element={<ProfileCoachHolly />} />
+                    <Route path="/profile/dan-smith" element={<ProfileDanSmith />} />
+                    <Route path="/profile/coach-holly-old" element={<CoachHolly />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </BrowserRouter>
+              </ChatProvider>
+            </ActivityDraftProvider>
+          </SavedActivitiesProvider>
+        </ActivitiesProvider>
+      </OnboardingProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
