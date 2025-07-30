@@ -38,6 +38,7 @@ import ClubThames from "./pages/ClubThames";
 import CoachHolly from "./pages/CoachHolly";
 import ProfileCoachHolly from "./pages/ProfileCoachHolly";
 import ProfileDanSmith from "./pages/ProfileDanSmith";
+import ProfileEdit from "./pages/ProfileEdit";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
