@@ -78,16 +78,33 @@ export default function Onboarding() {
       updateProfile({ name: tempData.name });
     } else if (currentStep === 2 && tempData.birthday) {
       updateProfile({ birthday: tempData.birthday });
-    } else if (currentStep === 3) {
-      updateProfile({ sports: tempData.sports });
+    } else if (currentStep === 3 && tempData.gender) {
+      updateProfile({ gender: tempData.gender });
     } else if (currentStep === 4) {
+      updateProfile({ sports: tempData.sports });
+    } else if (currentStep === 5) {
       updateProfile({ languages: tempData.languages });
-    } else if (currentStep === 5 && tempData.country) {
+    } else if (currentStep === 6 && tempData.country) {
       updateProfile({ country: tempData.country });
-    } else if (currentStep === 6 && tempData.profession.trim()) {
+    } else if (currentStep === 7 && tempData.profession.trim()) {
       updateProfile({ profession: tempData.profession });
-    } else if (currentStep === 7) {
-      updateProfile({ university: tempData.university });
+    } else if (currentStep === 8) {
+      updateProfile({
+        university: tempData.university,
+        hideUniversity: tempData.hideUniversity
+      });
+    } else if (currentStep === 9) {
+      // Update skill levels for selected sports
+      const skillUpdates = {};
+      tempData.sports.forEach(sport => {
+        const levelKey = `${sport.toLowerCase()}Level`;
+        if (tempData[levelKey]) {
+          skillUpdates[levelKey] = tempData[levelKey];
+        }
+      });
+      updateProfile(skillUpdates);
+    } else if (currentStep === 10) {
+      updateProfile({ gear: tempData.gear });
     }
 
     if (currentStep === totalSteps) {
