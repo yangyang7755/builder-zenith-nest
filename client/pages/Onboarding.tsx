@@ -19,11 +19,21 @@ export default function Onboarding() {
   const [tempData, setTempData] = useState({
     name: userProfile.name,
     birthday: userProfile.birthday,
+    gender: userProfile.gender,
     sports: [...userProfile.sports],
     languages: [...userProfile.languages],
     country: userProfile.country,
     profession: userProfile.profession,
     university: userProfile.university,
+    climbingLevel: userProfile.climbingLevel || "",
+    cyclingLevel: userProfile.cyclingLevel || "",
+    runningLevel: userProfile.runningLevel || "",
+    hikingLevel: userProfile.hikingLevel || "",
+    skiiingLevel: userProfile.skiiingLevel || "",
+    surfingLevel: userProfile.surfingLevel || "",
+    tennisLevel: userProfile.tennisLevel || "",
+    gear: [...(userProfile.gear || [])],
+    hideUniversity: userProfile.hideUniversity || false,
   });
 
   const availableSports = [
