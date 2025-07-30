@@ -119,11 +119,14 @@ export default function Onboarding() {
     switch (currentStep) {
       case 1: return tempData.name.trim().length > 0;
       case 2: return tempData.birthday.length > 0;
-      case 3: return tempData.sports.length > 0;
-      case 4: return tempData.languages.length > 0;
-      case 5: return tempData.country.length > 0;
-      case 6: return tempData.profession.trim().length > 0;
-      case 7: return true; // University is optional
+      case 3: return tempData.gender.length > 0;
+      case 4: return tempData.sports.length > 0;
+      case 5: return tempData.languages.length > 0;
+      case 6: return tempData.country.length > 0;
+      case 7: return tempData.profession.trim().length > 0;
+      case 8: return true; // University is optional
+      case 9: return true; // Skill levels are optional
+      case 10: return true; // Gear is optional
       default: return false;
     }
   };
