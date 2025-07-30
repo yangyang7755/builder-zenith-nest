@@ -301,7 +301,7 @@ export default function Onboarding() {
           </div>
         );
 
-      case 5:
+      case 6:
         return (
           <div className="space-y-6">
             <div className="text-center">
@@ -330,7 +330,7 @@ export default function Onboarding() {
           </div>
         );
 
-      case 6:
+      case 7:
         return (
           <div className="space-y-6">
             <div className="text-center">
@@ -354,26 +354,124 @@ export default function Onboarding() {
           </div>
         );
 
-      case 7:
+      case 8:
         return (
           <div className="space-y-6">
             <div className="text-center">
               <GraduationCap className="w-16 h-16 text-explore-green mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-black font-cabin mb-2">
-                University or Institution
+                Institution or Company
               </h2>
               <p className="text-gray-600 font-cabin">
-                Find members from your university (optional)
+                Find members from your institution (optional)
               </p>
             </div>
-            <div>
-              <input
-                type="text"
-                value={tempData.university}
-                onChange={(e) => setTempData(prev => ({ ...prev, university: e.target.value }))}
-                placeholder="e.g., Oxford University, Cambridge University"
-                className="w-full text-center text-xl border-b-2 border-gray-300 focus:border-explore-green pb-3 bg-transparent font-cabin focus:outline-none"
-              />
+            <div className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  value={tempData.university}
+                  onChange={(e) => setTempData(prev => ({ ...prev, university: e.target.value }))}
+                  placeholder="e.g., Oxford University"
+                  className="w-full text-center text-xl border-b-2 border-gray-300 focus:border-explore-green pb-3 bg-transparent font-cabin focus:outline-none"
+                />
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <input
+                  type="checkbox"
+                  id="hideUniversity"
+                  checked={tempData.hideUniversity}
+                  onChange={(e) => setTempData(prev => ({ ...prev, hideUniversity: e.target.checked }))}
+                  className="w-4 h-4"
+                />
+                <label htmlFor="hideUniversity" className="text-sm text-gray-600 font-cabin">
+                  Prefer not to say / Hide from profile
+                </label>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 9:
+        return (
+          <div className="space-y-6">
+            <div className="text-center">
+              <Target className="w-16 h-16 text-explore-green mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-black font-cabin mb-2">
+                What's your skill level?
+              </h2>
+              <p className="text-gray-600 font-cabin">
+                Set your level for each sport (optional - complete later)
+              </p>
+            </div>
+            <div className="space-y-4">
+              {tempData.sports.map((sport) => (
+                <div key={sport}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                    {sport}
+                  </label>
+                  <div className="flex gap-2 flex-wrap">
+                    {skillLevels.map((level) => {
+                      const levelKey = `${sport.toLowerCase()}Level`;
+                      return (
+                        <button
+                          key={level}
+                          onClick={() => setTempData(prev => ({ ...prev, [levelKey]: level }))}
+                          className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                            tempData[levelKey] === level
+                              ? "bg-explore-green text-white border-explore-green"
+                              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                          }`}
+                        >
+                          {level}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 10:
+        return (
+          <div className="space-y-6">
+            <div className="text-center">
+              <Package className="w-16 h-16 text-explore-green mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-black font-cabin mb-2">
+                What gear do you have?
+              </h2>
+              <p className="text-gray-600 font-cabin">
+                Select equipment you own (optional - complete later)
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+              {availableGear.map((gear) => (
+                <button
+                  key={gear}
+                  onClick={() => {
+                    if (tempData.gear.includes(gear)) {
+                      setTempData(prev => ({
+                        ...prev,
+                        gear: prev.gear.filter(g => g !== gear)
+                      }));
+                    } else {
+                      setTempData(prev => ({
+                        ...prev,
+                        gear: [...prev.gear, gear]
+                      }));
+                    }
+                  }}
+                  className={`p-3 rounded-lg border-2 font-cabin font-medium transition-all text-left ${
+                    tempData.gear.includes(gear)
+                      ? "bg-explore-green text-white border-explore-green"
+                      : "bg-white text-gray-700 border-gray-300 hover:border-explore-green"
+                  }`}
+                >
+                  {gear}
+                </button>
+              ))}
             </div>
           </div>
         );
