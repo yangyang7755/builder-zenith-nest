@@ -96,6 +96,7 @@ const App = () => (
                   />
                   <Route path="/saved" element={<Saved />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/profile/edit" element={<ProfileEdit />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/followers" element={<Followers />} />
                   <Route path="/following" element={<Following />} />
