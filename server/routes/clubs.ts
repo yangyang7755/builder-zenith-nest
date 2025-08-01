@@ -18,8 +18,13 @@ const JoinRequestSchema = z.object({
 
 export const handleGetClubs = async (req: Request, res: Response) => {
   try {
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      return res.json([]); // Return empty array for development
+    }
+
     const { userId } = req.query;
-    
+
     if (userId) {
       // Return clubs where user is a member
       const { data: userClubs, error } = await supabaseAdmin
