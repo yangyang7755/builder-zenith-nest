@@ -236,7 +236,7 @@ export default function ClubChatWestway() {
           </button>
           <div className="flex items-center gap-3">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800"
               alt="Westway Climbing Centre"
               className="w-10 h-10 rounded-full border border-black object-cover"
             />
