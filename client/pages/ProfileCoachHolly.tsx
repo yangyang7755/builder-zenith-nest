@@ -12,34 +12,35 @@ import {
   Phone,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
+import { getUserProfile, formatPersonalDetails, getSkillLevels } from "../services/profilesService";
 
 export default function ProfileCoachHolly() {
   const [selectedTab, setSelectedTab] = useState("Climb");
   const navigate = useNavigate();
 
+  // Load coach profile from standardized profiles service
+  const profileData = getUserProfile("coach-holly");
+  if (!profileData) {
+    return <div className="min-h-screen bg-white flex items-center justify-center">Profile not found</div>;
+  }
+
+  const personalDetails = formatPersonalDetails(profileData);
+  const skillLevels = getSkillLevels(profileData);
+
   const userProfile = {
-    name: "Coach Holly Peristiani",
-    bio: "Professional climbing coach with 10+ years experience. Love helping people reach new heights! Always looking to share knowledge and create a safe, fun climbing environment.",
-    location: "London, UK",
-    profileImage:
-      "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=200&h=200&fit=crop&crop=face",
-    followers: 245,
-    following: 89,
-    overallRating: 4.9,
-    totalReviews: 67,
-    sports: ["climbing"],
-    skillLevels: {
-      climbing: "Expert",
-    },
+    name: profileData.name,
+    bio: profileData.bio,
+    location: profileData.location,
+    profileImage: profileData.profileImage,
+    followers: profileData.followers,
+    following: profileData.following,
+    overallRating: profileData.overallRating,
+    totalReviews: profileData.totalReviews,
+    sports: profileData.sports,
+    skillLevels: skillLevels,
     personalDetails: {
-      gender: "Female",
-      age: 32,
-      nationality: "British",
-      profession: "Climbing Coach",
-      institution: "Westway Climbing Centre",
-      languages: ["🇬🇧", "🇫🇷", "🇪🇸"],
-      joinedDate: "March 2019",
-      certifications: ["Mountain Leader", "Rock Climbing Instructor", "First Aid"],
+      ...personalDetails,
+      languages: profileData.languages,
     },
   };
 
