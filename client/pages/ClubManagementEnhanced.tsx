@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/services/apiService';
 import { useToast } from '@/hooks/use-toast';
 import ChatRoom from '@/components/ChatRoom';
+import ImageUpload from '@/components/ImageUpload';
 import {
   Users,
   Settings,
