@@ -19,6 +19,8 @@ import {
   Save,
   X,
   Plus,
+  BookOpen,
+  Settings2,
 } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { maddieWeiProfile, DemoProfile } from "@/data/demoProfiles";
