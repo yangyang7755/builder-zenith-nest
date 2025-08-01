@@ -446,6 +446,34 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
               )}
 
               <div className="grid gap-4">
+                {/* Club Image */}
+                <div className="grid gap-2">
+                  <Label>Club Image</Label>
+                  {isEditing && isManager() ? (
+                    <ImageUpload
+                      currentImage={club.profile_image || ''}
+                      onImageChange={(url) => setEditForm({...editForm, profile_image: url})}
+                      variant="rectangle"
+                      size="md"
+                      placeholder="Club Photo"
+                    />
+                  ) : (
+                    <div className="h-32 w-48 border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+                      {club.profile_image ? (
+                        <img
+                          src={club.profile_image}
+                          alt={club.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          No image set
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="grid gap-2">
                   <Label htmlFor="name">Club Name</Label>
                   {isEditing && isManager() ? (
