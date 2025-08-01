@@ -137,6 +137,31 @@ export default function CreateActivity() {
             }
           })}
         </div>
+
+        {/* Create Club Section */}
+        <div className="mt-16 pt-8 border-t border-gray-200">
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-bold text-black font-cabin mb-2">
+              Or start your own community
+            </h2>
+            <p className="text-gray-600 font-cabin text-sm">
+              Create and manage your own club
+            </p>
+          </div>
+
+          <Link
+            to="/create/club"
+            className="flex items-center justify-center gap-3 w-full p-4 bg-blue-50 border-2 border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
+          >
+            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+            <div className="text-left">
+              <div className="font-medium text-black font-cabin">Create Club</div>
+              <div className="text-sm text-gray-600 font-cabin">Start your own sports community</div>
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* Bottom Navigation */}
