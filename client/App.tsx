@@ -52,6 +52,7 @@ import { SavedActivitiesProvider } from "./contexts/SavedActivitiesContext";
 import { ActivityDraftProvider } from "./contexts/ActivityDraftContext";
 import { OnboardingProvider } from "./contexts/OnboardingContext";
 import { ToastProvider } from "./contexts/ToastContext";
+import { ClubProvider } from "./contexts/ClubContext";
 import ToastContainer from "./components/ToastNotification";
 
 const queryClient = new QueryClient();
