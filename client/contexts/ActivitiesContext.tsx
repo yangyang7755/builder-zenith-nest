@@ -63,6 +63,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       climbingLevel: "Intermediate",
       gender: "Female only",
       visibility: "All",
+      club: "westway",
       createdAt: new Date(),
     },
     {
