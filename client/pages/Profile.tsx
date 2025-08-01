@@ -35,11 +35,16 @@ interface UserActivity {
 export default function Profile() {
   const { user, profile, updateProfile } = useAuth();
   const { toast } = useToast();
+
+  // Use demo profile when not signed in (must be declared before useState)
+  const displayProfile = user ? profile : maddieWeiProfile;
+  const isDemo = !user;
+
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userClubs, setUserClubs] = useState<UserClub[]>([]);
   const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
-  
+
   const [formData, setFormData] = useState({
     full_name: displayProfile?.full_name || '',
     university: displayProfile?.university || '',
