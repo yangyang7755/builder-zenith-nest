@@ -40,7 +40,17 @@ export const getAuthHeader = async () => {
 // Auth helpers
 export const signUp = async (email: string, password: string, userData?: { full_name?: string }) => {
   if (!supabase) {
-    return { data: { user: null }, error: { message: 'Authentication not configured' } };
+    // Simulate successful signup in demo mode
+    const demoUser = {
+      id: 'demo-user-' + Date.now(),
+      email: email,
+      user_metadata: userData || {},
+      created_at: new Date().toISOString()
+    };
+    return {
+      data: { user: demoUser },
+      error: null
+    };
   }
   return await supabase.auth.signUp({
     email,
