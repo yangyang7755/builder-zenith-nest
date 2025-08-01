@@ -62,24 +62,8 @@ export default function AuthLanding() {
           </div>
         </div>
 
-        {/* Demo Links */}
-        <div className="mt-8 w-full max-w-sm space-y-2">
-          <Link
-            to="/profile/demo"
-            className="w-full bg-blue-100 text-blue-700 py-2 px-4 rounded-lg text-center font-cabin text-sm block border border-blue-200"
-          >
-            📋 View Profile Demo & Onboarding Tutorial
-          </Link>
-          <Link
-            to="/enhanced-login"
-            className="w-full bg-purple-100 text-purple-700 py-2 px-4 rounded-lg text-center font-cabin text-sm block border border-purple-200"
-          >
-            🍎 Test Apple Sign-in & Email Verification
-          </Link>
-        </div>
-
         {/* Bottom Logo */}
-        <div className="mt-8">
+        <div className="mt-16">
           <h2 className="text-2xl font-bold text-black font-cabin">Wildpals</h2>
         </div>
       </div>
