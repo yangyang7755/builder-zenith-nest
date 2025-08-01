@@ -32,12 +32,16 @@ export const supabase = hasValidConfig
 
 // Helper to get auth header for API calls
 export const getAuthHeader = async () => {
+  if (!supabase) return '';
   const { data: { session } } = await supabase.auth.getSession();
   return session?.access_token ? `Bearer ${session.access_token}` : '';
 };
 
 // Auth helpers
 export const signUp = async (email: string, password: string, userData?: { full_name?: string }) => {
+  if (!supabase) {
+    return { data: { user: null }, error: { message: 'Authentication not configured' } };
+  }
   return await supabase.auth.signUp({
     email,
     password,
@@ -48,6 +52,9 @@ export const signUp = async (email: string, password: string, userData?: { full_
 };
 
 export const signIn = async (email: string, password: string) => {
+  if (!supabase) {
+    return { data: { user: null }, error: { message: 'Authentication not configured' } };
+  }
   return await supabase.auth.signInWithPassword({
     email,
     password
@@ -55,10 +62,14 @@ export const signIn = async (email: string, password: string) => {
 };
 
 export const signOut = async () => {
+  if (!supabase) {
+    return { error: { message: 'Authentication not configured' } };
+  }
   return await supabase.auth.signOut();
 };
 
 export const getCurrentUser = async () => {
+  if (!supabase) return null;
   const { data: { user } } = await supabase.auth.getUser();
   return user;
 };
