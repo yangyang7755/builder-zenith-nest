@@ -195,11 +195,22 @@ export default function Profile() {
             : "Manage your account settings and preferences"}
         </p>
         {isDemo && (
-          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
-              <strong>Demo Mode:</strong> This is Maddie Wei's profile. Sign in
-              to see your own profile and edit your information.
-            </p>
+          <div className="mt-2 space-y-2">
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <strong>Demo Mode:</strong> This is Maddie Wei's profile. Sign in
+                to see your own profile and edit your information.
+              </p>
+            </div>
+            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-800">
+                <strong>To test Apple Sign-in:</strong> Go to{" "}
+                <a href="/enhanced-login" className="underline font-medium">
+                  Enhanced Login
+                </a>{" "}
+                page, or use the "Continue with Apple" button from the main auth page.
+              </p>
+            </div>
           </div>
         )}
       </div>
