@@ -421,19 +421,29 @@ export default function Profile() {
 
           {/* Activity Filter Tabs */}
           <div className="flex gap-2 mb-6">
-            {["Climb", "Ride", "Run"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setSelectedTab(tab)}
-                className={`px-6 py-2 rounded-lg border border-black text-sm font-bold font-cabin ${
-                  selectedTab === tab
-                    ? "bg-explore-green text-white"
-                    : "bg-gray-100 text-explore-green"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+            {userProfile.sports.map((sport: string) => {
+              const tabName = sport.charAt(0).toUpperCase() + sport.slice(1);
+              const displayName = sport === "climbing" ? "Climb" :
+                                 sport === "cycling" ? "Ride" :
+                                 sport === "running" ? "Run" :
+                                 sport === "hiking" ? "Hike" :
+                                 sport === "skiing" ? "Ski" :
+                                 sport === "surfing" ? "Surf" :
+                                 sport === "tennis" ? "Tennis" : tabName;
+              return (
+                <button
+                  key={sport}
+                  onClick={() => setSelectedTab(tabName)}
+                  className={`px-6 py-2 rounded-lg border border-black text-sm font-bold font-cabin ${
+                    selectedTab === tabName
+                      ? "bg-explore-green text-white"
+                      : "bg-gray-100 text-explore-green"
+                  }`}
+                >
+                  {displayName}
+                </button>
+              );
+            })}
           </div>
 
           {/* Sport-Specific Content */}
