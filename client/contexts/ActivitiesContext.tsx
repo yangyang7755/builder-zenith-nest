@@ -90,6 +90,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       cafeStop: "Roehampton Cafe",
       gender: "All genders",
       visibility: "All",
+      club: "oucc",
       createdAt: new Date(),
     },
     {
