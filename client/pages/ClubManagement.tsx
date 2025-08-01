@@ -168,11 +168,11 @@ export default function ClubManagement() {
               <h3 className="text-lg font-bold text-black mb-4">Club Statistics</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-explore-green">{club.memberCount}</div>
+                  <div className="text-2xl font-bold text-explore-green">{getActualMemberCount(club)}</div>
                   <div className="text-sm text-gray-600">Total Members</div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-explore-green">{club.pendingRequests.length}</div>
+                  <div className="text-2xl font-bold text-explore-green">{getPendingRequestsCount(club)}</div>
                   <div className="text-sm text-gray-600">Pending Requests</div>
                 </div>
               </div>
