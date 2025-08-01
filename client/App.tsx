@@ -126,6 +126,10 @@ const App = () => (
                             path="/create/club"
                             element={<CreateClub />}
                           />
+                          <Route
+                            path="/club/manage/:clubId"
+                            element={<ClubManagerDashboard />}
+                          />
                           <Route path="/chat" element={<Chat />} />
                           <Route
                             path="/chat/:userId"
