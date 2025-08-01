@@ -49,6 +49,14 @@ export default function Index() {
     setFilters(newFilters);
   };
 
+  // Handle clubOnly query parameter
+  useEffect(() => {
+    const clubOnly = searchParams.get('clubOnly');
+    if (clubOnly === 'true') {
+      setFilters(prev => ({ ...prev, clubOnly: true }));
+    }
+  }, [searchParams]);
+
   const handleActivitySelect = (activity: any) => {
     setShowMapView(false);
     // Navigate to activity details if needed
