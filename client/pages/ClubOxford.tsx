@@ -364,7 +364,7 @@ export default function ClubOxford() {
                   Members
                 </h3>
                 <span className="text-sm text-gray-500 font-cabin">
-                  {club?.memberCount || 42} members
+                  {formatMemberCount(getActualMemberCount(club))}
                 </span>
               </div>
 
