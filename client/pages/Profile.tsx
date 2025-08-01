@@ -223,16 +223,38 @@ export default function Profile() {
   ];
 
   const getCurrentSportData = () => {
-    switch (selectedTab) {
-      case "Climb":
-        return climbingData;
-      case "Ride":
-        return cyclingData;
-      case "Run":
-        return runningData;
-      default:
-        return climbingData;
-    }
+    const sportName = selectedTab.toLowerCase();
+    const realStats = calculateSportStats(activities, sportName);
+    const createdActivities = getUserCreatedActivities(activities);
+    const participatedActivities = getUserParticipatedActivitiesForSport(activities, sportName);
+
+    // Create dynamic data structure based on real activities
+    return {
+      activities: {
+        created: createdActivities.filter(a => a.type.toLowerCase() === sportName).map(activity => ({
+          id: activity.id,
+          title: activity.title,
+          date: activity.date,
+          participants: parseInt(activity.maxParticipants) || 0,
+          location: activity.location,
+        })),
+        participated: participatedActivities.map(activity => ({
+          id: activity.id,
+          title: activity.title,
+          date: activity.date,
+          organizer: typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Unknown',
+          rating: 5, // Default rating for now
+        })),
+      },
+      gear: climbingData.gear, // Keep existing gear data for now
+      stats: {
+        ...realStats,
+        // Keep some existing data for sports that don't have real calculations yet
+        favoriteGrades: sportName === "climb" ? ["5.9", "5.10a", "5.10b"] : undefined,
+        preferredTypes: sportName === "ride" ? ["Road cycling", "Social rides"] :
+                       sportName === "run" ? ["Park runs", "Trail running"] : undefined,
+      },
+    };
   };
 
   const handleFollowersClick = () => {
