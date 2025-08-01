@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useClub } from "../contexts/ClubContext";
 import { useToast } from "../contexts/ToastContext";
+import { getActualMemberCount, getPendingRequestsCount, formatMemberCount } from "../utils/clubUtils";
 
 export default function ClubManagement() {
   const navigate = useNavigate();
