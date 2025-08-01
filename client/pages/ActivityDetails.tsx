@@ -365,7 +365,9 @@ export default function ActivityDetails() {
     navigate("/chat");
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyColor = (difficulty: string | undefined) => {
+    if (!difficulty) return "bg-gray-100 text-gray-700";
+
     switch (difficulty.toLowerCase()) {
       case "beginner":
         return "bg-green-100 text-green-700";
