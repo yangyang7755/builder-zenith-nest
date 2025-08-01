@@ -273,17 +273,7 @@ export default function Profile() {
                   )}
                 </div>
 
-                {isEditing && (
-                  <div className="grid gap-2">
-                    <Label htmlFor="profile_image">Profile Image URL</Label>
-                    <Input
-                      id="profile_image"
-                      value={formData.profile_image}
-                      onChange={(e) => setFormData({...formData, profile_image: e.target.value})}
-                      placeholder="Enter profile image URL"
-                    />
-                  </div>
-                )}
+
               </div>
             </CardContent>
           </Card>
