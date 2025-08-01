@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
 import { useOnboarding } from "../contexts/OnboardingContext";
+import { useClub } from "../contexts/ClubContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
 import ActivityCard from "../components/ActivityCard";
