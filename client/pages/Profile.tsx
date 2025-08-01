@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   MapPin,
@@ -10,6 +10,8 @@ import {
   Award,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
+import { getCurrentUserProfile, formatPersonalDetails, getSkillLevels } from "../services/profilesService";
+import { useOnboarding } from "../contexts/OnboardingContext";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Climb");
