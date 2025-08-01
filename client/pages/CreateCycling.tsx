@@ -160,6 +160,7 @@ export default function CreateCycling() {
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
+      difficulty: formData.difficulty,
       club:
         formData.visibility === "Club members" ? "oxford-cycling" : undefined, // Assume cycling is for Oxford club
       imageSrc:
