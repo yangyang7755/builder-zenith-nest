@@ -318,10 +318,10 @@ export default function Profile() {
         <TabsContent value="clubs">
           <Card>
             <CardHeader>
-              <CardTitle>My Clubs</CardTitle>
+              <CardTitle>{isDemo ? `${displayProfile?.full_name}'s Clubs` : 'My Clubs'}</CardTitle>
             </CardHeader>
             <CardContent>
-              {userClubs.length === 0 ? (
+              {displayClubs.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-gray-400 mb-2">No clubs joined yet</div>
                   <p className="text-sm text-gray-500 mb-4">
@@ -334,7 +334,7 @@ export default function Profile() {
                 </div>
               ) : (
                 <div className="grid gap-4">
-                  {userClubs.map((club) => (
+                  {displayClubs.map((club) => (
                     <div key={club.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div>
                         <h4 className="font-medium">{club.name}</h4>
