@@ -61,11 +61,12 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <ToastProvider>
-        <OnboardingProvider>
-          <ActivitiesProvider>
-            <SavedActivitiesProvider>
-              <ActivityDraftProvider>
-                <ChatProvider>
+        <ClubProvider>
+          <OnboardingProvider>
+            <ActivitiesProvider>
+              <SavedActivitiesProvider>
+                <ActivityDraftProvider>
+                  <ChatProvider>
                   <Toaster />
                   <Sonner />
                   <ToastContainer />
@@ -143,12 +144,13 @@ const App = () => (
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
-                  </BrowserRouter>
-                </ChatProvider>
-              </ActivityDraftProvider>
-            </SavedActivitiesProvider>
-          </ActivitiesProvider>
-        </OnboardingProvider>
+                    </BrowserRouter>
+                  </ChatProvider>
+                </ActivityDraftProvider>
+              </SavedActivitiesProvider>
+            </ActivitiesProvider>
+          </OnboardingProvider>
+        </ClubProvider>
       </ToastProvider>
     </TooltipProvider>
   </QueryClientProvider>
