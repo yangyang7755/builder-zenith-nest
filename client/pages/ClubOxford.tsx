@@ -481,6 +481,40 @@ export default function ClubOxford() {
         </div>
       )}
 
+      {/* Join Club Modal */}
+      {showJoinModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-sm p-6">
+            <h3 className="text-xl font-bold text-explore-green font-cabin mb-4">
+              Request to Join OUCC
+            </h3>
+            <p className="text-sm text-gray-600 font-cabin mb-4">
+              Send a message to the club managers with your request.
+            </p>
+            <textarea
+              value={joinMessage}
+              onChange={(e) => setJoinMessage(e.target.value)}
+              placeholder="Hi! I'd love to join the Oxford University Cycling Club. I'm passionate about cycling and..."
+              className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin h-24 resize-none mb-4"
+            />
+            <div className="space-y-3">
+              <button
+                onClick={handleJoinRequest}
+                className="w-full py-3 bg-explore-green text-white rounded-lg font-cabin font-medium hover:bg-green-600 transition-colors"
+              >
+                Send Request
+              </button>
+              <button
+                onClick={() => setShowJoinModal(false)}
+                className="w-full py-3 border-2 border-gray-300 rounded-lg text-gray-600 font-cabin font-medium hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
