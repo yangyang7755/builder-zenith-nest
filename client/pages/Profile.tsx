@@ -271,16 +271,9 @@ export default function Profile() {
                     </>
                   )}
                   {isDemo && (
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" asChild>
-                        <a href="/signin">Sign In to Edit</a>
-                      </Button>
-                      <Button variant="outline" size="sm" asChild>
-                        <a href="/enhanced-login">
-                          🍎 Test Apple Sign-in
-                        </a>
-                      </Button>
-                    </div>
+                    <Button variant="outline" size="sm" asChild>
+                      <a href="/signin">Sign In to Edit</a>
+                    </Button>
                   )}
                 </div>
               </div>
