@@ -209,7 +209,7 @@ export default function ClubWestway() {
             {/* Club Logo */}
             <div className="w-32 h-32 rounded-full border-2 border-black overflow-hidden mb-4">
               <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800"
+                src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800"
                 alt="Westway Sports & Fitness"
                 className="w-full h-full object-cover"
               />
