@@ -106,6 +106,7 @@ export default function CreateCycling() {
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
+      difficulty: formData.difficulty,
       specialComments: formData.specialComments,
       subtype: selectedType,
       organizer: "You",
