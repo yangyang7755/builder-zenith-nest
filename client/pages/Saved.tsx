@@ -5,6 +5,7 @@ import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { Activity } from "../contexts/ActivitiesContext";
 import BackendTest from "../components/BackendTest";
 import DemoAuth from "../components/DemoAuth";
+import UserNav from "../components/UserNav";
 
 export default function Saved() {
   const { savedActivities, unsaveActivity } = useSavedActivities();
