@@ -204,11 +204,12 @@ export default function ClubOxford() {
         <div className="px-6 pb-6">
           <div className="flex flex-col items-center text-center">
             {/* Club Logo */}
-            <div className="w-32 h-32 rounded-full border-2 border-black overflow-hidden mb-4 bg-blue-900 flex items-center justify-center">
-              <div className="text-center text-white">
-                <div className="text-2xl font-bold">OUCC</div>
-                <div className="text-xs">EST. 1873</div>
-              </div>
+            <div className="w-32 h-32 rounded-full border-2 border-black overflow-hidden mb-4">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800"
+                alt="Oxford University Cycling Club"
+                className="w-full h-full object-cover"
+              />
             </div>
 
             {/* Address */}
