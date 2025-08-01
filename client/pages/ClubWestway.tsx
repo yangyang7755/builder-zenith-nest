@@ -394,28 +394,18 @@ export default function ClubWestway() {
                 ))}
               </div>
 
-              {/* Message Input */}
+              {/* Go to Full Chat Button */}
               <div className="border-t border-gray-200 pt-4">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={chatMessage}
-                    onChange={(e) => setChatMessage(e.target.value)}
-                    placeholder="Type a message..."
-                    className="flex-1 border border-gray-300 rounded-lg py-2 px-3 font-cabin text-sm"
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        handleSendMessage();
-                      }
-                    }}
-                  />
-                  <button
-                    onClick={handleSendMessage}
-                    className="bg-explore-green text-white px-3 py-2 rounded-lg hover:bg-explore-green-dark transition-colors"
-                  >
-                    <Send className="w-4 h-4" />
-                  </button>
-                </div>
+                <button
+                  onClick={() => navigate("/club-chat/westway")}
+                  className="w-full bg-explore-green text-white py-3 rounded-lg font-cabin font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  Join Club Chat
+                </button>
+                <p className="text-xs text-gray-500 text-center mt-2 font-cabin">
+                  Click to join the full club conversation
+                </p>
               </div>
             </div>
           )}
