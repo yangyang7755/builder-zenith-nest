@@ -12,6 +12,8 @@ import {
 import BottomNavigation from "../components/BottomNavigation";
 import { getCurrentUserProfile, formatPersonalDetails, getSkillLevels } from "../services/profilesService";
 import { useOnboarding } from "../contexts/OnboardingContext";
+import { useActivities } from "../contexts/ActivitiesContext";
+import { calculateSportStats, getUserCreatedActivities, getUserParticipatedActivitiesForSport } from "../services/statisticsService";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Climb");
