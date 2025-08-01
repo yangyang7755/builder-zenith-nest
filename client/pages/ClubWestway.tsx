@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MapPin, ArrowLeft, Users, Calendar, LogOut, Send, Settings, UserPlus } from "lucide-react";
 import { useClub } from "../contexts/ClubContext";
+import { getActualMemberCount, formatMemberCount } from "../utils/clubUtils";
 
 export default function ClubWestway() {
   const navigate = useNavigate();
