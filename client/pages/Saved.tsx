@@ -94,6 +94,11 @@ export default function Saved() {
         </div>
       </div>
 
+      {/* User Navigation */}
+      <div className="p-4 border-b bg-gray-50">
+        <UserNav />
+      </div>
+
       {/* Scrollable Content */}
       <div className="overflow-y-auto pb-20">
         <div className="px-6">
