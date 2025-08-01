@@ -43,6 +43,7 @@ export function createServer() {
 
   // Club routes
   app.get("/api/clubs", handleGetClubs);
+  app.post("/api/clubs", handleCreateClub);
   app.get("/api/clubs/:id", handleGetClub);
   app.put("/api/clubs/:id", handleUpdateClub);
   app.post("/api/clubs/:id/join", handleJoinRequest);
