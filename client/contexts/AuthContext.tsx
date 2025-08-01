@@ -146,10 +146,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signIn: async (email: string, password: string) => {
       const result = await signIn(email, password);
+
+      // In demo mode, manually set user state since we don't have real auth state changes
+      if (result.data.user && !supabase) {
+        setUser(result.data.user);
+        const demoProfile = {
+          id: result.data.user.id,
+          email: result.data.user.email,
+          full_name: result.data.user.user_metadata?.full_name || 'Demo User',
+          university: 'Demo University',
+          bio: 'Demo user profile',
+          profile_image: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        setProfile(demoProfile);
+        setLoading(false);
+      }
+
       return { user: result.data.user, error: result.error };
     },
     signUp: async (email: string, password: string, userData?: { full_name?: string }) => {
       const result = await signUp(email, password, userData);
+
+      // In demo mode, don't automatically sign in after signup
+      // Just return success so user can proceed to signin page
+
       return { user: result.data.user, error: result.error };
     },
     signOut: async () => {
