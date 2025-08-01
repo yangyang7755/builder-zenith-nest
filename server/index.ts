@@ -56,5 +56,11 @@ export function createServer() {
   app.post("/api/clubs/:id/requests/:requestId/approve", handleApproveRequest);
   app.delete("/api/clubs/:id/requests/:requestId", handleDenyRequest);
 
+  // Auth/Profile routes
+  app.get("/api/profile", handleGetProfile);
+  app.put("/api/profile", handleUpdateProfile);
+  app.get("/api/user/clubs", handleGetUserClubs);
+  app.get("/api/user/activities", handleGetUserActivities);
+
   return app;
 }
