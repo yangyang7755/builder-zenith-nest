@@ -497,13 +497,15 @@ export default function Profile() {
                   <>
                     <div>
                       <div className="text-2xl font-bold text-explore-green">
-                        {currentSportData.stats.totalClimbs}
+                        {currentSportData.stats.totalActivities || 0}
                       </div>
-                      <div className="text-sm text-gray-600">Total Climbs</div>
+                      <div className="text-sm text-gray-600">
+                        {currentSportData.stats.totalActivities === 1 ? 'Climbing Activity' : 'Climbing Activities'}
+                      </div>
                     </div>
                     <div>
                       <div className="text-lg font-medium text-explore-green">
-                        {currentSportData.stats.favoriteGrades.join(", ")}
+                        {currentSportData.stats.favoriteGrades?.join(", ") || "N/A"}
                       </div>
                       <div className="text-sm text-gray-600">
                         Favorite Grades
