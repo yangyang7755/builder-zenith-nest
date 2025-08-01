@@ -1,10 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Missing Supabase environment variables');
+  // During development, allow missing env vars for now
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn('Warning: Missing Supabase environment variables. Some features will not work.');
+  } else {
+    throw new Error('Missing Supabase environment variables');
+  }
 }
 
 // Server-side client with service role key for admin operations
