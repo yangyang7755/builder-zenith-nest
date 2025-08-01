@@ -354,7 +354,7 @@ export default function ActivityDetails() {
   const handleSendRequest = () => {
     addJoinRequest({
       activityTitle: activity.title,
-      activityOrganizer: activity.organizer.name,
+      activityOrganizer: typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Unknown Organizer',
       requesterName: "You",
       message: requestMessage || "Hi! I'd like to join this activity.",
     });
@@ -391,10 +391,10 @@ export default function ActivityDetails() {
       date: "2025-08-06", // Use appropriate date from the schedule
       time: "10:00", // Extract time from schedule
       location: activity.location,
-      organizer: activity.organizer.name,
+      organizer: typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Unknown Organizer',
       difficulty: activity.difficulty,
-      maxParticipants: activity.capacity.toString(),
-      imageSrc: activity.organizer.image,
+      maxParticipants: activity.capacity?.toString() || 'N/A',
+      imageSrc: typeof activity.organizer === 'string' ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" : activity.organizer?.image,
       specialComments: "",
       gender: "All genders",
       visibility: "All",
@@ -942,7 +942,7 @@ export default function ActivityDetails() {
 
             <div className="mb-4">
               <p className="text-sm text-gray-600 font-cabin mb-3">
-                Send a message to {activity.organizer.name} (optional):
+                Send a message to {typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'organizer'} (optional):
               </p>
               <textarea
                 value={requestMessage}
