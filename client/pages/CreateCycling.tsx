@@ -171,7 +171,7 @@ export default function CreateCycling() {
 
     // Delete draft on successful creation
     deleteDraft("cycling");
-    alert("Activity created successfully!");
+    showToast("Cycling activity created successfully!", "success");
     navigate("/explore");
   };
 
