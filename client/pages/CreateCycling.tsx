@@ -436,8 +436,29 @@ export default function CreateCycling() {
                   setFormData({ ...formData, routeLink: e.target.value })
                 }
                 className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter route link"
+                placeholder="Enter route link (Strava, Komoot, etc.)"
               />
+            </div>
+
+            {/* Difficulty Level */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Difficulty Level
+              </h3>
+              <div className="relative">
+                <select
+                  value={formData.difficulty}
+                  onChange={(e) =>
+                    setFormData({ ...formData, difficulty: e.target.value })
+                  }
+                  className="appearance-none w-full border-2 border-gray-300 rounded-lg py-3 px-4 pr-10 font-cabin bg-white"
+                >
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>
             </div>
 
             {/* Optional (special filters) */}
