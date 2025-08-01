@@ -819,81 +819,87 @@ export default function ActivityDetails() {
         )}
 
         {/* Tags */}
-        <div className="mb-6">
-          <h3 className="text-xl font-bold text-black font-cabin mb-3">Tags</h3>
-          <div className="flex flex-wrap gap-2">
-            {activity.tags.map((tag, index) => (
-              <span
-                key={index}
-                className="text-xs bg-explore-green bg-opacity-10 text-explore-green px-3 py-1 rounded-full font-cabin"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Requirements Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-500" />
-            <h3 className="text-xl font-bold text-black font-cabin">
-              Requirements
-            </h3>
-          </div>
-          <div className="ml-8 relative">
-            <p className="text-sm text-black font-cabin mb-6">
-              Participants must be{" "}
-              <span
-                className="underline cursor-pointer"
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-              >
-                {activity.requirements.title}
-              </span>{" "}
-              <Info className="inline w-4 h-4 text-gray-400" />.
-            </p>
-
-            {/* Tooltip positioned outside the paragraph */}
-            {showTooltip && (
-              <div className="absolute left-0 top-16 bg-explore-green text-white p-4 rounded-lg shadow-lg z-50 w-80 text-sm font-cabin">
-                <div className="font-bold text-base mb-2">
-                  Requirements Details
-                </div>
-                <div className="mb-2">
-                  To join this session, you should be able to:
-                </div>
-                <ul className="space-y-1 mb-3">
-                  {activity.requirements.details.map((detail, index) => (
-                    <li key={index}>• {detail}</li>
-                  ))}
-                </ul>
-                <div className="flex items-start gap-2 bg-yellow-500 bg-opacity-20 p-2 rounded">
-                  <span className="text-yellow-300 font-bold">⚠</span>
-                  <div className="text-sm">{activity.requirements.warning}</div>
-                </div>
-              </div>
-            )}
-
-            {/* Checkbox */}
-            <div className="flex items-start gap-3 mb-8">
-              <input
-                type="checkbox"
-                id="requirements-agreement"
-                checked={agreedToRequirements}
-                onChange={(e) => setAgreedToRequirements(e.target.checked)}
-                className="w-4 h-4 mt-0.5 border-2 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="requirements-agreement"
-                className="text-sm text-black font-cabin cursor-pointer"
-              >
-                I agree I adhere to the requirements{" "}
-                <Info className="inline w-4 h-4 text-gray-400" />
-              </label>
+        {activity.tags && activity.tags.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-black font-cabin mb-3">Tags</h3>
+            <div className="flex flex-wrap gap-2">
+              {activity.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="text-xs bg-explore-green bg-opacity-10 text-explore-green px-3 py-1 rounded-full font-cabin"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Requirements Section */}
+        {activity.requirements && (
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-3">
+              <AlertTriangle className="w-5 h-5 text-yellow-500" />
+              <h3 className="text-xl font-bold text-black font-cabin">
+                Requirements
+              </h3>
+            </div>
+            <div className="ml-8 relative">
+              <p className="text-sm text-black font-cabin mb-6">
+                Participants must be{" "}
+                <span
+                  className="underline cursor-pointer"
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+                >
+                  {activity.requirements.title}
+                </span>{" "}
+                <Info className="inline w-4 h-4 text-gray-400" />.
+              </p>
+
+              {/* Tooltip positioned outside the paragraph */}
+              {showTooltip && activity.requirements.details && (
+                <div className="absolute left-0 top-16 bg-explore-green text-white p-4 rounded-lg shadow-lg z-50 w-80 text-sm font-cabin">
+                  <div className="font-bold text-base mb-2">
+                    Requirements Details
+                  </div>
+                  <div className="mb-2">
+                    To join this session, you should be able to:
+                  </div>
+                  <ul className="space-y-1 mb-3">
+                    {activity.requirements.details.map((detail, index) => (
+                      <li key={index}>• {detail}</li>
+                    ))}
+                  </ul>
+                  {activity.requirements.warning && (
+                    <div className="flex items-start gap-2 bg-yellow-500 bg-opacity-20 p-2 rounded">
+                      <span className="text-yellow-300 font-bold">⚠</span>
+                      <div className="text-sm">{activity.requirements.warning}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Checkbox */}
+              <div className="flex items-start gap-3 mb-8">
+                <input
+                  type="checkbox"
+                  id="requirements-agreement"
+                  checked={agreedToRequirements}
+                  onChange={(e) => setAgreedToRequirements(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 border-2 border-gray-300 rounded"
+                />
+                <label
+                  htmlFor="requirements-agreement"
+                  className="text-sm text-black font-cabin cursor-pointer"
+                >
+                  I agree I adhere to the requirements{" "}
+                  <Info className="inline w-4 h-4 text-gray-400" />
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Request to Join Button */}
         <button
