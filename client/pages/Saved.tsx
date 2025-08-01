@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Bookmark, Clock, MapPin, Users, CheckCircle } from "lucide-react";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { Activity } from "../contexts/ActivitiesContext";
+import BackendTest from "../components/BackendTest";
 
 export default function Saved() {
   const { savedActivities, unsaveActivity } = useSavedActivities();
