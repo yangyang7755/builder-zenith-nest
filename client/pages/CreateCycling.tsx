@@ -57,6 +57,7 @@ export default function CreateCycling() {
         ageMin: draft.ageMin || "",
         ageMax: draft.ageMax || "",
         visibility: draft.visibility || "All",
+        difficulty: draft.difficulty || "Beginner",
         specialComments: draft.specialComments || "",
       });
       if (draft.subtype) {
