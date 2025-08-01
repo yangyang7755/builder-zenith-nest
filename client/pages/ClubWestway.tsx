@@ -365,7 +365,7 @@ export default function ClubWestway() {
                   Club Chat
                 </h3>
                 <span className="text-sm text-gray-500 font-cabin">
-                  156 members
+                  {formatMemberCount(getActualMemberCount(club))}
                 </span>
               </div>
               
