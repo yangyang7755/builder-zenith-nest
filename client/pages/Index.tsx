@@ -354,7 +354,7 @@ export default function Index() {
               clubId="westway"
             />
             <ClubLogo
-              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800"
               alt="Oxford university cycling club"
               isMember={true}
               clubId="oxford-cycling"
@@ -1267,7 +1267,7 @@ function CyclingExploreSection() {
   const training = [
     {
       title: "Hill Climbing Intervals",
-      date: "�� Thursday, 6:00 PM",
+      date: "📅 Thursday, 6:00 PM",
       location: "📍Leith Hill, Surrey",
       organizer: "Watts Cycling Club",
       distance: "35km",
