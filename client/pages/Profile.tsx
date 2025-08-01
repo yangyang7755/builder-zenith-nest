@@ -296,7 +296,7 @@ export default function Profile() {
 
                 <div className="grid gap-2">
                   <Label htmlFor="bio">Bio</Label>
-                  {isEditing ? (
+                  {isEditing && !isDemo ? (
                     <Textarea
                       id="bio"
                       value={formData.bio}
@@ -305,7 +305,7 @@ export default function Profile() {
                       rows={3}
                     />
                   ) : (
-                    <p className="text-sm text-gray-700">{formData.bio || 'No bio added yet'}</p>
+                    <p className="text-sm text-gray-700">{displayProfile?.bio || 'No bio added yet'}</p>
                   )}
                 </div>
 
