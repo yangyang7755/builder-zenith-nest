@@ -268,7 +268,7 @@ export default function Profile() {
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="full_name">Full Name</Label>
-                  {isEditing ? (
+                  {isEditing && !isDemo ? (
                     <Input
                       id="full_name"
                       value={formData.full_name}
@@ -276,7 +276,7 @@ export default function Profile() {
                       placeholder="Enter your full name"
                     />
                   ) : (
-                    <p className="text-sm text-gray-700">{formData.full_name || 'Not set'}</p>
+                    <p className="text-sm text-gray-700">{displayProfile?.full_name || 'Not set'}</p>
                   )}
                 </div>
 
