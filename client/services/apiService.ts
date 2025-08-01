@@ -105,6 +105,33 @@ class ApiService {
     });
   }
 
+  // User/Profile methods
+  async getProfile() {
+    return this.request<any>('/profile');
+  }
+
+  async updateProfile(updates: any) {
+    return this.request<any>('/profile', {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async getUserClubs() {
+    return this.request<any[]>('/user/clubs');
+  }
+
+  async getUserActivities() {
+    return this.request<any[]>('/user/activities');
+  }
+
+  async createClub(clubData: any) {
+    return this.request<any>('/clubs', {
+      method: 'POST',
+      body: JSON.stringify(clubData),
+    });
+  }
+
   // Health check
   async ping() {
     return this.request<{ message: string }>('/ping');
