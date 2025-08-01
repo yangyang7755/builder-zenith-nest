@@ -215,9 +215,22 @@ export default function ClubOxford() {
               <div className="flex flex-col gap-3">
                 <div className="w-48 h-12 flex items-center justify-center bg-gray-100 rounded-lg">
                   <span className="text-explore-green font-cabin font-medium">
-                    ✓ Member
+                    ✓ {isManager ? "Manager" : "Member"}
                   </span>
                 </div>
+
+                {isManager && (
+                  <button
+                    onClick={() => navigate("/club/oucc/manage")}
+                    className="w-48 h-10 flex items-center justify-center gap-2 bg-explore-green text-white rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    <Settings className="w-4 h-4" />
+                    <span className="font-cabin font-medium text-sm">
+                      Manage Club
+                    </span>
+                  </button>
+                )}
+
                 <button
                   onClick={handleLeaveClub}
                   className="w-48 h-10 flex items-center justify-center gap-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
@@ -229,7 +242,11 @@ export default function ClubOxford() {
                 </button>
               </div>
             ) : (
-              <button className="w-48 h-14 bg-explore-green text-white rounded-lg font-cabin font-medium">
+              <button
+                onClick={() => setShowJoinModal(true)}
+                className="w-48 h-14 bg-explore-green text-white rounded-lg font-cabin font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
+              >
+                <UserPlus className="w-4 h-4" />
                 Request to Join
               </button>
             )}
