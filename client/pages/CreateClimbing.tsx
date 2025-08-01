@@ -65,7 +65,7 @@ export default function CreateClimbing() {
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     });
 
-    alert("Climbing activity created successfully!");
+    showToast("Climbing activity created successfully!", "success");
     navigate("/explore");
   };
 
