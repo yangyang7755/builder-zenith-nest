@@ -66,15 +66,26 @@ export default function Profile() {
       const clubsResponse = await apiService.getUserClubs();
       if (clubsResponse.data) {
         setUserClubs(clubsResponse.data);
+      } else if (clubsResponse.error) {
+        console.warn('Failed to load user clubs:', clubsResponse.error);
+        // Set empty array as fallback
+        setUserClubs([]);
       }
 
       // Load user activities
       const activitiesResponse = await apiService.getUserActivities();
       if (activitiesResponse.data) {
         setUserActivities(activitiesResponse.data);
+      } else if (activitiesResponse.error) {
+        console.warn('Failed to load user activities:', activitiesResponse.error);
+        // Set empty array as fallback
+        setUserActivities([]);
       }
     } catch (error) {
-      console.error('Error loading user data:', error);
+      console.warn('Error loading user data (this is expected in demo mode):', error);
+      // Set fallback data for demo mode
+      setUserClubs([]);
+      setUserActivities([]);
     }
   };
 
