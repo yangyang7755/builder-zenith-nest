@@ -112,14 +112,25 @@ export default function EnhancedLogin() {
       });
 
       // Simulate email verification after a few seconds
-      setTimeout(() => {
+      setTimeout(async () => {
         setVerificationStep("verified");
-        toast({
-          title: "Email Verified!",
-          description:
-            "Your Apple account has been verified. Signing you in...",
-        });
-        setTimeout(() => navigate("/explore"), 1000);
+
+        // Actually sign in the user with demo credentials
+        const { user, error } = await signIn("apple.demo@example.com", "demo123");
+
+        if (user && !error) {
+          toast({
+            title: "Email Verified!",
+            description: "Your Apple account has been verified. Signing you in...",
+          });
+          setTimeout(() => navigate("/explore"), 1000);
+        } else {
+          toast({
+            title: "Sign-in Error",
+            description: "Failed to complete Apple sign-in.",
+            variant: "destructive",
+          });
+        }
       }, 3000);
     } catch (error) {
       toast({
