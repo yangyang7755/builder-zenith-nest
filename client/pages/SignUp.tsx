@@ -80,10 +80,19 @@ export default function SignUp() {
       }
 
       if (user) {
-        toast({
-          title: "Account Created Successfully",
-          description: "Please check your email to verify your account before signing in.",
-        });
+        if (user.id.startsWith('demo-user-')) {
+          // Demo mode - no email verification needed
+          toast({
+            title: "Demo Account Created Successfully",
+            description: "Demo account created! You can now sign in with these credentials.",
+          });
+        } else {
+          // Real Supabase mode
+          toast({
+            title: "Account Created Successfully",
+            description: "Please check your email to verify your account before signing in.",
+          });
+        }
         navigate('/signin');
       }
     } catch (error) {
