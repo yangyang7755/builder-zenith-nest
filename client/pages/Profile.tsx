@@ -19,6 +19,7 @@ export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Climb");
   const navigate = useNavigate();
   const { userProfile: onboardingProfile, isOnboardingComplete } = useOnboarding();
+  const { activities } = useActivities();
   const [userProfile, setUserProfile] = useState<any>(null);
 
   useEffect(() => {
