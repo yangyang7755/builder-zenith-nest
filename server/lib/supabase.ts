@@ -24,12 +24,12 @@ export const supabaseAdmin = supabaseUrl && supabaseServiceKey
 
 // Helper function to get user from JWT token
 export const getUserFromToken = async (authHeader: string) => {
-  if (!authHeader?.startsWith('Bearer ')) {
+  if (!supabaseAdmin || !authHeader?.startsWith('Bearer ')) {
     return null;
   }
 
   const token = authHeader.split(' ')[1];
-  
+
   try {
     const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
     if (error) throw error;
