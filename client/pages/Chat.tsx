@@ -25,7 +25,7 @@ export default function Chat() {
       lastMessage: "New routes set this week! Come check them out 🧗‍♀️",
       timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
       avatar:
-        "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800",
+        "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800",
       unread: true,
       type: "club",
     },
@@ -354,7 +354,7 @@ function ClubChatItem({
               {club.name}
             </h3>
             <p className="text-gray-500 text-sm font-cabin truncate">
-              {club.lastMessage} · {getTimeAgo(club.timestamp)}
+              {club.lastMessage} �� {getTimeAgo(club.timestamp)}
             </p>
           </div>
 
