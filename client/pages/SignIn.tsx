@@ -234,13 +234,13 @@ export default function SignIn() {
         </Card>
 
         {/* Demo Account Info */}
-        <Card className="bg-blue-50 border-blue-200">
+        <Card className="bg-green-50 border-green-200">
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-sm text-blue-800 font-medium mb-2">Demo Account</p>
-              <p className="text-xs text-blue-600">
-                Since Supabase isn't configured yet, authentication features are simulated.
-                You can still explore the app with sample data.
+              <p className="text-sm text-green-800 font-medium mb-2">Demo Mode Active</p>
+              <p className="text-xs text-green-600">
+                Sign in with any email and password! Demo authentication is working
+                with all backend features including profiles, clubs, and activities.
               </p>
             </div>
           </CardContent>
