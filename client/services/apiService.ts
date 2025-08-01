@@ -1,3 +1,5 @@
+import { getAuthHeader } from '../lib/supabase';
+
 // API base URL - using your current Fly.io deployment
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://66e3ab0a84c340e9b445761a73e42448-dbbf80750d9f4e01981434bf2.fly.dev/api';
 
