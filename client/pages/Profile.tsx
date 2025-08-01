@@ -231,7 +231,7 @@ export default function Profile() {
             <CardContent className="space-y-6">
               {/* Profile Header */}
               <div className="flex items-start space-x-4">
-                {isEditing ? (
+                {isEditing && !isDemo ? (
                   <ImageUpload
                     currentImage={formData.profile_image}
                     onImageChange={(url) => setFormData({...formData, profile_image: url})}
@@ -241,9 +241,9 @@ export default function Profile() {
                   />
                 ) : (
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src={formData.profile_image} alt={formData.full_name} />
+                    <AvatarImage src={displayProfile?.profile_image} alt={displayProfile?.full_name} />
                     <AvatarFallback className="text-lg">
-                      {formData.full_name ? getInitials(formData.full_name) : getInitials(user.email || 'U')}
+                      {displayProfile?.full_name ? getInitials(displayProfile.full_name) : getInitials(displayProfile?.email || 'U')}
                     </AvatarFallback>
                   </Avatar>
                 )}
