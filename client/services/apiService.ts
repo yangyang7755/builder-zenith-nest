@@ -10,13 +10,15 @@ interface ApiResponse<T> {
 
 class ApiService {
   private async request<T>(
-    endpoint: string, 
+    endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     try {
+      const authHeader = await getAuthHeader();
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
           'Content-Type': 'application/json',
+          ...(authHeader && { 'Authorization': authHeader }),
           ...options.headers,
         },
         ...options,
