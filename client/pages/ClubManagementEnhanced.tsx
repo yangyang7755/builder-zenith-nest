@@ -73,6 +73,7 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
     location: '',
     website: '',
     contact_email: '',
+    profile_image: '',
   });
 
   useEffect(() => {
