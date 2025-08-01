@@ -48,15 +48,15 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    if (profile) {
+    if (displayProfile) {
       setFormData({
-        full_name: profile.full_name || '',
-        university: profile.university || '',
-        bio: profile.bio || '',
-        profile_image: profile.profile_image || '',
+        full_name: displayProfile.full_name || '',
+        university: displayProfile.university || '',
+        bio: displayProfile.bio || '',
+        profile_image: displayProfile.profile_image || '',
       });
     }
-  }, [profile]);
+  }, [displayProfile, user]);
 
   useEffect(() => {
     loadUserData();
