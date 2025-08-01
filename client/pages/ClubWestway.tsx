@@ -5,9 +5,15 @@ import { useClub } from "../contexts/ClubContext";
 
 export default function ClubWestway() {
   const navigate = useNavigate();
+  const { getClubById, isClubMember, isClubManager, requestToJoinClub } = useClub();
+  const club = getClubById("westway");
+  const isMember = isClubMember("westway");
+  const isManager = isClubManager("westway");
+
   const [selectedTab, setSelectedTab] = useState("events");
-  const [isMember, setIsMember] = useState(true);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [joinMessage, setJoinMessage] = useState("");
   const [chatMessage, setChatMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([
     {
