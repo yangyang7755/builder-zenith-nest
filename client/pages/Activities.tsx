@@ -227,9 +227,9 @@ export default function Activities() {
         )}
       </div>
 
-      {/* Map View */}
+      {/* Enhanced Map View */}
       {showMapView && (
-        <MapView
+        <EnhancedMapView
           activities={filteredActivities}
           onClose={() => setShowMapView(false)}
           onActivitySelect={handleActivitySelect}
