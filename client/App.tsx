@@ -81,6 +81,7 @@ const App = () => (
                     <Route path="/" element={<SplashScreen />} />
                     <Route path="/auth" element={<AuthLanding />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/enhanced-login" element={<EnhancedLogin />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/onboarding" element={<Onboarding />} />
