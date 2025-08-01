@@ -156,6 +156,10 @@ const App = () => (
                             path="/profile/edit"
                             element={<ProfileEdit />}
                           />
+                          <Route
+                            path="/profile/demo"
+                            element={<ProfileDemo />}
+                          />
                           <Route path="/settings" element={<Settings />} />
                           <Route path="/followers" element={<Followers />} />
                           <Route path="/following" element={<Following />} />
