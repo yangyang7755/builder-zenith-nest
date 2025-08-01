@@ -467,11 +467,13 @@ export default function ActivityDetails() {
                   }`}
                 />
               </button>
-              <span
-                className={`text-sm px-3 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}
-              >
-                {activity.difficulty}
-              </span>
+              {activity.difficulty && (
+                <span
+                  className={`text-sm px-3 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}
+                >
+                  {activity.difficulty}
+                </span>
+              )}
             </div>
           </div>
         </div>
