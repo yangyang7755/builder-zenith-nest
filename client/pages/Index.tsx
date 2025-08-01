@@ -348,7 +348,7 @@ export default function Index() {
           </h2>
           <div className="flex gap-4 justify-start">
             <ClubLogo
-              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800"
               alt="Westway climbing gym"
               isMember={true}
               clubId="westway"
@@ -1267,7 +1267,7 @@ function CyclingExploreSection() {
   const training = [
     {
       title: "Hill Climbing Intervals",
-      date: "📅 Thursday, 6:00 PM",
+      date: "�� Thursday, 6:00 PM",
       location: "📍Leith Hill, Surrey",
       organizer: "Watts Cycling Club",
       distance: "35km",
