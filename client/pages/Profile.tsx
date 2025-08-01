@@ -345,15 +345,29 @@ export default function Profile() {
 
           {/* Activity Tags with Skill Levels */}
           <div className="flex gap-3 mb-6 flex-wrap">
-            <div className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-bold font-cabin">
-              Sport climber • {userProfile.skillLevels.climbing}
-            </div>
-            <div className="border-2 border-explore-green text-explore-green px-4 py-2 rounded-lg text-sm font-cabin">
-              Road cyclist • {userProfile.skillLevels.cycling}
-            </div>
-            <div className="border-2 border-explore-green text-explore-green px-4 py-2 rounded-lg text-sm font-cabin">
-              Runner • {userProfile.skillLevels.running}
-            </div>
+            {userProfile.sports.map((sport: string, index: number) => {
+              const skillLevel = userProfile.skillLevels[sport] || "Beginner";
+              const sportLabel = sport === "climbing" ? "Sport climber" :
+                                sport === "cycling" ? "Road cyclist" :
+                                sport === "running" ? "Runner" :
+                                sport === "hiking" ? "Hiker" :
+                                sport === "skiing" ? "Skier" :
+                                sport === "surfing" ? "Surfer" :
+                                sport === "tennis" ? "Tennis player" :
+                                sport.charAt(0).toUpperCase() + sport.slice(1);
+              return (
+                <div
+                  key={sport}
+                  className={`px-4 py-2 rounded-lg text-sm font-cabin ${
+                    index === 0
+                      ? "bg-explore-green text-white font-bold"
+                      : "border-2 border-explore-green text-explore-green"
+                  }`}
+                >
+                  {sportLabel} • {skillLevel}
+                </div>
+              );
+            })}
           </div>
 
           {/* User Details Box */}
