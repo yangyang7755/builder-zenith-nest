@@ -5,6 +5,7 @@ import { useActivities } from "../contexts/ActivitiesContext";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
+import EnhancedMapView from "../components/EnhancedMapView";
 
 export default function Activities() {
   const { activities } = useActivities();
