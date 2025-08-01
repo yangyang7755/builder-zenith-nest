@@ -112,6 +112,13 @@ export default function ClubOxford() {
     }
   };
 
+  const handleJoinRequest = () => {
+    requestToJoinClub("oucc", joinMessage);
+    setShowJoinModal(false);
+    setJoinMessage("");
+    alert("Join request sent! You'll be notified once it's reviewed.");
+  };
+
   const members = [
     {
       name: "Tom",
