@@ -1,25 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/contexts/AuthContext';
-import { apiService } from '@/services/apiService';
-import { useToast } from '@/hooks/use-toast';
-import { User, Mail, MapPin, Calendar, Edit3, Save, X, Plus } from 'lucide-react';
-import ImageUpload from '@/components/ImageUpload';
-import { maddieWeiProfile, DemoProfile } from '@/data/demoProfiles';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
+import { apiService } from "@/services/apiService";
+import { useToast } from "@/hooks/use-toast";
+import {
+  User,
+  Mail,
+  MapPin,
+  Calendar,
+  Edit3,
+  Save,
+  X,
+  Plus,
+} from "lucide-react";
+import ImageUpload from "@/components/ImageUpload";
+import { maddieWeiProfile, DemoProfile } from "@/data/demoProfiles";
 
 interface UserClub {
   id: string;
   name: string;
   type: string;
   location: string;
-  userRole: 'member' | 'manager';
+  userRole: "member" | "manager";
 }
 
 interface UserActivity {
@@ -46,19 +55,19 @@ export default function Profile() {
   const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
 
   const [formData, setFormData] = useState({
-    full_name: displayProfile?.full_name || '',
-    university: displayProfile?.university || '',
-    bio: displayProfile?.bio || '',
-    profile_image: displayProfile?.profile_image || '',
+    full_name: displayProfile?.full_name || "",
+    university: displayProfile?.university || "",
+    bio: displayProfile?.bio || "",
+    profile_image: displayProfile?.profile_image || "",
   });
 
   useEffect(() => {
     if (displayProfile) {
       setFormData({
-        full_name: displayProfile.full_name || '',
-        university: displayProfile.university || '',
-        bio: displayProfile.bio || '',
-        profile_image: displayProfile.profile_image || '',
+        full_name: displayProfile.full_name || "",
+        university: displayProfile.university || "",
+        bio: displayProfile.bio || "",
+        profile_image: displayProfile.profile_image || "",
       });
     }
   }, [displayProfile, user]);
@@ -74,7 +83,7 @@ export default function Profile() {
       if (clubsResponse.data) {
         setUserClubs(clubsResponse.data);
       } else if (clubsResponse.error) {
-        console.warn('Failed to load user clubs:', clubsResponse.error);
+        console.warn("Failed to load user clubs:", clubsResponse.error);
         // Set empty array as fallback
         setUserClubs([]);
       }
@@ -84,12 +93,18 @@ export default function Profile() {
       if (activitiesResponse.data) {
         setUserActivities(activitiesResponse.data);
       } else if (activitiesResponse.error) {
-        console.warn('Failed to load user activities:', activitiesResponse.error);
+        console.warn(
+          "Failed to load user activities:",
+          activitiesResponse.error,
+        );
         // Set empty array as fallback
         setUserActivities([]);
       }
     } catch (error) {
-      console.warn('Error loading user data (this is expected in demo mode):', error);
+      console.warn(
+        "Error loading user data (this is expected in demo mode):",
+        error,
+      );
       // Set fallback data for demo mode
       setUserClubs([]);
       setUserActivities([]);
@@ -118,66 +133,70 @@ export default function Profile() {
 
   const handleCancel = () => {
     setFormData({
-      full_name: profile?.full_name || '',
-      university: profile?.university || '',
-      bio: profile?.bio || '',
-      profile_image: profile?.profile_image || '',
+      full_name: profile?.full_name || "",
+      university: profile?.university || "",
+      bio: profile?.bio || "",
+      profile_image: profile?.profile_image || "",
     });
     setIsEditing(false);
   };
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     });
   };
 
   // Use demo data when not signed in
-  const displayClubs = user ? userClubs : maddieWeiProfile.clubs.map(club => ({
-    id: club.id,
-    name: club.name,
-    type: club.type,
-    location: club.location,
-    userRole: club.userRole
-  }));
+  const displayClubs = user
+    ? userClubs
+    : maddieWeiProfile.clubs.map((club) => ({
+        id: club.id,
+        name: club.name,
+        type: club.type,
+        location: club.location,
+        userRole: club.userRole,
+      }));
 
-  const displayActivities = user ? userActivities : maddieWeiProfile.activities.map(activity => ({
-    id: activity.id,
-    title: activity.title,
-    type: activity.type,
-    date: activity.date,
-    time: activity.time,
-    location: activity.location,
-    club: activity.club
-  }));
+  const displayActivities = user
+    ? userActivities
+    : maddieWeiProfile.activities.map((activity) => ({
+        id: activity.id,
+        title: activity.title,
+        type: activity.type,
+        date: activity.date,
+        time: activity.time,
+        location: activity.location,
+        club: activity.club,
+      }));
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">
-          {isDemo ? `${displayProfile?.full_name}'s Profile` : 'My Profile'}
+          {isDemo ? `${displayProfile?.full_name}'s Profile` : "My Profile"}
         </h1>
         <p className="text-gray-500">
           {isDemo
             ? `Demo profile showing ${displayProfile?.full_name}'s activities and clubs`
-            : 'Manage your account settings and preferences'
-          }
+            : "Manage your account settings and preferences"}
         </p>
         {isDemo && (
           <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm text-blue-800">
-              <strong>Demo Mode:</strong> This is Maddie Wei's profile. Sign in to see your own profile and edit your information.
+              <strong>Demo Mode:</strong> This is Maddie Wei's profile. Sign in
+              to see your own profile and edit your information.
             </p>
           </div>
         )}
@@ -187,10 +206,11 @@ export default function Profile() {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="clubs">
-            {isDemo ? 'Clubs' : 'My Clubs'} ({displayClubs.length})
+            {isDemo ? "Clubs" : "My Clubs"} ({displayClubs.length})
           </TabsTrigger>
           <TabsTrigger value="activities">
-            {isDemo ? 'Activities' : 'My Activities'} ({displayActivities.length})
+            {isDemo ? "Activities" : "My Activities"} (
+            {displayActivities.length})
           </TabsTrigger>
         </TabsList>
 
@@ -204,17 +224,29 @@ export default function Profile() {
                     <>
                       {isEditing ? (
                         <>
-                          <Button onClick={handleCancel} variant="outline" size="sm">
+                          <Button
+                            onClick={handleCancel}
+                            variant="outline"
+                            size="sm"
+                          >
                             <X className="h-4 w-4 mr-1" />
                             Cancel
                           </Button>
-                          <Button onClick={handleSave} size="sm" disabled={loading}>
+                          <Button
+                            onClick={handleSave}
+                            size="sm"
+                            disabled={loading}
+                          >
                             <Save className="h-4 w-4 mr-1" />
-                            {loading ? 'Saving...' : 'Save'}
+                            {loading ? "Saving..." : "Save"}
                           </Button>
                         </>
                       ) : (
-                        <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+                        <Button
+                          onClick={() => setIsEditing(true)}
+                          variant="outline"
+                          size="sm"
+                        >
                           <Edit3 className="h-4 w-4 mr-1" />
                           Edit
                         </Button>
@@ -235,22 +267,29 @@ export default function Profile() {
                 {isEditing && !isDemo ? (
                   <ImageUpload
                     currentImage={formData.profile_image}
-                    onImageChange={(url) => setFormData({...formData, profile_image: url})}
+                    onImageChange={(url) =>
+                      setFormData({ ...formData, profile_image: url })
+                    }
                     variant="avatar"
                     size="lg"
                     placeholder="Profile Photo"
                   />
                 ) : (
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src={displayProfile?.profile_image} alt={displayProfile?.full_name} />
+                    <AvatarImage
+                      src={displayProfile?.profile_image}
+                      alt={displayProfile?.full_name}
+                    />
                     <AvatarFallback className="text-lg">
-                      {displayProfile?.full_name ? getInitials(displayProfile.full_name) : getInitials(displayProfile?.email || 'U')}
+                      {displayProfile?.full_name
+                        ? getInitials(displayProfile.full_name)
+                        : getInitials(displayProfile?.email || "U")}
                     </AvatarFallback>
                   </Avatar>
                 )}
                 <div className="space-y-1">
                   <h3 className="text-xl font-semibold">
-                    {displayProfile?.full_name || 'Add your name'}
+                    {displayProfile?.full_name || "Add your name"}
                   </h3>
                   <div className="flex items-center text-gray-500">
                     <Mail className="h-4 w-4 mr-1" />
@@ -273,11 +312,15 @@ export default function Profile() {
                     <Input
                       id="full_name"
                       value={formData.full_name}
-                      onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, full_name: e.target.value })
+                      }
                       placeholder="Enter your full name"
                     />
                   ) : (
-                    <p className="text-sm text-gray-700">{displayProfile?.full_name || 'Not set'}</p>
+                    <p className="text-sm text-gray-700">
+                      {displayProfile?.full_name || "Not set"}
+                    </p>
                   )}
                 </div>
 
@@ -287,11 +330,15 @@ export default function Profile() {
                     <Input
                       id="university"
                       value={formData.university}
-                      onChange={(e) => setFormData({...formData, university: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, university: e.target.value })
+                      }
                       placeholder="Enter your university or organization"
                     />
                   ) : (
-                    <p className="text-sm text-gray-700">{displayProfile?.university || 'Not set'}</p>
+                    <p className="text-sm text-gray-700">
+                      {displayProfile?.university || "Not set"}
+                    </p>
                   )}
                 </div>
 
@@ -301,16 +348,18 @@ export default function Profile() {
                     <Textarea
                       id="bio"
                       value={formData.bio}
-                      onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, bio: e.target.value })
+                      }
                       placeholder="Tell others about yourself..."
                       rows={3}
                     />
                   ) : (
-                    <p className="text-sm text-gray-700">{displayProfile?.bio || 'No bio added yet'}</p>
+                    <p className="text-sm text-gray-700">
+                      {displayProfile?.bio || "No bio added yet"}
+                    </p>
                   )}
                 </div>
-
-
               </div>
             </CardContent>
           </Card>
@@ -319,14 +368,17 @@ export default function Profile() {
         <TabsContent value="clubs">
           <Card>
             <CardHeader>
-              <CardTitle>{isDemo ? `${displayProfile?.full_name}'s Clubs` : 'My Clubs'}</CardTitle>
+              <CardTitle>
+                {isDemo ? `${displayProfile?.full_name}'s Clubs` : "My Clubs"}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {displayClubs.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-gray-400 mb-2">No clubs joined yet</div>
                   <p className="text-sm text-gray-500 mb-4">
-                    Join clubs to connect with like-minded people and participate in activities.
+                    Join clubs to connect with like-minded people and
+                    participate in activities.
                   </p>
                   <Button variant="outline">
                     <Plus className="h-4 w-4 mr-1" />
@@ -336,7 +388,10 @@ export default function Profile() {
               ) : (
                 <div className="grid gap-4">
                   {displayClubs.map((club) => (
-                    <div key={club.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={club.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div>
                         <h4 className="font-medium">{club.name}</h4>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -344,7 +399,11 @@ export default function Profile() {
                           <span>{club.location}</span>
                         </div>
                       </div>
-                      <Badge variant={club.userRole === 'manager' ? 'default' : 'outline'}>
+                      <Badge
+                        variant={
+                          club.userRole === "manager" ? "default" : "outline"
+                        }
+                      >
                         {club.userRole}
                       </Badge>
                     </div>
@@ -358,12 +417,18 @@ export default function Profile() {
         <TabsContent value="activities">
           <Card>
             <CardHeader>
-              <CardTitle>{isDemo ? `${displayProfile?.full_name}'s Activities` : 'My Activities'}</CardTitle>
+              <CardTitle>
+                {isDemo
+                  ? `${displayProfile?.full_name}'s Activities`
+                  : "My Activities"}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {displayActivities.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-gray-400 mb-2">No activities created yet</div>
+                  <div className="text-gray-400 mb-2">
+                    No activities created yet
+                  </div>
                   <p className="text-sm text-gray-500 mb-4">
                     Create your first activity to bring people together.
                   </p>
@@ -381,11 +446,15 @@ export default function Profile() {
                           <h4 className="font-medium">{activity.title}</h4>
                           <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
                             <Badge variant="secondary">{activity.type}</Badge>
-                            {activity.club && <span>��� {activity.club.name}</span>}
+                            {activity.club && (
+                              <span>��� {activity.club.name}</span>
+                            )}
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
                             <Calendar className="h-4 w-4" />
-                            <span>{formatDate(activity.date)} at {activity.time}</span>
+                            <span>
+                              {formatDate(activity.date)} at {activity.time}
+                            </span>
                             <MapPin className="h-4 w-4 ml-2" />
                             <span>{activity.location}</span>
                           </div>

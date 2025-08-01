@@ -13,6 +13,7 @@ Your app now has a complete backend infrastructure with:
 ## 🚀 Quick Setup (5 minutes)
 
 ### 1. Set up Supabase Project
+
 1. Go to [supabase.com](https://supabase.com) and create a new project
 2. Copy your project URL and anon key from Settings > API
 3. Create a `.env` file in your root directory:
@@ -28,6 +29,7 @@ VITE_API_URL=http://localhost:3001/api
 ```
 
 ### 2. Set up Database
+
 1. In your Supabase dashboard, go to SQL Editor
 2. Run these files in order:
    - `database/schema.sql` (creates tables and functions)
@@ -35,6 +37,7 @@ VITE_API_URL=http://localhost:3001/api
    - `database/seed.sql` (adds initial clubs)
 
 ### 3. Start Development
+
 ```bash
 npm run dev
 ```
@@ -44,6 +47,7 @@ Your backend will be running at `http://localhost:3001` and frontend at `http://
 ## 📊 Database Schema
 
 ### Core Tables
+
 - **profiles**: User information extending Supabase auth
 - **clubs**: Sports clubs and societies
 - **club_memberships**: User roles in clubs (member/manager)
@@ -52,6 +56,7 @@ Your backend will be running at `http://localhost:3001` and frontend at `http://
 - **chat_messages**: Real-time club chat (ready for implementation)
 
 ### Key Features
+
 - Automatic member count updates
 - Profile creation on user signup
 - Proper foreign key relationships
@@ -67,12 +72,14 @@ Your backend will be running at `http://localhost:3001` and frontend at `http://
 ## 🛠 API Endpoints
 
 ### Authentication
+
 - `GET /api/profile` - Get current user profile
 - `PUT /api/profile` - Update user profile
 - `GET /api/user/clubs` - Get user's clubs
 - `GET /api/user/activities` - Get user's activities
 
 ### Clubs
+
 - `GET /api/clubs` - List all clubs
 - `POST /api/clubs` - Create new club
 - `GET /api/clubs/:id` - Get club details
@@ -82,6 +89,7 @@ Your backend will be running at `http://localhost:3001` and frontend at `http://
 - `DELETE /api/clubs/:id/requests/:requestId` - Deny request
 
 ### Activities
+
 - `GET /api/activities` - List activities (with filters)
 - `POST /api/activities` - Create activity
 - `PUT /api/activities/:id` - Update activity
@@ -90,6 +98,7 @@ Your backend will be running at `http://localhost:3001` and frontend at `http://
 ## 🚀 Deployment
 
 ### Option 1: Deploy Backend to Fly.io (Recommended)
+
 ```bash
 # Install Fly CLI
 curl -L https://fly.io/install.sh | sh
@@ -100,7 +109,9 @@ fly deploy
 ```
 
 ### Option 2: Use Netlify Functions (Current Setup)
+
 Your current setup uses Netlify Functions. To deploy:
+
 1. Set environment variables in Netlify dashboard
 2. Deploy normally - functions will work automatically
 
@@ -110,12 +121,12 @@ Your frontend contexts are ready to migrate. Here's the pattern:
 
 ```typescript
 // Old localStorage way
-const activities = JSON.parse(localStorage.getItem('activities') || '[]');
+const activities = JSON.parse(localStorage.getItem("activities") || "[]");
 
 // New API way
 const { data: activities, error } = await apiService.getActivities();
 if (error) {
-  showToast('Failed to load activities', 'error');
+  showToast("Failed to load activities", "error");
   return;
 }
 setActivities(activities || []);
@@ -132,11 +143,13 @@ setActivities(activities || []);
 ## 🐛 Troubleshooting
 
 ### Common Issues
+
 - **CORS errors**: Check API_BASE_URL in your .env
 - **Auth errors**: Verify Supabase keys are correct
 - **Database errors**: Ensure you ran all SQL files in order
 
 ### Need Help?
+
 1. Check browser console for specific errors
 2. Verify environment variables are loaded
 3. Test API endpoints with curl or Postman
@@ -145,16 +158,19 @@ setActivities(activities || []);
 ## 🎯 Development Phases
 
 ### Phase 1: Basic Backend (✅ Complete)
+
 - Database setup
 - Authentication
 - Core API routes
 
 ### Phase 2: Frontend Migration (🔄 In Progress)
+
 - Replace localStorage with API calls
 - Add authentication UI
 - Test all features
 
 ### Phase 3: Enhanced Features (🔜 Next)
+
 - Real-time chat
 - Push notifications
 - Advanced search/filtering

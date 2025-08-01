@@ -6,7 +6,7 @@ import {
   handleGetActivities,
   handleCreateActivity,
   handleUpdateActivity,
-  handleDeleteActivity
+  handleDeleteActivity,
 } from "./routes/activities";
 import {
   handleGetClubs,
@@ -15,13 +15,13 @@ import {
   handleJoinRequest,
   handleApproveRequest,
   handleDenyRequest,
-  handleCreateClub
+  handleCreateClub,
 } from "./routes/clubs";
 import {
   handleGetProfile,
   handleUpdateProfile,
   handleGetUserClubs,
-  handleGetUserActivities
+  handleGetUserActivities,
 } from "./routes/auth";
 
 export function createServer() {

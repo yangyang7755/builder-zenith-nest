@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
+import React, { useState, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -12,24 +12,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { useToast } from '@/hooks/use-toast';
-import { Camera, Upload, X, Check } from 'lucide-react';
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+import { Camera, Upload, X, Check } from "lucide-react";
 
 interface ImageUploadProps {
   currentImage?: string;
   onImageChange: (imageUrl: string) => void;
-  variant?: 'avatar' | 'cover' | 'rectangle';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "avatar" | "cover" | "rectangle";
+  size?: "sm" | "md" | "lg";
   placeholder?: string;
 }
 
-export default function ImageUpload({ 
-  currentImage, 
-  onImageChange, 
-  variant = 'avatar',
-  size = 'md',
-  placeholder = 'Upload Image'
+export default function ImageUpload({
+  currentImage,
+  onImageChange,
+  variant = "avatar",
+  size = "md",
+  placeholder = "Upload Image",
 }: ImageUploadProps) {
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
@@ -39,9 +39,9 @@ export default function ImageUpload({
 
   const getSizeClasses = () => {
     const sizeMap = {
-      sm: variant === 'avatar' ? 'h-16 w-16' : 'h-24 w-32',
-      md: variant === 'avatar' ? 'h-24 w-24' : 'h-32 w-48',
-      lg: variant === 'avatar' ? 'h-32 w-32' : 'h-48 w-64'
+      sm: variant === "avatar" ? "h-16 w-16" : "h-24 w-32",
+      md: variant === "avatar" ? "h-24 w-24" : "h-32 w-48",
+      lg: variant === "avatar" ? "h-32 w-32" : "h-48 w-64",
     };
     return sizeMap[size];
   };
@@ -50,7 +50,7 @@ export default function ImageUpload({
     if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       toast({
         title: "Invalid File Type",
         description: "Please select an image file (JPG, PNG, GIF, etc.)",
@@ -78,10 +78,10 @@ export default function ImageUpload({
 
       // In a real app, you would upload to a service like Supabase Storage
       // For demo purposes, we'll use the local object URL
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate upload
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate upload
 
       onImageChange(url);
-      
+
       toast({
         title: "Image Uploaded Successfully",
         description: "Your image has been updated.",
@@ -111,15 +111,15 @@ export default function ImageUpload({
 
   const handleRemoveImage = () => {
     setPreviewUrl(null);
-    onImageChange('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    if (cameraInputRef.current) cameraInputRef.current.value = '';
+    onImageChange("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (cameraInputRef.current) cameraInputRef.current.value = "";
   };
 
   const currentDisplayImage = previewUrl || currentImage;
 
   const renderImageContainer = () => {
-    if (variant === 'avatar') {
+    if (variant === "avatar") {
       return (
         <Avatar className={getSizeClasses()}>
           <AvatarImage src={currentDisplayImage} alt="Upload preview" />
@@ -131,11 +131,13 @@ export default function ImageUpload({
     }
 
     return (
-      <div className={`${getSizeClasses()} border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden bg-gray-50`}>
+      <div
+        className={`${getSizeClasses()} border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden bg-gray-50`}
+      >
         {currentDisplayImage ? (
-          <img 
-            src={currentDisplayImage} 
-            alt="Upload preview" 
+          <img
+            src={currentDisplayImage}
+            alt="Upload preview"
             className="w-full h-full object-cover"
           />
         ) : (
@@ -153,7 +155,7 @@ export default function ImageUpload({
       {/* Image Preview */}
       <div className="flex items-center gap-4">
         {renderImageContainer()}
-        
+
         {currentDisplayImage && (
           <Button
             variant="outline"
@@ -173,7 +175,7 @@ export default function ImageUpload({
           <AlertDialogTrigger asChild>
             <Button variant="outline" size="sm" disabled={isUploading}>
               <Camera className="h-4 w-4 mr-2" />
-              {isUploading ? 'Uploading...' : 'Camera'}
+              {isUploading ? "Uploading..." : "Camera"}
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -193,14 +195,14 @@ export default function ImageUpload({
           </AlertDialogContent>
         </AlertDialog>
 
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={handleGallerySelect}
           disabled={isUploading}
         >
           <Upload className="h-4 w-4 mr-2" />
-          {isUploading ? 'Uploading...' : 'Gallery'}
+          {isUploading ? "Uploading..." : "Gallery"}
         </Button>
       </div>
 
@@ -215,7 +217,7 @@ export default function ImageUpload({
         }}
         className="hidden"
       />
-      
+
       <input
         ref={cameraInputRef}
         type="file"
@@ -242,8 +244,8 @@ export default function ImageUpload({
 
       {/* Demo Note */}
       <div className="text-xs text-gray-500 bg-blue-50 p-2 rounded border border-blue-200">
-        <span className="font-medium">Demo Mode:</span> Images are stored locally. 
-        In production, images would be uploaded to cloud storage.
+        <span className="font-medium">Demo Mode:</span> Images are stored
+        locally. In production, images would be uploaded to cloud storage.
       </div>
     </div>
   );
@@ -251,10 +253,14 @@ export default function ImageUpload({
 
 // Hook for image upload with compression
 export const useImageUpload = () => {
-  const compressImage = (file: File, maxWidth: number = 800, quality: number = 0.8): Promise<string> => {
+  const compressImage = (
+    file: File,
+    maxWidth: number = 800,
+    quality: number = 0.8,
+  ): Promise<string> => {
     return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       const img = new Image();
 
       img.onload = () => {
@@ -263,7 +269,7 @@ export const useImageUpload = () => {
         canvas.height = img.height * ratio;
 
         ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', quality));
+        resolve(canvas.toDataURL("image/jpeg", quality));
       };
 
       img.src = URL.createObjectURL(file);

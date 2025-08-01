@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { User, LogIn, LogOut, Crown } from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { User, LogIn, LogOut, Crown } from "lucide-react";
 
 export default function DemoAuth() {
   const { user, profile, signIn, signOut } = useAuth();
@@ -17,10 +17,11 @@ export default function DemoAuth() {
       // Since we don't have real Supabase configured, simulate a successful sign in
       toast({
         title: "Demo Sign In",
-        description: "This is a demo sign in. In production, this would authenticate with Supabase.",
+        description:
+          "This is a demo sign in. In production, this would authenticate with Supabase.",
         variant: "default",
       });
-      
+
       // In a real app, this would call signIn with real credentials
       // await signIn('demo@example.com', 'password');
     } catch (error) {
@@ -65,7 +66,10 @@ export default function DemoAuth() {
         {user ? (
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="bg-green-100 text-green-800">
+              <Badge
+                variant="secondary"
+                className="bg-green-100 text-green-800"
+              >
                 Signed In
               </Badge>
               {profile?.university && (
@@ -75,15 +79,15 @@ export default function DemoAuth() {
                 </Badge>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <div>
                 <p className="text-sm font-medium">
-                  {profile?.full_name || 'User'}
+                  {profile?.full_name || "User"}
                 </p>
                 <p className="text-xs text-gray-500">{user.email}</p>
               </div>
-              
+
               {profile?.bio && (
                 <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded">
                   {profile.bio}
@@ -91,15 +95,15 @@ export default function DemoAuth() {
               )}
             </div>
 
-            <Button 
-              onClick={handleSignOut} 
-              variant="outline" 
-              size="sm" 
+            <Button
+              onClick={handleSignOut}
+              variant="outline"
+              size="sm"
               disabled={loading}
               className="w-full"
             >
               <LogOut className="h-4 w-4 mr-1" />
-              {loading ? 'Signing Out...' : 'Sign Out'}
+              {loading ? "Signing Out..." : "Sign Out"}
             </Button>
           </div>
         ) : (
@@ -107,12 +111,15 @@ export default function DemoAuth() {
             <Badge variant="outline" className="bg-gray-100">
               Not Signed In
             </Badge>
-            
+
             <div className="text-sm text-gray-600 bg-green-50 p-3 rounded border border-green-200">
-              <p className="font-medium text-green-800 mb-1">Demo Mode Active</p>
+              <p className="font-medium text-green-800 mb-1">
+                Demo Mode Active
+              </p>
               <p className="text-green-700">
-                Backend is running with demo data! All features work including profile management,
-                club data, and activities. Ready for Supabase integration.
+                Backend is running with demo data! All features work including
+                profile management, club data, and activities. Ready for
+                Supabase integration.
               </p>
             </div>
 

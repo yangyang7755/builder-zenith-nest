@@ -1,14 +1,28 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase, Profile, signIn, signUp, signOut, getCurrentUser } from '../lib/supabase';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { User, Session } from "@supabase/supabase-js";
+import {
+  supabase,
+  Profile,
+  signIn,
+  signUp,
+  signOut,
+  getCurrentUser,
+} from "../lib/supabase";
 
 interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ user: User | null; error: any }>;
-  signUp: (email: string, password: string, userData?: { full_name?: string }) => Promise<{ user: User | null; error: any }>;
+  signIn: (
+    email: string,
+    password: string,
+  ) => Promise<{ user: User | null; error: any }>;
+  signUp: (
+    email: string,
+    password: string,
+    userData?: { full_name?: string },
+  ) => Promise<{ user: User | null; error: any }>;
   signOut: () => Promise<{ error: any }>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -19,12 +33,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -33,42 +49,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Fetch user profile from our API
   const fetchProfile = async (userId: string, authToken: string) => {
     try {
-      const response = await fetch('/api/profile', {
+      const response = await fetch("/api/profile", {
         headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
       });
-      
+
       if (response.ok) {
         const profileData = await response.json();
         setProfile(profileData);
       }
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error("Error fetching profile:", error);
     }
   };
 
   // Update profile via API
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!session?.access_token) return;
-    
+
     try {
-      const response = await fetch('/api/profile', {
-        method: 'PUT',
+      const response = await fetch("/api/profile", {
+        method: "PUT",
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(updates)
+        body: JSON.stringify(updates),
       });
-      
+
       if (response.ok) {
         const updatedProfile = await response.json();
         setProfile(updatedProfile);
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
       throw error;
     }
   };
@@ -91,14 +107,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      const { data: { session: initialSession } } = await supabase.auth.getSession();
+      const {
+        data: { session: initialSession },
+      } = await supabase.auth.getSession();
 
       if (mounted) {
         setSession(initialSession);
         setUser(initialSession?.user || null);
 
         if (initialSession?.user && initialSession?.access_token) {
-          await fetchProfile(initialSession.user.id, initialSession.access_token);
+          await fetchProfile(
+            initialSession.user.id,
+            initialSession.access_token,
+          );
         }
 
         setLoading(false);
@@ -112,21 +133,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (supabase) {
       const { data } = supabase.auth.onAuthStateChange(
         async (event, currentSession) => {
-          console.log('Auth state changed:', event, currentSession?.user?.email);
+          console.log(
+            "Auth state changed:",
+            event,
+            currentSession?.user?.email,
+          );
 
           if (mounted) {
             setSession(currentSession);
             setUser(currentSession?.user || null);
 
             if (currentSession?.user && currentSession?.access_token) {
-              await fetchProfile(currentSession.user.id, currentSession.access_token);
+              await fetchProfile(
+                currentSession.user.id,
+                currentSession.access_token,
+              );
             } else {
               setProfile(null);
             }
 
             setLoading(false);
           }
-        }
+        },
       );
       subscription = data.subscription;
     }
@@ -153,12 +181,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const demoProfile = {
           id: result.data.user.id,
           email: result.data.user.email,
-          full_name: result.data.user.user_metadata?.full_name || 'Demo User',
-          university: 'Demo University',
-          bio: 'Demo user profile',
+          full_name: result.data.user.user_metadata?.full_name || "Demo User",
+          university: "Demo University",
+          bio: "Demo user profile",
           profile_image: null,
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         };
         setProfile(demoProfile);
         setLoading(false);
@@ -166,7 +194,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return { user: result.data.user, error: result.error };
     },
-    signUp: async (email: string, password: string, userData?: { full_name?: string }) => {
+    signUp: async (
+      email: string,
+      password: string,
+      userData?: { full_name?: string },
+    ) => {
       const result = await signUp(email, password, userData);
 
       // In demo mode, don't automatically sign in after signup
@@ -184,12 +216,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { error: result.error };
     },
     updateProfile,
-    refreshProfile
+    refreshProfile,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

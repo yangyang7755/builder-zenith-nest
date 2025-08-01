@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { apiService } from "../services/apiService";
 
 export default function BackendTest() {
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -33,7 +35,8 @@ export default function BackendTest() {
       <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
         <p className="text-sm text-red-700">Backend Error: {message}</p>
         <p className="text-xs text-red-600 mt-1">
-          Backend may not be deployed yet. That's totally fine - we can set it up!
+          Backend may not be deployed yet. That's totally fine - we can set it
+          up!
         </p>
       </div>
     );

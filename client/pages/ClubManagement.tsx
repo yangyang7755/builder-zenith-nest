@@ -1,39 +1,45 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { 
-  ArrowLeft, 
-  Users, 
-  Settings, 
-  Edit, 
-  Check, 
-  X, 
+import {
+  ArrowLeft,
+  Users,
+  Settings,
+  Edit,
+  Check,
+  X,
   Upload,
   Plus,
   UserPlus,
   UserMinus,
   Clock,
-  Mail
+  Mail,
 } from "lucide-react";
 import { useClub } from "../contexts/ClubContext";
 import { useToast } from "../contexts/ToastContext";
-import { getActualMemberCount, getPendingRequestsCount, formatMemberCount } from "../utils/clubUtils";
+import {
+  getActualMemberCount,
+  getPendingRequestsCount,
+  formatMemberCount,
+} from "../utils/clubUtils";
 
 export default function ClubManagement() {
   const navigate = useNavigate();
   const { clubId } = useParams<{ clubId: string }>();
-  const { 
-    getClubById, 
-    isClubManager, 
-    updateClub, 
-    approveClubRequest, 
-    denyClubRequest, 
-    removeMember 
+  const {
+    getClubById,
+    isClubManager,
+    updateClub,
+    approveClubRequest,
+    denyClubRequest,
+    removeMember,
   } = useClub();
   const { showToast } = useToast();
-  
-  const [activeTab, setActiveTab] = useState<"overview" | "members" | "requests" | "settings">("overview");
+
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "members" | "requests" | "settings"
+  >("overview");
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const club = clubId ? getClubById(clubId) : null;
   const canManage = clubId ? isClubManager(clubId) : false;
 
@@ -49,7 +55,7 @@ export default function ClubManagement() {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-bold text-black mb-2">Club not found</h2>
-          <button 
+          <button
             onClick={() => navigate("/explore")}
             className="text-explore-green underline"
           >
@@ -65,8 +71,10 @@ export default function ClubManagement() {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-bold text-black mb-2">Access Denied</h2>
-          <p className="text-gray-600 mb-4">You don't have permission to manage this club.</p>
-          <button 
+          <p className="text-gray-600 mb-4">
+            You don't have permission to manage this club.
+          </p>
+          <button
             onClick={() => navigate(`/club/${clubId}`)}
             className="text-explore-green underline"
           >
@@ -112,7 +120,16 @@ export default function ClubManagement() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -120,7 +137,10 @@ export default function ClubManagement() {
 
       {/* Header */}
       <div className="flex items-center gap-3 p-6 border-b border-gray-200">
-        <button onClick={() => navigate(`/club/${clubId}`)} className="text-black">
+        <button
+          onClick={() => navigate(`/club/${clubId}`)}
+          className="text-black"
+        >
           <ArrowLeft className="w-6 h-6" />
         </button>
         <div className="flex-1">
@@ -136,7 +156,7 @@ export default function ClubManagement() {
           { id: "members", label: "Members", icon: Users },
           { id: "requests", label: "Requests", icon: UserPlus },
           { id: "settings", label: "Settings", icon: Edit },
-        ].map(tab => {
+        ].map((tab) => {
           const Icon = tab.icon;
           return (
             <button
@@ -165,29 +185,42 @@ export default function ClubManagement() {
         {activeTab === "overview" && (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-bold text-black mb-4">Club Statistics</h3>
+              <h3 className="text-lg font-bold text-black mb-4">
+                Club Statistics
+              </h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-explore-green">{getActualMemberCount(club)}</div>
+                  <div className="text-2xl font-bold text-explore-green">
+                    {getActualMemberCount(club)}
+                  </div>
                   <div className="text-sm text-gray-600">Total Members</div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-explore-green">{getPendingRequestsCount(club)}</div>
+                  <div className="text-2xl font-bold text-explore-green">
+                    {getPendingRequestsCount(club)}
+                  </div>
                   <div className="text-sm text-gray-600">Pending Requests</div>
                 </div>
               </div>
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-black mb-4">Recent Activity</h3>
+              <h3 className="text-lg font-bold text-black mb-4">
+                Recent Activity
+              </h3>
               <div className="space-y-3">
-                {club.pendingRequests.slice(0, 3).map(request => (
-                  <div key={request.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                {club.pendingRequests.slice(0, 3).map((request) => (
+                  <div
+                    key={request.id}
+                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                  >
                     <div className="w-8 h-8 bg-explore-green rounded-full flex items-center justify-center">
                       <UserPlus className="w-4 h-4 text-white" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">{request.userName} requested to join</p>
+                      <p className="text-sm font-medium">
+                        {request.userName} requested to join
+                      </p>
                       <p className="text-xs text-gray-500">
                         {request.requestedAt.toLocaleDateString()}
                       </p>
@@ -195,7 +228,9 @@ export default function ClubManagement() {
                   </div>
                 ))}
                 {club.pendingRequests.length === 0 && (
-                  <p className="text-gray-500 text-center py-4">No recent activity</p>
+                  <p className="text-gray-500 text-center py-4">
+                    No recent activity
+                  </p>
                 )}
               </div>
             </div>
@@ -205,19 +240,28 @@ export default function ClubManagement() {
         {activeTab === "members" && (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-black">Club Members ({club.memberCount})</h3>
+              <h3 className="text-lg font-bold text-black">
+                Club Members ({club.memberCount})
+              </h3>
             </div>
             <div className="space-y-3">
-              {club.members.map(memberId => (
-                <div key={memberId} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+              {club.members.map((memberId) => (
+                <div
+                  key={memberId}
+                  className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
+                >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
                     <div>
                       <p className="font-medium">
-                        {memberId === club.managerId ? "You (Manager)" : `Member ${memberId}`}
+                        {memberId === club.managerId
+                          ? "You (Manager)"
+                          : `Member ${memberId}`}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {club.managers.includes(memberId) ? "Manager" : "Member"}
+                        {club.managers.includes(memberId)
+                          ? "Manager"
+                          : "Member"}
                       </p>
                     </div>
                   </div>
@@ -243,11 +287,16 @@ export default function ClubManagement() {
               </h3>
             </div>
             <div className="space-y-4">
-              {club.pendingRequests.map(request => (
-                <div key={request.id} className="border border-gray-200 rounded-lg p-4">
+              {club.pendingRequests.map((request) => (
+                <div
+                  key={request.id}
+                  className="border border-gray-200 rounded-lg p-4"
+                >
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h4 className="font-medium text-black">{request.userName}</h4>
+                      <h4 className="font-medium text-black">
+                        {request.userName}
+                      </h4>
                       <p className="text-sm text-gray-500 flex items-center gap-1">
                         <Mail className="w-3 h-3" />
                         {request.userEmail}
@@ -258,7 +307,7 @@ export default function ClubManagement() {
                       </p>
                     </div>
                   </div>
-                  
+
                   {request.message && (
                     <div className="mb-3">
                       <p className="text-sm text-gray-700 bg-gray-50 p-2 rounded italic">
@@ -266,7 +315,7 @@ export default function ClubManagement() {
                       </p>
                     </div>
                   )}
-                  
+
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleApproveRequest(request.id)}
@@ -288,7 +337,9 @@ export default function ClubManagement() {
               {club.pendingRequests.length === 0 && (
                 <div className="text-center py-8">
                   <UserPlus className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500">No pending membership requests</p>
+                  <p className="text-gray-500">
+                    No pending membership requests
+                  </p>
                 </div>
               )}
             </div>
@@ -299,7 +350,9 @@ export default function ClubManagement() {
           <div className="space-y-6">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-black">Club Information</h3>
+                <h3 className="text-lg font-bold text-black">
+                  Club Information
+                </h3>
                 {!isEditing ? (
                   <button
                     onClick={() => setIsEditing(true)}
@@ -336,12 +389,16 @@ export default function ClubManagement() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Club Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Club Name
+                  </label>
                   {isEditing ? (
                     <input
                       type="text"
                       value={editForm.name}
-                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, name: e.target.value })
+                      }
                       className="w-full p-2 border border-gray-300 rounded-lg"
                     />
                   ) : (
@@ -350,44 +407,68 @@ export default function ClubManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description
+                  </label>
                   {isEditing ? (
                     <textarea
                       value={editForm.description}
-                      onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          description: e.target.value,
+                        })
+                      }
                       className="w-full p-2 border border-gray-300 rounded-lg h-24 resize-none"
                     />
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-lg">{club.description}</p>
+                    <p className="p-2 bg-gray-50 rounded-lg">
+                      {club.description}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Website
+                  </label>
                   {isEditing ? (
                     <input
                       type="url"
                       value={editForm.website}
-                      onChange={(e) => setEditForm({ ...editForm, website: e.target.value })}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, website: e.target.value })
+                      }
                       className="w-full p-2 border border-gray-300 rounded-lg"
                       placeholder="https://..."
                     />
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-lg">{club.website || "Not provided"}</p>
+                    <p className="p-2 bg-gray-50 rounded-lg">
+                      {club.website || "Not provided"}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Contact Email</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Contact Email
+                  </label>
                   {isEditing ? (
                     <input
                       type="email"
                       value={editForm.contactEmail}
-                      onChange={(e) => setEditForm({ ...editForm, contactEmail: e.target.value })}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          contactEmail: e.target.value,
+                        })
+                      }
                       className="w-full p-2 border border-gray-300 rounded-lg"
                     />
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-lg">{club.contactEmail || "Not provided"}</p>
+                    <p className="p-2 bg-gray-50 rounded-lg">
+                      {club.contactEmail || "Not provided"}
+                    </p>
                   )}
                 </div>
               </div>
@@ -397,10 +478,12 @@ export default function ClubManagement() {
               <h3 className="text-lg font-bold text-black mb-4">Club Images</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Profile Image
+                  </label>
                   <div className="flex items-center gap-4">
-                    <img 
-                      src={club.profileImage} 
+                    <img
+                      src={club.profileImage}
                       alt={club.name}
                       className="w-16 h-16 rounded-lg object-cover border border-gray-200"
                     />

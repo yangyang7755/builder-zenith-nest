@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -14,10 +14,15 @@ const isValidUrl = (url: string | undefined) => {
   }
 };
 
-const hasValidConfig = isValidUrl(supabaseUrl) && supabaseAnonKey && supabaseAnonKey !== 'temp-placeholder';
+const hasValidConfig =
+  isValidUrl(supabaseUrl) &&
+  supabaseAnonKey &&
+  supabaseAnonKey !== "temp-placeholder";
 
 if (!hasValidConfig) {
-  console.warn('Warning: Missing or invalid Supabase environment variables. Authentication features will not work.');
+  console.warn(
+    "Warning: Missing or invalid Supabase environment variables. Authentication features will not work.",
+  );
 }
 
 export const supabase = hasValidConfig
@@ -25,39 +30,45 @@ export const supabase = hasValidConfig
       auth: {
         autoRefreshToken: true,
         persistSession: true,
-        detectSessionInUrl: true
-      }
+        detectSessionInUrl: true,
+      },
     })
   : null;
 
 // Helper to get auth header for API calls
 export const getAuthHeader = async () => {
-  if (!supabase) return '';
-  const { data: { session } } = await supabase.auth.getSession();
-  return session?.access_token ? `Bearer ${session.access_token}` : '';
+  if (!supabase) return "";
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session?.access_token ? `Bearer ${session.access_token}` : "";
 };
 
 // Auth helpers
-export const signUp = async (email: string, password: string, userData?: { full_name?: string }) => {
+export const signUp = async (
+  email: string,
+  password: string,
+  userData?: { full_name?: string },
+) => {
   if (!supabase) {
     // Simulate successful signup in demo mode
     const demoUser = {
-      id: 'demo-user-' + Date.now(),
+      id: "demo-user-" + Date.now(),
       email: email,
       user_metadata: userData || {},
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
     return {
       data: { user: demoUser },
-      error: null
+      error: null,
     };
   }
   return await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: userData
-    }
+      data: userData,
+    },
   });
 };
 
@@ -65,32 +76,34 @@ export const signIn = async (email: string, password: string) => {
   if (!supabase) {
     // Simulate successful signin in demo mode
     const demoUser = {
-      id: 'demo-user-signed-in',
+      id: "demo-user-signed-in",
       email: email,
-      user_metadata: { full_name: 'Demo User' },
-      created_at: new Date().toISOString()
+      user_metadata: { full_name: "Demo User" },
+      created_at: new Date().toISOString(),
     };
     return {
       data: { user: demoUser },
-      error: null
+      error: null,
     };
   }
   return await supabase.auth.signInWithPassword({
     email,
-    password
+    password,
   });
 };
 
 export const signOut = async () => {
   if (!supabase) {
-    return { error: { message: 'Authentication not configured' } };
+    return { error: { message: "Authentication not configured" } };
   }
   return await supabase.auth.signOut();
 };
 
 export const getCurrentUser = async () => {
   if (!supabase) return null;
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return user;
 };
 

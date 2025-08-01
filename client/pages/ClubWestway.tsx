@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MapPin, ArrowLeft, Users, Calendar, LogOut, Send, Settings, UserPlus } from "lucide-react";
+import {
+  MapPin,
+  ArrowLeft,
+  Users,
+  Calendar,
+  LogOut,
+  Send,
+  Settings,
+  UserPlus,
+} from "lucide-react";
 import { useClub } from "../contexts/ClubContext";
 import { getActualMemberCount, formatMemberCount } from "../utils/clubUtils";
 
 export default function ClubWestway() {
   const navigate = useNavigate();
-  const { getClubById, isClubMember, isClubManager, requestToJoinClub } = useClub();
+  const { getClubById, isClubMember, isClubManager, requestToJoinClub } =
+    useClub();
   const club = getClubById("westway");
   const isMember = isClubMember("westway");
   const isManager = isClubManager("westway");
@@ -52,7 +62,8 @@ export default function ClubWestway() {
       avatar:
         "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
-      description: "Weekly social climbing session for women and non-binary climbers",
+      description:
+        "Weekly social climbing session for women and non-binary climbers",
       difficulty: "All levels welcome",
     },
     {
@@ -74,7 +85,8 @@ export default function ClubWestway() {
       avatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
-      description: "Learn the fundamentals of lead climbing with certified instructors",
+      description:
+        "Learn the fundamentals of lead climbing with certified instructors",
       difficulty: "Intermediate",
     },
   ];
@@ -368,7 +380,7 @@ export default function ClubWestway() {
                   {formatMemberCount(getActualMemberCount(club))}
                 </span>
               </div>
-              
+
               {/* Chat Messages */}
               <div className="space-y-3 max-h-80 overflow-y-auto">
                 {chatMessages.map((message) => (
@@ -425,8 +437,8 @@ export default function ClubWestway() {
                 Leave Club
               </h3>
               <p className="text-gray-600 font-cabin">
-                Are you sure you want to leave Westway Climbing Centre?
-                You'll lose access to club events and chat.
+                Are you sure you want to leave Westway Climbing Centre? You'll
+                lose access to club events and chat.
               </p>
             </div>
 

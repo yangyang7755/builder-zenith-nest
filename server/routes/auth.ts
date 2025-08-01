@@ -22,12 +22,12 @@ export const handleGetProfile = async (req: Request, res: Response) => {
         bio: "This is a demo profile for testing purposes.",
         profile_image: null,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
       return res.json(demoProfile);
     }
 
-    const user = await getUserFromToken(req.headers.authorization || '');
+    const user = await getUserFromToken(req.headers.authorization || "");
 
     if (!user) {
       // In demo mode, return sample profile instead of 401 error
@@ -39,57 +39,59 @@ export const handleGetProfile = async (req: Request, res: Response) => {
         bio: "Demo profile - authentication not configured",
         profile_image: null,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
       return res.json(demoProfile);
     }
 
     const { data: profile, error } = await supabaseAdmin
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
       .single();
-    
+
     if (error) {
-      console.error('Database error:', error);
+      console.error("Database error:", error);
       return res.status(500).json({ error: "Failed to fetch profile" });
     }
-    
+
     res.json(profile);
   } catch (error) {
-    console.error('Server error:', error);
+    console.error("Server error:", error);
     res.status(500).json({ error: "Failed to fetch profile" });
   }
 };
 
 export const handleUpdateProfile = async (req: Request, res: Response) => {
   try {
-    const user = await getUserFromToken(req.headers.authorization || '');
-    
+    const user = await getUserFromToken(req.headers.authorization || "");
+
     if (!user) {
       return res.status(401).json({ error: "Authentication required" });
     }
 
     const validatedData = ProfileUpdateSchema.parse(req.body);
-    
+
     const { data: updatedProfile, error } = await supabaseAdmin
-      .from('profiles')
+      .from("profiles")
       .update(validatedData)
-      .eq('id', user.id)
-      .select('*')
+      .eq("id", user.id)
+      .select("*")
       .single();
-    
+
     if (error) {
-      console.error('Database error:', error);
+      console.error("Database error:", error);
       return res.status(500).json({ error: "Failed to update profile" });
     }
-    
+
     res.json(updatedProfile);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid profile data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid profile data", details: error.errors });
     } else {
-      console.error('Server error:', error);
+      console.error("Server error:", error);
       res.status(500).json({ error: "Failed to update profile" });
     }
   }
@@ -106,20 +108,20 @@ export const handleGetUserClubs = async (req: Request, res: Response) => {
           name: "Oxford University Cycling Club",
           type: "cycling",
           location: "Oxford, UK",
-          userRole: "member"
+          userRole: "member",
         },
         {
           id: "westway",
           name: "Westway Climbing Centre",
           type: "climbing",
           location: "London, UK",
-          userRole: "manager"
-        }
+          userRole: "manager",
+        },
       ];
       return res.json(demoClubs);
     }
 
-    const user = await getUserFromToken(req.headers.authorization || '');
+    const user = await getUserFromToken(req.headers.authorization || "");
 
     if (!user) {
       // In demo mode, return sample data instead of 401 error
@@ -129,35 +131,38 @@ export const handleGetUserClubs = async (req: Request, res: Response) => {
           name: "Oxford University Cycling Club",
           type: "cycling",
           location: "Oxford, UK",
-          userRole: "member"
-        }
+          userRole: "member",
+        },
       ];
       return res.json(demoClubs);
     }
 
     const { data: memberships, error } = await supabaseAdmin
-      .from('club_memberships')
-      .select(`
+      .from("club_memberships")
+      .select(
+        `
         role,
         status,
         club:clubs(*)
-      `)
-      .eq('user_id', user.id)
-      .eq('status', 'approved');
-    
+      `,
+      )
+      .eq("user_id", user.id)
+      .eq("status", "approved");
+
     if (error) {
-      console.error('Database error:', error);
+      console.error("Database error:", error);
       return res.status(500).json({ error: "Failed to fetch user clubs" });
     }
-    
-    const clubs = memberships?.map(membership => ({
-      ...membership.club,
-      userRole: membership.role
-    })) || [];
-    
+
+    const clubs =
+      memberships?.map((membership) => ({
+        ...membership.club,
+        userRole: membership.role,
+      })) || [];
+
     res.json(clubs);
   } catch (error) {
-    console.error('Server error:', error);
+    console.error("Server error:", error);
     res.status(500).json({ error: "Failed to fetch user clubs" });
   }
 };
@@ -175,7 +180,7 @@ export const handleGetUserActivities = async (req: Request, res: Response) => {
           date: "2024-02-15",
           time: "08:00",
           location: "Oxford Countryside",
-          club: { name: "Oxford University Cycling Club" }
+          club: { name: "Oxford University Cycling Club" },
         },
         {
           id: "demo-2",
@@ -184,13 +189,13 @@ export const handleGetUserActivities = async (req: Request, res: Response) => {
           date: "2024-02-20",
           time: "19:00",
           location: "Westway Climbing Centre",
-          club: { name: "Westway Climbing Centre" }
-        }
+          club: { name: "Westway Climbing Centre" },
+        },
       ];
       return res.json(demoActivities);
     }
 
-    const user = await getUserFromToken(req.headers.authorization || '');
+    const user = await getUserFromToken(req.headers.authorization || "");
 
     if (!user) {
       // In demo mode, return sample data instead of 401 error
@@ -202,30 +207,32 @@ export const handleGetUserActivities = async (req: Request, res: Response) => {
           date: "2024-02-15",
           time: "08:00",
           location: "Demo Location",
-          club: { name: "Demo Club" }
-        }
+          club: { name: "Demo Club" },
+        },
       ];
       return res.json(demoActivities);
     }
 
     const { data: activities, error } = await supabaseAdmin
-      .from('activities')
-      .select(`
+      .from("activities")
+      .select(
+        `
         *,
         organizer:profiles!organizer_id(id, full_name, email),
         club:clubs(id, name)
-      `)
-      .eq('organizer_id', user.id)
-      .order('date', { ascending: true });
-    
+      `,
+      )
+      .eq("organizer_id", user.id)
+      .order("date", { ascending: true });
+
     if (error) {
-      console.error('Database error:', error);
+      console.error("Database error:", error);
       return res.status(500).json({ error: "Failed to fetch user activities" });
     }
-    
+
     res.json(activities || []);
   } catch (error) {
-    console.error('Server error:', error);
+    console.error("Server error:", error);
     res.status(500).json({ error: "Failed to fetch user activities" });
   }
 };

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,11 +8,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import {
   User,
   Settings,
@@ -22,7 +22,7 @@ import {
   Crown,
   MessageCircle,
   Calendar,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function UserNav() {
   const { user, profile, signOut } = useAuth();
@@ -36,7 +36,7 @@ export default function UserNav() {
         title: "Signed Out",
         description: "You have been successfully signed out.",
       });
-      navigate('/explore');
+      navigate("/explore");
     } catch (error) {
       toast({
         title: "Error",
@@ -48,9 +48,9 @@ export default function UserNav() {
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -85,7 +85,7 @@ export default function UserNav() {
           Chat
         </Link>
       </Button>
-      
+
       <Button variant="ghost" size="sm" asChild>
         <Link to="/create">
           <Calendar className="h-4 w-4 mr-1" />
@@ -98,15 +98,14 @@ export default function UserNav() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage 
-                src={profile?.profile_image} 
-                alt={profile?.full_name || user.email || 'User'} 
+              <AvatarImage
+                src={profile?.profile_image}
+                alt={profile?.full_name || user.email || "User"}
               />
               <AvatarFallback>
-                {profile?.full_name 
-                  ? getInitials(profile.full_name) 
-                  : getInitials(user.email?.split('@')[0] || 'U')
-                }
+                {profile?.full_name
+                  ? getInitials(profile.full_name)
+                  : getInitials(user.email?.split("@")[0] || "U")}
               </AvatarFallback>
             </Avatar>
           </Button>
@@ -115,7 +114,7 @@ export default function UserNav() {
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">
-                {profile?.full_name || 'User'}
+                {profile?.full_name || "User"}
               </p>
               <p className="text-xs leading-none text-muted-foreground">
                 {user.email}
@@ -184,24 +183,26 @@ export function UserNavMobile() {
     <div className="p-4 border-t">
       <div className="flex items-center gap-3 mb-3">
         <Avatar className="h-10 w-10">
-          <AvatarImage 
-            src={profile?.profile_image} 
-            alt={profile?.full_name || user.email || 'User'} 
+          <AvatarImage
+            src={profile?.profile_image}
+            alt={profile?.full_name || user.email || "User"}
           />
           <AvatarFallback>
-            {profile?.full_name 
-              ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-              : user.email?.split('@')[0]?.charAt(0).toUpperCase() || 'U'
-            }
+            {profile?.full_name
+              ? profile.full_name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2)
+              : user.email?.split("@")[0]?.charAt(0).toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium truncate">
-            {profile?.full_name || 'User'}
+            {profile?.full_name || "User"}
           </p>
-          <p className="text-xs text-gray-500 truncate">
-            {user.email}
-          </p>
+          <p className="text-xs text-gray-500 truncate">{user.email}</p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2">

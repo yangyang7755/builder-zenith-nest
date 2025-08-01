@@ -1,43 +1,49 @@
-import React, { useState } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
+import React, { useState } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 
 export default function SignIn() {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn } = useAuth();
   const { toast } = useToast();
-  
+
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // Get the intended destination from location state
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || "/";
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
+    const newErrors: { [key: string]: string } = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     }
 
     setErrors(newErrors);
@@ -46,7 +52,7 @@ export default function SignIn() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -56,22 +62,25 @@ export default function SignIn() {
       const { user, error } = await signIn(formData.email, formData.password);
 
       if (error) {
-        if (error.message.includes('Invalid login credentials')) {
+        if (error.message.includes("Invalid login credentials")) {
           toast({
             title: "Sign In Failed",
-            description: "Invalid email or password. Please check your credentials and try again.",
+            description:
+              "Invalid email or password. Please check your credentials and try again.",
             variant: "destructive",
           });
-        } else if (error.message.includes('Email not confirmed')) {
+        } else if (error.message.includes("Email not confirmed")) {
           toast({
             title: "Email Not Verified",
-            description: "Please check your email and click the verification link before signing in.",
+            description:
+              "Please check your email and click the verification link before signing in.",
             variant: "destructive",
           });
         } else {
           toast({
             title: "Sign In Failed",
-            description: error.message || "Failed to sign in. Please try again.",
+            description:
+              error.message || "Failed to sign in. Please try again.",
             variant: "destructive",
           });
         }
@@ -79,10 +88,11 @@ export default function SignIn() {
       }
 
       if (user) {
-        if (user.id.includes('demo-user')) {
+        if (user.id.includes("demo-user")) {
           toast({
             title: "Demo Sign In Successful!",
-            description: "Welcome to demo mode! All features are available with sample data.",
+            description:
+              "Welcome to demo mode! All features are available with sample data.",
           });
         } else {
           toast({
@@ -104,9 +114,9 @@ export default function SignIn() {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -145,7 +155,9 @@ export default function SignIn() {
                       type="email"
                       autoComplete="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       placeholder="Enter your email"
                       className="pl-10"
                       disabled={loading}
@@ -172,7 +184,9 @@ export default function SignIn() {
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
                       placeholder="Enter your password"
                       className="pl-10 pr-10"
                       disabled={loading}
@@ -210,17 +224,13 @@ export default function SignIn() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Signing In..." : "Sign In"}
               </Button>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  Don't have an account?{' '}
+                  Don't have an account?{" "}
                   <Link
                     to="/signup"
                     className="font-medium text-blue-600 hover:text-blue-500"
@@ -237,10 +247,13 @@ export default function SignIn() {
         <Card className="bg-green-50 border-green-200">
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-sm text-green-800 font-medium mb-2">Demo Mode Active</p>
+              <p className="text-sm text-green-800 font-medium mb-2">
+                Demo Mode Active
+              </p>
               <p className="text-xs text-green-600">
-                Sign in with any email and password! Demo authentication is working
-                with all backend features including profiles, clubs, and activities.
+                Sign in with any email and password! Demo authentication is
+                working with all backend features including profiles, clubs, and
+                activities.
               </p>
             </div>
           </CardContent>

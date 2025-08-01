@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -14,14 +14,19 @@ const isValidUrl = (url: string | undefined) => {
   }
 };
 
-const hasValidConfig = isValidUrl(supabaseUrl) && supabaseServiceKey && supabaseServiceKey !== 'temp-placeholder';
+const hasValidConfig =
+  isValidUrl(supabaseUrl) &&
+  supabaseServiceKey &&
+  supabaseServiceKey !== "temp-placeholder";
 
 if (!hasValidConfig) {
   // During development, allow missing env vars for now
-  if (process.env.NODE_ENV !== 'production') {
-    console.warn('Warning: Missing or invalid Supabase environment variables. Database features will not work.');
+  if (process.env.NODE_ENV !== "production") {
+    console.warn(
+      "Warning: Missing or invalid Supabase environment variables. Database features will not work.",
+    );
   } else {
-    throw new Error('Missing Supabase environment variables');
+    throw new Error("Missing Supabase environment variables");
   }
 }
 
@@ -30,25 +35,28 @@ export const supabaseAdmin = hasValidConfig
   ? createClient(supabaseUrl!, supabaseServiceKey!, {
       auth: {
         autoRefreshToken: false,
-        persistSession: false
-      }
+        persistSession: false,
+      },
     })
   : null;
 
 // Helper function to get user from JWT token
 export const getUserFromToken = async (authHeader: string) => {
-  if (!supabaseAdmin || !authHeader?.startsWith('Bearer ')) {
+  if (!supabaseAdmin || !authHeader?.startsWith("Bearer ")) {
     return null;
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(" ")[1];
 
   try {
-    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+    const {
+      data: { user },
+      error,
+    } = await supabaseAdmin.auth.getUser(token);
     if (error) throw error;
     return user;
   } catch (error) {
-    console.error('Error getting user from token:', error);
+    console.error("Error getting user from token:", error);
     return null;
   }
 };
@@ -123,8 +131,8 @@ export interface Database {
           id: string;
           club_id: string;
           user_id: string;
-          role: 'member' | 'manager';
-          status: 'pending' | 'approved' | 'denied';
+          role: "member" | "manager";
+          status: "pending" | "approved" | "denied";
           requested_at: string;
           approved_at: string | null;
           message: string | null;
@@ -132,13 +140,13 @@ export interface Database {
         Insert: {
           club_id: string;
           user_id: string;
-          role?: 'member' | 'manager';
-          status?: 'pending' | 'approved' | 'denied';
+          role?: "member" | "manager";
+          status?: "pending" | "approved" | "denied";
           message?: string | null;
         };
         Update: {
-          role?: 'member' | 'manager';
-          status?: 'pending' | 'approved' | 'denied';
+          role?: "member" | "manager";
+          status?: "pending" | "approved" | "denied";
           approved_at?: string | null;
         };
       };

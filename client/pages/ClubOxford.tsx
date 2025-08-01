@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MapPin, ArrowLeft, Users, Calendar, LogOut, Send, Settings, UserPlus } from "lucide-react";
+import {
+  MapPin,
+  ArrowLeft,
+  Users,
+  Calendar,
+  LogOut,
+  Send,
+  Settings,
+  UserPlus,
+} from "lucide-react";
 import { useClub } from "../contexts/ClubContext";
 import { getActualMemberCount, formatMemberCount } from "../utils/clubUtils";
 
 export default function ClubOxford() {
   const navigate = useNavigate();
-  const { getClubById, isClubMember, isClubManager, requestToJoinClub } = useClub();
+  const { getClubById, isClubMember, isClubManager, requestToJoinClub } =
+    useClub();
   const club = getClubById("oucc");
   const isMember = isClubMember("oucc");
   const isManager = isClubManager("oucc");
@@ -370,21 +380,27 @@ export default function ClubOxford() {
 
               {/* Club Managers Section */}
               <div className="mb-6">
-                <h4 className="text-md font-medium text-black font-cabin mb-3">Club Managers</h4>
+                <h4 className="text-md font-medium text-black font-cabin mb-3">
+                  Club Managers
+                </h4>
                 <div className="grid grid-cols-6 gap-4">
                   {club?.managers.map((managerId, index) => {
                     // Map manager IDs to display names
-                    const managerName = managerId === "current-user" ? "You" :
-                                       managerId === "coach-holly" ? "Coach Holly" :
-                                       `Manager ${managerId}`;
+                    const managerName =
+                      managerId === "current-user"
+                        ? "You"
+                        : managerId === "coach-holly"
+                          ? "Coach Holly"
+                          : `Manager ${managerId}`;
                     return (
                       <div key={managerId} className="text-center">
                         <img
-                          src={managerId === "current-user" ?
-                            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" :
-                            managerId === "coach-holly" ?
-                            "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face" :
-                            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+                          src={
+                            managerId === "current-user"
+                              ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+                              : managerId === "coach-holly"
+                                ? "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+                                : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
                           }
                           alt={managerName}
                           className="w-12 h-12 rounded-full border-2 border-explore-green object-cover mx-auto mb-2"
@@ -392,7 +408,9 @@ export default function ClubOxford() {
                         <span className="text-xs text-black font-cabin font-medium">
                           {managerName}
                         </span>
-                        <div className="text-xs text-explore-green font-cabin">Manager</div>
+                        <div className="text-xs text-explore-green font-cabin">
+                          Manager
+                        </div>
                       </div>
                     );
                   })}
@@ -401,7 +419,9 @@ export default function ClubOxford() {
 
               {/* Regular Members Section */}
               <div>
-                <h4 className="text-md font-medium text-black font-cabin mb-3">Members</h4>
+                <h4 className="text-md font-medium text-black font-cabin mb-3">
+                  Members
+                </h4>
                 <div className="grid grid-cols-6 gap-4">
                   {members.map((member, index) => (
                     <div key={index} className="text-center">
@@ -437,7 +457,9 @@ export default function ClubOxford() {
 
               {/* Recent Messages Preview */}
               <div className="border-2 border-gray-200 rounded-lg p-4 mb-4">
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Recent Messages</h4>
+                <h4 className="text-sm font-medium text-gray-700 mb-3">
+                  Recent Messages
+                </h4>
                 <div className="space-y-3 max-h-40 overflow-y-auto">
                   {chatMessages.slice(-3).map((msg) => (
                     <div key={msg.id} className="flex items-start gap-3">

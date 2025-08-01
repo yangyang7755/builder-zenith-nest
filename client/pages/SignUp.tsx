@@ -1,54 +1,60 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { User, Mail, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { User, Mail, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
   const { toast } = useToast();
-  
+
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    full_name: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
+    full_name: "",
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
-    const newErrors: {[key: string]: string} = {};
+    const newErrors: { [key: string]: string } = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     if (!formData.full_name.trim()) {
-      newErrors.full_name = 'Full name is required';
+      newErrors.full_name = "Full name is required";
     }
 
     setErrors(newErrors);
@@ -57,43 +63,44 @@ export default function SignUp() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
     try {
-      const { user, error } = await signUp(
-        formData.email, 
-        formData.password,
-        { full_name: formData.full_name }
-      );
+      const { user, error } = await signUp(formData.email, formData.password, {
+        full_name: formData.full_name,
+      });
 
       if (error) {
         toast({
           title: "Sign Up Failed",
-          description: error.message || "Failed to create account. Please try again.",
+          description:
+            error.message || "Failed to create account. Please try again.",
           variant: "destructive",
         });
         return;
       }
 
       if (user) {
-        if (user.id.startsWith('demo-user-')) {
+        if (user.id.startsWith("demo-user-")) {
           // Demo mode - no email verification needed
           toast({
             title: "Demo Account Created Successfully",
-            description: "Demo account created! You can now sign in with these credentials.",
+            description:
+              "Demo account created! You can now sign in with these credentials.",
           });
         } else {
           // Real Supabase mode
           toast({
             title: "Account Created Successfully",
-            description: "Please check your email to verify your account before signing in.",
+            description:
+              "Please check your email to verify your account before signing in.",
           });
         }
-        navigate('/signin');
+        navigate("/signin");
       }
     } catch (error) {
       toast({
@@ -107,9 +114,9 @@ export default function SignUp() {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -147,7 +154,9 @@ export default function SignUp() {
                       name="full_name"
                       type="text"
                       value={formData.full_name}
-                      onChange={(e) => handleInputChange('full_name', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("full_name", e.target.value)
+                      }
                       placeholder="Enter your full name"
                       className="pl-10"
                       disabled={loading}
@@ -173,7 +182,9 @@ export default function SignUp() {
                       name="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       placeholder="Enter your email"
                       className="pl-10"
                       disabled={loading}
@@ -199,7 +210,9 @@ export default function SignUp() {
                       name="password"
                       type={showPassword ? "text" : "password"}
                       value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
                       placeholder="Enter your password"
                       className="pl-10 pr-10"
                       disabled={loading}
@@ -236,7 +249,9 @@ export default function SignUp() {
                       name="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
+                      }
                       placeholder="Confirm your password"
                       className="pl-10 pr-10"
                       disabled={loading}
@@ -244,7 +259,9 @@ export default function SignUp() {
                     <button
                       type="button"
                       className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="h-4 w-4 text-gray-400" />
@@ -263,17 +280,13 @@ export default function SignUp() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Creating Account..." : "Create Account"}
               </Button>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  Already have an account?{' '}
+                  Already have an account?{" "}
                   <Link
                     to="/signin"
                     className="font-medium text-blue-600 hover:text-blue-500"
@@ -290,10 +303,12 @@ export default function SignUp() {
         <Card className="bg-green-50 border-green-200">
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-sm text-green-800 font-medium mb-2">Demo Mode Active</p>
+              <p className="text-sm text-green-800 font-medium mb-2">
+                Demo Mode Active
+              </p>
               <p className="text-xs text-green-600">
-                You can create a demo account with any email and password.
-                No real email verification required - perfect for testing!
+                You can create a demo account with any email and password. No
+                real email verification required - perfect for testing!
               </p>
             </div>
           </CardContent>

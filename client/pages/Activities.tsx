@@ -23,7 +23,15 @@ export default function Activities() {
   const [filters, setFilters] = useState<FilterOptions>({
     activityType: filterParam
       ? [filterParam.charAt(0).toUpperCase() + filterParam.slice(1)]
-      : ["Cycling", "Climbing", "Running", "Hiking", "Skiing", "Surfing", "Tennis"],
+      : [
+          "Cycling",
+          "Climbing",
+          "Running",
+          "Hiking",
+          "Skiing",
+          "Surfing",
+          "Tennis",
+        ],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     date: { start: "", end: "" },
@@ -369,21 +377,22 @@ function ActivityCard({
       </div>
 
       {/* Activity-specific metrics */}
-      {(activity.type === "cycling" || activity.type === "running") && (activity.distance || activity.pace) && (
-        <div className="mt-3 flex gap-4">
-          {activity.distance && (
-            <div className="text-sm text-gray-600">
-              {getActivityIcon(activity.type)} {activity.distance}
-              {activity.distanceUnit}
-            </div>
-          )}
-          {activity.pace && (
-            <div className="text-sm text-gray-600">
-              ⚡ {activity.pace} {activity.paceUnit}
-            </div>
-          )}
-        </div>
-      )}
+      {(activity.type === "cycling" || activity.type === "running") &&
+        (activity.distance || activity.pace) && (
+          <div className="mt-3 flex gap-4">
+            {activity.distance && (
+              <div className="text-sm text-gray-600">
+                {getActivityIcon(activity.type)} {activity.distance}
+                {activity.distanceUnit}
+              </div>
+            )}
+            {activity.pace && (
+              <div className="text-sm text-gray-600">
+                ⚡ {activity.pace} {activity.paceUnit}
+              </div>
+            )}
+          </div>
+        )}
 
       {activity.type === "climbing" && activity.climbingLevel && (
         <div className="mt-3">
@@ -393,28 +402,34 @@ function ActivityCard({
         </div>
       )}
 
-      {activity.type === "hiking" && (activity.distance || activity.elevation) && (
-        <div className="mt-3 flex gap-4">
-          {activity.distance && (
-            <div className="text-sm text-gray-600">
-              🥾 {activity.distance}{activity.distanceUnit}
-            </div>
-          )}
-          {activity.elevation && (
-            <div className="text-sm text-gray-600">
-              ⛰️ {activity.elevation}{activity.elevationUnit}
-            </div>
-          )}
-        </div>
-      )}
-
-      {(activity.type === "skiing" || activity.type === "surfing" || activity.type === "tennis") && activity.difficulty && (
-        <div className="mt-3">
-          <div className="text-sm text-gray-600">
-            {getActivityIcon(activity.type)} {activity.difficulty} level
+      {activity.type === "hiking" &&
+        (activity.distance || activity.elevation) && (
+          <div className="mt-3 flex gap-4">
+            {activity.distance && (
+              <div className="text-sm text-gray-600">
+                🥾 {activity.distance}
+                {activity.distanceUnit}
+              </div>
+            )}
+            {activity.elevation && (
+              <div className="text-sm text-gray-600">
+                ⛰️ {activity.elevation}
+                {activity.elevationUnit}
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        )}
+
+      {(activity.type === "skiing" ||
+        activity.type === "surfing" ||
+        activity.type === "tennis") &&
+        activity.difficulty && (
+          <div className="mt-3">
+            <div className="text-sm text-gray-600">
+              {getActivityIcon(activity.type)} {activity.difficulty} level
+            </div>
+          </div>
+        )}
     </div>
   );
 }

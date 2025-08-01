@@ -4,7 +4,7 @@ export interface ClubMember {
   id: string;
   name: string;
   email: string;
-  role: 'member' | 'manager';
+  role: "member" | "manager";
 }
 
 export interface ClubRequest {
@@ -14,7 +14,7 @@ export interface ClubRequest {
   userEmail: string;
   message?: string;
   requestedAt: string;
-  status: 'pending' | 'approved' | 'denied';
+  status: "pending" | "approved" | "denied";
 }
 
 export interface Club {
@@ -34,19 +34,19 @@ export interface Club {
  */
 export const getActualMemberCount = (club: Club | any): number => {
   if (!club) return 0;
-  
+
   // If we have a members array, use its length
   if (Array.isArray(club.members)) {
-    return club.members.filter(member => 
-      member.status === 'approved' || !member.status // Assume approved if no status
+    return club.members.filter(
+      (member) => member.status === "approved" || !member.status, // Assume approved if no status
     ).length;
   }
-  
+
   // Fallback to managers length if available
   if (Array.isArray(club.managers)) {
     return club.managers.length;
   }
-  
+
   // Last fallback to stored memberCount
   return club.memberCount || 0;
 };
@@ -56,7 +56,7 @@ export const getActualMemberCount = (club: Club | any): number => {
  */
 export const getPendingRequestsCount = (club: Club | any): number => {
   if (!club?.pendingRequests) return 0;
-  return club.pendingRequests.filter(req => req.status === 'pending').length;
+  return club.pendingRequests.filter((req) => req.status === "pending").length;
 };
 
 /**
@@ -64,19 +64,19 @@ export const getPendingRequestsCount = (club: Club | any): number => {
  */
 export const isClubManager = (club: Club | any, userId: string): boolean => {
   if (!club || !userId) return false;
-  
+
   // Check managers array
   if (Array.isArray(club.managers)) {
     return club.managers.includes(userId);
   }
-  
+
   // Check members array for manager role
   if (Array.isArray(club.members)) {
-    return club.members.some(member => 
-      member.id === userId && member.role === 'manager'
+    return club.members.some(
+      (member) => member.id === userId && member.role === "manager",
     );
   }
-  
+
   return false;
 };
 
@@ -85,33 +85,36 @@ export const isClubManager = (club: Club | any, userId: string): boolean => {
  */
 export const isClubMember = (club: Club | any, userId: string): boolean => {
   if (!club || !userId) return false;
-  
+
   // Check if user is a manager first
   if (isClubManager(club, userId)) return true;
-  
+
   // Check members array
   if (Array.isArray(club.members)) {
-    return club.members.some(member => member.id === userId);
+    return club.members.some((member) => member.id === userId);
   }
-  
+
   return false;
 };
 
 /**
  * Get club member by user ID
  */
-export const getClubMember = (club: Club | any, userId: string): ClubMember | null => {
+export const getClubMember = (
+  club: Club | any,
+  userId: string,
+): ClubMember | null => {
   if (!club?.members || !userId) return null;
-  
-  return club.members.find(member => member.id === userId) || null;
+
+  return club.members.find((member) => member.id === userId) || null;
 };
 
 /**
  * Format member count for display
  */
 export const formatMemberCount = (count: number): string => {
-  if (count === 0) return 'No members';
-  if (count === 1) return '1 member';
+  if (count === 0) return "No members";
+  if (count === 1) return "1 member";
   return `${count} members`;
 };
 
@@ -120,8 +123,8 @@ export const formatMemberCount = (count: number): string => {
  */
 export const getClubManagers = (club: Club | any): ClubMember[] => {
   if (!club?.members) return [];
-  
-  return club.members.filter(member => member.role === 'manager');
+
+  return club.members.filter((member) => member.role === "manager");
 };
 
 /**
@@ -129,8 +132,8 @@ export const getClubManagers = (club: Club | any): ClubMember[] => {
  */
 export const getClubRegularMembers = (club: Club | any): ClubMember[] => {
   if (!club?.members) return [];
-  
-  return club.members.filter(member => member.role === 'member');
+
+  return club.members.filter((member) => member.role === "member");
 };
 
 /**
@@ -138,12 +141,12 @@ export const getClubRegularMembers = (club: Club | any): ClubMember[] => {
  */
 export const normalizeClubData = (club: any): Club => {
   const actualMemberCount = getActualMemberCount(club);
-  
+
   return {
     ...club,
     memberCount: actualMemberCount,
     members: club.members || [],
     pendingRequests: club.pendingRequests || [],
-    managers: club.managers || []
+    managers: club.managers || [],
   };
 };

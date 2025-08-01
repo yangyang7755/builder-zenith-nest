@@ -7,6 +7,7 @@ Your app now has a full-featured backend with authentication, club management, a
 ## 🔐 Authentication
 
 All protected endpoints require a Bearer token in the Authorization header:
+
 ```
 Authorization: Bearer <your_jwt_token>
 ```
@@ -14,18 +15,21 @@ Authorization: Bearer <your_jwt_token>
 ## 📋 API Endpoints
 
 ### Health Check
+
 - `GET /api/ping` - Health check endpoint
   ```json
   Response: { "message": "ping pong" }
   ```
 
 ### Authentication & Users
+
 - `GET /api/profile` - Get current user profile (Protected)
 - `PUT /api/profile` - Update user profile (Protected)
 - `GET /api/user/clubs` - Get user's clubs (Protected)
 - `GET /api/user/activities` - Get user's activities (Protected)
 
 ### Clubs
+
 - `GET /api/clubs` - List all clubs
   - Query params: `?userId=<id>` to get user's clubs only
 - `POST /api/clubs` - Create new club (Protected)
@@ -36,6 +40,7 @@ Authorization: Bearer <your_jwt_token>
 - `DELETE /api/clubs/:id/requests/:requestId` - Deny join request (Managers only)
 
 ### Activities
+
 - `GET /api/activities` - List activities with filtering
   - Query params: `?club=<id>&type=<type>&location=<location>`
 - `POST /api/activities` - Create new activity (Protected)
@@ -45,6 +50,7 @@ Authorization: Bearer <your_jwt_token>
 ## 📊 Data Models
 
 ### User Profile
+
 ```typescript
 interface Profile {
   id: string;
@@ -59,12 +65,21 @@ interface Profile {
 ```
 
 ### Club
+
 ```typescript
 interface Club {
   id: string;
   name: string;
   description: string | null;
-  type: 'cycling' | 'climbing' | 'running' | 'hiking' | 'skiing' | 'surfing' | 'tennis' | 'general';
+  type:
+    | "cycling"
+    | "climbing"
+    | "running"
+    | "hiking"
+    | "skiing"
+    | "surfing"
+    | "tennis"
+    | "general";
   location: string;
   member_count: number;
   members: ClubMember[];
@@ -75,11 +90,19 @@ interface Club {
 ```
 
 ### Activity
+
 ```typescript
 interface Activity {
   id: string;
   title: string;
-  type: 'cycling' | 'climbing' | 'running' | 'hiking' | 'skiing' | 'surfing' | 'tennis';
+  type:
+    | "cycling"
+    | "climbing"
+    | "running"
+    | "hiking"
+    | "skiing"
+    | "surfing"
+    | "tennis";
   date: string; // YYYY-MM-DD
   time: string; // HH:MM
   location: string;
@@ -97,12 +120,13 @@ interface Activity {
 ```
 
 ### Club Membership
+
 ```typescript
 interface ClubMember {
   id: string;
   name: string;
   email: string;
-  role: 'member' | 'manager';
+  role: "member" | "manager";
 }
 
 interface JoinRequest {
@@ -112,13 +136,14 @@ interface JoinRequest {
   userEmail: string;
   message?: string;
   requestedAt: string;
-  status: 'pending' | 'approved' | 'denied';
+  status: "pending" | "approved" | "denied";
 }
 ```
 
 ## 🎯 Frontend Features
 
 ### 1. User Profile Management (`/profile`)
+
 - ✅ View and edit profile information
 - ✅ Profile image support
 - ✅ University/organization tracking
@@ -126,6 +151,7 @@ interface JoinRequest {
 - ✅ User's clubs and activities overview
 
 ### 2. Authentication System (`/signin`, `/signup`)
+
 - ✅ User registration with email verification
 - ✅ Secure sign in/out
 - ✅ Password validation
@@ -133,6 +159,7 @@ interface JoinRequest {
 - ✅ Authentication state management
 
 ### 3. Live Chat System (`ChatRoom` component)
+
 - ✅ Real-time messaging simulation
 - ✅ Online user tracking
 - ✅ Message history
@@ -141,6 +168,7 @@ interface JoinRequest {
 - ✅ System messages
 
 ### 4. Enhanced Club Management (`/club/:id/manage-enhanced`)
+
 - ✅ Comprehensive club dashboard
 - ✅ Member management with roles
 - ✅ Join request approval/denial
@@ -150,6 +178,7 @@ interface JoinRequest {
 - ✅ Statistics tracking
 
 ### 5. Protected Routes & Navigation
+
 - ✅ `ProtectedRoute` component for auth-required pages
 - ✅ `UserNav` component with authentication status
 - ✅ Automatic redirects for auth flows
@@ -158,6 +187,7 @@ interface JoinRequest {
 ## 🛠 Technical Implementation
 
 ### Backend Stack
+
 - **Framework**: Express.js with TypeScript
 - **Database**: Supabase PostgreSQL (when configured)
 - **Authentication**: Supabase Auth with JWT tokens
@@ -165,6 +195,7 @@ interface JoinRequest {
 - **Security**: Row Level Security policies
 
 ### Frontend Stack
+
 - **Framework**: React 18 with TypeScript
 - **State Management**: Context API (AuthContext, ClubContext, etc.)
 - **Routing**: React Router 6 with protected routes
@@ -173,6 +204,7 @@ interface JoinRequest {
 - **API Client**: Custom service layer with auth headers
 
 ### Database Schema
+
 ```sql
 -- Users (extends Supabase auth.users)
 profiles (id, email, full_name, university, bio, profile_image)
@@ -192,6 +224,7 @@ chat_messages (id, club_id, user_id, message, created_at)
 ## 🚀 Development Status
 
 ### ✅ Completed Features
+
 1. Complete backend API with all CRUD operations
 2. User authentication and profile management
 3. Club creation, management, and member systems
@@ -202,6 +235,7 @@ chat_messages (id, club_id, user_id, message, created_at)
 8. Database schema with security policies
 
 ### 🔄 Ready for Production
+
 1. Set up Supabase project
 2. Configure environment variables
 3. Run database migration scripts
@@ -209,6 +243,7 @@ chat_messages (id, club_id, user_id, message, created_at)
 5. Enable real-time subscriptions
 
 ### 🎯 Next Steps for Full Production
+
 1. **Supabase Setup**: Create project and configure credentials
 2. **Real-time Chat**: Enable Supabase Realtime for live messaging
 3. **File Uploads**: Add profile image upload functionality
@@ -232,6 +267,7 @@ VITE_API_URL=your_backend_api_url
 ## 📱 Current Demo Features
 
 The app currently works with:
+
 - ✅ Demo authentication system
 - ✅ Sample data for clubs and activities
 - ✅ All UI components functional

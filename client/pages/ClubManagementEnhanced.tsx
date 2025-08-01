@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '@/contexts/AuthContext';
-import { apiService } from '@/services/apiService';
-import { useToast } from '@/hooks/use-toast';
-import ChatRoom from '@/components/ChatRoom';
-import ImageUpload from '@/components/ImageUpload';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/contexts/AuthContext";
+import { apiService } from "@/services/apiService";
+import { useToast } from "@/hooks/use-toast";
+import ChatRoom from "@/components/ChatRoom";
+import ImageUpload from "@/components/ImageUpload";
 import {
   Users,
   Settings,
@@ -27,7 +27,7 @@ import {
   UserCheck,
   Clock,
   Mail,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface Club {
   id: string;
@@ -44,7 +44,7 @@ interface ClubMember {
   id: string;
   name: string;
   email: string;
-  role: 'member' | 'manager';
+  role: "member" | "manager";
 }
 
 interface JoinRequest {
@@ -60,20 +60,22 @@ interface ClubManagementEnhancedProps {
   clubId: string;
 }
 
-export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhancedProps) {
+export default function ClubManagementEnhanced({
+  clubId,
+}: ClubManagementEnhancedProps) {
   const { user } = useAuth();
   const { toast } = useToast();
-  
+
   const [club, setClub] = useState<Club | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
-    name: '',
-    description: '',
-    location: '',
-    website: '',
-    contact_email: '',
-    profile_image: '',
+    name: "",
+    description: "",
+    location: "",
+    website: "",
+    contact_email: "",
+    profile_image: "",
   });
 
   useEffect(() => {
@@ -87,11 +89,11 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
         setClub(response.data);
         setEditForm({
           name: response.data.name,
-          description: response.data.description || '',
+          description: response.data.description || "",
           location: response.data.location,
-          website: response.data.website || '',
-          contact_email: response.data.contact_email || '',
-          profile_image: response.data.profile_image || '',
+          website: response.data.website || "",
+          contact_email: response.data.contact_email || "",
+          profile_image: response.data.profile_image || "",
         });
       }
     } catch (error) {
@@ -170,25 +172,25 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
 
   const isManager = () => {
     if (!user || !club) return false;
-    return club.members.some(m => m.id === user.id && m.role === 'manager');
+    return club.members.some((m) => m.id === user.id && m.role === "manager");
   };
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -207,7 +209,9 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
     return (
       <div className="container mx-auto px-4 py-8">
         <Alert>
-          <AlertDescription>Club not found or you don't have access to manage this club.</AlertDescription>
+          <AlertDescription>
+            Club not found or you don't have access to manage this club.
+          </AlertDescription>
         </Alert>
       </div>
     );
@@ -216,8 +220,12 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{club.name} Management</h1>
-        <p className="text-gray-500">Manage your club settings, members, and activities</p>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {club.name} Management
+        </h1>
+        <p className="text-gray-500">
+          Manage your club settings, members, and activities
+        </p>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
@@ -249,8 +257,16 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                   <Badge variant="secondary">{club.member_count}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">Pending Requests</span>
-                  <Badge variant={club.pendingRequests.length > 0 ? "destructive" : "secondary"}>
+                  <span className="text-sm text-gray-500">
+                    Pending Requests
+                  </span>
+                  <Badge
+                    variant={
+                      club.pendingRequests.length > 0
+                        ? "destructive"
+                        : "secondary"
+                    }
+                  >
                     {club.pendingRequests.length}
                   </Badge>
                 </div>
@@ -275,7 +291,8 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
               <CardContent>
                 <div className="space-y-3">
                   <div className="text-sm text-gray-500">
-                    No recent activities to show. Activity tracking will be available once fully integrated.
+                    No recent activities to show. Activity tracking will be
+                    available once fully integrated.
                   </div>
                 </div>
               </CardContent>
@@ -292,10 +309,15 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
             <CardContent>
               <div className="space-y-4">
                 {club.members.map((member) => (
-                  <div key={member.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div
+                    key={member.id}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
                     <div className="flex items-center gap-3">
                       <Avatar>
-                        <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
+                        <AvatarFallback>
+                          {getInitials(member.name)}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
                         <p className="font-medium">{member.name}</p>
@@ -303,11 +325,17 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant={member.role === 'manager' ? 'default' : 'secondary'}>
-                        {member.role === 'manager' && <Crown className="h-3 w-3 mr-1" />}
+                      <Badge
+                        variant={
+                          member.role === "manager" ? "default" : "secondary"
+                        }
+                      >
+                        {member.role === "manager" && (
+                          <Crown className="h-3 w-3 mr-1" />
+                        )}
                         {member.role}
                       </Badge>
-                      {isManager() && member.role !== 'manager' && (
+                      {isManager() && member.role !== "manager" && (
                         <Button variant="outline" size="sm">
                           Promote to Manager
                         </Button>
@@ -330,8 +358,12 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
               {club.pendingRequests.length === 0 ? (
                 <div className="text-center py-8">
                   <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Pending Requests</h3>
-                  <p className="text-gray-500">All membership requests have been processed.</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No Pending Requests
+                  </h3>
+                  <p className="text-gray-500">
+                    All membership requests have been processed.
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -340,7 +372,9 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                       <div className="flex items-start justify-between">
                         <div className="flex items-start gap-3">
                           <Avatar>
-                            <AvatarFallback>{getInitials(request.userName)}</AvatarFallback>
+                            <AvatarFallback>
+                              {getInitials(request.userName)}
+                            </AvatarFallback>
                           </Avatar>
                           <div className="space-y-1">
                             <p className="font-medium">{request.userName}</p>
@@ -423,13 +457,21 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                         >
                           Cancel
                         </Button>
-                        <Button onClick={handleUpdateClub} size="sm" disabled={loading}>
+                        <Button
+                          onClick={handleUpdateClub}
+                          size="sm"
+                          disabled={loading}
+                        >
                           <Save className="h-4 w-4 mr-1" />
                           Save Changes
                         </Button>
                       </>
                     ) : (
-                      <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+                      <Button
+                        onClick={() => setIsEditing(true)}
+                        variant="outline"
+                        size="sm"
+                      >
                         <Edit3 className="h-4 w-4 mr-1" />
                         Edit
                       </Button>
@@ -453,8 +495,10 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                   <Label>Club Image</Label>
                   {isEditing && isManager() ? (
                     <ImageUpload
-                      currentImage={club.profile_image || ''}
-                      onImageChange={(url) => setEditForm({...editForm, profile_image: url})}
+                      currentImage={club.profile_image || ""}
+                      onImageChange={(url) =>
+                        setEditForm({ ...editForm, profile_image: url })
+                      }
                       variant="rectangle"
                       size="md"
                       placeholder="Club Photo"
@@ -482,7 +526,9 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                     <Input
                       id="name"
                       value={editForm.name}
-                      onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, name: e.target.value })
+                      }
                     />
                   ) : (
                     <p className="text-sm text-gray-700">{club.name}</p>
@@ -495,11 +541,18 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                     <Textarea
                       id="description"
                       value={editForm.description}
-                      onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          description: e.target.value,
+                        })
+                      }
                       rows={3}
                     />
                   ) : (
-                    <p className="text-sm text-gray-700">{club.description || 'No description set'}</p>
+                    <p className="text-sm text-gray-700">
+                      {club.description || "No description set"}
+                    </p>
                   )}
                 </div>
 
@@ -509,7 +562,9 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                     <Input
                       id="location"
                       value={editForm.location}
-                      onChange={(e) => setEditForm({...editForm, location: e.target.value})}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, location: e.target.value })
+                      }
                     />
                   ) : (
                     <p className="text-sm text-gray-700">{club.location}</p>
@@ -522,17 +577,24 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                     <Input
                       id="website"
                       value={editForm.website}
-                      onChange={(e) => setEditForm({...editForm, website: e.target.value})}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, website: e.target.value })
+                      }
                       placeholder="https://..."
                     />
                   ) : (
                     <p className="text-sm text-gray-700">
                       {editForm.website ? (
-                        <a href={editForm.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <a
+                          href={editForm.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
                           {editForm.website}
                         </a>
                       ) : (
-                        'No website set'
+                        "No website set"
                       )}
                     </p>
                   )}
@@ -545,17 +607,25 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
                       id="contact_email"
                       type="email"
                       value={editForm.contact_email}
-                      onChange={(e) => setEditForm({...editForm, contact_email: e.target.value})}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          contact_email: e.target.value,
+                        })
+                      }
                       placeholder="contact@club.com"
                     />
                   ) : (
                     <p className="text-sm text-gray-700">
                       {editForm.contact_email ? (
-                        <a href={`mailto:${editForm.contact_email}`} className="text-blue-600 hover:underline">
+                        <a
+                          href={`mailto:${editForm.contact_email}`}
+                          className="text-blue-600 hover:underline"
+                        >
                           {editForm.contact_email}
                         </a>
                       ) : (
-                        'No contact email set'
+                        "No contact email set"
                       )}
                     </p>
                   )}

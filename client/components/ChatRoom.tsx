@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { Send, Users, Clock, MessageCircle } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { Send, Users, Clock, MessageCircle } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 interface ChatMessage {
   id: string;
@@ -37,7 +37,7 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
   const { user, profile } = useAuth();
   const { toast } = useToast();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const [onlineUsers, setOnlineUsers] = useState<ChatUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [connected, setConnected] = useState(false);
@@ -48,24 +48,28 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
   useEffect(() => {
     // Load initial messages
     loadInitialMessages();
-    
+
     // Simulate connection
     setConnected(true);
-    
+
     // Add current user to online users
     if (user && profile) {
       const currentUser: ChatUser = {
         id: user.id,
-        name: profile.full_name || user.email?.split('@')[0] || 'Anonymous',
+        name: profile.full_name || user.email?.split("@")[0] || "Anonymous",
         avatar: profile.profile_image,
         is_online: true,
       };
-      setOnlineUsers(prev => [...prev.filter(u => u.id !== user.id), currentUser]);
+      setOnlineUsers((prev) => [
+        ...prev.filter((u) => u.id !== user.id),
+        currentUser,
+      ]);
     }
 
     // Simulate receiving messages (in production, this would be real-time subscription)
     const interval = setInterval(() => {
-      if (Math.random() < 0.1) { // 10% chance every 3 seconds
+      if (Math.random() < 0.1) {
+        // 10% chance every 3 seconds
         simulateIncomingMessage();
       }
     }, 3000);
@@ -84,32 +88,32 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
     // Simulate loading messages from database
     const sampleMessages: ChatMessage[] = [
       {
-        id: '1',
-        user_id: 'system',
-        user_name: 'System',
+        id: "1",
+        user_id: "system",
+        user_name: "System",
         message: `Welcome to ${clubName} chat! 🎉`,
         created_at: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
         is_system: true,
       },
       {
-        id: '2',
-        user_id: 'user-1',
-        user_name: 'Alex Johnson',
-        message: 'Hey everyone! Looking forward to tomorrow\'s ride 🚴‍♂️',
+        id: "2",
+        user_id: "user-1",
+        user_name: "Alex Johnson",
+        message: "Hey everyone! Looking forward to tomorrow's ride 🚴‍♂️",
         created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
       },
       {
-        id: '3',
-        user_id: 'user-2',
-        user_name: 'Sarah Chen',
-        message: 'Same here! What time are we meeting?',
+        id: "3",
+        user_id: "user-2",
+        user_name: "Sarah Chen",
+        message: "Same here! What time are we meeting?",
         created_at: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
       },
       {
-        id: '4',
-        user_id: 'user-1',
-        user_name: 'Alex Johnson',
-        message: '8 AM at the university gates. Don\'t be late! ⏰',
+        id: "4",
+        user_id: "user-1",
+        user_name: "Alex Johnson",
+        message: "8 AM at the university gates. Don't be late! ⏰",
         created_at: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
       },
     ];
@@ -117,29 +121,36 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
 
     // Set sample online users
     setOnlineUsers([
-      { id: 'user-1', name: 'Alex Johnson', is_online: true },
-      { id: 'user-2', name: 'Sarah Chen', is_online: true },
-      { id: 'user-3', name: 'Mike Wilson', is_online: false, last_seen: new Date(Date.now() - 1000 * 60 * 5).toISOString() },
+      { id: "user-1", name: "Alex Johnson", is_online: true },
+      { id: "user-2", name: "Sarah Chen", is_online: true },
+      {
+        id: "user-3",
+        name: "Mike Wilson",
+        is_online: false,
+        last_seen: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+      },
     ]);
   };
 
   const simulateIncomingMessage = () => {
     const sampleMessages = [
-      'Has anyone tried the new climbing route?',
-      'Great session today everyone! 💪',
-      'Anyone up for a coffee after training?',
-      'Don\'t forget to bring your water bottles tomorrow',
-      'The weather looks perfect for outdoor activities this weekend',
+      "Has anyone tried the new climbing route?",
+      "Great session today everyone! 💪",
+      "Anyone up for a coffee after training?",
+      "Don't forget to bring your water bottles tomorrow",
+      "The weather looks perfect for outdoor activities this weekend",
     ];
 
     const sampleUsers = [
-      { id: 'user-3', name: 'Mike Wilson' },
-      { id: 'user-4', name: 'Emma Davis' },
-      { id: 'user-5', name: 'Tom Brown' },
+      { id: "user-3", name: "Mike Wilson" },
+      { id: "user-4", name: "Emma Davis" },
+      { id: "user-5", name: "Tom Brown" },
     ];
 
-    const randomUser = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
-    const randomMessage = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
+    const randomUser =
+      sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+    const randomMessage =
+      sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
 
     const newMsg: ChatMessage = {
       id: `msg-${Date.now()}`,
@@ -149,11 +160,11 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
       created_at: new Date().toISOString(),
     };
 
-    setMessages(prev => [...prev, newMsg]);
+    setMessages((prev) => [...prev, newMsg]);
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleSendMessage = async () => {
@@ -174,14 +185,15 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
       const message: ChatMessage = {
         id: `msg-${Date.now()}`,
         user_id: user.id,
-        user_name: profile.full_name || user.email?.split('@')[0] || 'Anonymous',
+        user_name:
+          profile.full_name || user.email?.split("@")[0] || "Anonymous",
         user_avatar: profile.profile_image,
         message: newMessage.trim(),
         created_at: new Date().toISOString(),
       };
 
-      setMessages(prev => [...prev, message]);
-      setNewMessage('');
+      setMessages((prev) => [...prev, message]);
+      setNewMessage("");
 
       toast({
         title: "Message sent",
@@ -199,7 +211,7 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -207,9 +219,9 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -230,14 +242,16 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
               <div>
                 <h3 className="font-semibold">{clubName} Chat</h3>
                 <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <div className={`w-2 h-2 rounded-full ${connected ? 'bg-green-500' : 'bg-red-500'}`} />
-                  <span>{connected ? 'Connected' : 'Disconnected'}</span>
+                  <div
+                    className={`w-2 h-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`}
+                  />
+                  <span>{connected ? "Connected" : "Disconnected"}</span>
                 </div>
               </div>
             </div>
             <Badge variant="secondary">
               <Users className="h-3 w-3 mr-1" />
-              {onlineUsers.filter(u => u.is_online).length} online
+              {onlineUsers.filter((u) => u.is_online).length} online
             </Badge>
           </div>
         </div>
@@ -248,18 +262,25 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.user_id === user?.id ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${message.user_id === user?.id ? "justify-end" : "justify-start"}`}
               >
-                <div className={`flex gap-3 max-w-[70%] ${message.user_id === user?.id ? 'flex-row-reverse' : ''}`}>
+                <div
+                  className={`flex gap-3 max-w-[70%] ${message.user_id === user?.id ? "flex-row-reverse" : ""}`}
+                >
                   {!message.is_system && (
                     <Avatar className="h-8 w-8 mt-1">
-                      <AvatarImage src={message.user_avatar} alt={message.user_name} />
+                      <AvatarImage
+                        src={message.user_avatar}
+                        alt={message.user_name}
+                      />
                       <AvatarFallback className="text-xs">
                         {getInitials(message.user_name)}
                       </AvatarFallback>
                     </Avatar>
                   )}
-                  <div className={`space-y-1 ${message.user_id === user?.id ? 'text-right' : ''}`}>
+                  <div
+                    className={`space-y-1 ${message.user_id === user?.id ? "text-right" : ""}`}
+                  >
                     {!message.is_system && (
                       <div className="flex items-center gap-2 text-xs text-gray-500">
                         {message.user_id === user?.id ? (
@@ -270,7 +291,9 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
                           </>
                         ) : (
                           <>
-                            <span className="font-medium">{message.user_name}</span>
+                            <span className="font-medium">
+                              {message.user_name}
+                            </span>
                             <Clock className="h-3 w-3" />
                             <span>{formatMessageTime(message.created_at)}</span>
                           </>
@@ -280,10 +303,10 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
                     <div
                       className={`p-3 rounded-lg ${
                         message.is_system
-                          ? 'bg-blue-50 text-blue-800 text-center border border-blue-200'
+                          ? "bg-blue-50 text-blue-800 text-center border border-blue-200"
                           : message.user_id === user?.id
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-900'
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 text-gray-900"
                       }`}
                     >
                       {message.message}
@@ -303,7 +326,9 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={user ? "Type a message..." : "Sign in to send messages"}
+              placeholder={
+                user ? "Type a message..." : "Sign in to send messages"
+              }
               disabled={loading || !user}
               className="flex-1"
             />
@@ -334,12 +359,18 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
                       {getInitials(chatUser.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${chatUser.is_online ? 'bg-green-500' : 'bg-gray-400'}`} />
+                  <div
+                    className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${chatUser.is_online ? "bg-green-500" : "bg-gray-400"}`}
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{chatUser.name}</p>
+                  <p className="text-sm font-medium truncate">
+                    {chatUser.name}
+                  </p>
                   <p className="text-xs text-gray-500">
-                    {chatUser.is_online ? 'Online' : `Last seen ${chatUser.last_seen ? formatMessageTime(chatUser.last_seen) : 'unknown'}`}
+                    {chatUser.is_online
+                      ? "Online"
+                      : `Last seen ${chatUser.last_seen ? formatMessageTime(chatUser.last_seen) : "unknown"}`}
                   </p>
                 </div>
               </div>

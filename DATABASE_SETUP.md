@@ -3,6 +3,7 @@
 ## Recommended Database Solutions
 
 ### 1. **Supabase** (Recommended for your use case)
+
 - **Why**: Built-in auth, real-time subscriptions, easy React integration
 - **Setup**: Available as MCP integration in Builder.io
 - **Perfect for**: User management, activities, club memberships, real-time chat
@@ -17,11 +18,13 @@ SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ### 2. **Neon (Serverless Postgres)**
+
 - **Why**: Serverless PostgreSQL with excellent free tier
 - **Setup**: Available as MCP integration in Builder.io
 - **Perfect for**: Traditional relational data with modern scaling
 
 ### 3. **PlanetScale (MySQL)**
+
 - **Why**: Serverless MySQL with branching (like Git for databases)
 - **Setup**: Via Prisma ORM integration
 
@@ -123,10 +126,12 @@ SMTP_PASS=
 ## Integration Steps
 
 1. **Connect MCP Integration**
+
    - Click [MCP Servers button](#open-mcp-popover) in Builder.io
    - Connect Supabase or Neon integration
 
 2. **Update Frontend to Use Backend**
+
    - Replace localStorage with API calls
    - Add authentication layer
    - Implement real-time updates
@@ -139,29 +144,31 @@ SMTP_PASS=
 ## Authentication Options
 
 ### Option A: Supabase Auth (Recommended)
+
 ```javascript
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.REACT_APP_SUPABASE_URL,
-  process.env.REACT_APP_SUPABASE_ANON_KEY
-)
+  process.env.REACT_APP_SUPABASE_ANON_KEY,
+);
 
 // Simple login
 const { data, error } = await supabase.auth.signInWithPassword({
-  email: 'user@example.com',
-  password: 'password'
-})
+  email: "user@example.com",
+  password: "password",
+});
 ```
 
 ### Option B: Custom JWT Auth
+
 ```javascript
 // Backend route for login
-app.post('/api/auth/login', async (req, res) => {
+app.post("/api/auth/login", async (req, res) => {
   // Validate credentials
   // Generate JWT token
   // Return user data + token
-})
+});
 ```
 
 ## Next Steps

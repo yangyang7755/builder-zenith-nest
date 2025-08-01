@@ -1,7 +1,9 @@
-import { getAuthHeader } from '../lib/supabase';
+import { getAuthHeader } from "../lib/supabase";
 
 // API base URL - using your current Fly.io deployment
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://66e3ab0a84c340e9b445761a73e42448-dbbf80750d9f4e01981434bf2.fly.dev/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://66e3ab0a84c340e9b445761a73e42448-dbbf80750d9f4e01981434bf2.fly.dev/api";
 
 interface ApiResponse<T> {
   data?: T;
@@ -11,14 +13,14 @@ interface ApiResponse<T> {
 class ApiService {
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<ApiResponse<T>> {
     try {
       const authHeader = await getAuthHeader();
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
-          'Content-Type': 'application/json',
-          ...(authHeader && { 'Authorization': authHeader }),
+          "Content-Type": "application/json",
+          ...(authHeader && { Authorization: authHeader }),
           ...options.headers,
         },
         ...options,
@@ -32,44 +34,50 @@ class ApiService {
       return { data };
     } catch (error) {
       console.error(`API request failed:`, error);
-      return { error: error instanceof Error ? error.message : 'Unknown error' };
+      return {
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   }
 
   // Activity methods
-  async getActivities(filters?: { club?: string; type?: string; location?: string }) {
+  async getActivities(filters?: {
+    club?: string;
+    type?: string;
+    location?: string;
+  }) {
     const params = new URLSearchParams();
-    if (filters?.club) params.append('club', filters.club);
-    if (filters?.type) params.append('type', filters.type);
-    if (filters?.location) params.append('location', filters.location);
-    
-    const query = params.toString() ? `?${params.toString()}` : '';
+    if (filters?.club) params.append("club", filters.club);
+    if (filters?.type) params.append("type", filters.type);
+    if (filters?.location) params.append("location", filters.location);
+
+    const query = params.toString() ? `?${params.toString()}` : "";
     return this.request<any[]>(`/activities${query}`);
   }
 
   async createActivity(activity: any) {
-    return this.request<any>('/activities', {
-      method: 'POST',
+    return this.request<any>("/activities", {
+      method: "POST",
       body: JSON.stringify(activity),
     });
   }
 
   async updateActivity(id: string, updates: any) {
     return this.request<any>(`/activities/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(updates),
     });
   }
 
   async deleteActivity(id: string) {
     return this.request<void>(`/activities/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
   }
 
   // Club methods
   async getClubs(userId?: string) {
-    const query = userId ? `?userId=${userId}` : '';
+    const query = userId ? `?userId=${userId}` : "";
     return this.request<any[]>(`/clubs${query}`);
   }
 
@@ -79,62 +87,69 @@ class ApiService {
 
   async updateClub(id: string, updates: any, userId: string) {
     return this.request<any>(`/clubs/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify({ ...updates, userId }),
     });
   }
 
   async requestToJoinClub(clubId: string, requestData: any) {
     return this.request<any>(`/clubs/${clubId}/join`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(requestData),
     });
   }
 
-  async approveClubRequest(clubId: string, requestId: string, managerId: string) {
-    return this.request<void>(`/clubs/${clubId}/requests/${requestId}/approve`, {
-      method: 'POST',
-      body: JSON.stringify({ managerId }),
-    });
+  async approveClubRequest(
+    clubId: string,
+    requestId: string,
+    managerId: string,
+  ) {
+    return this.request<void>(
+      `/clubs/${clubId}/requests/${requestId}/approve`,
+      {
+        method: "POST",
+        body: JSON.stringify({ managerId }),
+      },
+    );
   }
 
   async denyClubRequest(clubId: string, requestId: string, managerId: string) {
     return this.request<void>(`/clubs/${clubId}/requests/${requestId}`, {
-      method: 'DELETE',
+      method: "DELETE",
       body: JSON.stringify({ managerId }),
     });
   }
 
   // User/Profile methods
   async getProfile() {
-    return this.request<any>('/profile');
+    return this.request<any>("/profile");
   }
 
   async updateProfile(updates: any) {
-    return this.request<any>('/profile', {
-      method: 'PUT',
+    return this.request<any>("/profile", {
+      method: "PUT",
       body: JSON.stringify(updates),
     });
   }
 
   async getUserClubs() {
-    return this.request<any[]>('/user/clubs');
+    return this.request<any[]>("/user/clubs");
   }
 
   async getUserActivities() {
-    return this.request<any[]>('/user/activities');
+    return this.request<any[]>("/user/activities");
   }
 
   async createClub(clubData: any) {
-    return this.request<any>('/clubs', {
-      method: 'POST',
+    return this.request<any>("/clubs", {
+      method: "POST",
       body: JSON.stringify(clubData),
     });
   }
 
   // Health check
   async ping() {
-    return this.request<{ message: string }>('/ping');
+    return this.request<{ message: string }>("/ping");
   }
 }
 
