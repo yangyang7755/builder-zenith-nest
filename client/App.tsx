@@ -46,6 +46,8 @@ import Settings from "./pages/Settings";
 import Followers from "./pages/Followers";
 import Following from "./pages/Following";
 import ClubManagement from "./pages/ClubManagement";
+import ClubManagementEnhanced from "./pages/ClubManagementEnhanced";
+import SignIn from "./pages/SignIn";
 import NotFound from "./pages/NotFound";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
 import { ChatProvider } from "./contexts/ChatContext";
