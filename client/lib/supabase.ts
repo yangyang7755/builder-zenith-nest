@@ -63,7 +63,17 @@ export const signUp = async (email: string, password: string, userData?: { full_
 
 export const signIn = async (email: string, password: string) => {
   if (!supabase) {
-    return { data: { user: null }, error: { message: 'Authentication not configured' } };
+    // Simulate successful signin in demo mode
+    const demoUser = {
+      id: 'demo-user-signed-in',
+      email: email,
+      user_metadata: { full_name: 'Demo User' },
+      created_at: new Date().toISOString()
+    };
+    return {
+      data: { user: demoUser },
+      error: null
+    };
   }
   return await supabase.auth.signInWithPassword({
     email,
