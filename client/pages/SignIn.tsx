@@ -79,10 +79,17 @@ export default function SignIn() {
       }
 
       if (user) {
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
-        });
+        if (user.id.includes('demo-user')) {
+          toast({
+            title: "Demo Sign In Successful!",
+            description: "Welcome to demo mode! All features are available with sample data.",
+          });
+        } else {
+          toast({
+            title: "Welcome back!",
+            description: "You have successfully signed in.",
+          });
+        }
         navigate(from, { replace: true });
       }
     } catch (error) {
