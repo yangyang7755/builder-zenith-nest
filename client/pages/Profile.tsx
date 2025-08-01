@@ -535,15 +535,17 @@ export default function Profile() {
                   <>
                     <div>
                       <div className="text-2xl font-bold text-explore-green">
-                        {currentSportData.stats.totalRuns}
+                        {currentSportData.stats.totalActivities || 0}
                       </div>
-                      <div className="text-sm text-gray-600">Total Runs</div>
+                      <div className="text-sm text-gray-600">
+                        {currentSportData.stats.totalActivities === 1 ? 'Run' : 'Runs'}
+                      </div>
                     </div>
                     <div>
                       <div className="text-lg font-medium text-explore-green">
-                        {currentSportData.stats.totalDistance}
+                        {currentSportData.stats.totalDistance || "0 km"}
                       </div>
-                      <div className="text-sm text-gray-600">Distance</div>
+                      <div className="text-sm text-gray-600">Distance Covered</div>
                     </div>
                   </>
                 )}
