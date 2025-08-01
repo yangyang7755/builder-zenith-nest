@@ -433,54 +433,48 @@ export default function ClubOxford() {
               <h3 className="text-lg font-medium text-black font-cabin mb-4">
                 Club Chat
               </h3>
+
+              {/* Recent Messages Preview */}
               <div className="border-2 border-gray-200 rounded-lg p-4 mb-4">
-                <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
-                  {chatMessages.map((msg) => (
+                <h4 className="text-sm font-medium text-gray-700 mb-3">Recent Messages</h4>
+                <div className="space-y-3 max-h-40 overflow-y-auto">
+                  {chatMessages.slice(-3).map((msg) => (
                     <div key={msg.id} className="flex items-start gap-3">
                       <img
                         src={msg.avatar}
                         alt={msg.user}
-                        className="w-8 h-8 rounded-full border border-gray-300 object-cover"
+                        className="w-6 h-6 rounded-full object-cover"
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-sm text-black font-cabin">
+                          <span className="font-medium text-xs text-black font-cabin">
                             {msg.user}
                           </span>
                           <span className="text-xs text-gray-500 font-cabin">
                             {msg.time}
                           </span>
                         </div>
-                        <div className="text-sm text-black font-cabin">
+                        <div className="text-xs text-gray-700 font-cabin">
                           {msg.message}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-gray-200 pt-3">
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={chatMessage}
-                      onChange={(e) => setChatMessage(e.target.value)}
-                      placeholder="Type a message..."
-                      className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-cabin focus:outline-none focus:border-explore-green"
-                      onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                          handleSendMessage();
-                        }
-                      }}
-                    />
-                    <button
-                      onClick={handleSendMessage}
-                      className="bg-explore-green text-white px-3 py-2 rounded-lg hover:bg-explore-green-dark transition-colors"
-                    >
-                      <Send className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
               </div>
+
+              {/* Go to Full Chat Button */}
+              <button
+                onClick={() => navigate("/club-chat/oxford")}
+                className="w-full bg-explore-green text-white py-3 rounded-lg font-cabin font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
+              >
+                <Send className="w-4 h-4" />
+                Join Club Chat
+              </button>
+
+              <p className="text-xs text-gray-500 text-center mt-2 font-cabin">
+                Click to join the full club conversation
+              </p>
             </div>
           )}
         </div>
