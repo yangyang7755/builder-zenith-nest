@@ -282,7 +282,7 @@ export default function Profile() {
 
                 <div className="grid gap-2">
                   <Label htmlFor="university">University/Organization</Label>
-                  {isEditing ? (
+                  {isEditing && !isDemo ? (
                     <Input
                       id="university"
                       value={formData.university}
@@ -290,7 +290,7 @@ export default function Profile() {
                       placeholder="Enter your university or organization"
                     />
                   ) : (
-                    <p className="text-sm text-gray-700">{formData.university || 'Not set'}</p>
+                    <p className="text-sm text-gray-700">{displayProfile?.university || 'Not set'}</p>
                   )}
                 </div>
 
