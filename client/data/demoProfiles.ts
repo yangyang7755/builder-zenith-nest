@@ -50,7 +50,7 @@ export const maddieWeiProfile: DemoProfile = {
   university: "Oxford University",
   bio: "Passionate about outdoor adventures and connecting with like-minded people. Love cycling through the countryside and discovering new climbing spots. Always up for a challenge and making new friends along the way! 🚴‍♀️🧗‍♀️",
   profile_image:
-    "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=150&h=150&fit=crop&crop=face",
+    "https://cdn.builder.io/o/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F03ed6e7727774975bd659959a3c89476?alt=media&token=eb86902f-55e8-4174-8314-caf77525b740&apiKey=f84d5d174b6b486a8c8b5017bb90c068",
   created_at: "2024-01-15T10:30:00Z",
   updated_at: "2025-01-15T14:22:00Z",
   clubs: [
