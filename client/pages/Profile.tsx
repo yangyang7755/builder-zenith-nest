@@ -194,13 +194,23 @@ export default function Profile() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Profile Header */}
-              <div className="flex items-center space-x-4">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={formData.profile_image} alt={formData.full_name} />
-                  <AvatarFallback className="text-lg">
-                    {formData.full_name ? getInitials(formData.full_name) : getInitials(user.email || 'U')}
-                  </AvatarFallback>
-                </Avatar>
+              <div className="flex items-start space-x-4">
+                {isEditing ? (
+                  <ImageUpload
+                    currentImage={formData.profile_image}
+                    onImageChange={(url) => setFormData({...formData, profile_image: url})}
+                    variant="avatar"
+                    size="lg"
+                    placeholder="Profile Photo"
+                  />
+                ) : (
+                  <Avatar className="h-20 w-20">
+                    <AvatarImage src={formData.profile_image} alt={formData.full_name} />
+                    <AvatarFallback className="text-lg">
+                      {formData.full_name ? getInitials(formData.full_name) : getInitials(user.email || 'U')}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
                 <div className="space-y-1">
                   <h3 className="text-xl font-semibold">
                     {formData.full_name || 'Add your name'}
