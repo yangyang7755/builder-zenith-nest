@@ -134,6 +134,12 @@ export default function Saved() {
                   <p className="text-gray-500 mb-4">
                     Save activities from the explore page to see them here
                   </p>
+
+                  {/* Backend Test */}
+                  <div className="mb-6">
+                    <BackendTest />
+                  </div>
+
                   <Link
                     to="/explore"
                     className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
