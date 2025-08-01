@@ -1,50 +1,20 @@
 import { Request, Response } from "express";
 import { z } from "zod";
+import { supabaseAdmin, getUserFromToken } from "../lib/supabase";
 
 // Club schema for validation
 const ClubSchema = z.object({
   name: z.string().min(1),
-  description: z.string(),
+  description: z.string().optional(),
   type: z.enum(["cycling", "climbing", "running", "hiking", "skiing", "surfing", "tennis", "general"]),
-  location: z.string(),
+  location: z.string().min(1),
   website: z.string().url().optional(),
-  contactEmail: z.string().email().optional(),
+  contact_email: z.string().email().optional(),
 });
 
 const JoinRequestSchema = z.object({
-  userId: z.string(),
-  userName: z.string(),
-  userEmail: z.string().email(),
   message: z.string().optional(),
 });
-
-// In-memory storage (replace with database in production)
-let clubs: any[] = [
-  {
-    id: "oucc",
-    name: "Oxford University Cycling Club",
-    description: "Premier cycling club at Oxford University",
-    type: "cycling",
-    location: "Oxford, UK",
-    managers: ["user-1"],
-    members: ["user-1", "user-2"],
-    pendingRequests: [],
-    memberCount: 2,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "westway",
-    name: "Westway Climbing Centre",
-    description: "London's premier climbing facility",
-    type: "climbing",
-    location: "London, UK",
-    managers: ["coach-holly"],
-    members: ["coach-holly", "user-2"],
-    pendingRequests: [],
-    memberCount: 2,
-    createdAt: new Date().toISOString(),
-  }
-];
 
 export const handleGetClubs = async (req: Request, res: Response) => {
   try {
@@ -52,15 +22,43 @@ export const handleGetClubs = async (req: Request, res: Response) => {
     
     if (userId) {
       // Return clubs where user is a member
-      const userClubs = clubs.filter(club => 
-        club.members.includes(userId) || club.managers.includes(userId)
-      );
-      return res.json(userClubs);
+      const { data: userClubs, error } = await supabaseAdmin
+        .from('club_memberships')
+        .select(`
+          role,
+          status,
+          club:clubs(*)
+        `)
+        .eq('user_id', userId)
+        .eq('status', 'approved');
+      
+      if (error) {
+        console.error('Database error:', error);
+        return res.status(500).json({ error: "Failed to fetch user clubs" });
+      }
+      
+      const clubs = userClubs?.map(membership => ({
+        ...membership.club,
+        userRole: membership.role
+      })) || [];
+      
+      return res.json(clubs);
     }
     
     // Return all public clubs
-    res.json(clubs);
+    const { data: clubs, error } = await supabaseAdmin
+      .from('clubs')
+      .select('*')
+      .order('name');
+    
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: "Failed to fetch clubs" });
+    }
+    
+    res.json(clubs || []);
   } catch (error) {
+    console.error('Server error:', error);
     res.status(500).json({ error: "Failed to fetch clubs" });
   }
 };
@@ -68,14 +66,57 @@ export const handleGetClubs = async (req: Request, res: Response) => {
 export const handleGetClub = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const club = clubs.find(c => c.id === id);
     
-    if (!club) {
-      return res.status(404).json({ error: "Club not found" });
+    const { data: club, error } = await supabaseAdmin
+      .from('clubs')
+      .select(`
+        *,
+        memberships:club_memberships(
+          id,
+          role,
+          status,
+          requested_at,
+          message,
+          user:profiles(id, full_name, email)
+        )
+      `)
+      .eq('id', id)
+      .single();
+    
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return res.status(404).json({ error: "Club not found" });
+      }
+      console.error('Database error:', error);
+      return res.status(500).json({ error: "Failed to fetch club" });
     }
     
-    res.json(club);
+    // Separate members and pending requests
+    const members = club.memberships?.filter(m => m.status === 'approved') || [];
+    const pendingRequests = club.memberships?.filter(m => m.status === 'pending') || [];
+    
+    const clubData = {
+      ...club,
+      members: members.map(m => ({
+        id: m.user.id,
+        name: m.user.full_name,
+        email: m.user.email,
+        role: m.role
+      })),
+      pendingRequests: pendingRequests.map(m => ({
+        id: m.id,
+        userId: m.user.id,
+        userName: m.user.full_name,
+        userEmail: m.user.email,
+        message: m.message,
+        requestedAt: m.requested_at
+      })),
+      memberships: undefined // Remove raw memberships data
+    };
+    
+    res.json(clubData);
   } catch (error) {
+    console.error('Server error:', error);
     res.status(500).json({ error: "Failed to fetch club" });
   }
 };
@@ -83,30 +124,46 @@ export const handleGetClub = async (req: Request, res: Response) => {
 export const handleUpdateClub = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { userId } = req.body;
-    const updates = req.body;
+    const user = await getUserFromToken(req.headers.authorization || '');
     
-    const clubIndex = clubs.findIndex(c => c.id === id);
-    
-    if (clubIndex === -1) {
-      return res.status(404).json({ error: "Club not found" });
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
     }
+
+    // Check if user is a manager of this club
+    const { data: membership } = await supabaseAdmin
+      .from('club_memberships')
+      .select('*')
+      .eq('club_id', id)
+      .eq('user_id', user.id)
+      .eq('role', 'manager')
+      .eq('status', 'approved')
+      .single();
     
-    const club = clubs[clubIndex];
-    
-    // Check if user is a manager
-    if (!club.managers.includes(userId)) {
+    if (!membership) {
       return res.status(403).json({ error: "Only club managers can update club information" });
     }
     
-    const validatedUpdates = ClubSchema.partial().parse(updates);
-    clubs[clubIndex] = { ...club, ...validatedUpdates };
+    const validatedUpdates = ClubSchema.partial().parse(req.body);
     
-    res.json(clubs[clubIndex]);
+    const { data: updatedClub, error } = await supabaseAdmin
+      .from('clubs')
+      .update(validatedUpdates)
+      .eq('id', id)
+      .select('*')
+      .single();
+    
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: "Failed to update club" });
+    }
+    
+    res.json(updatedClub);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json({ error: "Invalid club data", details: error.errors });
     } else {
+      console.error('Server error:', error);
       res.status(500).json({ error: "Failed to update club" });
     }
   }
@@ -115,41 +172,74 @@ export const handleUpdateClub = async (req: Request, res: Response) => {
 export const handleJoinRequest = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const user = await getUserFromToken(req.headers.authorization || '');
+    
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
     const requestData = JoinRequestSchema.parse(req.body);
     
-    const clubIndex = clubs.findIndex(c => c.id === id);
+    // Check if club exists
+    const { data: club } = await supabaseAdmin
+      .from('clubs')
+      .select('id')
+      .eq('id', id)
+      .single();
     
-    if (clubIndex === -1) {
+    if (!club) {
       return res.status(404).json({ error: "Club not found" });
     }
     
-    const club = clubs[clubIndex];
+    // Check if user is already a member or has a pending request
+    const { data: existingMembership } = await supabaseAdmin
+      .from('club_memberships')
+      .select('*')
+      .eq('club_id', id)
+      .eq('user_id', user.id)
+      .single();
     
-    // Check if user is already a member
-    if (club.members.includes(requestData.userId)) {
-      return res.status(400).json({ error: "User is already a member" });
+    if (existingMembership) {
+      if (existingMembership.status === 'approved') {
+        return res.status(400).json({ error: "You are already a member of this club" });
+      } else if (existingMembership.status === 'pending') {
+        return res.status(400).json({ error: "You already have a pending request for this club" });
+      }
     }
     
-    // Check if request already exists
-    const existingRequest = club.pendingRequests.find((r: any) => r.userId === requestData.userId);
-    if (existingRequest) {
-      return res.status(400).json({ error: "Join request already pending" });
+    const { data: newRequest, error } = await supabaseAdmin
+      .from('club_memberships')
+      .insert({
+        club_id: id,
+        user_id: user.id,
+        message: requestData.message,
+        status: 'pending'
+      })
+      .select(`
+        *,
+        user:profiles(id, full_name, email)
+      `)
+      .single();
+    
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: "Failed to create join request" });
     }
     
-    const newRequest = {
-      id: `req-${Date.now()}`,
-      ...requestData,
-      requestedAt: new Date().toISOString(),
-      status: "pending",
-    };
-    
-    clubs[clubIndex].pendingRequests.push(newRequest);
-    
-    res.status(201).json(newRequest);
+    res.status(201).json({
+      id: newRequest.id,
+      userId: newRequest.user.id,
+      userName: newRequest.user.full_name,
+      userEmail: newRequest.user.email,
+      message: newRequest.message,
+      requestedAt: newRequest.requested_at,
+      status: newRequest.status
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json({ error: "Invalid request data", details: error.errors });
     } else {
+      console.error('Server error:', error);
       res.status(500).json({ error: "Failed to create join request" });
     }
   }
@@ -158,38 +248,44 @@ export const handleJoinRequest = async (req: Request, res: Response) => {
 export const handleApproveRequest = async (req: Request, res: Response) => {
   try {
     const { id, requestId } = req.params;
-    const { managerId } = req.body;
+    const user = await getUserFromToken(req.headers.authorization || '');
     
-    const clubIndex = clubs.findIndex(c => c.id === id);
-    
-    if (clubIndex === -1) {
-      return res.status(404).json({ error: "Club not found" });
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
     }
+
+    // Check if user is a manager of this club
+    const { data: membership } = await supabaseAdmin
+      .from('club_memberships')
+      .select('*')
+      .eq('club_id', id)
+      .eq('user_id', user.id)
+      .eq('role', 'manager')
+      .eq('status', 'approved')
+      .single();
     
-    const club = clubs[clubIndex];
-    
-    // Check if user is a manager
-    if (!club.managers.includes(managerId)) {
+    if (!membership) {
       return res.status(403).json({ error: "Only club managers can approve requests" });
     }
     
-    const requestIndex = club.pendingRequests.findIndex((r: any) => r.id === requestId);
+    // Update the request status
+    const { error } = await supabaseAdmin
+      .from('club_memberships')
+      .update({
+        status: 'approved',
+        approved_at: new Date().toISOString()
+      })
+      .eq('id', requestId)
+      .eq('club_id', id);
     
-    if (requestIndex === -1) {
-      return res.status(404).json({ error: "Request not found" });
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: "Failed to approve request" });
     }
-    
-    const request = club.pendingRequests[requestIndex];
-    
-    // Add user to members
-    clubs[clubIndex].members.push(request.userId);
-    clubs[clubIndex].memberCount++;
-    
-    // Remove from pending requests
-    clubs[clubIndex].pendingRequests.splice(requestIndex, 1);
     
     res.json({ message: "Request approved successfully" });
   } catch (error) {
+    console.error('Server error:', error);
     res.status(500).json({ error: "Failed to approve request" });
   }
 };
@@ -197,32 +293,99 @@ export const handleApproveRequest = async (req: Request, res: Response) => {
 export const handleDenyRequest = async (req: Request, res: Response) => {
   try {
     const { id, requestId } = req.params;
-    const { managerId } = req.body;
+    const user = await getUserFromToken(req.headers.authorization || '');
     
-    const clubIndex = clubs.findIndex(c => c.id === id);
-    
-    if (clubIndex === -1) {
-      return res.status(404).json({ error: "Club not found" });
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
     }
+
+    // Check if user is a manager of this club
+    const { data: membership } = await supabaseAdmin
+      .from('club_memberships')
+      .select('*')
+      .eq('club_id', id)
+      .eq('user_id', user.id)
+      .eq('role', 'manager')
+      .eq('status', 'approved')
+      .single();
     
-    const club = clubs[clubIndex];
-    
-    // Check if user is a manager
-    if (!club.managers.includes(managerId)) {
+    if (!membership) {
       return res.status(403).json({ error: "Only club managers can deny requests" });
     }
     
-    const requestIndex = club.pendingRequests.findIndex((r: any) => r.id === requestId);
+    // Delete the request
+    const { error } = await supabaseAdmin
+      .from('club_memberships')
+      .delete()
+      .eq('id', requestId)
+      .eq('club_id', id);
     
-    if (requestIndex === -1) {
-      return res.status(404).json({ error: "Request not found" });
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: "Failed to deny request" });
     }
-    
-    // Remove from pending requests
-    clubs[clubIndex].pendingRequests.splice(requestIndex, 1);
     
     res.json({ message: "Request denied successfully" });
   } catch (error) {
+    console.error('Server error:', error);
     res.status(500).json({ error: "Failed to deny request" });
+  }
+};
+
+// New endpoint to create a club
+export const handleCreateClub = async (req: Request, res: Response) => {
+  try {
+    const user = await getUserFromToken(req.headers.authorization || '');
+    
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    const validatedData = ClubSchema.parse(req.body);
+    const clubId = validatedData.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+    
+    // Create the club
+    const { data: newClub, error: clubError } = await supabaseAdmin
+      .from('clubs')
+      .insert({
+        id: clubId,
+        ...validatedData,
+        created_by: user.id
+      })
+      .select('*')
+      .single();
+    
+    if (clubError) {
+      if (clubError.code === '23505') {
+        return res.status(400).json({ error: "A club with this name already exists" });
+      }
+      console.error('Database error:', clubError);
+      return res.status(500).json({ error: "Failed to create club" });
+    }
+    
+    // Add creator as manager
+    const { error: membershipError } = await supabaseAdmin
+      .from('club_memberships')
+      .insert({
+        club_id: clubId,
+        user_id: user.id,
+        role: 'manager',
+        status: 'approved',
+        approved_at: new Date().toISOString()
+      });
+    
+    if (membershipError) {
+      console.error('Membership error:', membershipError);
+      // Don't fail the club creation if membership fails
+    }
+    
+    res.status(201).json(newClub);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: "Invalid club data", details: error.errors });
+    } else {
+      console.error('Server error:', error);
+      res.status(500).json({ error: "Failed to create club" });
+    }
   }
 };
