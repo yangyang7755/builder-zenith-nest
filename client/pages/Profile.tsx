@@ -244,14 +244,26 @@ export default function Profile() {
                           </Button>
                         </>
                       ) : (
-                        <Button
-                          onClick={() => setIsEditing(true)}
-                          variant="outline"
-                          size="sm"
-                        >
-                          <Edit3 className="h-4 w-4 mr-1" />
-                          Edit
-                        </Button>
+                        <>
+                          <Button
+                            onClick={() => setIsEditing(true)}
+                            variant="outline"
+                            size="sm"
+                          >
+                            <Edit3 className="h-4 w-4 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            asChild
+                          >
+                            <a href="/profile/demo">
+                              <BookOpen className="h-4 w-4 mr-1" />
+                              Enhanced Profile Tutorial
+                            </a>
+                          </Button>
+                        </>
                       )}
                     </>
                   )}
