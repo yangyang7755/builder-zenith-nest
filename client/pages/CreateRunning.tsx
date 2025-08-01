@@ -7,6 +7,7 @@ import DateTimePicker from "../components/DateTimePicker";
 
 export default function CreateRunning() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [selectedType, setSelectedType] = useState("Trail");
   const [formData, setFormData] = useState({
     maxRunners: "8",
