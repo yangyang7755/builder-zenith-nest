@@ -357,10 +357,10 @@ export default function Profile() {
         <TabsContent value="activities">
           <Card>
             <CardHeader>
-              <CardTitle>My Activities</CardTitle>
+              <CardTitle>{isDemo ? `${displayProfile?.full_name}'s Activities` : 'My Activities'}</CardTitle>
             </CardHeader>
             <CardContent>
-              {userActivities.length === 0 ? (
+              {displayActivities.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-gray-400 mb-2">No activities created yet</div>
                   <p className="text-sm text-gray-500 mb-4">
@@ -373,7 +373,7 @@ export default function Profile() {
                 </div>
               ) : (
                 <div className="grid gap-4">
-                  {userActivities.map((activity) => (
+                  {displayActivities.map((activity) => (
                     <div key={activity.id} className="p-4 border rounded-lg">
                       <div className="flex items-start justify-between">
                         <div>
