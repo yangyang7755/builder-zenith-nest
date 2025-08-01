@@ -141,7 +141,7 @@ export default function CreateRunning() {
         "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=40&h=40&fit=crop&crop=face",
     });
 
-    alert("Running activity created successfully!");
+    showToast("Running activity created successfully!", "success");
     navigate("/explore");
   };
 
