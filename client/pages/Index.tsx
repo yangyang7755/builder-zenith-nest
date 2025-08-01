@@ -167,11 +167,20 @@ export default function Index() {
 
     // Filter by club only
     if (filters.clubOnly) {
-      // User is member of westway and oxford-cycling
-      const userClubs = ["westway", "oxford-cycling"];
-      filtered = filtered.filter(
-        (activity) => activity.club && userClubs.includes(activity.club),
-      );
+      const userClubIds = getUserClubs().map(club => club.id);
+      filtered = filtered.filter((activity) => {
+        // Show activities that are either:
+        // 1. Created by members of clubs the user belongs to
+        // 2. Explicitly tagged with a club the user is a member of
+        if (activity.club && userClubIds.includes(activity.club)) {
+          return true;
+        }
+
+        // Check if the activity organizer is from one of the user's clubs
+        // This would require additional logic to map organizers to clubs
+        // For now, just filter by explicit club tags
+        return false;
+      });
     }
 
     setFilteredActivities(filtered);
