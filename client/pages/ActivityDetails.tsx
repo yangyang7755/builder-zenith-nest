@@ -11,9 +11,11 @@ import {
   Target,
   Trophy,
   Bookmark,
+  ExternalLink,
 } from "lucide-react";
 import { useChat } from "../contexts/ChatContext";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
+import { useActivities } from "../contexts/ActivitiesContext";
 
 // Comprehensive activity data structure
 const activitiesData = {
@@ -323,10 +325,15 @@ export default function ActivityDetails() {
   const [requestMessage, setRequestMessage] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Get activity data based on ID
-  const activity = activityId
+  const { activities } = useActivities();
+
+  // Get activity data from context first, then fallback to static data
+  const contextActivity = activities.find(a => a.id === activityId);
+  const staticActivity = activityId
     ? activitiesData[activityId as keyof typeof activitiesData]
     : null;
+
+  const activity = contextActivity || staticActivity;
 
   useEffect(() => {
     if (!activity) {
@@ -501,7 +508,7 @@ export default function ActivityDetails() {
             Description
           </h3>
           <p className="text-sm text-black font-cabin leading-relaxed">
-            {activity.description}
+            {contextActivity?.specialComments || activity.description}
           </p>
         </div>
 
@@ -516,7 +523,7 @@ export default function ActivityDetails() {
               </h3>
             </div>
             <p className="text-sm text-gray-600 font-cabin ml-8">
-              {activity.location}
+              {contextActivity?.location || activity.location}
             </p>
           </div>
 
@@ -527,7 +534,7 @@ export default function ActivityDetails() {
               <h3 className="text-xl font-bold text-black font-cabin">Time</h3>
             </div>
             <p className="text-sm text-black font-cabin ml-8">
-              {activity.schedule}
+              {contextActivity ? `${contextActivity.date}, ${contextActivity.time}` : activity.schedule}
             </p>
           </div>
 
@@ -540,14 +547,14 @@ export default function ActivityDetails() {
               </h4>
             </div>
             <p className="text-sm text-black font-cabin ml-6">
-              {activity.currentParticipants}/{activity.capacity} joined
+              {activity.currentParticipants || '0'}/{contextActivity?.maxParticipants || activity.capacity} joined
             </p>
           </div>
 
           {/* Activity-specific details */}
           {(activity.type === "cycling" || activity.type === "running") && (
             <>
-              {activity.distance && (
+              {(activity.distance || (contextActivity?.distance && contextActivity?.distanceUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <Target className="w-4 h-4 text-green-500" />
@@ -556,11 +563,11 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {activity.distance}
+                    {contextActivity ? `${contextActivity.distance} ${contextActivity.distanceUnit}` : activity.distance}
                   </p>
                 </div>
               )}
-              {activity.pace && (
+              {(activity.pace || (contextActivity?.pace && contextActivity?.paceUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-yellow-500">⚡</span>
@@ -569,11 +576,11 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {activity.pace}
+                    {contextActivity ? `${contextActivity.pace} ${contextActivity.paceUnit}` : activity.pace}
                   </p>
                 </div>
               )}
-              {activity.elevation && (
+              {(activity.elevation || (contextActivity?.elevation && contextActivity?.elevationUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-green-600">⛰️</span>
@@ -582,7 +589,7 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {activity.elevation}
+                    {contextActivity ? `${contextActivity.elevation} ${contextActivity.elevationUnit}` : activity.elevation}
                   </p>
                 </div>
               )}
@@ -635,11 +642,33 @@ export default function ActivityDetails() {
           )}
         </div>
 
+        {/* Route Links Section */}
+        {(contextActivity?.routeLink || activity.routeLink) && (
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-black font-cabin mb-3">
+              Route Information
+            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <ExternalLink className="w-4 h-4 text-blue-600" />
+                <a
+                  href={contextActivity?.routeLink || activity.routeLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-cabin text-blue-600 hover:text-blue-800 underline"
+                >
+                  View {activity.type} route
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Additional Info */}
         {(activity.fee ||
           activity.accommodation ||
           activity.transport ||
-          activity.cafeStop ||
+          (contextActivity?.cafeStop || activity.cafeStop) ||
           activity.route ||
           activity.trainingFocus ||
           activity.terrain ||
@@ -681,11 +710,11 @@ export default function ActivityDetails() {
                   </span>
                 </div>
               )}
-              {activity.cafeStop && (
+              {(contextActivity?.cafeStop || activity.cafeStop) && (
                 <div className="flex items-center gap-2">
                   <span className="text-brown-600">☕</span>
                   <span className="text-sm font-cabin">
-                    Cafe stop: {activity.cafeStop}
+                    Cafe stop: {contextActivity?.cafeStop || activity.cafeStop}
                   </span>
                 </div>
               )}
