@@ -17,6 +17,12 @@ import {
   handleDenyRequest,
   handleCreateClub
 } from "./routes/clubs";
+import {
+  handleGetProfile,
+  handleUpdateProfile,
+  handleGetUserClubs,
+  handleGetUserActivities
+} from "./routes/auth";
 
 export function createServer() {
   const app = express();
