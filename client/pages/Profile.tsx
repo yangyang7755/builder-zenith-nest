@@ -199,21 +199,30 @@ export default function Profile() {
               <div className="flex items-center justify-between">
                 <CardTitle>Profile Information</CardTitle>
                 <div className="flex gap-2">
-                  {isEditing ? (
+                  {!isDemo && (
                     <>
-                      <Button onClick={handleCancel} variant="outline" size="sm">
-                        <X className="h-4 w-4 mr-1" />
-                        Cancel
-                      </Button>
-                      <Button onClick={handleSave} size="sm" disabled={loading}>
-                        <Save className="h-4 w-4 mr-1" />
-                        {loading ? 'Saving...' : 'Save'}
-                      </Button>
+                      {isEditing ? (
+                        <>
+                          <Button onClick={handleCancel} variant="outline" size="sm">
+                            <X className="h-4 w-4 mr-1" />
+                            Cancel
+                          </Button>
+                          <Button onClick={handleSave} size="sm" disabled={loading}>
+                            <Save className="h-4 w-4 mr-1" />
+                            {loading ? 'Saving...' : 'Save'}
+                          </Button>
+                        </>
+                      ) : (
+                        <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+                          <Edit3 className="h-4 w-4 mr-1" />
+                          Edit
+                        </Button>
+                      )}
                     </>
-                  ) : (
-                    <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
-                      <Edit3 className="h-4 w-4 mr-1" />
-                      Edit
+                  )}
+                  {isDemo && (
+                    <Button variant="outline" size="sm" asChild>
+                      <a href="/signin">Sign In to Edit</a>
                     </Button>
                   )}
                 </div>
