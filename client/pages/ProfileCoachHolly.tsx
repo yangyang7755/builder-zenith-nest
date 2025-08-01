@@ -285,7 +285,9 @@ export default function ProfileCoachHolly() {
               <div className="col-span-2">
                 <span className="text-sm text-gray-600 font-cabin">Languages:</span>
                 <div className="font-medium text-black font-cabin">
-                  {userProfile.personalDetails.languages.join(" ")}
+                  {Array.isArray(userProfile.personalDetails.languages)
+                    ? userProfile.personalDetails.languages.join(", ")
+                    : userProfile.personalDetails.languages}
                 </div>
               </div>
               <div className="col-span-2">
