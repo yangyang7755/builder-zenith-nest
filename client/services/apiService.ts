@@ -1,5 +1,5 @@
-// API base URL - update this to your deployed backend URL
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+// API base URL - using your current Fly.io deployment
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://66e3ab0a84c340e9b445761a73e42448-dbbf80750d9f4e01981434bf2.fly.dev/api';
 
 interface ApiResponse<T> {
   data?: T;
