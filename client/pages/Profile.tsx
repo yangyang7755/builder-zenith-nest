@@ -255,10 +255,10 @@ export default function Profile() {
                     <Mail className="h-4 w-4 mr-1" />
                     {displayProfile?.email}
                   </div>
-                  {formData.university && (
+                  {displayProfile?.university && (
                     <div className="flex items-center text-gray-500">
                       <MapPin className="h-4 w-4 mr-1" />
-                      {formData.university}
+                      {displayProfile.university}
                     </div>
                   )}
                 </div>
