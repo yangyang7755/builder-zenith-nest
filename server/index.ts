@@ -14,7 +14,8 @@ import {
   handleUpdateClub,
   handleJoinRequest,
   handleApproveRequest,
-  handleDenyRequest
+  handleDenyRequest,
+  handleCreateClub
 } from "./routes/clubs";
 
 export function createServer() {
