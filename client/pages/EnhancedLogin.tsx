@@ -165,12 +165,25 @@ export default function EnhancedLogin() {
       });
 
       // Simulate email verification after a few seconds
-      setTimeout(() => {
+      setTimeout(async () => {
         setVerificationStep("verified");
-        toast({
-          title: "Email Verified!",
-          description: "Your email has been verified. You can now continue.",
-        });
+
+        // Actually sign in the user with their email and demo password
+        const { user, error } = await signIn(email, "demo123");
+
+        if (user && !error) {
+          toast({
+            title: "Email Verified!",
+            description: "Your email has been verified. Signing you in...",
+          });
+          setTimeout(() => navigate("/explore"), 1000);
+        } else {
+          toast({
+            title: "Sign-in Error",
+            description: "Failed to complete email sign-in.",
+            variant: "destructive",
+          });
+        }
       }, 4000);
     } catch (error) {
       toast({
