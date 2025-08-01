@@ -143,10 +143,6 @@ export default function Profile() {
     });
   };
 
-  // Use demo profile when not signed in
-  const displayProfile = user ? profile : maddieWeiProfile;
-  const isDemo = !user;
-
   // Use demo data when not signed in
   const displayClubs = user ? userClubs : maddieWeiProfile.clubs.map(club => ({
     id: club.id,
