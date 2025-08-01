@@ -65,7 +65,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <ToastProvider>
-        <ClubProvider>
+        <AuthProvider>
+          <ClubProvider>
           <OnboardingProvider>
             <ActivitiesProvider>
               <SavedActivitiesProvider>
@@ -80,6 +81,7 @@ const App = () => (
                     <Route path="/auth" element={<AuthLanding />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
+                    <Route path="/signin" element={<SignIn />} />
                     <Route path="/onboarding" element={<Onboarding />} />
                     <Route path="/explore" element={<Index />} />
                     <Route path="/activities" element={<Activities />} />
@@ -147,6 +149,7 @@ const App = () => (
                     <Route path="/profile/dan-smith" element={<ProfileDanSmith />} />
                     <Route path="/profile/coach-holly-old" element={<CoachHolly />} />
                     <Route path="/club/:clubId/manage" element={<ClubManagement />} />
+                    <Route path="/club/:clubId/manage-enhanced" element={<ClubManagementEnhanced clubId={window.location.pathname.split('/')[2]} />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
@@ -156,7 +159,8 @@ const App = () => (
               </SavedActivitiesProvider>
             </ActivitiesProvider>
           </OnboardingProvider>
-        </ClubProvider>
+          </ClubProvider>
+        </AuthProvider>
       </ToastProvider>
     </TooltipProvider>
   </QueryClientProvider>
