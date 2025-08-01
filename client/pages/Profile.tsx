@@ -249,11 +249,11 @@ export default function Profile() {
                 )}
                 <div className="space-y-1">
                   <h3 className="text-xl font-semibold">
-                    {formData.full_name || 'Add your name'}
+                    {displayProfile?.full_name || 'Add your name'}
                   </h3>
                   <div className="flex items-center text-gray-500">
                     <Mail className="h-4 w-4 mr-1" />
-                    {user.email}
+                    {displayProfile?.email}
                   </div>
                   {formData.university && (
                     <div className="flex items-center text-gray-500">
