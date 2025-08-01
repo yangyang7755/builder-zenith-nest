@@ -124,7 +124,13 @@ export default function SignUp() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <UserPlus className="mx-auto h-12 w-12 text-blue-600" />
+          <div className="mx-auto w-16 h-16 mb-4">
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9e47fe83fd834e79a57361f8a278d9a9?format=webp&width=800"
+              alt="Wildpals Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             Create your account
           </h2>
