@@ -117,24 +117,17 @@ export default function DemoAuth() {
             </div>
 
             <div className="space-y-2">
-              <Button 
-                onClick={handleDemoSignIn} 
-                size="sm" 
-                disabled={loading}
-                className="w-full"
-              >
-                <LogIn className="h-4 w-4 mr-1" />
-                {loading ? 'Signing In...' : 'Demo Sign In'}
-              </Button>
-              
               <div className="grid grid-cols-2 gap-2">
                 <Button variant="outline" size="sm" asChild>
-                  <a href="/signin">Real Sign In</a>
+                  <a href="/signin">Sign In</a>
                 </Button>
-                <Button variant="outline" size="sm" asChild>
+                <Button size="sm" asChild>
                   <a href="/signup">Sign Up</a>
                 </Button>
               </div>
+              <p className="text-xs text-center text-gray-500">
+                Use any email/password - it's all demo mode!
+              </p>
             </div>
           </div>
         )}
