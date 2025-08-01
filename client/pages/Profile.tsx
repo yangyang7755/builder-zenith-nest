@@ -1,720 +1,355 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  MapPin,
-  CheckCircle,
-  Circle,
-  Star,
-  Settings,
-  Trophy,
-  Award,
-} from "lucide-react";
-import BottomNavigation from "../components/BottomNavigation";
-import { getCurrentUserProfile, formatPersonalDetails, getSkillLevels } from "../services/profilesService";
-import { useOnboarding } from "../contexts/OnboardingContext";
-import { useActivities } from "../contexts/ActivitiesContext";
-import { calculateSportStats, getUserCreatedActivities, getUserParticipatedActivitiesForSport } from "../services/statisticsService";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts/AuthContext';
+import { apiService } from '@/services/apiService';
+import { useToast } from '@/hooks/use-toast';
+import { User, Mail, MapPin, Calendar, Edit3, Save, X, Plus } from 'lucide-react';
+
+interface UserClub {
+  id: string;
+  name: string;
+  type: string;
+  location: string;
+  userRole: 'member' | 'manager';
+}
+
+interface UserActivity {
+  id: string;
+  title: string;
+  type: string;
+  date: string;
+  time: string;
+  location: string;
+  club?: { name: string };
+}
 
 export default function Profile() {
-  const [selectedTab, setSelectedTab] = useState("Climb");
-  const navigate = useNavigate();
-  const { userProfile: onboardingProfile, isOnboardingComplete } = useOnboarding();
-  const { activities } = useActivities();
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const { user, profile, updateProfile } = useAuth();
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userClubs, setUserClubs] = useState<UserClub[]>([]);
+  const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
+  
+  const [formData, setFormData] = useState({
+    full_name: profile?.full_name || '',
+    university: profile?.university || '',
+    bio: profile?.bio || '',
+    profile_image: profile?.profile_image || '',
+  });
 
   useEffect(() => {
-    // Load user profile from onboarding data or fallback to sample data
-    const currentProfile = getCurrentUserProfile();
-
-    if (currentProfile && isOnboardingComplete) {
-      const personalDetails = formatPersonalDetails(currentProfile);
-      const skillLevels = getSkillLevels(currentProfile);
-
-      setUserProfile({
-        name: currentProfile.name,
-        location: currentProfile.location || "London, UK",
-        profileImage: currentProfile.profileImage,
-        followers: currentProfile.followers || 100,
-        following: currentProfile.following || 105,
-        overallRating: currentProfile.overallRating || 4.8,
-        totalReviews: currentProfile.totalReviews || 24,
-        sports: currentProfile.sports,
-        skillLevels: skillLevels,
-        personalDetails: {
-          ...personalDetails,
-          languages: currentProfile.languages || ["English"],
-        },
-      });
-
-      // Set the first sport as default tab if available
-      if (currentProfile.sports && currentProfile.sports.length > 0) {
-        setSelectedTab(currentProfile.sports[0].charAt(0).toUpperCase() + currentProfile.sports[0].slice(1));
-      }
-    } else {
-      // Fallback to sample data if no onboarding data
-      setUserProfile({
-        name: "Maddie Wei",
-        location: "Notting Hill, London",
-        profileImage: "https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&crop=face",
-        followers: 100,
-        following: 105,
-        overallRating: 4.8,
-        totalReviews: 24,
-        sports: ["climbing", "cycling", "running"],
-        skillLevels: {
-          climbing: "Intermediate",
-          cycling: "Advanced",
-          running: "Beginner",
-        },
-        personalDetails: {
-          gender: "Female",
-          age: 25,
-          nationality: "Spanish",
-          profession: "Student",
-          institution: "Oxford University",
-          languages: ["English", "Spanish", "French"],
-          joinedDate: "January 2024",
-        },
+    if (profile) {
+      setFormData({
+        full_name: profile.full_name || '',
+        university: profile.university || '',
+        bio: profile.bio || '',
+        profile_image: profile.profile_image || '',
       });
     }
-  }, [onboardingProfile, isOnboardingComplete]);
+  }, [profile]);
 
-  if (!userProfile) {
-    return <div className="min-h-screen bg-white flex items-center justify-center">Loading...</div>;
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      // Load user clubs
+      const clubsResponse = await apiService.getUserClubs();
+      if (clubsResponse.data) {
+        setUserClubs(clubsResponse.data);
+      }
+
+      // Load user activities
+      const activitiesResponse = await apiService.getUserActivities();
+      if (activitiesResponse.data) {
+        setUserActivities(activitiesResponse.data);
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      await updateProfile(formData);
+      setIsEditing(false);
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      full_name: profile?.full_name || '',
+      university: profile?.university || '',
+      bio: profile?.bio || '',
+      profile_image: profile?.profile_image || '',
+    });
+    setIsEditing(false);
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  if (!user) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Card>
+          <CardContent className="text-center py-12">
+            <User className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Not Signed In</h3>
+            <p className="text-gray-500 mb-4">Please sign in to view your profile.</p>
+            <Button>Sign In</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
-  const reviews = [
-    {
-      id: 1,
-      reviewer: "Sarah Chen",
-      reviewerImage:
-        "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face",
-      rating: 5,
-      comment: "Great climbing partner! Very supportive and reliable.",
-      activity: "Westway Women's Climb",
-      date: "2025-01-15",
-    },
-    {
-      id: 2,
-      reviewer: "Mike Johnson",
-      reviewerImage:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-      rating: 5,
-      comment: "Excellent cyclist, kept great pace throughout the ride.",
-      activity: "Richmond Park Social",
-      date: "2025-01-20",
-    },
-    {
-      id: 3,
-      reviewer: "Emma Wilson",
-      reviewerImage:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",
-      rating: 4,
-      comment: "Fun running companion, very motivating!",
-      activity: "Hyde Park Morning Run",
-      date: "2025-01-28",
-    },
-  ];
-
-  const climbingData = {
-    activities: {
-      created: [
-        {
-          id: "peak-district-climb",
-          title: "Peak District Sport Climbing",
-          date: "2025-02-05",
-          participants: 8,
-          location: "Peak District",
-        },
-      ],
-      participated: [
-        {
-          id: "westway-womens-climb",
-          title: "Westway Women's+ Climb",
-          date: "2025-01-26",
-          organizer: "Coach Holly",
-          rating: 5,
-        },
-      ],
-    },
-    gear: [
-      { name: "Bouldering pad", owned: true, icon: "🧗" },
-      { name: "Quickdraws", owned: false, icon: "🔗" },
-      { name: "Rope", owned: false, icon: "🪢" },
-      { name: "Helmet", owned: false, icon: "⛑️" },
-    ],
-    stats: {
-      totalClimbs: 18,
-      favoriteGrades: ["5.8", "5.9", "5.10a"],
-      preferredTerrain: ["Indoor", "Sport"],
-    },
-  };
-
-  const cyclingData = {
-    activities: {
-      created: [
-        {
-          id: "sunday-morning-ride",
-          title: "Sunday Morning Social",
-          date: "2025-02-08",
-          participants: 12,
-          location: "Richmond Park",
-        },
-      ],
-      participated: [
-        {
-          id: "chaingang-training",
-          title: "Intermediate Chaingang",
-          date: "2025-01-28",
-          organizer: "Surrey Road Cycling",
-          rating: 4,
-        },
-      ],
-    },
-    gear: [
-      { name: "Helmet", owned: true, icon: "⛑️" },
-      { name: "Repair kit", owned: false, icon: "🔧" },
-    ],
-    stats: {
-      totalRides: 24,
-      totalDistance: "1,250 km",
-      averageSpeed: "25 kph",
-      preferredTypes: ["Road cycling", "Sportives", "Social rides"],
-    },
-  };
-
-  const runningData = {
-    activities: {
-      created: [],
-      participated: [
-        {
-          id: "morning-trail-run",
-          title: "Morning Trail Run",
-          date: "2025-01-28",
-          organizer: "London Runners",
-          rating: 4,
-        },
-      ],
-    },
-    gear: [{ name: "Helmet", owned: false, icon: "⛑️" }],
-    stats: {
-      totalRuns: 12,
-      totalDistance: "185 km",
-      personalBests: {
-        "5K": "22:15",
-        "10K": "46:30",
-        "Half Marathon": "1:42:00",
-      },
-      preferredTypes: ["Park runs", "Trail running", "Social runs"],
-    },
-  };
-
-  const clubs = [
-    {
-      name: "Westway",
-      logo: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F1e4beaadbd444b8497b8d2ef2ac43e70?format=webp&width=800",
-      path: "/club/westway",
-    },
-    {
-      name: "CULMC",
-      logo: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=50&h=50&fit=crop",
-      path: "/club/oxford-cycling",
-    },
-  ];
-
-  const getCurrentSportData = () => {
-    const sportName = selectedTab.toLowerCase();
-    const realStats = calculateSportStats(activities, sportName);
-    const createdActivities = getUserCreatedActivities(activities);
-    const participatedActivities = getUserParticipatedActivitiesForSport(activities, sportName);
-
-    // Create dynamic data structure based on real activities
-    return {
-      activities: {
-        created: createdActivities.filter(a => a.type.toLowerCase() === sportName).map(activity => ({
-          id: activity.id,
-          title: activity.title,
-          date: activity.date,
-          participants: parseInt(activity.maxParticipants) || 0,
-          location: activity.location,
-        })),
-        participated: participatedActivities.map(activity => ({
-          id: activity.id,
-          title: activity.title,
-          date: activity.date,
-          organizer: typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Unknown',
-          rating: 5, // Default rating for now
-        })),
-      },
-      gear: climbingData.gear, // Keep existing gear data for now
-      stats: {
-        ...realStats,
-        // Keep some existing data for sports that don't have real calculations yet
-        favoriteGrades: sportName === "climb" ? ["5.9", "5.10a", "5.10b"] : undefined,
-        preferredTypes: sportName === "ride" ? ["Road cycling", "Social rides"] :
-                       sportName === "run" ? ["Park runs", "Trail running"] : undefined,
-      },
-    };
-  };
-
-  const handleFollowersClick = () => {
-    navigate("/followers");
-  };
-
-  const handleFollowingClick = () => {
-    navigate("/following");
-  };
-
-  const handleSettingsClick = () => {
-    navigate("/settings");
-  };
-
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
-      />
-    ));
-  };
-
-  const currentSportData = getCurrentSportData();
-
   return (
-    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
-      {/* Status Bar */}
-      <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
-        <span>9:41</span>
-        <div className="flex items-center gap-1">
-          <div className="flex gap-0.5">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="w-1 h-3 bg-black rounded-sm"></div>
-            ))}
-          </div>
-          <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect
-              x="1"
-              y="3"
-              width="22"
-              height="10"
-              rx="2"
-              stroke="black"
-              strokeWidth="1"
-              fill="none"
-            />
-            <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
-          </svg>
-        </div>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
+        <p className="text-gray-500">Manage your account settings and preferences</p>
       </div>
 
-      {/* Scrollable Content */}
-      <div className="overflow-y-auto pb-20">
-        <div className="px-6">
-          {/* Profile Header */}
-          <div className="flex items-start justify-between mt-6 mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-24 h-24 rounded-full border border-black overflow-hidden">
-                <img
-                  src={userProfile.profileImage}
-                  alt={userProfile.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="clubs">My Clubs ({userClubs.length})</TabsTrigger>
+          <TabsTrigger value="activities">My Activities ({userActivities.length})</TabsTrigger>
+        </TabsList>
 
-              <div>
-                <h1 className="text-xl font-bold text-black font-cabin mb-2">
-                  {userProfile.name}
-                </h1>
-                <div className="flex gap-2 mb-2">
-                  <button
-                    onClick={handleFollowersClick}
-                    className="text-sm text-explore-green font-cabin underline"
-                  >
-                    {userProfile.followers} Followers
-                  </button>
-                  <span className="text-sm text-gray-400">•</span>
-                  <button
-                    onClick={handleFollowingClick}
-                    className="text-sm text-explore-green font-cabin underline"
-                  >
-                    {userProfile.following} Following
-                  </button>
+        <TabsContent value="profile">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Profile Information</CardTitle>
+                <div className="flex gap-2">
+                  {isEditing ? (
+                    <>
+                      <Button onClick={handleCancel} variant="outline" size="sm">
+                        <X className="h-4 w-4 mr-1" />
+                        Cancel
+                      </Button>
+                      <Button onClick={handleSave} size="sm" disabled={loading}>
+                        <Save className="h-4 w-4 mr-1" />
+                        {loading ? 'Saving...' : 'Save'}
+                      </Button>
+                    </>
+                  ) : (
+                    <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
+                      <Edit3 className="h-4 w-4 mr-1" />
+                      Edit
+                    </Button>
+                  )}
                 </div>
-
-                {/* Rating */}
-                <div className="flex items-center gap-2">
-                  <div className="flex">
-                    {renderStars(Math.floor(userProfile.overallRating))}
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Profile Header */}
+              <div className="flex items-center space-x-4">
+                <Avatar className="h-20 w-20">
+                  <AvatarImage src={formData.profile_image} alt={formData.full_name} />
+                  <AvatarFallback className="text-lg">
+                    {formData.full_name ? getInitials(formData.full_name) : getInitials(user.email || 'U')}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-1">
+                  <h3 className="text-xl font-semibold">
+                    {formData.full_name || 'Add your name'}
+                  </h3>
+                  <div className="flex items-center text-gray-500">
+                    <Mail className="h-4 w-4 mr-1" />
+                    {user.email}
                   </div>
-                  <span className="text-sm text-gray-600 font-cabin">
-                    {userProfile.overallRating} ({userProfile.totalReviews}{" "}
-                    reviews)
-                  </span>
+                  {formData.university && (
+                    <div className="flex items-center text-gray-500">
+                      <MapPin className="h-4 w-4 mr-1" />
+                      {formData.university}
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-2">
-              <button className="px-4 py-2 border-2 border-explore-green rounded-lg text-explore-green text-sm font-cabin">
-                Share
-              </button>
-              <button
-                onClick={handleSettingsClick}
-                className="p-2 border-2 border-explore-green rounded-lg text-explore-green hover:bg-explore-green hover:text-white transition-colors"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Activity Tags with Skill Levels */}
-          <div className="flex gap-3 mb-6 flex-wrap">
-            {userProfile.sports.map((sport: string, index: number) => {
-              const skillLevel = userProfile.skillLevels[sport] || "Beginner";
-              const sportLabel = sport === "climbing" ? "Sport climber" :
-                                sport === "cycling" ? "Road cyclist" :
-                                sport === "running" ? "Runner" :
-                                sport === "hiking" ? "Hiker" :
-                                sport === "skiing" ? "Skier" :
-                                sport === "surfing" ? "Surfer" :
-                                sport === "tennis" ? "Tennis player" :
-                                sport.charAt(0).toUpperCase() + sport.slice(1);
-              return (
-                <div
-                  key={sport}
-                  className={`px-4 py-2 rounded-lg text-sm font-cabin ${
-                    index === 0
-                      ? "bg-explore-green text-white font-bold"
-                      : "border-2 border-explore-green text-explore-green"
-                  }`}
-                >
-                  {sportLabel} • {skillLevel}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* User Details Box */}
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h3 className="text-lg font-bold text-black font-cabin mb-3">
-              Personal Details
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <span className="text-sm text-gray-600 font-cabin">
-                  Gender:
-                </span>
-                <div className="font-medium text-black font-cabin">
-                  {userProfile.personalDetails.gender}
-                </div>
-              </div>
-              <div>
-                <span className="text-sm text-gray-600 font-cabin">Age:</span>
-                <div className="font-medium text-black font-cabin">
-                  {userProfile.personalDetails.age} years old
-                </div>
-              </div>
-              <div>
-                <span className="text-sm text-gray-600 font-cabin">
-                  Nationality:
-                </span>
-                <div className="font-medium text-black font-cabin">
-                  {userProfile.personalDetails.nationality}
-                </div>
-              </div>
-              <div>
-                <span className="text-sm text-gray-600 font-cabin">
-                  Profession:
-                </span>
-                <div className="font-medium text-black font-cabin">
-                  {userProfile.personalDetails.profession}
-                </div>
-              </div>
-              <div className="col-span-2">
-                <span className="text-sm text-gray-600 font-cabin">
-                  Institution:
-                </span>
-                <div className="font-medium text-black font-cabin">
-                  {userProfile.personalDetails.institution}
-                </div>
-              </div>
-              <div className="col-span-2">
-                <span className="text-sm text-gray-600 font-cabin">
-                  Languages:
-                </span>
-                <div className="font-medium text-black font-cabin">
-                  {userProfile.personalDetails.languages.join(", ")}
-                </div>
-              </div>
-              <div className="col-span-2">
-                <span className="text-sm text-gray-600 font-cabin">
-                  Member since:
-                </span>
-                <div className="font-medium text-black font-cabin">
-                  {userProfile.personalDetails.joinedDate}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Activity Filter Tabs */}
-          <div className="flex gap-2 mb-6">
-            {userProfile.sports.map((sport: string) => {
-              const tabName = sport.charAt(0).toUpperCase() + sport.slice(1);
-              const displayName = sport === "climbing" ? "Climb" :
-                                 sport === "cycling" ? "Ride" :
-                                 sport === "running" ? "Run" :
-                                 sport === "hiking" ? "Hike" :
-                                 sport === "skiing" ? "Ski" :
-                                 sport === "surfing" ? "Surf" :
-                                 sport === "tennis" ? "Tennis" : tabName;
-              return (
-                <button
-                  key={sport}
-                  onClick={() => setSelectedTab(tabName)}
-                  className={`px-6 py-2 rounded-lg border border-black text-sm font-bold font-cabin ${
-                    selectedTab === tabName
-                      ? "bg-explore-green text-white"
-                      : "bg-gray-100 text-explore-green"
-                  }`}
-                >
-                  {displayName}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Sport-Specific Content */}
-          <div className="space-y-8">
-            {/* Stats Overview */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-lg font-semibold text-black font-cabin mb-3">
-                {selectedTab} Statistics
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                {selectedTab === "Climb" && (
-                  <>
-                    <div>
-                      <div className="text-2xl font-bold text-explore-green">
-                        {currentSportData.stats.totalActivities || 0}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {currentSportData.stats.totalActivities === 1 ? 'Climbing Activity' : 'Climbing Activities'}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-medium text-explore-green">
-                        {currentSportData.stats.favoriteGrades?.join(", ") || "N/A"}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        Favorite Grades
-                      </div>
-                    </div>
-                  </>
-                )}
-                {selectedTab === "Ride" && (
-                  <>
-                    <div>
-                      <div className="text-2xl font-bold text-explore-green">
-                        {currentSportData.stats.totalActivities || 0}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {currentSportData.stats.totalActivities === 1 ? 'Ride' : 'Rides'}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-medium text-explore-green">
-                        {currentSportData.stats.totalDistance || "0 km"}
-                      </div>
-                      <div className="text-sm text-gray-600">Distance Covered</div>
-                    </div>
-                  </>
-                )}
-                {selectedTab === "Run" && (
-                  <>
-                    <div>
-                      <div className="text-2xl font-bold text-explore-green">
-                        {currentSportData.stats.totalActivities || 0}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {currentSportData.stats.totalActivities === 1 ? 'Run' : 'Runs'}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-medium text-explore-green">
-                        {currentSportData.stats.totalDistance || "0 km"}
-                      </div>
-                      <div className="text-sm text-gray-600">Distance Covered</div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Activities Created */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-4 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-explore-green" />
-                Activities Created
-              </h3>
-              <div className="space-y-3">
-                {currentSportData.activities.created.map((activity) => (
-                  <button
-                    key={activity.id}
-                    onClick={() => navigate(`/activity/${activity.id}`)}
-                    className="w-full border-2 border-gray-200 rounded-lg p-4 hover:border-explore-green transition-colors text-left"
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-black font-cabin">
-                        {activity.title}
-                      </h4>
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                        {activity.participants} joined
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-600 font-cabin">
-                      {activity.date} • {activity.location}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Activities Participated */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-4 flex items-center gap-2">
-                <Award className="w-5 h-5 text-explore-green" />
-                Activities Participated
-              </h3>
-              <div className="space-y-3">
-                {currentSportData.activities.participated.map((activity) => (
-                  <button
-                    key={activity.id}
-                    onClick={() => navigate(`/activity/${activity.id}`)}
-                    className="w-full border-2 border-gray-200 rounded-lg p-4 hover:border-explore-green transition-colors text-left"
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-black font-cabin">
-                        {activity.title}
-                      </h4>
-                      <div className="flex">{renderStars(activity.rating)}</div>
-                    </div>
-                    <div className="text-sm text-gray-600 font-cabin">
-                      {activity.date} • By {activity.organizer}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Gear & Equipment */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-4">
-                Gear & Equipment
-              </h3>
-              <div className="grid grid-cols-2 gap-3">
-                {currentSportData.gear.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
-                  >
-                    <span className="text-lg">{item.icon}</span>
-                    <span className="text-sm text-black font-cabin flex-1">
-                      {item.name}
-                    </span>
-                    {item.owned ? (
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                    ) : (
-                      <Circle className="w-4 h-4 text-gray-300" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Reviews Section */}
-          <div className="mt-8">
-            <h3 className="text-xl font-medium text-black font-cabin mb-4">
-              Recent Reviews
-            </h3>
-            <div className="space-y-4">
-              {reviews.slice(0, 3).map((review) => (
-                <div
-                  key={review.id}
-                  className="border-2 border-gray-200 rounded-lg p-4"
-                >
-                  <div className="flex items-start gap-3 mb-3">
-                    <img
-                      src={review.reviewerImage}
-                      alt={review.reviewer}
-                      className="w-10 h-10 rounded-full border border-black"
+              {/* Editable Fields */}
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="full_name">Full Name</Label>
+                  {isEditing ? (
+                    <Input
+                      id="full_name"
+                      value={formData.full_name}
+                      onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                      placeholder="Enter your full name"
                     />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-black font-cabin text-sm">
-                          {review.reviewer}
-                        </span>
-                        <div className="flex">{renderStars(review.rating)}</div>
-                      </div>
-                      <div className="text-xs text-gray-500 font-cabin">
-                        {review.activity} • {review.date}
-                      </div>
-                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-700">{formData.full_name || 'Not set'}</p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="university">University/Organization</Label>
+                  {isEditing ? (
+                    <Input
+                      id="university"
+                      value={formData.university}
+                      onChange={(e) => setFormData({...formData, university: e.target.value})}
+                      placeholder="Enter your university or organization"
+                    />
+                  ) : (
+                    <p className="text-sm text-gray-700">{formData.university || 'Not set'}</p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="bio">Bio</Label>
+                  {isEditing ? (
+                    <Textarea
+                      id="bio"
+                      value={formData.bio}
+                      onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                      placeholder="Tell others about yourself..."
+                      rows={3}
+                    />
+                  ) : (
+                    <p className="text-sm text-gray-700">{formData.bio || 'No bio added yet'}</p>
+                  )}
+                </div>
+
+                {isEditing && (
+                  <div className="grid gap-2">
+                    <Label htmlFor="profile_image">Profile Image URL</Label>
+                    <Input
+                      id="profile_image"
+                      value={formData.profile_image}
+                      onChange={(e) => setFormData({...formData, profile_image: e.target.value})}
+                      placeholder="Enter profile image URL"
+                    />
                   </div>
-                  <p className="text-sm text-gray-700 font-cabin">
-                    {review.comment}
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="clubs">
+          <Card>
+            <CardHeader>
+              <CardTitle>My Clubs</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {userClubs.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="text-gray-400 mb-2">No clubs joined yet</div>
+                  <p className="text-sm text-gray-500 mb-4">
+                    Join clubs to connect with like-minded people and participate in activities.
                   </p>
+                  <Button variant="outline">
+                    <Plus className="h-4 w-4 mr-1" />
+                    Browse Clubs
+                  </Button>
                 </div>
-              ))}
-            </div>
-          </div>
+              ) : (
+                <div className="grid gap-4">
+                  {userClubs.map((club) => (
+                    <div key={club.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div>
+                        <h4 className="font-medium">{club.name}</h4>
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <Badge variant="secondary">{club.type}</Badge>
+                          <span>{club.location}</span>
+                        </div>
+                      </div>
+                      <Badge variant={club.userRole === 'manager' ? 'default' : 'outline'}>
+                        {club.userRole}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          {/* Clubs Section */}
-          <div className="mt-8">
-            <h3 className="text-xl font-medium text-black font-cabin mb-4">
-              Clubs
-            </h3>
-            <div className="flex gap-4">
-              {clubs.map((club, index) => (
-                <Link
-                  key={index}
-                  to={club.path}
-                  className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
-                >
-                  <div className="w-6 h-6 rounded-full overflow-hidden">
-                    <img
-                      src={club.logo}
-                      alt={club.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-sm font-cabin text-black hover:text-explore-green transition-colors">
-                    {club.name}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Location Section */}
-          <div className="mt-8">
-            <h3 className="text-xl font-medium text-black font-cabin mb-2">
-              Location
-            </h3>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-black font-cabin">
-                {userProfile.location}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
+        <TabsContent value="activities">
+          <Card>
+            <CardHeader>
+              <CardTitle>My Activities</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {userActivities.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="text-gray-400 mb-2">No activities created yet</div>
+                  <p className="text-sm text-gray-500 mb-4">
+                    Create your first activity to bring people together.
+                  </p>
+                  <Button variant="outline">
+                    <Plus className="h-4 w-4 mr-1" />
+                    Create Activity
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {userActivities.map((activity) => (
+                    <div key={activity.id} className="p-4 border rounded-lg">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h4 className="font-medium">{activity.title}</h4>
+                          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+                            <Badge variant="secondary">{activity.type}</Badge>
+                            {activity.club && <span>��� {activity.club.name}</span>}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
+                            <Calendar className="h-4 w-4" />
+                            <span>{formatDate(activity.date)} at {activity.time}</span>
+                            <MapPin className="h-4 w-4 ml-2" />
+                            <span>{activity.location}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
