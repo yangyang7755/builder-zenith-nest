@@ -285,6 +285,19 @@ export default function SignUp() {
             </form>
           </CardContent>
         </Card>
+
+        {/* Demo Mode Info */}
+        <Card className="bg-green-50 border-green-200">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <p className="text-sm text-green-800 font-medium mb-2">Demo Mode Active</p>
+              <p className="text-xs text-green-600">
+                You can create a demo account with any email and password.
+                No real email verification required - perfect for testing!
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
