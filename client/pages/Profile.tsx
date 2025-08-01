@@ -138,20 +138,28 @@ export default function Profile() {
     });
   };
 
-  if (!user) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Card>
-          <CardContent className="text-center py-12">
-            <User className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Not Signed In</h3>
-            <p className="text-gray-500 mb-4">Please sign in to view your profile.</p>
-            <Button>Sign In</Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // Use demo profile when not signed in
+  const displayProfile = user ? profile : maddieWeiProfile;
+  const isDemo = !user;
+
+  // Use demo data when not signed in
+  const displayClubs = user ? userClubs : maddieWeiProfile.clubs.map(club => ({
+    id: club.id,
+    name: club.name,
+    type: club.type,
+    location: club.location,
+    userRole: club.userRole
+  }));
+
+  const displayActivities = user ? userActivities : maddieWeiProfile.activities.map(activity => ({
+    id: activity.id,
+    title: activity.title,
+    type: activity.type,
+    date: activity.date,
+    time: activity.time,
+    location: activity.location,
+    club: activity.club
+  }));
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
