@@ -217,9 +217,25 @@ export default function ProfileCoachHolly() {
 
           {/* Activity Tags */}
           <div className="flex gap-3 mb-6 flex-wrap">
-            <div className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-bold font-cabin">
-              Sport climber • {userProfile.skillLevels.climbing}
-            </div>
+            {userProfile.sports.map((sport: string, index: number) => {
+              const skillLevel = userProfile.skillLevels[sport] || "Expert";
+              const sportLabel = sport === "climbing" ? "Sport climber" :
+                                sport === "cycling" ? "Road cyclist" :
+                                sport === "running" ? "Runner" :
+                                sport === "hiking" ? "Hiker" :
+                                sport === "skiing" ? "Skier" :
+                                sport === "surfing" ? "Surfer" :
+                                sport === "tennis" ? "Tennis player" :
+                                sport.charAt(0).toUpperCase() + sport.slice(1);
+              return (
+                <div
+                  key={sport}
+                  className="bg-explore-green text-white px-4 py-2 rounded-lg text-sm font-bold font-cabin"
+                >
+                  {sportLabel} • {skillLevel}
+                </div>
+              );
+            })}
             <div className="border-2 border-orange-500 text-orange-500 px-4 py-2 rounded-lg text-sm font-cabin">
               Coach • Certified
             </div>
