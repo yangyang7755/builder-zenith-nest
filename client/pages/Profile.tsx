@@ -16,35 +16,69 @@ import { useOnboarding } from "../contexts/OnboardingContext";
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Climb");
   const navigate = useNavigate();
+  const { userProfile: onboardingProfile, isOnboardingComplete } = useOnboarding();
+  const [userProfile, setUserProfile] = useState<any>(null);
 
-  // Sample user data - this would normally come from a context or API
-  const userProfile = {
-    name: "Maddie Wei",
+  useEffect(() => {
+    // Load user profile from onboarding data or fallback to sample data
+    const currentProfile = getCurrentUserProfile();
 
-    location: "Notting Hill, London",
-    profileImage:
-      "https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&crop=face",
-    followers: 100,
-    following: 105,
-    overallRating: 4.8,
-    totalReviews: 24,
-    sports: ["climbing", "cycling", "running"],
-    skillLevels: {
-      climbing: "Intermediate",
-      cycling: "Advanced",
-      running: "Beginner",
-    },
-    // Additional user details
-    personalDetails: {
-      gender: "Female",
-      age: 25,
-      nationality: "Spanish",
-      profession: "Student",
-      institution: "Oxford University",
-      languages: ["🇬🇧", "🇪🇸", "🇫🇷"],
-      joinedDate: "January 2024",
-    },
-  };
+    if (currentProfile && isOnboardingComplete) {
+      const personalDetails = formatPersonalDetails(currentProfile);
+      const skillLevels = getSkillLevels(currentProfile);
+
+      setUserProfile({
+        name: currentProfile.name,
+        location: currentProfile.location || "London, UK",
+        profileImage: currentProfile.profileImage,
+        followers: currentProfile.followers || 100,
+        following: currentProfile.following || 105,
+        overallRating: currentProfile.overallRating || 4.8,
+        totalReviews: currentProfile.totalReviews || 24,
+        sports: currentProfile.sports,
+        skillLevels: skillLevels,
+        personalDetails: {
+          ...personalDetails,
+          languages: currentProfile.languages || ["English"],
+        },
+      });
+
+      // Set the first sport as default tab if available
+      if (currentProfile.sports && currentProfile.sports.length > 0) {
+        setSelectedTab(currentProfile.sports[0].charAt(0).toUpperCase() + currentProfile.sports[0].slice(1));
+      }
+    } else {
+      // Fallback to sample data if no onboarding data
+      setUserProfile({
+        name: "Maddie Wei",
+        location: "Notting Hill, London",
+        profileImage: "https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&crop=face",
+        followers: 100,
+        following: 105,
+        overallRating: 4.8,
+        totalReviews: 24,
+        sports: ["climbing", "cycling", "running"],
+        skillLevels: {
+          climbing: "Intermediate",
+          cycling: "Advanced",
+          running: "Beginner",
+        },
+        personalDetails: {
+          gender: "Female",
+          age: 25,
+          nationality: "Spanish",
+          profession: "Student",
+          institution: "Oxford University",
+          languages: ["English", "Spanish", "French"],
+          joinedDate: "January 2024",
+        },
+      });
+    }
+  }, [onboardingProfile, isOnboardingComplete]);
+
+  if (!userProfile) {
+    return <div className="min-h-screen bg-white flex items-center justify-center">Loading...</div>;
+  }
 
   const reviews = [
     {
