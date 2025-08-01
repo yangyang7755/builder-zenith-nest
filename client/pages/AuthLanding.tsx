@@ -51,9 +51,12 @@ export default function AuthLanding() {
           </Link>
 
           {/* Continue with Apple Button */}
-          <button className="w-full border-2 border-explore-green bg-white text-explore-green py-3 px-6 rounded-lg font-cabin text-base">
+          <Link
+            to="/enhanced-login"
+            className="w-full border-2 border-explore-green bg-white text-explore-green py-3 px-6 rounded-lg font-cabin text-base block text-center"
+          >
             Continue with Apple
-          </button>
+          </Link>
 
           {/* Login Link */}
           <div className="text-center pt-4">
