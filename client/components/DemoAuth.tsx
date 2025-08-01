@@ -108,11 +108,11 @@ export default function DemoAuth() {
               Not Signed In
             </Badge>
             
-            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded border border-blue-200">
-              <p className="font-medium text-blue-800 mb-1">Demo Mode</p>
-              <p className="text-blue-700">
-                Authentication features are ready but require Supabase configuration. 
-                You can still explore the app with sample data.
+            <div className="text-sm text-gray-600 bg-green-50 p-3 rounded border border-green-200">
+              <p className="font-medium text-green-800 mb-1">Demo Mode Active</p>
+              <p className="text-green-700">
+                Backend is running with demo data! All features work including profile management,
+                club data, and activities. Ready for Supabase integration.
               </p>
             </div>
 
