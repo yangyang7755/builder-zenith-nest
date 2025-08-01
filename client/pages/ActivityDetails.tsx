@@ -484,21 +484,26 @@ export default function ActivityDetails() {
         <div
           className="flex items-center gap-3 mb-6 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
           onClick={() => {
-            if (activity.organizer.name === "Coach Holly Peristiani") {
+            const organizerName = typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name;
+            if (organizerName === "Coach Holly Peristiani") {
               navigate("/profile/coach-holly");
             }
           }}
         >
           <img
-            src={activity.organizer.image}
-            alt={activity.organizer.name}
+            src={
+              typeof activity.organizer === 'string'
+                ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" // Default avatar
+                : activity.organizer?.image || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+            }
+            alt={typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Organizer'}
             className="w-12 h-12 rounded-full border border-black object-cover"
           />
           <div>
             <h2 className="text-lg font-bold text-black font-cabin">
-              {activity.organizer.name}
+              {typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Unknown Organizer'}
             </h2>
-            {activity.organizer.name === "Coach Holly Peristiani" && (
+            {(typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name) === "Coach Holly Peristiani" && (
               <p className="text-xs text-gray-500 font-cabin">
                 Click to view profile
               </p>
