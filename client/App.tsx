@@ -121,6 +121,10 @@ const App = () => (
                             path="/create/tennis"
                             element={<CreateTennis />}
                           />
+                          <Route
+                            path="/create/club"
+                            element={<CreateClub />}
+                          />
                           <Route path="/chat" element={<Chat />} />
                           <Route
                             path="/chat/:userId"
