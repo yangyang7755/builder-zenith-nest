@@ -31,6 +31,7 @@ export default function CreateCycling() {
     ageMin: "",
     ageMax: "",
     visibility: "All",
+    difficulty: "Beginner",
     specialComments: "",
   });
 
