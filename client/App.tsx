@@ -49,6 +49,7 @@ import ClubManagement from "./pages/ClubManagement";
 import ClubManagementEnhanced from "./pages/ClubManagementEnhanced";
 import SignIn from "./pages/SignIn";
 import EnhancedLogin from "./pages/EnhancedLogin";
+import ProfileDemo from "./pages/ProfileDemo";
 import NotFound from "./pages/NotFound";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
 import { ChatProvider } from "./contexts/ChatContext";
