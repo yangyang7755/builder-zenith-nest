@@ -11,6 +11,7 @@ export default function CreateCycling() {
   const navigate = useNavigate();
   const { addActivity } = useActivities();
   const { getDraft, saveDraft, deleteDraft, hasDraft } = useActivityDraft();
+  const { showToast } = useToast();
   const [selectedType, setSelectedType] = useState("Road");
   const [showLocationMap, setShowLocationMap] = useState(false);
   const [showBackModal, setShowBackModal] = useState(false);
