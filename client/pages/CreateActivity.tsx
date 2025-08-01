@@ -7,6 +7,7 @@ import {
   Snowflake,
   Waves,
   Zap,
+  Users,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 
