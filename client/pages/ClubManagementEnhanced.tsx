@@ -91,6 +91,7 @@ export default function ClubManagementEnhanced({ clubId }: ClubManagementEnhance
           location: response.data.location,
           website: response.data.website || '',
           contact_email: response.data.contact_email || '',
+          profile_image: response.data.profile_image || '',
         });
       }
     } catch (error) {
