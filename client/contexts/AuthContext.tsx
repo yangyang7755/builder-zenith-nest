@@ -84,45 +84,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Get initial session
     const getInitialSession = async () => {
+      if (!supabase) {
+        if (mounted) {
+          setLoading(false);
+        }
+        return;
+      }
+
       const { data: { session: initialSession } } = await supabase.auth.getSession();
-      
+
       if (mounted) {
         setSession(initialSession);
         setUser(initialSession?.user || null);
-        
+
         if (initialSession?.user && initialSession?.access_token) {
           await fetchProfile(initialSession.user.id, initialSession.access_token);
         }
-        
+
         setLoading(false);
       }
     };
 
     getInitialSession();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
-        console.log('Auth state changed:', event, currentSession?.user?.email);
-        
-        if (mounted) {
-          setSession(currentSession);
-          setUser(currentSession?.user || null);
-          
-          if (currentSession?.user && currentSession?.access_token) {
-            await fetchProfile(currentSession.user.id, currentSession.access_token);
-          } else {
-            setProfile(null);
+    // Listen for auth changes (only if Supabase is available)
+    let subscription: any = null;
+    if (supabase) {
+      const { data } = supabase.auth.onAuthStateChange(
+        async (event, currentSession) => {
+          console.log('Auth state changed:', event, currentSession?.user?.email);
+
+          if (mounted) {
+            setSession(currentSession);
+            setUser(currentSession?.user || null);
+
+            if (currentSession?.user && currentSession?.access_token) {
+              await fetchProfile(currentSession.user.id, currentSession.access_token);
+            } else {
+              setProfile(null);
+            }
+
+            setLoading(false);
           }
-          
-          setLoading(false);
         }
-      }
-    );
+      );
+      subscription = data.subscription;
+    }
 
     return () => {
       mounted = false;
-      subscription.unsubscribe();
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     };
   }, []);
 
