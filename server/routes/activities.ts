@@ -18,8 +18,13 @@ const ActivitySchema = z.object({
 
 export const handleGetActivities = async (req: Request, res: Response) => {
   try {
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      return res.json([]); // Return empty array for development
+    }
+
     const { club, type, location } = req.query;
-    
+
     let query = supabaseAdmin
       .from('activities')
       .select(`
