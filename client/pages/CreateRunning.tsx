@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Calendar, ChevronDown, MapPin, X } from "lucide-react";
 import { useActivities } from "../contexts/ActivitiesContext";
+import { useToast } from "../contexts/ToastContext";
 import DateTimePicker from "../components/DateTimePicker";
 
 export default function CreateRunning() {
