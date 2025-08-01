@@ -273,7 +273,7 @@ export default function ClubWestway() {
                   Upcoming Events
                 </h3>
                 <Link
-                  to="/activities"
+                  to="/explore?clubOnly=true"
                   className="text-sm text-explore-green underline font-cabin"
                 >
                   See all
