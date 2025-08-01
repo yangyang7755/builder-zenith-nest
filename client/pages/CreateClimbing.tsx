@@ -7,6 +7,7 @@ import DateTimePicker from "../components/DateTimePicker";
 
 export default function CreateClimbing() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [selectedType, setSelectedType] = useState("Sport climbing");
   const [formData, setFormData] = useState({
     maxPeople: "",
