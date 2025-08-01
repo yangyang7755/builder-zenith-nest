@@ -224,7 +224,7 @@ export default function ClubChatOxford() {
           </button>
           <div className="flex items-center gap-3">
             <img
-              src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=40&h=40&fit=crop"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800"
               alt="Oxford Cycling Club"
               className="w-10 h-10 rounded-full border border-black object-cover"
             />
