@@ -11,8 +11,13 @@ const ProfileUpdateSchema = z.object({
 
 export const handleGetProfile = async (req: Request, res: Response) => {
   try {
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      return res.status(503).json({ error: "Database not configured" });
+    }
+
     const user = await getUserFromToken(req.headers.authorization || '');
-    
+
     if (!user) {
       return res.status(401).json({ error: "Authentication required" });
     }
