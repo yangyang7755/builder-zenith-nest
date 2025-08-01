@@ -137,8 +137,9 @@ export default function Saved() {
                   </p>
 
                   {/* Backend Test */}
-                  <div className="mb-6">
+                  <div className="mb-6 grid gap-4 md:grid-cols-2">
                     <BackendTest />
+                    <DemoAuth />
                   </div>
 
                   <Link
