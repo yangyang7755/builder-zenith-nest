@@ -267,12 +267,15 @@ export default function Profile() {
                           <Button
                             variant="outline"
                             size="sm"
-                            asChild
+                            onClick={() => {
+                              toast({
+                                title: "Enhanced Features Coming Soon",
+                                description: "Skill tracking, achievements, and detailed preferences will be added to this profile page.",
+                              });
+                            }}
                           >
-                            <a href="/profile/demo">
-                              <BookOpen className="h-4 w-4 mr-1" />
-                              Enhanced Profile Tutorial
-                            </a>
+                            <Settings2 className="h-4 w-4 mr-1" />
+                            Enhanced Features
                           </Button>
                         </>
                       )}
