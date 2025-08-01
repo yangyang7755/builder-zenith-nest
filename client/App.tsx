@@ -91,6 +91,7 @@ const App = () => (
                     <Route path="/chat" element={<Chat />} />
                     <Route path="/chat/:userId" element={<IndividualChat />} />
                     <Route path="/club/westway" element={<ClubWestway />} />
+                    <Route path="/club/oucc" element={<ClubOxford />} />
                     <Route path="/club/oxford-cycling" element={<ClubOxford />} />
                     <Route path="/club/rapha-cycling" element={<ClubRapha />} />
                     <Route
