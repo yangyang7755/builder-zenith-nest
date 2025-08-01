@@ -164,15 +164,33 @@ export default function Profile() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
-        <p className="text-gray-500">Manage your account settings and preferences</p>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {isDemo ? `${displayProfile?.full_name}'s Profile` : 'My Profile'}
+        </h1>
+        <p className="text-gray-500">
+          {isDemo
+            ? `Demo profile showing ${displayProfile?.full_name}'s activities and clubs`
+            : 'Manage your account settings and preferences'
+          }
+        </p>
+        {isDemo && (
+          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              <strong>Demo Mode:</strong> This is Maddie Wei's profile. Sign in to see your own profile and edit your information.
+            </p>
+          </div>
+        )}
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="clubs">My Clubs ({userClubs.length})</TabsTrigger>
-          <TabsTrigger value="activities">My Activities ({userActivities.length})</TabsTrigger>
+          <TabsTrigger value="clubs">
+            {isDemo ? 'Clubs' : 'My Clubs'} ({displayClubs.length})
+          </TabsTrigger>
+          <TabsTrigger value="activities">
+            {isDemo ? 'Activities' : 'My Activities'} ({displayActivities.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile">
