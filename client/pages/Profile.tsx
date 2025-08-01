@@ -12,6 +12,7 @@ import { apiService } from '@/services/apiService';
 import { useToast } from '@/hooks/use-toast';
 import { User, Mail, MapPin, Calendar, Edit3, Save, X, Plus } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import { maddieWeiProfile, DemoProfile } from '@/data/demoProfiles';
 
 interface UserClub {
   id: string;
