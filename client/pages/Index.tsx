@@ -11,6 +11,7 @@ import ActivityCard from "../components/ActivityCard";
 export default function Index() {
   const { activities, searchActivities } = useActivities();
   const { showWelcomeMessage, dismissWelcomeMessage, userProfile } = useOnboarding();
+  const { getUserClubs, isClubMember } = useClub();
 
   const formatActivityDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -931,7 +932,7 @@ function ClimbingExploreSection() {
     },
     {
       title: "Multi-pitch Climbing Course",
-      date: "📅 3 days, Aug 12-14",
+      date: "�� 3 days, Aug 12-14",
       location: "📍Lake District",
       organizer: "Mountain Skills Academy",
       grade: "Multi-pitch routes",
