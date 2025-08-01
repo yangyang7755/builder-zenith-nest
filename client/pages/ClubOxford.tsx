@@ -363,26 +363,66 @@ export default function ClubOxford() {
                   Members
                 </h3>
                 <span className="text-sm text-gray-500 font-cabin">
-                  42 members
+                  {club?.memberCount || 42} members
                 </span>
               </div>
-              <div className="grid grid-cols-6 gap-4">
-                {members.map((member, index) => (
-                  <div key={index} className="text-center">
-                    <img
-                      src={member.avatar}
-                      alt={member.name}
-                      className="w-12 h-12 rounded-full border border-black object-cover mx-auto mb-2"
-                    />
-                    <span className="text-xs text-black font-cabin">
-                      {member.name}
-                    </span>
-                  </div>
-                ))}
+
+              {/* Club Managers Section */}
+              <div className="mb-6">
+                <h4 className="text-md font-medium text-black font-cabin mb-3">Club Managers</h4>
+                <div className="grid grid-cols-6 gap-4">
+                  {club?.managers.map((managerId, index) => {
+                    // Map manager IDs to display names
+                    const managerName = managerId === "current-user" ? "You" :
+                                       managerId === "coach-holly" ? "Coach Holly" :
+                                       `Manager ${managerId}`;
+                    return (
+                      <div key={managerId} className="text-center">
+                        <img
+                          src={managerId === "current-user" ?
+                            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" :
+                            managerId === "coach-holly" ?
+                            "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face" :
+                            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+                          }
+                          alt={managerName}
+                          className="w-12 h-12 rounded-full border-2 border-explore-green object-cover mx-auto mb-2"
+                        />
+                        <span className="text-xs text-black font-cabin font-medium">
+                          {managerName}
+                        </span>
+                        <div className="text-xs text-explore-green font-cabin">Manager</div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
+
+              {/* Regular Members Section */}
+              <div>
+                <h4 className="text-md font-medium text-black font-cabin mb-3">Members</h4>
+                <div className="grid grid-cols-6 gap-4">
+                  {members.map((member, index) => (
+                    <div key={index} className="text-center">
+                      <img
+                        src={member.avatar}
+                        alt={member.name}
+                        className="w-12 h-12 rounded-full border border-black object-cover mx-auto mb-2"
+                      />
+                      <span className="text-xs text-black font-cabin">
+                        {member.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="text-center mt-6">
-                <button className="text-explore-green font-cabin underline">
-                  View All
+                <button
+                  onClick={() => navigate("/club/oucc/manage")}
+                  className="text-explore-green font-cabin underline"
+                >
+                  {isManager ? "Manage Members" : "View All"}
                 </button>
               </div>
             </div>
