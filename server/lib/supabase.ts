@@ -13,12 +13,14 @@ if (!supabaseUrl || !supabaseServiceKey) {
 }
 
 // Server-side client with service role key for admin operations
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  }
-});
+export const supabaseAdmin = supabaseUrl && supabaseServiceKey
+  ? createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    })
+  : null;
 
 // Helper function to get user from JWT token
 export const getUserFromToken = async (authHeader: string) => {
