@@ -1,162 +1,281 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { User, Mail, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { signUp } = useAuth();
+  const { toast } = useToast();
+  
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    full_name: '',
+  });
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
-  const handleSignUp = () => {
-    if (!agreedToTerms) {
-      alert("Please agree to the Terms and Privacy Policy");
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {};
+
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (!formData.full_name.trim()) {
+      newErrors.full_name = 'Full name is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
       return;
     }
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
+
+    setLoading(true);
+    try {
+      const { user, error } = await signUp(
+        formData.email, 
+        formData.password,
+        { full_name: formData.full_name }
+      );
+
+      if (error) {
+        toast({
+          title: "Sign Up Failed",
+          description: error.message || "Failed to create account. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (user) {
+        toast({
+          title: "Account Created Successfully",
+          description: "Please check your email to verify your account before signing in.",
+        });
+        navigate('/signin');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-    // Handle sign up logic here
-    // After successful sign up, redirect to onboarding
-    navigate("/onboarding");
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
   };
 
   return (
-    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
-      <div className="flex flex-col justify-center items-center px-7 py-16 min-h-screen">
-        {/* Logo Section */}
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-32 h-32 bg-explore-green rounded-full flex items-center justify-center mb-6">
-            <svg
-              className="w-16 h-16 text-white"
-              viewBox="0 0 100 100"
-              fill="currentColor"
-            >
-              <path d="M20 75C25 70, 30 65, 35 70C40 75, 45 70, 50 75C55 80, 60 75, 65 80C70 85, 75 80, 80 85" />
-              <path d="M20 65C25 60, 30 55, 35 60C40 65, 45 60, 50 65C55 70, 60 65, 65 70C70 75, 75 70, 80 75" />
-              <path d="M20 55C25 50, 30 45, 35 50C40 55, 45 50, 50 55C55 60, 60 55, 65 60C70 65, 75 60, 80 65" />
-              <path d="M20 45C25 40, 30 35, 35 40C40 45, 45 40, 50 45C55 50, 60 45, 65 50C70 55, 75 50, 80 55" />
-              <path d="M20 35C25 30, 30 25, 35 30C40 35, 45 30, 50 35C55 40, 60 35, 65 40C70 45, 75 40, 80 45" />
-              <path d="M20 25C25 20, 30 15, 35 20C40 25, 45 20, 50 25C55 30, 60 25, 65 30C70 35, 75 30, 80 35" />
-              <path d="M25 15C30 10, 35 5, 40 10C45 15, 50 10, 55 15C60 20, 65 15, 70 20C75 25, 80 20, 85 25" />
-              <path d="M75 15C80 10, 85 5, 90 10" />
-              <path d="M80 25C85 20, 90 15, 95 20" />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-black font-cabin mb-2">
-            Wildpals
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
+          <UserPlus className="mx-auto h-12 w-12 text-blue-600" />
+          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+            Create your account
           </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Join our community of sports enthusiasts
+          </p>
         </div>
 
-        {/* Create Account Title */}
-        <h1 className="text-3xl text-black text-center font-cabin mb-8">
-          Create your account
-        </h1>
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>
+              Enter your information to create a new account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="full_name">Full Name</Label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <User className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <Input
+                      id="full_name"
+                      name="full_name"
+                      type="text"
+                      value={formData.full_name}
+                      onChange={(e) => handleInputChange('full_name', e.target.value)}
+                      placeholder="Enter your full name"
+                      className="pl-10"
+                      disabled={loading}
+                    />
+                  </div>
+                  {errors.full_name && (
+                    <Alert className="mt-2">
+                      <AlertDescription className="text-red-600 text-sm">
+                        {errors.full_name}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
 
-        {/* Form */}
-        <div className="w-full max-w-sm space-y-4">
-          {/* Full Name Input */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Full name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full border-2 border-explore-green rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green"
-            />
-          </div>
+                <div>
+                  <Label htmlFor="email">Email Address</Label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Mail className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      placeholder="Enter your email"
+                      className="pl-10"
+                      disabled={loading}
+                    />
+                  </div>
+                  {errors.email && (
+                    <Alert className="mt-2">
+                      <AlertDescription className="text-red-600 text-sm">
+                        {errors.email}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
 
-          {/* Email Input */}
-          <div className="relative">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border-2 border-explore-green rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green"
-            />
-          </div>
+                <div>
+                  <Label htmlFor="password">Password</Label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={(e) => handleInputChange('password', e.target.value)}
+                      placeholder="Enter your password"
+                      className="pl-10 pr-10"
+                      disabled={loading}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-gray-400" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-gray-400" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <Alert className="mt-2">
+                      <AlertDescription className="text-red-600 text-sm">
+                        {errors.password}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
 
-          {/* Password Input */}
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border-2 border-explore-green rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green pr-16"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black opacity-55 text-base font-cabin"
-            >
-              Show
-            </button>
-          </div>
+                <div>
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={formData.confirmPassword}
+                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                      placeholder="Confirm your password"
+                      className="pl-10 pr-10"
+                      disabled={loading}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4 text-gray-400" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-gray-400" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <Alert className="mt-2">
+                      <AlertDescription className="text-red-600 text-sm">
+                        {errors.confirmPassword}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+              </div>
 
-          {/* Confirm Password Input */}
-          <div className="relative">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full border-2 border-explore-green rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green pr-16"
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black opacity-55 text-base font-cabin"
-            >
-              Show
-            </button>
-          </div>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading}
+              >
+                {loading ? "Creating Account..." : "Create Account"}
+              </Button>
 
-          {/* Terms Agreement */}
-          <div className="flex items-center gap-3 pt-4">
-            <input
-              type="checkbox"
-              id="terms-agreement"
-              checked={agreedToTerms}
-              onChange={(e) => setAgreedToTerms(e.target.checked)}
-              className="w-4 h-4 border-2 border-gray-300 rounded"
-            />
-            <label
-              htmlFor="terms-agreement"
-              className="text-sm text-black font-cabin cursor-pointer"
-            >
-              I agree to the Terms and Privacy Policy
-            </label>
-          </div>
-
-          {/* Sign Up Button */}
-          <button
-            onClick={handleSignUp}
-            disabled={!agreedToTerms}
-            className={`w-full py-3 px-6 rounded-lg font-cabin text-base mt-6 transition-colors ${
-              agreedToTerms
-                ? "bg-explore-green text-white hover:bg-explore-green-light"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
-          >
-            Sign Up
-          </button>
-
-          {/* Divider */}
-          <div className="text-center py-4">
-            <span className="text-gray-400 font-cabin text-base">or</span>
-          </div>
-
-          {/* Continue with Apple */}
-          <button className="w-full border-2 border-explore-green bg-white text-explore-green py-3 px-6 rounded-lg font-cabin text-base">
-            Continue with Apple
-          </button>
-        </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-600">
+                  Already have an account?{' '}
+                  <Link
+                    to="/signin"
+                    className="font-medium text-blue-600 hover:text-blue-500"
+                  >
+                    Sign in here
+                  </Link>
+                </p>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
