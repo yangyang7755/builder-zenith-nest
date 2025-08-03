@@ -7,6 +7,8 @@ import {
   handleCreateActivity,
   handleUpdateActivity,
   handleDeleteActivity,
+  handleJoinActivity,
+  handleLeaveActivity,
 } from "./routes/activities";
 import {
   handleGetClubs,
