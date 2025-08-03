@@ -146,8 +146,8 @@ export default function Index() {
       });
     }
 
-    // Filter by location
-    if (filters.location) {
+    // Filter by location (text search)
+    if (filters.location && !filters.location.includes("Current Location")) {
       filtered = filtered.filter(
         (activity) =>
           activity.location
@@ -157,6 +157,21 @@ export default function Index() {
             .toLowerCase()
             .includes(filters.location.toLowerCase()),
       );
+    }
+
+    // Filter by location distance (if current location is set)
+    if (filters.location && filters.location.includes("Current Location") && filters.locationRange) {
+      // Extract coordinates from current location string
+      const coordMatch = filters.location.match(/\(([-\d.]+),\s*([-\d.]+)\)/);
+      if (coordMatch) {
+        const userLat = parseFloat(coordMatch[1]);
+        const userLng = parseFloat(coordMatch[2]);
+
+        filtered = filtered.filter((activity) => {
+          const distance = calculateDistance(userLat, userLng, activity.location);
+          return distance <= filters.locationRange;
+        });
+      }
     }
 
     // Filter by number of people
@@ -363,7 +378,7 @@ export default function Index() {
               age={28}
               climbingLevel="5.9-5.11"
               date="📅 Friday evenings"
-              location="📍 Westway Climbing Centre"
+              location="�� Westway Climbing Centre"
               description="Looking for a regular climbing partner for Friday evening sessions. I'm working on lead climbing and could use someone experienced."
               availability="Fridays 6-9pm"
               experience="2 years indoor, 6 months outdoor"
