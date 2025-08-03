@@ -38,6 +38,14 @@ import {
   handleUnfollowUser,
   handleGetFollowStats,
 } from "./routes/followers";
+import {
+  handleGetClubMessages,
+  handleGetDirectMessages,
+  handleSendClubMessage,
+  handleSendDirectMessage,
+  handleMarkMessagesRead,
+  handleGetClubOnlineUsers,
+} from "./routes/chat";
 
 export function createServer() {
   const app = express();
