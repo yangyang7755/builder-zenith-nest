@@ -101,11 +101,7 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
         ...validatedData,
         organizer_id: user.id,
       })
-      .select(`
-        *,
-        profiles!organizer_id(id, full_name, email),
-        clubs(id, name)
-      `)
+      .select("*")
       .single();
 
     if (error) {
