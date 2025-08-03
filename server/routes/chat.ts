@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { supabaseAdmin } from "../lib/supabase";
+import { supabaseAdminAdmin } from "../lib/supabaseAdmin";
 import { z } from "zod";
 
 // Validation schemas
@@ -43,7 +43,7 @@ export async function handleGetClubMessages(req: Request, res: Response) {
     }
 
     // Verify user is member of the club
-    const { data: membership } = await supabase
+    const { data: membership } = await supabaseAdmin
       .from("club_memberships")
       .select("*")
       .eq("club_id", club_id)
@@ -56,7 +56,7 @@ export async function handleGetClubMessages(req: Request, res: Response) {
     }
 
     // Get messages with user info
-    const { data: messages, error } = await supabase
+    const { data: messages, error } = await supabaseAdmin
       .from("chat_messages")
       .select(`
         id,
@@ -111,7 +111,7 @@ export async function handleGetDirectMessages(req: Request, res: Response) {
     }
 
     // Get messages between the two users
-    const { data: messages, error } = await supabase
+    const { data: messages, error } = await supabaseAdmin
       .from("direct_messages")
       .select(`
         id,
@@ -177,7 +177,7 @@ export async function handleSendClubMessage(req: Request, res: Response) {
     }
 
     // Verify user is member of the club
-    const { data: membership } = await supabase
+    const { data: membership } = await supabaseAdmin
       .from("club_memberships")
       .select("*")
       .eq("club_id", club_id)
@@ -190,7 +190,7 @@ export async function handleSendClubMessage(req: Request, res: Response) {
     }
 
     // Save message to database
-    const { data: newMessage, error } = await supabase
+    const { data: newMessage, error } = await supabaseAdmin
       .from("chat_messages")
       .insert({
         club_id,
@@ -245,7 +245,7 @@ export async function handleSendDirectMessage(req: Request, res: Response) {
     }
 
     // Verify receiver exists
-    const { data: receiver } = await supabase
+    const { data: receiver } = await supabaseAdmin
       .from("profiles")
       .select("id, full_name")
       .eq("id", receiver_id)
@@ -256,7 +256,7 @@ export async function handleSendDirectMessage(req: Request, res: Response) {
     }
 
     // Save message to database
-    const { data: newMessage, error } = await supabase
+    const { data: newMessage, error } = await supabaseAdmin
       .from("direct_messages")
       .insert({
         sender_id: userId,
@@ -321,7 +321,7 @@ export async function handleMarkMessagesRead(req: Request, res: Response) {
     }
 
     // Call the database function to mark messages as read
-    const { error } = await supabase.rpc('mark_messages_as_read', {
+    const { error } = await supabaseAdmin.rpc('mark_messages_as_read', {
       sender_user_id: sender_id,
       receiver_user_id: userId
     });
@@ -350,7 +350,7 @@ export async function handleGetClubOnlineUsers(req: Request, res: Response) {
     }
 
     // Get club members (in production, this would check Socket.IO connections)
-    const { data: members, error } = await supabase
+    const { data: members, error } = await supabaseAdmin
       .from("club_memberships")
       .select(`
         profiles:user_id (
