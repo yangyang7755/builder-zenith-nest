@@ -1,23 +1,23 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   ArrowLeft,
-  MapPin,
+  Share,
+  Edit,
   CheckCircle,
-  Circle,
   Star,
-  Trophy,
-  Award,
   MessageSquare,
-  Phone,
+  MapPin
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
-import { getUserProfile, formatPersonalDetails, getSkillLevels } from "../services/profilesService";
 
 export default function ProfileCoachHolly() {
+  const [following, setFollowing] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('organized');
   const [activeSportTab, setActiveSportTab] = useState<'climbing' | 'cycling' | 'running'>('climbing');
-  const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('completed');
-  const navigate = useNavigate();
+  const activitiesRef = useRef<HTMLDivElement>(null);
 
   // Load coach profile from standardized profiles service
   const profileData = getUserProfile("coach-holly");
