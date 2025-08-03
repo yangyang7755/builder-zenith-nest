@@ -24,6 +24,60 @@
       opacity: 1;
     }
   }
+
+  /* React Native-style mobile enhancements */
+  .react-native-container {
+    max-width: 428px; /* iPhone 14 Pro Max width */
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #f8f9fa;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .native-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .native-button-press {
+    transition: all 0.1s ease;
+  }
+
+  .native-button-press:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+
+  .ios-blur {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Native-style status bar spacing */
+  .native-status-bar {
+    padding-top: env(safe-area-inset-top);
+    padding-top: 44px; /* fallback for older browsers */
+  }
+
+  /* Native bottom safe area */
+  .native-bottom-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: 34px; /* fallback for devices with home indicator */
+  }
+
+  /* Haptic feedback simulation */
+  .haptic-light:active {
+    transform: scale(0.99);
+  }
+
+  .haptic-medium:active {
+    transform: scale(0.97);
+  }
+
+  .haptic-heavy:active {
+    transform: scale(0.95);
+  }
 }
 
 @layer base {
