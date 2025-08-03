@@ -9,6 +9,44 @@ import MapView from "../components/MapView";
 import ActivityCard from "../components/ActivityCard";
 import BottomNavigation from "../components/BottomNavigation";
 
+// Mock coordinates for demo locations
+const LOCATION_COORDINATES: { [key: string]: { lat: number; lng: number } } = {
+  "westway climbing centre": { lat: 51.5200, lng: -0.2375 },
+  "richmond park": { lat: 51.4545, lng: -0.2727 },
+  "stanage edge": { lat: 53.3403, lng: -1.6286 },
+  "oxford": { lat: 51.7520, lng: -1.2577 },
+  "london": { lat: 51.5074, lng: -0.1278 },
+  "peak district": { lat: 53.3403, lng: -1.6286 },
+  "hampstead heath": { lat: 51.5557, lng: -0.1657 },
+  "regents park": { lat: 51.5268, lng: -0.1554 }
+};
+
+// Calculate distance between two points using Haversine formula
+function calculateDistance(lat1: number, lng1: number, locationName: string): number {
+  const locationKey = locationName.toLowerCase();
+  const coords = LOCATION_COORDINATES[locationKey];
+
+  if (!coords) {
+    // If we don't have coordinates for this location, assume it's within range
+    return 0;
+  }
+
+  const lat2 = coords.lat;
+  const lng2 = coords.lng;
+
+  const R = 6371; // Earth's radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng/2) * Math.sin(dLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const distance = R * c;
+
+  return distance;
+}
+
 export default function Index() {
   const { activities, searchActivities, loading, error, refreshActivities, createActivity } = useActivities();
   const { showWelcomeMessage, dismissWelcomeMessage, userProfile } = useOnboarding();
