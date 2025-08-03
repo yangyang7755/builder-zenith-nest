@@ -1,6 +1,6 @@
 import { Server as SocketServer } from "socket.io";
 import { createServer } from "http";
-import { supabaseAdmin } from "./lib/supabase";
+import { supabaseAdminAdmin } from "./lib/supabaseAdmin";
 
 export function setupSocketServer(app: any) {
   const server = createServer(app);
@@ -31,7 +31,7 @@ export function setupSocketServer(app: any) {
       
       try {
         // Save message to database
-        const { data: newMessage, error } = await supabase
+        const { data: newMessage, error } = await supabaseAdmin
           .from("chat_messages")
           .insert({
             club_id: clubId,
@@ -63,7 +63,7 @@ export function setupSocketServer(app: any) {
       
       try {
         // Save message to database
-        const { data: newMessage, error } = await supabase
+        const { data: newMessage, error } = await supabaseAdmin
           .from("direct_messages")
           .insert({
             sender_id: senderId,
