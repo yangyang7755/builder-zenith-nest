@@ -17,6 +17,7 @@ import { useChat } from "../contexts/ChatContext";
 import BottomNavigation from "../components/BottomNavigation";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { useActivities } from "../contexts/ActivitiesContext";
+import ReviewModal from "../components/ReviewModal";
 
 // Comprehensive activity data structure
 const activitiesData = {
@@ -756,7 +757,7 @@ export default function ActivityDetails() {
               )}
               {activity.meetupPoint && (
                 <div className="flex items-center gap-2">
-                  <span className="text-red-600">📍</span>
+                  <span className="text-red-600">����</span>
                   <span className="text-sm font-cabin">
                     Meetup: {activity.meetupPoint}
                   </span>
