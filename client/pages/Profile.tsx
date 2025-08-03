@@ -178,31 +178,177 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Activities Joined Section */}
-        <div className="px-6 pb-6">
+        {/* Activities & Reviews Section */}
+        <div ref={activitiesRef} className="px-6 pb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-black">Activities Joined</h3>
-            <span className="text-sm text-gray-500">12 total</span>
+            <h3 className="text-lg font-bold text-black">Activities & Reviews</h3>
+            <span className="text-sm text-gray-500">15 total</span>
           </div>
-          
+
+          {/* Tab Navigation */}
+          <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+            <button
+              onClick={() => setActiveTab('completed')}
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                activeTab === 'completed'
+                  ? 'bg-white text-explore-green shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Completed Activities
+            </button>
+            <button
+              onClick={() => setActiveTab('organized')}
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                activeTab === 'organized'
+                  ? 'bg-white text-explore-green shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Organized Activities
+            </button>
+          </div>
+
+          {/* Tab Content */}
           <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl">🧗</div>
-              <div className="flex-1">
-                <h4 className="font-medium text-black">Westway Women's+ Climbing Morning</h4>
-                <p className="text-sm text-gray-600">Coach Holly Peristiani • Feb 5, 2025</p>
-              </div>
-              <CheckCircle className="w-5 h-5 text-green-500" />
-            </div>
-            
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl">🚴</div>
-              <div className="flex-1">
-                <h4 className="font-medium text-black">Sunday Morning Social Ride</h4>
-                <p className="text-sm text-gray-600">Richmond Cycling Club • Feb 2, 2025</p>
-              </div>
-              <CheckCircle className="w-5 h-5 text-green-500" />
-            </div>
+            {activeTab === 'completed' ? (
+              <>
+                {/* Completed Activities with Reviews */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-2xl">🧗</div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-black">Westway Women's+ Climbing Morning</h4>
+                      <p className="text-sm text-gray-600">Coach Holly Peristiani • Feb 5, 2025</p>
+                      <div className="flex items-center gap-1 mt-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                          />
+                        ))}
+                        <span className="text-xs text-gray-500 ml-1">Your review: "Amazing session!"</span>
+                      </div>
+                    </div>
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-2xl">🚴</div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-black">Sunday Morning Social Ride</h4>
+                      <p className="text-sm text-gray-600">Richmond Cycling Club • Feb 2, 2025</p>
+                      <div className="flex items-center gap-1 mt-1">
+                        {[1, 2, 3, 4].map((star) => (
+                          <Star
+                            key={star}
+                            className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                          />
+                        ))}
+                        <Star className="w-3 h-3 text-gray-300" />
+                        <span className="text-xs text-gray-500 ml-1">Your review: "Great route, friendly group"</span>
+                      </div>
+                    </div>
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-2xl">🏃</div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-black">Richmond Park Morning Run</h4>
+                      <p className="text-sm text-gray-600">Run Club London • Jan 28, 2025</p>
+                      <div className="flex items-center gap-1 mt-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                          />
+                        ))}
+                        <span className="text-xs text-gray-500 ml-1">Your review: "Perfect pace for beginners"</span>
+                      </div>
+                    </div>
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Organized Activities */}
+                <div className="bg-blue-50 rounded-lg p-4 border-l-4 border-explore-green">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-2xl">🧗</div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-black">Beginner Climbing Workshop</h4>
+                      <p className="text-sm text-gray-600">You organized • Jan 20, 2025</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs text-gray-600">4.9 avg rating (8 reviews)</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">"Great instruction, very patient!" - Sarah</p>
+                    </div>
+                    <div className="text-xs text-gray-500">8 joined</div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-4 border-l-4 border-explore-green">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-2xl">🚴</div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-black">Women's Cycling Safety Workshop</h4>
+                      <p className="text-sm text-gray-600">You organized • Jan 15, 2025</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs text-gray-600">4.8 avg rating (12 reviews)</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">"Learned so much about road safety!" - Emma</p>
+                    </div>
+                    <div className="text-xs text-gray-500">12 joined</div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-4 border-l-4 border-explore-green">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-2xl">🧗</div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-black">Advanced Lead Climbing Session</h4>
+                      <p className="text-sm text-gray-600">You organized • Jan 10, 2025</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4].map((star) => (
+                            <Star
+                              key={star}
+                              className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                            />
+                          ))}
+                          <Star className="w-3 h-3 text-gray-300" />
+                        </div>
+                        <span className="text-xs text-gray-600">4.7 avg rating (5 reviews)</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">"Challenging but excellent guidance" - Marcus</p>
+                    </div>
+                    <div className="text-xs text-gray-500">5 joined</div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -212,7 +358,7 @@ export default function Profile() {
           
           <div className="grid grid-cols-2 gap-3">
             <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-              <span>🪢</span>
+              <span>���</span>
               <span className="text-sm">Rope</span>
               <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
             </div>
