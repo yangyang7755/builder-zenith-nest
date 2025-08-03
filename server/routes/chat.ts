@@ -35,15 +35,18 @@ export async function handleGetClubMessages(req: Request, res: Response) {
     if (!supabaseAdmin) {
       return res.status(500).json({ error: "Database not configured" });
     }
+
+    // Get user from Authorization header
+    const authHeader = req.headers.authorization;
+    const user = await getUserFromToken(authHeader || '');
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
     const { club_id, limit, offset } = GetClubMessagesSchema.parse({
       club_id: req.params.club_id,
       ...req.query
     });
-
-    const userId = req.headers['x-user-id'] as string;
-    if (!userId) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
 
     // Verify user is member of the club
     const { data: membership } = await supabaseAdmin
