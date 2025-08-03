@@ -20,6 +20,7 @@ export default function Profile() {
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('completed');
+  const [activeSportTab, setActiveSportTab] = useState<'climbing' | 'cycling' | 'running'>('climbing');
   const activitiesRef = useRef<HTMLDivElement>(null);
 
   // Use the profile hook to get real data when user is logged in
@@ -78,7 +79,7 @@ export default function Profile() {
                 {loading ? (
                   <div className="flex gap-4">
                     <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-                    <span>��</span>
+                    <span>•</span>
                     <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
                   </div>
                 ) : (
