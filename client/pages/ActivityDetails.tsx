@@ -384,13 +384,42 @@ export default function ActivityDetails() {
     }
   };
 
-  // Check if activity date has passed (for demo purposes, we'll check a few activities)
+  // Check if activity date has passed
   const hasActivityPassed = () => {
     if (!activity) return false;
 
-    // For demo, assume these activities have passed
-    const passedActivities = ["westway-womens-climb", "morning-trail-run"];
-    return passedActivities.includes(activity.id);
+    // Extract date from activity schedule or use activity.date if available
+    let activityDate: Date;
+
+    if (activity.date && activity.time) {
+      // If activity has date and time properties (from backend)
+      activityDate = new Date(`${activity.date}T${activity.time}`);
+    } else if (activity.schedule) {
+      // Parse date from schedule string (for static data)
+      // Examples: "Wednesday, August 6th, 10:00-12:00 AM" or "Friday, August 16th, 7:00 AM"
+      const scheduleStr = activity.schedule;
+
+      // For demo, manually parse some known dates
+      if (scheduleStr.includes("August 6th")) {
+        activityDate = new Date("2025-08-06T10:00:00");
+      } else if (scheduleStr.includes("August 16th")) {
+        activityDate = new Date("2025-08-16T07:00:00");
+      } else if (scheduleStr.includes("September 6-7th")) {
+        activityDate = new Date("2025-09-06T09:00:00");
+      } else {
+        // Default to a future date if we can't parse
+        activityDate = new Date("2025-12-31T23:59:59");
+      }
+    } else {
+      return false;
+    }
+
+    // Check if activity date + 1 day has passed (so reviews are available the day after)
+    const now = new Date();
+    const dayAfterActivity = new Date(activityDate);
+    dayAfterActivity.setDate(dayAfterActivity.getDate() + 1);
+
+    return now > dayAfterActivity;
   };
 
   const handleReviewSubmitted = () => {
