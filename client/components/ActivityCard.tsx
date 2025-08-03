@@ -127,7 +127,7 @@ export default function ActivityCard({
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={handleSaveClick}
-              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              className="p-1 hover:bg-gray-100 rounded transition-all duration-150 haptic-light"
               title={
                 isActivitySaved(
                   activityId ||
