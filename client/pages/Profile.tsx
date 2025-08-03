@@ -104,7 +104,7 @@ export default function Profile() {
 
               {/* Rating */}
               <button
-                onClick={() => setShowReviews(true)}
+                onClick={() => activitiesRef.current?.scrollIntoView({ behavior: 'smooth' })}
                 className="flex items-center gap-2 mb-3 hover:opacity-75 transition-opacity"
               >
                 {loading ? (
