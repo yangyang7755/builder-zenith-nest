@@ -6,8 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSocket } from "@/hooks/useSocket";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Users, Clock, MessageCircle } from "lucide-react";
+import { apiService } from "@/services/apiService";
+import { Send, Users, Clock, MessageCircle, Wifi, WifiOff } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 interface ChatMessage {
@@ -36,177 +38,131 @@ interface ChatRoomProps {
 export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
   const { user, profile } = useAuth();
   const { toast } = useToast();
+  const socket = useSocket();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [onlineUsers, setOnlineUsers] = useState<ChatUser[]>([]);
   const [loading, setLoading] = useState(false);
-  const [connected, setConnected] = useState(false);
+  const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  // Simulate real-time connection (in production, this would use Supabase Realtime)
+  // Load initial messages from API
+  const loadInitialMessages = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getClubMessages(clubId);
+      
+      if (response.error) {
+        console.error("Failed to load messages:", response.error);
+        toast({
+          title: "Error",
+          description: "Failed to load chat messages",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (response.data) {
+        setMessages(response.data);
+        scrollToBottom();
+      }
+    } catch (error) {
+      console.error("Error loading messages:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load online users
+  const loadOnlineUsers = async () => {
+    try {
+      const response = await apiService.getClubOnlineUsers(clubId);
+      
+      if (response.data) {
+        setOnlineUsers(response.data);
+      }
+    } catch (error) {
+      console.error("Error loading online users:", error);
+    }
+  };
+
+  // Initialize chat
   useEffect(() => {
-    // Load initial messages
     loadInitialMessages();
+    loadOnlineUsers();
 
-    // Simulate connection
-    setConnected(true);
-
-    // Add current user to online users
-    if (user && profile) {
-      const currentUser: ChatUser = {
-        id: user.id,
-        name: profile.full_name || user.email?.split("@")[0] || "Anonymous",
-        avatar: profile.profile_image,
-        is_online: true,
-      };
-      setOnlineUsers((prev) => [
-        ...prev.filter((u) => u.id !== user.id),
-        currentUser,
-      ]);
+    // Join club room for real-time messages
+    if (socket.connected) {
+      socket.joinClub(clubId);
     }
 
-    // Simulate receiving messages (in production, this would be real-time subscription)
-    const interval = setInterval(() => {
-      if (Math.random() < 0.1) {
-        // 10% chance every 3 seconds
-        simulateIncomingMessage();
-      }
-    }, 3000);
-
     return () => {
-      clearInterval(interval);
-      setConnected(false);
+      if (socket.connected) {
+        socket.leaveClub(clubId);
+      }
     };
-  }, [clubId, user, profile]);
+  }, [clubId, socket.connected]);
 
+  // Listen for real-time messages
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    socket.onClubMessage((newMessage) => {
+      setMessages((prev) => [...prev, newMessage]);
+      scrollToBottom();
+    });
 
-  const loadInitialMessages = () => {
-    // Simulate loading messages from database
-    const sampleMessages: ChatMessage[] = [
-      {
-        id: "1",
-        user_id: "system",
-        user_name: "System",
-        message: `Welcome to ${clubName} chat! 🎉`,
-        created_at: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-        is_system: true,
-      },
-      {
-        id: "2",
-        user_id: "user-1",
-        user_name: "Alex Johnson",
-        message: "Hey everyone! Looking forward to tomorrow's ride 🚴‍♂️",
-        created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-      },
-      {
-        id: "3",
-        user_id: "user-2",
-        user_name: "Sarah Chen",
-        message: "Same here! What time are we meeting?",
-        created_at: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
-      },
-      {
-        id: "4",
-        user_id: "user-1",
-        user_name: "Alex Johnson",
-        message: "8 AM at the university gates. Don't be late! ⏰",
-        created_at: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
-      },
-    ];
-    setMessages(sampleMessages);
-
-    // Set sample online users
-    setOnlineUsers([
-      { id: "user-1", name: "Alex Johnson", is_online: true },
-      { id: "user-2", name: "Sarah Chen", is_online: true },
-      {
-        id: "user-3",
-        name: "Mike Wilson",
-        is_online: false,
-        last_seen: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-      },
-    ]);
-  };
-
-  const simulateIncomingMessage = () => {
-    const sampleMessages = [
-      "Has anyone tried the new climbing route?",
-      "Great session today everyone! 💪",
-      "Anyone up for a coffee after training?",
-      "Don't forget to bring your water bottles tomorrow",
-      "The weather looks perfect for outdoor activities this weekend",
-    ];
-
-    const sampleUsers = [
-      { id: "user-3", name: "Mike Wilson" },
-      { id: "user-4", name: "Emma Davis" },
-      { id: "user-5", name: "Tom Brown" },
-    ];
-
-    const randomUser =
-      sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
-    const randomMessage =
-      sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
-
-    const newMsg: ChatMessage = {
-      id: `msg-${Date.now()}`,
-      user_id: randomUser.id,
-      user_name: randomUser.name,
-      message: randomMessage,
-      created_at: new Date().toISOString(),
+    // Cleanup listeners when component unmounts
+    return () => {
+      if (socket.socket) {
+        socket.socket.off('new_club_message');
+      }
     };
-
-    setMessages((prev) => [...prev, newMsg]);
-  };
+  }, [socket]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !user || !profile) {
-      if (!user) {
-        toast({
-          title: "Authentication Required",
-          description: "Please sign in to send messages.",
-          variant: "destructive",
-        });
-      }
-      return;
-    }
+    if (!newMessage.trim() || sending || !user) return;
 
-    setLoading(true);
     try {
-      // In production, this would send to Supabase
-      const message: ChatMessage = {
-        id: `msg-${Date.now()}`,
-        user_id: user.id,
-        user_name:
-          profile.full_name || user.email?.split("@")[0] || "Anonymous",
-        user_avatar: profile.profile_image,
-        message: newMessage.trim(),
-        created_at: new Date().toISOString(),
-      };
+      setSending(true);
+      
+      // Send via Socket.IO for real-time delivery
+      if (socket.connected) {
+        socket.sendClubMessage(clubId, newMessage.trim());
+      } else {
+        // Fallback to HTTP API if Socket.IO not connected
+        const response = await apiService.sendClubMessage(clubId, newMessage.trim());
+        
+        if (response.error) {
+          toast({
+            title: "Error",
+            description: "Failed to send message",
+            variant: "destructive",
+          });
+          return;
+        }
 
-      setMessages((prev) => [...prev, message]);
+        if (response.data) {
+          setMessages((prev) => [...prev, response.data]);
+          scrollToBottom();
+        }
+      }
+
       setNewMessage("");
-
-      toast({
-        title: "Message sent",
-        description: "Your message has been sent to the club chat.",
-      });
     } catch (error) {
+      console.error("Error sending message:", error);
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: "Failed to send message",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setSending(false);
     }
   };
 
@@ -217,167 +173,179 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
     }
   };
 
-  const getInitials = (name: string) => {
+  const getUserInitials = (name: string) => {
     return name
       .split(" ")
-      .map((n) => n[0])
+      .map((word) => word[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
-  const formatMessageTime = (timestamp: string) => {
-    return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
+  const isOwnMessage = (message: ChatMessage) => {
+    return user?.id === message.user_id;
   };
 
   return (
-    <div className="flex h-[600px] border rounded-lg overflow-hidden">
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Chat Header */}
-        <div className="border-b p-4 bg-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <MessageCircle className="h-5 w-5 text-blue-600" />
-              <div>
-                <h3 className="font-semibold">{clubName} Chat</h3>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <div
-                    className={`w-2 h-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`}
-                  />
-                  <span>{connected ? "Connected" : "Disconnected"}</span>
-                </div>
+    <div className="flex flex-col h-full">
+      {/* Chat Header */}
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <MessageCircle className="w-5 h-5 text-explore-green" />
+            <div>
+              <CardTitle className="text-lg">{clubName} Chat</CardTitle>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                {socket.connected ? (
+                  <>
+                    <Wifi className="w-4 h-4 text-green-500" />
+                    <span>Connected</span>
+                  </>
+                ) : (
+                  <>
+                    <WifiOff className="w-4 h-4 text-red-500" />
+                    <span>Disconnected</span>
+                  </>
+                )}
               </div>
             </div>
-            <Badge variant="secondary">
-              <Users className="h-3 w-3 mr-1" />
-              {onlineUsers.filter((u) => u.is_online).length} online
-            </Badge>
+          </div>
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 text-gray-500" />
+            <Badge variant="secondary">{onlineUsers.length} online</Badge>
           </div>
         </div>
+      </CardHeader>
 
-        {/* Messages Area */}
-        <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
-          <div className="space-y-4">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.user_id === user?.id ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`flex gap-3 max-w-[70%] ${message.user_id === user?.id ? "flex-row-reverse" : ""}`}
-                >
-                  {!message.is_system && (
-                    <Avatar className="h-8 w-8 mt-1">
-                      <AvatarImage
-                        src={message.user_avatar}
-                        alt={message.user_name}
-                      />
-                      <AvatarFallback className="text-xs">
-                        {getInitials(message.user_name)}
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
+      {/* Messages Area */}
+      <CardContent className="flex-1 flex flex-col min-h-0 p-0">
+        <ScrollArea className="flex-1 px-4" ref={scrollAreaRef}>
+          {loading ? (
+            <div className="flex items-center justify-center h-32">
+              <div className="text-gray-500">Loading messages...</div>
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-32 text-center">
+              <MessageCircle className="w-8 h-8 text-gray-400 mb-2" />
+              <p className="text-gray-500">No messages yet</p>
+              <p className="text-sm text-gray-400">Be the first to start the conversation!</p>
+            </div>
+          ) : (
+            <div className="space-y-4 py-4">
+              {messages.map((message, index) => {
+                const isOwn = isOwnMessage(message);
+                const showAvatar = index === 0 || messages[index - 1].user_id !== message.user_id;
+                const showTimestamp = index === messages.length - 1 || 
+                  messages[index + 1].user_id !== message.user_id ||
+                  new Date(messages[index + 1].created_at).getTime() - new Date(message.created_at).getTime() > 300000; // 5 minutes
+
+                return (
                   <div
-                    className={`space-y-1 ${message.user_id === user?.id ? "text-right" : ""}`}
+                    key={message.id}
+                    className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}
                   >
-                    {!message.is_system && (
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        {message.user_id === user?.id ? (
-                          <>
-                            <Clock className="h-3 w-3" />
-                            <span>{formatMessageTime(message.created_at)}</span>
-                            <span className="font-medium">You</span>
-                          </>
-                        ) : (
-                          <>
-                            <span className="font-medium">
-                              {message.user_name}
-                            </span>
-                            <Clock className="h-3 w-3" />
-                            <span>{formatMessageTime(message.created_at)}</span>
-                          </>
-                        )}
+                    <div className={`flex-shrink-0 ${showAvatar ? "" : "invisible"}`}>
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={message.user_avatar} />
+                        <AvatarFallback className="text-xs">
+                          {getUserInitials(message.user_name)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className={`flex-1 max-w-[70%] ${isOwn ? "text-right" : ""}`}>
+                      {showAvatar && !isOwn && (
+                        <div className="text-sm font-medium text-gray-700 mb-1">
+                          {message.user_name}
+                        </div>
+                      )}
+                      <div
+                        className={`inline-block px-3 py-2 rounded-lg text-sm ${
+                          isOwn
+                            ? "bg-explore-green text-white"
+                            : message.is_system
+                            ? "bg-gray-100 text-gray-600 italic"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {message.message}
                       </div>
-                    )}
-                    <div
-                      className={`p-3 rounded-lg ${
-                        message.is_system
-                          ? "bg-blue-50 text-blue-800 text-center border border-blue-200"
-                          : message.user_id === user?.id
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-100 text-gray-900"
-                      }`}
-                    >
-                      {message.message}
+                      {showTimestamp && (
+                        <div className={`text-xs text-gray-400 mt-1 ${isOwn ? "text-right" : ""}`}>
+                          <Clock className="w-3 h-3 inline mr-1" />
+                          {formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
+                );
+              })}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
         </ScrollArea>
 
+        {/* Online Users */}
+        {onlineUsers.length > 0 && (
+          <div className="px-4 py-2 border-t bg-gray-50">
+            <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+              <Users className="w-4 h-4" />
+              Online ({onlineUsers.length})
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {onlineUsers.slice(0, 8).map((user) => (
+                <div key={user.id} className="flex items-center gap-1">
+                  <Avatar className="w-6 h-6">
+                    <AvatarImage src={user.avatar} />
+                    <AvatarFallback className="text-xs">
+                      {getUserInitials(user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-xs text-gray-600">{user.name}</span>
+                  {user.is_online && (
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  )}
+                </div>
+              ))}
+              {onlineUsers.length > 8 && (
+                <div className="text-xs text-gray-500">
+                  +{onlineUsers.length - 8} more
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Message Input */}
-        <div className="border-t p-4 bg-white">
+        <div className="p-4 border-t bg-white">
           <div className="flex gap-2">
             <Input
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={
-                user ? "Type a message..." : "Sign in to send messages"
-              }
-              disabled={loading || !user}
+              placeholder={`Message ${clubName}...`}
               className="flex-1"
+              disabled={sending || !socket.connected}
             />
             <Button
               onClick={handleSendMessage}
-              disabled={loading || !newMessage.trim() || !user}
-              size="icon"
+              disabled={!newMessage.trim() || sending || !socket.connected}
+              size="sm"
+              className="bg-explore-green hover:bg-green-600"
             >
-              <Send className="h-4 w-4" />
+              {sending ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
             </Button>
           </div>
+          {!socket.connected && (
+            <div className="text-xs text-red-500 mt-1">
+              Connection lost. Messages may not send in real-time.
+            </div>
+          )}
         </div>
-      </div>
-
-      {/* Online Users Sidebar */}
-      <div className="w-64 border-l bg-gray-50">
-        <div className="p-4 border-b bg-white">
-          <h4 className="font-semibold text-sm">Club Members</h4>
-        </div>
-        <ScrollArea className="h-full p-4">
-          <div className="space-y-3">
-            {onlineUsers.map((chatUser) => (
-              <div key={chatUser.id} className="flex items-center gap-3">
-                <div className="relative">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={chatUser.avatar} alt={chatUser.name} />
-                    <AvatarFallback className="text-xs">
-                      {getInitials(chatUser.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div
-                    className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${chatUser.is_online ? "bg-green-500" : "bg-gray-400"}`}
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">
-                    {chatUser.name}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {chatUser.is_online
-                      ? "Online"
-                      : `Last seen ${chatUser.last_seen ? formatMessageTime(chatUser.last_seen) : "unknown"}`}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
+      </CardContent>
     </div>
   );
 }
