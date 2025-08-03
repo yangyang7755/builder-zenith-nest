@@ -126,10 +126,10 @@ export default function FilterSystem({
         {/* Filter Button */}
         <button
           onClick={() => setShowFilterModal(true)}
-          className="bg-gray-200 rounded-full px-4 h-12 flex items-center gap-2 relative"
+          className="bg-gray-200 rounded-full px-3 h-12 flex items-center gap-1 relative"
         >
-          <Filter className="w-5 h-5 text-black" />
-          <span className="text-black text-base font-cabin">Filter</span>
+          <Filter className="w-4 h-4 text-black" />
+          <span className="text-black text-sm font-cabin">Filter</span>
           {getActiveFilterCount() > 0 && (
             <div className="absolute -top-1 -right-1 bg-explore-green text-white rounded-full w-5 h-5 text-xs flex items-center justify-center font-bold">
               {getActiveFilterCount()}
@@ -140,10 +140,10 @@ export default function FilterSystem({
         {/* Map Button */}
         <button
           onClick={onShowMap}
-          className="bg-explore-green text-white rounded-full px-4 h-12 flex items-center gap-2"
+          className="bg-explore-green text-white rounded-full px-3 h-12 flex items-center gap-1"
         >
-          <MapPin className="w-5 h-5" />
-          <span className="text-base font-cabin">Map</span>
+          <MapPin className="w-4 h-4" />
+          <span className="text-sm font-cabin">Map</span>
         </button>
       </div>
 
