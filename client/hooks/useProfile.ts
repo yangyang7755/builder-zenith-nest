@@ -36,16 +36,16 @@ export function useProfile(userId?: string) {
         // If it's the current user, get their own profile
         const profileEndpoint = userId === 'me' ? '/api/profile' : `/api/users/${userId}/profile`;
         
-        const [profileRes, followStatsRes] = await Promise.all([
-          apiService.getProfile().catch(() => null),
-          fetch(`/api/users/${userId}/follow-stats`).then(r => r.json()).catch(() => ({ followers: 0, following: 0 }))
+        const [profileResult, followStatsResult] = await Promise.all([
+          userId === 'me' ? apiService.getProfile() : null,
+          apiService.getFollowStats(userId).catch(() => ({ data: { followers: 0, following: 0 } }))
         ]);
 
-        if (profileRes) {
-          setProfile(profileRes);
+        if (profileResult && profileResult.data) {
+          setProfile(profileResult.data);
         }
-        
-        setFollowStats(followStatsRes);
+
+        setFollowStats(followStatsResult.data || { followers: 0, following: 0 });
 
       } catch (err) {
         console.error('Failed to fetch profile data:', err);
