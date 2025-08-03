@@ -147,8 +147,8 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
           return;
         }
 
-        if (response.data) {
-          setMessages((prev) => [...prev, response.data]);
+        if (response.data && response.data.data) {
+          setMessages((prev) => [...prev, response.data.data]);
           scrollToBottom();
         }
       }
