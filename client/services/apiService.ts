@@ -147,6 +147,62 @@ class ApiService {
     });
   }
 
+  // Reviews methods
+  async getReviews(filters?: { activity_id?: string; user_id?: string }) {
+    const params = new URLSearchParams();
+    if (filters?.activity_id) params.append("activity_id", filters.activity_id);
+    if (filters?.user_id) params.append("user_id", filters.user_id);
+
+    const query = params.toString() ? `?${params.toString()}` : "";
+    return this.request<any[]>(`/reviews${query}`);
+  }
+
+  async createReview(review: any) {
+    return this.request<any>("/reviews", {
+      method: "POST",
+      body: JSON.stringify(review),
+    });
+  }
+
+  async updateReview(id: string, updates: any) {
+    return this.request<any>(`/reviews/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async deleteReview(id: string) {
+    return this.request<void>(`/reviews/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // Followers methods
+  async getFollowers(userId: string) {
+    return this.request<any[]>(`/users/${userId}/followers`);
+  }
+
+  async getFollowing(userId: string) {
+    return this.request<any[]>(`/users/${userId}/following`);
+  }
+
+  async getFollowStats(userId: string) {
+    return this.request<{ followers: number; following: number }>(`/users/${userId}/follow-stats`);
+  }
+
+  async followUser(userId: string) {
+    return this.request<any>("/follow", {
+      method: "POST",
+      body: JSON.stringify({ following_id: userId }),
+    });
+  }
+
+  async unfollowUser(userId: string) {
+    return this.request<void>(`/follow/${userId}`, {
+      method: "DELETE",
+    });
+  }
+
   // Health check
   async ping() {
     return this.request<{ message: string }>("/ping");
