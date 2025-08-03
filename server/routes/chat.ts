@@ -134,6 +134,23 @@ export async function handleGetClubMessages(req: Request, res: Response) {
 
     if (error) {
       console.error("Error fetching club messages:", error);
+      // In development, fall back to demo data on database errors
+      if (process.env.NODE_ENV !== "production") {
+        return res.json({
+          success: true,
+          data: [
+            {
+              id: "demo-msg-1",
+              user_id: "demo-user-1",
+              user_name: "Demo User",
+              user_avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+              message: "Welcome to the demo chat! Database error, showing demo data.",
+              created_at: new Date(Date.now() - 3600000).toISOString(),
+              is_system: false
+            }
+          ]
+        });
+      }
       return res.status(500).json({ error: "Failed to fetch messages" });
     }
 
