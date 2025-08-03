@@ -929,18 +929,27 @@ export default function ActivityDetails() {
           </div>
         )}
 
-        {/* Request to Join Button */}
-        <button
-          onClick={handleRequestToJoin}
-          disabled={!agreedToRequirements}
-          className={`w-full py-3 rounded-lg text-lg font-cabin font-medium transition-colors ${
-            agreedToRequirements
-              ? "bg-explore-green text-white hover:bg-explore-green-light"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          Join
-        </button>
+        {/* Request to Join Button or Review Button */}
+        {hasActivityPassed() ? (
+          <button
+            onClick={() => setShowReviewModal(true)}
+            className="w-full py-3 rounded-lg text-lg font-cabin font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors"
+          >
+            Leave a Review
+          </button>
+        ) : (
+          <button
+            onClick={handleRequestToJoin}
+            disabled={!agreedToRequirements}
+            className={`w-full py-3 rounded-lg text-lg font-cabin font-medium transition-colors ${
+              agreedToRequirements
+                ? "bg-explore-green text-white hover:bg-explore-green-light"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Join
+          </button>
+        )}
       </div>
 
       {/* Request Modal */}
