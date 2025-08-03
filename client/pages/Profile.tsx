@@ -358,7 +358,7 @@ export default function Profile() {
           
           <div className="grid grid-cols-2 gap-3">
             <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-              <span>���</span>
+              <span>🪢</span>
               <span className="text-sm">Rope</span>
               <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
             </div>
@@ -490,76 +490,7 @@ export default function Profile() {
         </div>
       )}
 
-      {/* Reviews Modal */}
-      {showReviews && (
-        <div className="fixed inset-0 z-50 bg-white">
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
-            <button onClick={() => setShowReviews(false)}>
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
-            </button>
-            <span className="text-gray-500 font-medium">Reviews</span>
-            <div className="w-6"></div>
-          </div>
-          <div className="p-4">
-            <div className="space-y-4">
-              {/* Demo reviews */}
-              {[
-                {
-                  reviewer: "Alice Johnson",
-                  activity: "Westway Climbing Session",
-                  rating: 5,
-                  comment: "Maddie is an excellent climbing coach! Very patient and encouraging.",
-                  date: "2 weeks ago",
-                  image: "https://images.unsplash.com/photo-1494790108755-2616b612b647?w=40&h=40&fit=crop"
-                },
-                {
-                  reviewer: "Sarah Chen",
-                  activity: "Richmond Park Cycling",
-                  rating: 5,
-                  comment: "Great organizer, very safety-conscious and fun to ride with!",
-                  date: "1 month ago",
-                  image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop"
-                },
-                {
-                  reviewer: "Emma Wilson",
-                  activity: "Beginner Climbing Workshop",
-                  rating: 4,
-                  comment: "Really helpful for beginners. Clear instructions and good energy.",
-                  date: "6 weeks ago",
-                  image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=40&h=40&fit=crop"
-                }
-              ].map((review, index) => (
-                <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-start gap-3 mb-3">
-                    <img src={review.image} alt={review.reviewer} className="w-10 h-10 rounded-full object-cover" />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-medium text-black text-sm">{review.reviewer}</h4>
-                        <span className="text-xs text-gray-500">•</span>
-                        <span className="text-xs text-gray-500">{review.date}</span>
-                      </div>
-                      <p className="text-xs text-gray-600 mb-2">{review.activity}</p>
-                      <div className="flex items-center gap-1 mb-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`w-3 h-3 ${
-                              star <= review.rating
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <p className="text-sm text-gray-700">{review.comment}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Bottom Navigation */}
       <BottomNavigation />
