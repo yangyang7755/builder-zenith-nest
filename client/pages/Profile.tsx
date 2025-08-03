@@ -78,7 +78,7 @@ export default function Profile() {
                 {loading ? (
                   <div className="flex gap-4">
                     <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-                    <span>•</span>
+                    <span>��</span>
                     <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
                   </div>
                 ) : (
@@ -350,33 +350,7 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Gear & Skills Section */}
-        <div className="px-6 pb-6">
-          <h3 className="text-lg font-bold text-black mb-4">Gear & Skills</h3>
-          
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-              <span>🪢</span>
-              <span className="text-sm">Rope</span>
-              <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
-            </div>
-            <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-              <span>⛑️</span>
-              <span className="text-sm">Helmet</span>
-              <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
-            </div>
-            <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-              <span>🦺</span>
-              <span className="text-sm">Harness</span>
-              <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
-            </div>
-            <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-              <span>🚴</span>
-              <span className="text-sm">Road Bike</span>
-              <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
-            </div>
-          </div>
-        </div>
+
 
         {/* Clubs Section */}
         <div className="px-6 pb-6">
