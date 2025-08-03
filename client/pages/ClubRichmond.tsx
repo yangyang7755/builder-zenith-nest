@@ -65,13 +65,13 @@ export default function ClubRichmond() {
         {/* Club Image and Info */}
         <div className="text-center mb-6">
           <img
-            src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop"
-            alt="Richmond Park Runners"
-            className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-explore-green"
+            src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F7c405a1be5e04dc69eb62c5c70ba6efc?format=webp&width=800"
+            alt="Richmond Cycling Club"
+            className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-explore-green object-cover"
           />
 
           <h2 className="text-2xl font-bold text-black font-cabin mb-2">
-            Richmond Park Runners
+            Richmond Cycling Club
           </h2>
 
           <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
