@@ -1,0 +1,388 @@
+import { Request, Response } from "express";
+import { supabase } from "../lib/supabase";
+import { z } from "zod";
+
+// Validation schemas
+const GetClubMessagesSchema = z.object({
+  club_id: z.string(),
+  limit: z.string().optional().transform(val => val ? parseInt(val) : 50),
+  offset: z.string().optional().transform(val => val ? parseInt(val) : 0),
+});
+
+const SendClubMessageSchema = z.object({
+  club_id: z.string(),
+  message: z.string().min(1).max(1000),
+});
+
+const GetDirectMessagesSchema = z.object({
+  other_user_id: z.string(),
+  limit: z.string().optional().transform(val => val ? parseInt(val) : 50),
+  offset: z.string().optional().transform(val => val ? parseInt(val) : 0),
+});
+
+const SendDirectMessageSchema = z.object({
+  receiver_id: z.string(),
+  message: z.string().min(1).max(1000),
+});
+
+const MarkMessagesReadSchema = z.object({
+  sender_id: z.string(),
+});
+
+// Get club chat messages
+export async function handleGetClubMessages(req: Request, res: Response) {
+  try {
+    const { club_id, limit, offset } = GetClubMessagesSchema.parse({
+      club_id: req.params.club_id,
+      ...req.query
+    });
+
+    const userId = req.headers['x-user-id'] as string;
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    // Verify user is member of the club
+    const { data: membership } = await supabase
+      .from("club_memberships")
+      .select("*")
+      .eq("club_id", club_id)
+      .eq("user_id", userId)
+      .eq("status", "approved")
+      .single();
+
+    if (!membership) {
+      return res.status(403).json({ error: "Access denied: Not a member of this club" });
+    }
+
+    // Get messages with user info
+    const { data: messages, error } = await supabase
+      .from("chat_messages")
+      .select(`
+        id,
+        message,
+        created_at,
+        user_id,
+        profiles:user_id (
+          id,
+          full_name,
+          profile_image
+        )
+      `)
+      .eq("club_id", club_id)
+      .order("created_at", { ascending: true })
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      console.error("Error fetching club messages:", error);
+      return res.status(500).json({ error: "Failed to fetch messages" });
+    }
+
+    res.json({
+      success: true,
+      data: messages?.map(msg => ({
+        id: msg.id,
+        user_id: msg.user_id,
+        user_name: msg.profiles?.full_name || "Unknown User",
+        user_avatar: msg.profiles?.profile_image,
+        message: msg.message,
+        created_at: msg.created_at,
+        is_system: false
+      })) || []
+    });
+
+  } catch (error) {
+    console.error("Error in handleGetClubMessages:", error);
+    res.status(400).json({ error: "Invalid request parameters" });
+  }
+}
+
+// Get direct messages between two users
+export async function handleGetDirectMessages(req: Request, res: Response) {
+  try {
+    const { other_user_id, limit, offset } = GetDirectMessagesSchema.parse({
+      other_user_id: req.params.other_user_id,
+      ...req.query
+    });
+
+    const userId = req.headers['x-user-id'] as string;
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    // Get messages between the two users
+    const { data: messages, error } = await supabase
+      .from("direct_messages")
+      .select(`
+        id,
+        message,
+        created_at,
+        read_at,
+        sender_id,
+        receiver_id,
+        sender:sender_id (
+          id,
+          full_name,
+          profile_image
+        ),
+        receiver:receiver_id (
+          id,
+          full_name,
+          profile_image
+        )
+      `)
+      .or(`and(sender_id.eq.${userId},receiver_id.eq.${other_user_id}),and(sender_id.eq.${other_user_id},receiver_id.eq.${userId})`)
+      .order("created_at", { ascending: true })
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      console.error("Error fetching direct messages:", error);
+      return res.status(500).json({ error: "Failed to fetch messages" });
+    }
+
+    res.json({
+      success: true,
+      data: messages?.map(msg => ({
+        id: msg.id,
+        sender_id: msg.sender_id,
+        receiver_id: msg.receiver_id,
+        sender_name: msg.sender?.full_name || "Unknown User",
+        sender_avatar: msg.sender?.profile_image,
+        receiver_name: msg.receiver?.full_name || "Unknown User",
+        receiver_avatar: msg.receiver?.profile_image,
+        message: msg.message,
+        created_at: msg.created_at,
+        read_at: msg.read_at,
+        is_sent_by_me: msg.sender_id === userId
+      })) || []
+    });
+
+  } catch (error) {
+    console.error("Error in handleGetDirectMessages:", error);
+    res.status(400).json({ error: "Invalid request parameters" });
+  }
+}
+
+// Send club message (HTTP endpoint, real-time handled by Socket.IO)
+export async function handleSendClubMessage(req: Request, res: Response) {
+  try {
+    const { club_id, message } = SendClubMessageSchema.parse({
+      club_id: req.params.club_id,
+      ...req.body
+    });
+
+    const userId = req.headers['x-user-id'] as string;
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    // Verify user is member of the club
+    const { data: membership } = await supabase
+      .from("club_memberships")
+      .select("*")
+      .eq("club_id", club_id)
+      .eq("user_id", userId)
+      .eq("status", "approved")
+      .single();
+
+    if (!membership) {
+      return res.status(403).json({ error: "Access denied: Not a member of this club" });
+    }
+
+    // Save message to database
+    const { data: newMessage, error } = await supabase
+      .from("chat_messages")
+      .insert({
+        club_id,
+        user_id: userId,
+        message
+      })
+      .select(`
+        id,
+        message,
+        created_at,
+        user_id,
+        profiles:user_id (
+          id,
+          full_name,
+          profile_image
+        )
+      `)
+      .single();
+
+    if (error) {
+      console.error("Error sending club message:", error);
+      return res.status(500).json({ error: "Failed to send message" });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        id: newMessage.id,
+        user_id: newMessage.user_id,
+        user_name: newMessage.profiles?.full_name || "Unknown User",
+        user_avatar: newMessage.profiles?.profile_image,
+        message: newMessage.message,
+        created_at: newMessage.created_at,
+        is_system: false
+      }
+    });
+
+  } catch (error) {
+    console.error("Error in handleSendClubMessage:", error);
+    res.status(400).json({ error: "Invalid request parameters" });
+  }
+}
+
+// Send direct message (HTTP endpoint, real-time handled by Socket.IO)
+export async function handleSendDirectMessage(req: Request, res: Response) {
+  try {
+    const { receiver_id, message } = SendDirectMessageSchema.parse(req.body);
+
+    const userId = req.headers['x-user-id'] as string;
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    // Verify receiver exists
+    const { data: receiver } = await supabase
+      .from("profiles")
+      .select("id, full_name")
+      .eq("id", receiver_id)
+      .single();
+
+    if (!receiver) {
+      return res.status(404).json({ error: "Receiver not found" });
+    }
+
+    // Save message to database
+    const { data: newMessage, error } = await supabase
+      .from("direct_messages")
+      .insert({
+        sender_id: userId,
+        receiver_id,
+        message
+      })
+      .select(`
+        id,
+        message,
+        created_at,
+        sender_id,
+        receiver_id,
+        sender:sender_id (
+          id,
+          full_name,
+          profile_image
+        ),
+        receiver:receiver_id (
+          id,
+          full_name,
+          profile_image
+        )
+      `)
+      .single();
+
+    if (error) {
+      console.error("Error sending direct message:", error);
+      return res.status(500).json({ error: "Failed to send message" });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        id: newMessage.id,
+        sender_id: newMessage.sender_id,
+        receiver_id: newMessage.receiver_id,
+        sender_name: newMessage.sender?.full_name || "Unknown User",
+        sender_avatar: newMessage.sender?.profile_image,
+        receiver_name: newMessage.receiver?.full_name || "Unknown User",
+        receiver_avatar: newMessage.receiver?.profile_image,
+        message: newMessage.message,
+        created_at: newMessage.created_at,
+        read_at: null,
+        is_sent_by_me: true
+      }
+    });
+
+  } catch (error) {
+    console.error("Error in handleSendDirectMessage:", error);
+    res.status(400).json({ error: "Invalid request parameters" });
+  }
+}
+
+// Mark direct messages as read
+export async function handleMarkMessagesRead(req: Request, res: Response) {
+  try {
+    const { sender_id } = MarkMessagesReadSchema.parse(req.body);
+
+    const userId = req.headers['x-user-id'] as string;
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    // Call the database function to mark messages as read
+    const { error } = await supabase.rpc('mark_messages_as_read', {
+      sender_user_id: sender_id,
+      receiver_user_id: userId
+    });
+
+    if (error) {
+      console.error("Error marking messages as read:", error);
+      return res.status(500).json({ error: "Failed to mark messages as read" });
+    }
+
+    res.json({ success: true });
+
+  } catch (error) {
+    console.error("Error in handleMarkMessagesRead:", error);
+    res.status(400).json({ error: "Invalid request parameters" });
+  }
+}
+
+// Get online users for a club (this would be enhanced with Socket.IO for real-time)
+export async function handleGetClubOnlineUsers(req: Request, res: Response) {
+  try {
+    const club_id = req.params.club_id;
+    const userId = req.headers['x-user-id'] as string;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    // Get club members (in production, this would check Socket.IO connections)
+    const { data: members, error } = await supabase
+      .from("club_memberships")
+      .select(`
+        profiles:user_id (
+          id,
+          full_name,
+          profile_image
+        )
+      `)
+      .eq("club_id", club_id)
+      .eq("status", "approved");
+
+    if (error) {
+      console.error("Error fetching club members:", error);
+      return res.status(500).json({ error: "Failed to fetch club members" });
+    }
+
+    // For now, simulate online status (in production, use Socket.IO connection tracking)
+    const onlineUsers = members?.map(member => ({
+      id: member.profiles?.id,
+      name: member.profiles?.full_name || "Unknown User",
+      avatar: member.profiles?.profile_image,
+      is_online: Math.random() > 0.5, // Simulate online status
+      last_seen: new Date().toISOString()
+    })) || [];
+
+    res.json({
+      success: true,
+      data: onlineUsers
+    });
+
+  } catch (error) {
+    console.error("Error in handleGetClubOnlineUsers:", error);
+    res.status(400).json({ error: "Invalid request parameters" });
+  }
+}
