@@ -267,3 +267,94 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to delete activity" });
   }
 };
+
+export const handleJoinActivity = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // activity id
+    const user = await getUserFromToken(req.headers.authorization || "");
+
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: "Database not configured" });
+    }
+
+    // Check if activity exists
+    const { data: activity, error: activityError } = await supabaseAdmin
+      .from("activities")
+      .select("*, activity_participants(user_id)")
+      .eq("id", id)
+      .single();
+
+    if (activityError || !activity) {
+      return res.status(404).json({ error: "Activity not found" });
+    }
+
+    // Check if user already joined
+    const alreadyJoined = activity.activity_participants.some(
+      (p: any) => p.user_id === user.id
+    );
+
+    if (alreadyJoined) {
+      return res.status(400).json({ error: "Already joined this activity" });
+    }
+
+    // Check if activity is full
+    if (activity.max_participants &&
+        activity.activity_participants.length >= activity.max_participants) {
+      return res.status(400).json({ error: "Activity is full" });
+    }
+
+    // Add user to activity
+    const { error: joinError } = await supabaseAdmin
+      .from("activity_participants")
+      .insert({
+        activity_id: id,
+        user_id: user.id,
+      });
+
+    if (joinError) {
+      console.error("Database error:", joinError);
+      return res.status(500).json({ error: "Failed to join activity" });
+    }
+
+    res.status(200).json({ message: "Successfully joined activity" });
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({ error: "Failed to join activity" });
+  }
+};
+
+export const handleLeaveActivity = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // activity id
+    const user = await getUserFromToken(req.headers.authorization || "");
+
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: "Database not configured" });
+    }
+
+    // Remove user from activity
+    const { error } = await supabaseAdmin
+      .from("activity_participants")
+      .delete()
+      .eq("activity_id", id)
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error("Database error:", error);
+      return res.status(500).json({ error: "Failed to leave activity" });
+    }
+
+    res.status(200).json({ message: "Successfully left activity" });
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({ error: "Failed to leave activity" });
+  }
+};
