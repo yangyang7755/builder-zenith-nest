@@ -73,28 +73,46 @@ export default function Profile() {
               
               {/* Stats */}
               <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
-                <span>{displayProfile.followers || 152} Followers</span>
-                <span>•</span>
-                <span>{displayProfile.following || 87} Following</span>
+                {loading ? (
+                  <div className="flex gap-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                    <span>•</span>
+                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                ) : (
+                  <>
+                    <span>{displayProfile.followers || 0} Followers</span>
+                    <span>•</span>
+                    <span>{displayProfile.following || 0} Following</span>
+                  </>
+                )}
               </div>
 
               {/* Rating */}
               <div className="flex items-center gap-2 mb-3">
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`w-4 h-4 ${
-                        star <= Math.floor(displayProfile.rating || 4.8)
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-black">
-                  {displayProfile.rating || 4.8} ({displayProfile.reviews || 23} reviews)
-                </span>
+                {loading ? (
+                  <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+                ) : displayProfile.rating && displayProfile.rating > 0 ? (
+                  <>
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-4 h-4 ${
+                            star <= Math.floor(displayProfile.rating || 0)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm font-medium text-black">
+                      {displayProfile.rating.toFixed(1)} ({displayProfile.reviews || 0} reviews)
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-sm text-gray-500">No reviews yet</span>
+                )}
               </div>
             </div>
           </div>
