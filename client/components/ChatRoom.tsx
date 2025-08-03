@@ -63,8 +63,8 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
         return;
       }
 
-      if (response.data) {
-        setMessages(response.data);
+      if (response.data && response.data.data) {
+        setMessages(response.data.data);
         scrollToBottom();
       }
     } catch (error) {
