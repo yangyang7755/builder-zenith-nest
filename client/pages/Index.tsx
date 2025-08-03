@@ -281,6 +281,12 @@ export default function Index() {
                 >
                   Retry
                 </button>
+                <button
+                  onClick={testCreateActivity}
+                  className="text-blue-600 hover:underline ml-2"
+                >
+                  Test Create
+                </button>
               </>
             ) : (
               <>
@@ -1246,7 +1252,7 @@ function CyclingExploreSection() {
   const groupRides = [
     {
       title: "Sunday Morning Social Ride",
-      date: "📅 Sunday, 8:00 AM",
+      date: "��� Sunday, 8:00 AM",
       location: "📍Richmond Park, London",
       organizer: "Richmond Cycling Club",
       distance: "25km",
