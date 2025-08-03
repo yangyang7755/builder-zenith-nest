@@ -25,13 +25,34 @@ export default function Onboarding() {
     country: userProfile.country,
     profession: userProfile.profession,
     university: userProfile.university,
+    bio: userProfile.bio || "",
+    location: userProfile.location || "",
+
     climbingLevel: userProfile.climbingLevel || "",
+    climbingExperience: userProfile.climbingExperience || "",
+    climbingMaxGrade: userProfile.climbingMaxGrade || "",
+    climbingCertifications: [...(userProfile.climbingCertifications || [])],
+    climbingSpecialties: [...(userProfile.climbingSpecialties || [])],
+    climbingSkills: [...(userProfile.climbingSkills || [])],
+
     cyclingLevel: userProfile.cyclingLevel || "",
+    cyclingExperience: userProfile.cyclingExperience || "",
+    cyclingDistance: userProfile.cyclingDistance || "",
+    cyclingPace: userProfile.cyclingPace || "",
+    cyclingPreferences: [...(userProfile.cyclingPreferences || [])],
+
     runningLevel: userProfile.runningLevel || "",
+    runningExperience: userProfile.runningExperience || "",
+    runningDistance: userProfile.runningDistance || "",
+    runningPace: userProfile.runningPace || "",
+    runningGoals: userProfile.runningGoals || "",
+    runningPreferences: [...(userProfile.runningPreferences || [])],
+
     hikingLevel: userProfile.hikingLevel || "",
     skiiingLevel: userProfile.skiiingLevel || "",
     surfingLevel: userProfile.surfingLevel || "",
     tennisLevel: userProfile.tennisLevel || "",
+
     gear: [...(userProfile.gear || [])],
     hideUniversity: userProfile.hideUniversity || false,
   });
