@@ -384,6 +384,20 @@ export default function ActivityDetails() {
     }
   };
 
+  // Check if activity date has passed (for demo purposes, we'll check a few activities)
+  const hasActivityPassed = () => {
+    if (!activity) return false;
+
+    // For demo, assume these activities have passed
+    const passedActivities = ["westway-womens-climb", "morning-trail-run"];
+    return passedActivities.includes(activity.id);
+  };
+
+  const handleReviewSubmitted = () => {
+    // Refresh activity data if needed
+    console.log('Review submitted for activity:', activity.id);
+  };
+
   const handleSaveActivity = () => {
     if (!activity) return;
 
