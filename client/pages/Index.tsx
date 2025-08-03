@@ -221,11 +221,19 @@ export default function Index() {
       );
     });
 
-    // Filter by gender
+    // Filter by gender - "Female only" is exclusive filter
     if (filters.gender.length > 0) {
-      filtered = filtered.filter((activity) =>
-        filters.gender.includes(activity.gender || "All genders"),
-      );
+      if (filters.gender.includes("Female only")) {
+        // When "Female only" is selected, show only female-only activities
+        filtered = filtered.filter((activity) =>
+          activity.gender === "Female only"
+        );
+      } else {
+        // When "Female only" is NOT selected, show all non-female-only activities
+        filtered = filtered.filter((activity) =>
+          activity.gender !== "Female only" || filters.gender.includes(activity.gender || "All genders")
+        );
+      }
     }
 
     // Filter by club only
@@ -1234,7 +1242,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
           <div>
             <div className="text-gray-500">Discipline</div>
             <div className="font-medium text-black">
-              ⛰️ {activity.discipline}
+              ⛰��� {activity.discipline}
             </div>
           </div>
         </div>
