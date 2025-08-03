@@ -102,7 +102,10 @@ export default function Profile() {
               </div>
 
               {/* Rating */}
-              <div className="flex items-center gap-2 mb-3">
+              <button
+                onClick={() => setShowReviews(true)}
+                className="flex items-center gap-2 mb-3 hover:opacity-75 transition-opacity"
+              >
                 {loading ? (
                   <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
                 ) : displayProfile.rating && displayProfile.rating > 0 ? (
@@ -126,7 +129,7 @@ export default function Profile() {
                 ) : (
                   <span className="text-sm text-gray-500">No reviews yet</span>
                 )}
-              </div>
+              </button>
             </div>
           </div>
 
