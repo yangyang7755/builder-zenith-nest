@@ -441,6 +441,28 @@ export async function handleMarkMessagesRead(req: Request, res: Response) {
 export async function handleGetClubOnlineUsers(req: Request, res: Response) {
   try {
     if (!supabaseAdmin) {
+      // In development, return demo data instead of failing
+      if (process.env.NODE_ENV !== "production") {
+        return res.json({
+          success: true,
+          data: [
+            {
+              id: "demo-user-1",
+              name: "Demo User",
+              avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+              is_online: true,
+              last_seen: new Date().toISOString()
+            },
+            {
+              id: "demo-user-2",
+              name: "Another User",
+              avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+              is_online: true,
+              last_seen: new Date().toISOString()
+            }
+          ]
+        });
+      }
       return res.status(500).json({ error: "Database not configured" });
     }
 
