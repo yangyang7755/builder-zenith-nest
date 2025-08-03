@@ -15,7 +15,8 @@ import BottomNavigation from "../components/BottomNavigation";
 import { getUserProfile, formatPersonalDetails, getSkillLevels } from "../services/profilesService";
 
 export default function ProfileCoachHolly() {
-  const [selectedTab, setSelectedTab] = useState("Climb");
+  const [activeSportTab, setActiveSportTab] = useState<'climbing' | 'cycling' | 'running'>('climbing');
+  const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('completed');
   const navigate = useNavigate();
 
   // Load coach profile from standardized profiles service
