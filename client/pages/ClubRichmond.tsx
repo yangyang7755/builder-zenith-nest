@@ -133,11 +133,11 @@ export default function ClubRichmond() {
             About
           </h3>
           <p className="text-gray-700 font-cabin leading-relaxed">
-            Richmond Park Runners is London's premier running community,
-            offering everything from casual social runs to competitive training
-            sessions. Our beautiful routes through Richmond Park provide the
-            perfect setting for runners of all levels to improve their fitness
-            and meet like-minded people.
+            Richmond Cycling Club is London's premier cycling community,
+            offering everything from casual social rides to competitive training
+            sessions. Our beautiful routes through Richmond Park and surrounding
+            areas provide the perfect setting for cyclists of all levels to improve
+            their fitness and meet like-minded people.
           </p>
         </div>
 
