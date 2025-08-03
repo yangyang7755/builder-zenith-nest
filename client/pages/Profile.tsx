@@ -55,9 +55,7 @@ export default function Profile() {
           <ArrowLeft className="w-6 h-6 text-gray-600" />
         </Link>
         <span className="text-gray-500 font-medium">Profile</span>
-        <Link to="/chat">
-          <MessageSquare className="w-6 h-6 text-explore-green" />
-        </Link>
+        <div className="w-6"></div>
       </div>
 
       {/* Profile Content */}
