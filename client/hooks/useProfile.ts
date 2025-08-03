@@ -61,7 +61,8 @@ export function useProfile(userId?: string) {
   const fetchFollowers = async () => {
     if (!userId) return;
     try {
-      const data = await ApiService.get(`/api/users/${userId}/followers`);
+      const response = await fetch(`/api/users/${userId}/followers`);
+      const data = await response.json();
       setFollowers(data);
     } catch (err) {
       console.error('Failed to fetch followers:', err);
@@ -71,7 +72,8 @@ export function useProfile(userId?: string) {
   const fetchFollowing = async () => {
     if (!userId) return;
     try {
-      const data = await ApiService.get(`/api/users/${userId}/following`);
+      const response = await fetch(`/api/users/${userId}/following`);
+      const data = await response.json();
       setFollowing(data);
     } catch (err) {
       console.error('Failed to fetch following:', err);
@@ -80,7 +82,11 @@ export function useProfile(userId?: string) {
 
   const followUser = async (targetUserId: string) => {
     try {
-      await ApiService.post('/api/follow', { following_id: targetUserId });
+      await fetch('/api/follow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ following_id: targetUserId })
+      });
       setFollowStats(prev => ({ ...prev, following: prev.following + 1 }));
       return true;
     } catch (err) {
@@ -91,7 +97,7 @@ export function useProfile(userId?: string) {
 
   const unfollowUser = async (targetUserId: string) => {
     try {
-      await ApiService.delete(`/api/follow/${targetUserId}`);
+      await fetch(`/api/follow/${targetUserId}`, { method: 'DELETE' });
       setFollowStats(prev => ({ ...prev, following: prev.following - 1 }));
       return true;
     } catch (err) {
