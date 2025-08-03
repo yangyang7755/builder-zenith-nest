@@ -161,6 +161,7 @@ const App = () => (
                             path="/club/thames-cyclists"
                             element={<ClubThames />}
                           />
+                          <Route path="/club/uclmc" element={<ClubUCLMC />} />
                           <Route path="/saved" element={<Saved />} />
                           <Route path="/profile" element={<Profile />} />
                           <Route
