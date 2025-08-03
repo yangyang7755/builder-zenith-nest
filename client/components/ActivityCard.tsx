@@ -116,7 +116,7 @@ export default function ActivityCard({
   return (
     <>
       <div
-        className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
+        className="min-w-72 w-72 border-2 border-explore-green rounded-lg p-4 flex-shrink-0 bg-white cursor-pointer hover:shadow-lg transition-all duration-200 native-button-press"
         onClick={handleCardClick}
       >
         {/* Header with title, save button, and difficulty badge */}
