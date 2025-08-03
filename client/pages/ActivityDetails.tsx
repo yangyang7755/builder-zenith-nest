@@ -998,6 +998,19 @@ export default function ActivityDetails() {
         </div>
       )}
 
+      {/* Review Modal */}
+      <ReviewModal
+        isOpen={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        activity={{
+          id: activity.id,
+          title: activity.title,
+          organizer_id: "demo-organizer-id", // In real app, this would come from activity data
+          organizer_name: typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Organizer',
+        }}
+        onReviewSubmitted={handleReviewSubmitted}
+      />
+
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
