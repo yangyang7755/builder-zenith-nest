@@ -334,7 +334,8 @@ export default function ActivityDetails() {
     ? activitiesData[activityId as keyof typeof activitiesData]
     : null;
 
-  const activity = contextActivity || staticActivity;
+  // Prefer static activity data for complete information, fallback to context
+  const activity = staticActivity || contextActivity;
 
   useEffect(() => {
     if (!activity) {
