@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Star, X } from 'lucide-react';
-import { ApiService } from '@/services/apiService';
+import { apiService } from '@/services/apiService';
 
 interface ReviewModalProps {
   isOpen: boolean;
