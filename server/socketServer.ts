@@ -28,8 +28,13 @@ export function setupSocketServer(app: any) {
     // Handle club messages
     socket.on("club_message", async (data) => {
       const { clubId, userId, message } = data;
-      
+
       try {
+        if (!supabaseAdmin) {
+          socket.emit("error", { message: "Database not configured" });
+          return;
+        }
+
         // Save message to database
         const { data: newMessage, error } = await supabaseAdmin
           .from("chat_messages")
