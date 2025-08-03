@@ -27,7 +27,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans max-w-md mx-auto relative">
+    <div className="react-native-container bg-gray-100 font-sans relative native-scroll">
       {/* Header */}
       <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
         <Link to="/explore">
