@@ -1,181 +1,236 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Edit, Settings, Calendar } from "lucide-react";
+import { 
+  ArrowLeft, 
+  Share, 
+  Edit, 
+  CheckCircle,
+  Home,
+  Clock,
+  Plus,
+  MessageSquare,
+  User
+} from "lucide-react";
 import { maddieWeiProfile } from "@/data/demoProfiles";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Profile() {
   const { user } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
+  const [following, setFollowing] = useState(false);
 
-  // Use demo profile when not signed in
-  const displayProfile = user ? user : maddieWeiProfile;
+  // Use demo profile when not signed in - but with Ben Stuart style data
+  const displayProfile = user ? user : {
+    ...maddieWeiProfile,
+    full_name: "Maddie Wei",
+    profile_image: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fb4460a1279a84ad1b10626393196b1cf?format=webp&width=800"
+  };
   const isDemo = !user;
 
-  const handleEditProfile = () => {
-    setIsEditing(!isEditing);
+  const handleFollow = () => {
+    setFollowing(!following);
   };
 
   return (
-    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
+    <div className="min-h-screen bg-gray-100 font-sans max-w-md mx-auto relative">
       {/* Header */}
-      <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
-        <span>9:41</span>
-        <div className="flex items-center gap-1">
-          <div className="flex gap-0.5">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="w-1 h-3 bg-black rounded-sm" />
-            ))}
+      <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
+        <Link to="/explore">
+          <ArrowLeft className="w-6 h-6 text-gray-600" />
+        </Link>
+        <span className="text-gray-500 font-medium">Profile</span>
+        <div className="w-6"></div>
+      </div>
+
+      {/* Profile Content */}
+      <div className="bg-white">
+        {/* Profile Header */}
+        <div className="px-6 pt-6 pb-4">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+              <img
+                src={displayProfile.profile_image}
+                alt={displayProfile.full_name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-3">
+                <h1 className="text-xl font-bold text-black">{displayProfile.full_name}</h1>
+                <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600">
+                  Share
+                </button>
+                <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600">
+                  <Edit className="w-4 h-4" />
+                </button>
+              </div>
+              
+              <button 
+                onClick={handleFollow}
+                className={`w-full py-2 px-4 rounded font-medium ${
+                  following 
+                    ? 'bg-gray-200 text-gray-700' 
+                    : 'bg-green-700 text-white'
+                }`}
+              >
+                {following ? 'Following' : 'Follow'}
+              </button>
+            </div>
+          </div>
+
+          {/* Activity Tags */}
+          <div className="flex gap-2 mb-4">
+            <span className="px-3 py-1 bg-green-700 text-white rounded-full text-sm font-medium">
+              Sport climber
+            </span>
+            <span className="px-3 py-1 border border-gray-300 rounded-full text-sm text-gray-600">
+              Road cyclist
+            </span>
+          </div>
+
+          {/* Bio */}
+          <p className="text-gray-700 mb-4 leading-relaxed">
+            Weekend warrior. Always up for some mountain adventures
+          </p>
+
+          {/* Activity Buttons */}
+          <div className="flex gap-2 mb-6">
+            <button className="px-4 py-2 bg-green-700 text-white rounded font-medium">
+              Climb
+            </button>
+            <button className="px-4 py-2 border border-gray-300 rounded text-gray-600">
+              Ride
+            </button>
+            <button className="px-4 py-2 border border-gray-300 rounded text-gray-600">
+              Run
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="px-6 py-4 border-t border-gray-100">
+          <div className="grid grid-cols-2 gap-8">
+            {/* Activities joined */}
+            <div>
+              <h3 className="font-bold text-gray-900 mb-3">Activities joined</h3>
+              <div className="mb-3">
+                <span className="text-2xl font-bold">18</span>
+                <span className="text-gray-600 ml-1">climbs</span>
+              </div>
+              <div>
+                <div className="font-medium text-gray-700 mb-2">Preferred terrain:</div>
+                <ul className="text-gray-600 space-y-1">
+                  <li>• Indoor</li>
+                  <li>• Sport</li>
+                </ul>
+              </div>
+              
+              <div className="mt-4 flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                <span className="text-sm text-gray-600">Portland sport trip</span>
+              </div>
+              <div className="text-xs text-gray-400">1/06</div>
+            </div>
+
+            {/* Gear & skills */}
+            <div>
+              <h3 className="font-bold text-gray-900 mb-3">Gear & skills</h3>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-green-600 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-3 h-3 text-white" />
+                  </div>
+                  <span className="text-sm text-gray-700">Lead belay</span>
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-green-600 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-3 h-3 text-white" />
+                  </div>
+                  <span className="text-sm text-gray-700">Multipitch</span>
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
+                  <span className="text-sm text-gray-700">Trad rack</span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
+                  <span className="text-sm text-gray-700">Rope</span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
+                  <span className="text-sm text-gray-700">Quickdraws</span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
+                  <span className="text-sm text-gray-700">Helmet</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Clubs Section */}
+        <div className="px-6 py-4 border-t border-gray-100">
+          <h3 className="font-bold text-gray-900 mb-3">Clubs</h3>
+          <div className="flex gap-2">
+            <span className="px-2 py-1 bg-gray-200 rounded text-xs font-medium">
+              🏔️ Westway
+            </span>
+            <span className="px-2 py-1 bg-gray-200 rounded text-xs font-medium">
+              🎯 CULMC
+            </span>
+          </div>
+        </div>
+
+        {/* Location Section */}
+        <div className="px-6 py-4 border-t border-gray-100">
+          <h3 className="font-bold text-gray-900 mb-3">Location</h3>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-gray-400 rounded-full"></div>
+            <span className="text-gray-700">Notting Hill, London</span>
           </div>
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="flex items-center justify-between p-6 pb-4">
-        <Link to="/explore">
-          <ArrowLeft className="w-6 h-6 text-black" />
-        </Link>
-        <h1 className="text-xl font-bold text-black font-cabin">Profile</h1>
-        <button onClick={handleEditProfile}>
-          <Edit className="w-6 h-6 text-black" />
-        </button>
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-200">
+        <div className="flex items-center justify-around py-2">
+          <Link to="/explore" className="p-3">
+            <Home className="w-6 h-6 text-black" />
+          </Link>
+          <Link to="/saved" className="p-3">
+            <Clock className="w-6 h-6 text-gray-400" />
+          </Link>
+          <Link to="/create" className="p-3">
+            <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
+              <Plus className="w-5 h-5 text-white" />
+            </div>
+          </Link>
+          <Link to="/chat" className="p-3">
+            <MessageSquare className="w-6 h-6 text-gray-400" />
+          </Link>
+          <Link to="/profile" className="p-3">
+            <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
+              <User className="w-4 h-4 text-white" />
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* Demo Mode Banner */}
       {isDemo && (
-        <div className="mx-6 mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800 font-cabin">
+        <div className="fixed top-16 left-4 right-4 max-w-md mx-auto p-3 bg-blue-50 border border-blue-200 rounded-lg z-50">
+          <p className="text-sm text-blue-800">
             <strong>Demo Mode:</strong> This is Maddie Wei's profile. Sign in to see your own profile.
           </p>
         </div>
       )}
-
-      {/* Profile Content */}
-      <div className="px-6">
-        {/* Profile Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200">
-            <img
-              src={displayProfile.profile_image || "https://via.placeholder.com/80"}
-              alt={displayProfile.full_name || "Profile"}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-bold text-black font-cabin">
-              {displayProfile.full_name || "User Name"}
-            </h2>
-            <p className="text-gray-600 font-cabin">{displayProfile.email}</p>
-            {displayProfile.university && (
-              <p className="text-gray-600 font-cabin text-sm">{displayProfile.university}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Bio */}
-        {displayProfile.bio && (
-          <div className="mb-6">
-            <p className="text-gray-700 font-cabin leading-relaxed">
-              {displayProfile.bio}
-            </p>
-          </div>
-        )}
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-explore-green font-cabin">
-              {maddieWeiProfile.clubs?.length || 0}
-            </div>
-            <div className="text-sm text-gray-600 font-cabin">Clubs</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-explore-green font-cabin">
-              {maddieWeiProfile.activities?.length || 0}
-            </div>
-            <div className="text-sm text-gray-600 font-cabin">Activities</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-explore-green font-cabin">24</div>
-            <div className="text-sm text-gray-600 font-cabin">Events</div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {isDemo ? (
-            <Link
-              to="/signin"
-              className="bg-explore-green text-white py-3 px-6 rounded-lg text-center font-cabin font-medium"
-            >
-              Sign In to Edit
-            </Link>
-          ) : (
-            <Link
-              to="/profile/edit"
-              className="bg-explore-green text-white py-3 px-6 rounded-lg text-center font-cabin font-medium"
-            >
-              Edit Profile
-            </Link>
-          )}
-          <Link
-            to="/settings"
-            className="border-2 border-gray-300 text-black py-3 px-6 rounded-lg text-center font-cabin font-medium"
-          >
-            Settings
-          </Link>
-        </div>
-
-        {/* Recent Activities */}
-        <div className="mb-6">
-          <h3 className="text-lg font-bold text-black font-cabin mb-4">Recent Activities</h3>
-          <div className="space-y-3">
-            {maddieWeiProfile.activities?.slice(0, 3).map((activity, index) => (
-              <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="w-10 h-10 bg-explore-green rounded-full flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-white" />
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-black font-cabin">{activity.title}</div>
-                  <div className="text-sm text-gray-600 font-cabin">
-                    {new Date(activity.date).toLocaleDateString()} • {activity.location}
-                  </div>
-                </div>
-              </div>
-            )) || (
-              <div className="text-center py-8 text-gray-500 font-cabin">
-                No recent activities
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Clubs */}
-        <div className="mb-8">
-          <h3 className="text-lg font-bold text-black font-cabin mb-4">My Clubs</h3>
-          <div className="space-y-3">
-            {maddieWeiProfile.clubs?.map((club, index) => (
-              <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-cabin font-bold text-sm">
-                    {club.name.charAt(0)}
-                  </span>
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-black font-cabin">{club.name}</div>
-                  <div className="text-sm text-gray-600 font-cabin">
-                    {club.userRole} • {club.location}
-                  </div>
-                </div>
-              </div>
-            )) || (
-              <div className="text-center py-8 text-gray-500 font-cabin">
-                No clubs joined yet
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
