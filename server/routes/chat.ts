@@ -29,13 +29,30 @@ const MarkMessagesReadSchema = z.object({
   sender_id: z.string(),
 });
 
-// Helper function to get authenticated user
+// Helper function to get authenticated user (with demo fallback)
 async function getAuthenticatedUser(req: Request) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
+    // In development without Supabase, return a demo user
+    if (process.env.NODE_ENV !== "production") {
+      return {
+        id: "demo-user-id",
+        email: "demo@example.com"
+      };
+    }
     return null;
   }
-  return await getUserFromToken(authHeader);
+
+  const user = await getUserFromToken(authHeader);
+  if (!user && process.env.NODE_ENV !== "production") {
+    // Fallback to demo user in development
+    return {
+      id: "demo-user-id",
+      email: "demo@example.com"
+    };
+  }
+
+  return user;
 }
 
 // Get club chat messages
