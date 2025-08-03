@@ -7,6 +7,7 @@ import { useClub } from "../contexts/ClubContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
 import ActivityCard from "../components/ActivityCard";
+import BottomNavigation from "../components/BottomNavigation";
 
 export default function Index() {
   const { activities, searchActivities } = useActivities();
