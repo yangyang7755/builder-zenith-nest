@@ -17,6 +17,9 @@ import BottomNavigation from "../components/BottomNavigation";
 export default function Profile() {
   const { user } = useAuth();
   const [following, setFollowing] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
 
   // Use the profile hook to get real data when user is logged in
   const { profile, followStats, loading } = useProfile(user?.id);
