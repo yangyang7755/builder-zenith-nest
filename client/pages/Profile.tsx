@@ -177,6 +177,159 @@ export default function Profile() {
           </div>
         </div>
 
+        {/* Sports & Licensing Section */}
+        <div className="px-6 pb-6">
+          <h3 className="text-lg font-bold text-black mb-4">Sports & Licensing</h3>
+
+          {/* Sports Tab Navigation */}
+          <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+            <button
+              onClick={() => setActiveSportTab('climbing')}
+              className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                activeSportTab === 'climbing'
+                  ? 'bg-white text-explore-green shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              🧗 Climbing
+            </button>
+            <button
+              onClick={() => setActiveSportTab('cycling')}
+              className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                activeSportTab === 'cycling'
+                  ? 'bg-white text-explore-green shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              🚴 Cycling
+            </button>
+            <button
+              onClick={() => setActiveSportTab('running')}
+              className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                activeSportTab === 'running'
+                  ? 'bg-white text-explore-green shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              🏃 Running
+            </button>
+          </div>
+
+          {/* Sports Content */}
+          <div className="space-y-4">
+            {activeSportTab === 'climbing' && (
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-black">Rock Climbing</h4>
+                  <span className="px-3 py-1 bg-explore-green text-white rounded-full text-xs font-medium">
+                    Expert
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <span className="text-gray-600">Experience:</span>
+                    <div className="font-medium text-black">5 years</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Max Grade:</span>
+                    <div className="font-medium text-black">V6 / 6c+</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Certifications:</span>
+                    <div className="font-medium text-black">Lead Climbing</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Specialties:</span>
+                    <div className="font-medium text-black">Coaching</div>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">Indoor</span>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">Outdoor</span>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">Top Rope</span>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">Lead</span>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">Bouldering</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeSportTab === 'cycling' && (
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-black">Road Cycling</h4>
+                  <span className="px-3 py-1 bg-yellow-500 text-white rounded-full text-xs font-medium">
+                    Intermediate
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <span className="text-gray-600">Experience:</span>
+                    <div className="font-medium text-black">3 years</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Avg Distance:</span>
+                    <div className="font-medium text-black">40-60km</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Preferred Pace:</span>
+                    <div className="font-medium text-black">25-30 kph</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Group Rides:</span>
+                    <div className="font-medium text-black">Weekly</div>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Road</span>
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Social Rides</span>
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Commuting</span>
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Group Leader</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeSportTab === 'running' && (
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-black">Distance Running</h4>
+                  <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-medium">
+                    Beginner
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <span className="text-gray-600">Experience:</span>
+                    <div className="font-medium text-black">1 year</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Avg Distance:</span>
+                    <div className="font-medium text-black">5-8km</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Best Pace:</span>
+                    <div className="font-medium text-black">6:30/km</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Goals:</span>
+                    <div className="font-medium text-black">10K race</div>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs">Trail</span>
+                    <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs">Road</span>
+                    <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs">Morning Runs</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Activities & Reviews Section */}
         <div ref={activitiesRef} className="px-6 pb-6">
           <div className="flex items-center justify-between mb-4">
