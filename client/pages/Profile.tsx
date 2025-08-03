@@ -238,7 +238,7 @@ export default function Profile() {
           <h3 className="text-lg font-bold text-black mb-4">Clubs</h3>
           
           <div className="space-y-3">
-            <Link to="/club-westway" className="block">
+            <Link to="/club/westway" className="block">
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <img
                   src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=40&h=40&fit=crop"
@@ -252,7 +252,7 @@ export default function Profile() {
               </div>
             </Link>
 
-            <Link to="/club-richmond" className="block">
+            <Link to="/club/richmond-runners" className="block">
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F7c405a1be5e04dc69eb62c5c70ba6efc?format=webp&width=800"
