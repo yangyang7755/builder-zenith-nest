@@ -1,6 +1,6 @@
 import { Server as SocketServer } from "socket.io";
 import { createServer } from "http";
-import { supabase } from "./lib/supabase";
+import { supabaseAdmin } from "./lib/supabase";
 
 export function setupSocketServer(app: any) {
   const server = createServer(app);
