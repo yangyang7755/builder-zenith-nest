@@ -108,7 +108,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [userProfile, setUserProfile] = useState<UserProfile>(defaultProfile);
   const [currentStep, setCurrentStep] = useState(1);
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
-  const totalSteps = 10; // name, birthday, gender, sports, languages, country, profession, university, skill levels, gear
+  const totalSteps = 13; // name, birthday, gender, sports, languages, country, profession, university, bio, location, skill levels, detailed sports, gear
 
   // Load onboarding state from localStorage on mount
   useEffect(() => {
