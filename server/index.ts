@@ -100,5 +100,13 @@ export function createServer() {
   app.post("/api/follow", handleFollowUser);
   app.delete("/api/follow/:user_id", handleUnfollowUser);
 
+  // Chat routes
+  app.get("/api/clubs/:club_id/messages", handleGetClubMessages);
+  app.post("/api/clubs/:club_id/messages", handleSendClubMessage);
+  app.get("/api/clubs/:club_id/online-users", handleGetClubOnlineUsers);
+  app.get("/api/messages/:other_user_id", handleGetDirectMessages);
+  app.post("/api/messages", handleSendDirectMessage);
+  app.post("/api/messages/mark-read", handleMarkMessagesRead);
+
   return app;
 }
