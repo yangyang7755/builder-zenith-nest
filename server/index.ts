@@ -25,6 +25,19 @@ import {
   handleGetUserClubs,
   handleGetUserActivities,
 } from "./routes/auth";
+import {
+  handleGetReviews,
+  handleCreateReview,
+  handleUpdateReview,
+  handleDeleteReview,
+} from "./routes/reviews";
+import {
+  handleGetFollowers,
+  handleGetFollowing,
+  handleFollowUser,
+  handleUnfollowUser,
+  handleGetFollowStats,
+} from "./routes/followers";
 
 export function createServer() {
   const app = express();
