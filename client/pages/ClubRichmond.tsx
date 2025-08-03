@@ -82,7 +82,7 @@ export default function ClubRichmond() {
           <div className="flex items-center justify-center gap-6 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-explore-green font-cabin">
-                245
+                182
               </div>
               <div className="text-sm text-gray-600 font-cabin">Members</div>
             </div>
