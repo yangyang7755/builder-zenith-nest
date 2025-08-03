@@ -48,6 +48,8 @@ export function createServer() {
   app.post("/api/activities", handleCreateActivity);
   app.put("/api/activities/:id", handleUpdateActivity);
   app.delete("/api/activities/:id", handleDeleteActivity);
+  app.post("/api/activities/:id/join", handleJoinActivity);
+  app.delete("/api/activities/:id/join", handleLeaveActivity);
 
   // Club routes
   app.get("/api/clubs", handleGetClubs);
