@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ApiService } from '@/services/apiService';
+import { apiService } from '@/services/apiService';
 
 export interface ProfileData {
   id: string;
