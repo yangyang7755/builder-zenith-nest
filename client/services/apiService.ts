@@ -1,8 +1,7 @@
 import { getAuthHeader } from "../lib/supabase";
 
-// API base URL - using local backend server
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+// API base URL - backend is served from same port as client via Vite middleware
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 interface ApiResponse<T> {
   data?: T;
