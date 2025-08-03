@@ -7,23 +7,23 @@ import {
   User
 } from "lucide-react";
 
-// React Native-style tab configuration
+// React Native-style tab configuration with authentic mobile patterns
 const tabs = [
   {
     id: 'home',
     name: 'Home',
     path: '/explore',
     icon: Home,
-    activeColor: '#4ADE80', // green-400
-    inactiveColor: '#9CA3AF' // gray-400
+    activeColor: '#007AFF', // iOS blue
+    inactiveColor: '#8E8E93' // iOS gray
   },
   {
     id: 'activities',
-    name: 'Activities',
+    name: 'Activities', 
     path: '/activities',
     icon: Search,
-    activeColor: '#4ADE80',
-    inactiveColor: '#9CA3AF'
+    activeColor: '#007AFF',
+    inactiveColor: '#8E8E93'
   },
   {
     id: 'create',
@@ -31,24 +31,24 @@ const tabs = [
     path: '/create',
     icon: Plus,
     activeColor: '#FFFFFF',
-    inactiveColor: '#1F2937', // gray-800
-    isSpecial: true // Center tab with different styling
+    inactiveColor: '#FFFFFF',
+    isSpecial: true // Floating action button style
   },
   {
     id: 'chat',
     name: 'Chat',
     path: '/chat',
     icon: MessageCircle,
-    activeColor: '#4ADE80',
-    inactiveColor: '#9CA3AF'
+    activeColor: '#007AFF',
+    inactiveColor: '#8E8E93'
   },
   {
     id: 'profile',
     name: 'Profile',
     path: '/profile',
     icon: User,
-    activeColor: '#4ADE80',
-    inactiveColor: '#9CA3AF'
+    activeColor: '#007AFF',
+    inactiveColor: '#8E8E93'
   }
 ];
 
@@ -70,68 +70,77 @@ export default function BottomNavigation() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="bg-white border-t border-gray-200 max-w-md mx-auto">
-        {/* Tab Bar Container */}
-        <div className="flex items-center justify-around h-16 px-2">
-          {tabs.map((tab) => {
+      {/* React Native-style Tab Bar */}
+      <div className="bg-white/95 backdrop-blur-lg border-t border-gray-200/50 max-w-md mx-auto shadow-[0_-2px_20px_rgba(0,0,0,0.08)]">
+        {/* Tab Container with React Native spacing */}
+        <div className="flex items-end justify-around h-20 px-1 pb-2 pt-2 relative">
+          {tabs.map((tab, index) => {
             const isActive = isTabActive(tab.path);
             const IconComponent = tab.icon;
 
+            // Special styling for the center Create button (React Native FAB pattern)
+            if (tab.isSpecial) {
+              return (
+                <Link
+                  key={tab.id}
+                  to={tab.path}
+                  className="flex flex-col items-center justify-center absolute left-1/2 transform -translate-x-1/2 -top-3"
+                >
+                  {/* Floating Action Button */}
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full shadow-lg flex items-center justify-center mb-1 transition-all duration-200 active:scale-95">
+                    <IconComponent
+                      size={24}
+                      color="#FFFFFF"
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  
+                  {/* Label */}
+                  <span className="text-[10px] font-medium text-gray-600 mt-1">
+                    {tab.name}
+                  </span>
+                </Link>
+              );
+            }
+
+            // Regular tab styling (React Native pattern)
             return (
               <Link
                 key={tab.id}
                 to={tab.path}
-                className="flex-1 flex flex-col items-center justify-center py-1 px-1"
+                className="flex-1 flex flex-col items-center justify-center py-1 px-1 min-h-[60px] max-w-[60px] transition-all duration-200 active:scale-95"
               >
-                {/* Icon Container */}
-                <div
-                  className={`
-                    p-2 rounded-full transition-all duration-200 ease-in-out
-                    ${tab.isSpecial && isActive
-                      ? 'bg-explore-green shadow-lg transform scale-110'
-                      : tab.isSpecial
-                        ? 'bg-gray-100 hover:bg-gray-200'
-                        : isActive
-                          ? 'bg-green-50'
-                          : 'hover:bg-gray-50'
-                    }
-                  `}
-                >
+                {/* Icon with React Native-style active state */}
+                <div className="relative">
                   <IconComponent
-                    size={tab.isSpecial ? 24 : 20}
-                    color={
-                      isActive
-                        ? tab.activeColor
-                        : tab.inactiveColor
-                    }
+                    size={24}
+                    color={isActive ? tab.activeColor : tab.inactiveColor}
                     strokeWidth={isActive ? 2.5 : 2}
+                    className="transition-all duration-200"
                   />
+                  
+                  {/* Active indicator (React Native style) */}
+                  {isActive && (
+                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-4 h-0.5 bg-blue-500 rounded-full" />
+                  )}
                 </div>
 
-                {/* Tab Label */}
+                {/* Tab Label with React Native typography */}
                 <span
                   className={`
-                    text-xs font-medium mt-1 transition-colors duration-200
-                    ${isActive
-                      ? 'text-explore-green'
-                      : 'text-gray-500'
-                    }
+                    text-[10px] font-medium mt-1.5 transition-colors duration-200 leading-tight
+                    ${isActive ? 'text-blue-500' : 'text-gray-500'}
                   `}
                 >
                   {tab.name}
                 </span>
-
-                {/* Active Indicator Dot */}
-                {isActive && !tab.isSpecial && (
-                  <div className="w-1 h-1 bg-explore-green rounded-full mt-0.5" />
-                )}
               </Link>
             );
           })}
         </div>
 
-        {/* Safe Area for iOS devices */}
-        <div className="h-safe-area-inset-bottom bg-white" />
+        {/* iOS-style safe area for devices with home indicator */}
+        <div className="h-[env(safe-area-inset-bottom)] bg-white/95 backdrop-blur-lg min-h-[8px]" />
       </div>
     </div>
   );
