@@ -59,6 +59,32 @@ async function getAuthenticatedUser(req: Request) {
 export async function handleGetClubMessages(req: Request, res: Response) {
   try {
     if (!supabaseAdmin) {
+      // In development, return demo data instead of failing
+      if (process.env.NODE_ENV !== "production") {
+        return res.json({
+          success: true,
+          data: [
+            {
+              id: "demo-msg-1",
+              user_id: "demo-user-1",
+              user_name: "Demo User",
+              user_avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+              message: "Welcome to the demo chat! This is a sample message.",
+              created_at: new Date(Date.now() - 3600000).toISOString(),
+              is_system: false
+            },
+            {
+              id: "demo-msg-2",
+              user_id: "demo-user-2",
+              user_name: "Another User",
+              user_avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+              message: "Database not configured, showing demo data instead.",
+              created_at: new Date().toISOString(),
+              is_system: false
+            }
+          ]
+        });
+      }
       return res.status(500).json({ error: "Database not configured" });
     }
 
