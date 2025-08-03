@@ -544,7 +544,8 @@ export default function ActivityDetails() {
               <h3 className="text-xl font-bold text-black font-cabin">Time</h3>
             </div>
             <p className="text-sm text-black font-cabin ml-8">
-              {contextActivity ? `${contextActivity.date}, ${contextActivity.time}` : activity.schedule}
+              {contextActivity ? `${contextActivity.date}, ${contextActivity.time}` :
+               activity.id === "westway-womens-climb" ? "Every Wednesday, 10:00-12:00 AM" : activity.schedule}
             </p>
           </div>
 
