@@ -195,29 +195,7 @@ export default function Profile() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-200">
-        <div className="flex items-center justify-around py-2">
-          <Link to="/explore" className="p-3">
-            <Home className="w-6 h-6 text-black" />
-          </Link>
-          <Link to="/saved" className="p-3">
-            <Clock className="w-6 h-6 text-gray-400" />
-          </Link>
-          <Link to="/create" className="p-3">
-            <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
-              <Plus className="w-5 h-5 text-white" />
-            </div>
-          </Link>
-          <Link to="/chat" className="p-3">
-            <MessageSquare className="w-6 h-6 text-gray-400" />
-          </Link>
-          <Link to="/profile" className="p-3">
-            <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
-              <User className="w-4 h-4 text-white" />
-            </div>
-          </Link>
-        </div>
-      </div>
+      <BottomNavigation />
 
       {/* Demo Mode Banner */}
       {isDemo && (
