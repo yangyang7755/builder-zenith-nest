@@ -26,13 +26,17 @@ export default function ReviewModal({ isOpen, onClose, activity, onReviewSubmitt
 
     setIsSubmitting(true);
     try {
-      await ApiService.post('/api/reviews', {
+      const result = await apiService.createReview({
         activity_id: activity.id,
         reviewee_id: activity.organizer_id,
         rating,
         comment: comment.trim() || undefined,
       });
-      
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       onReviewSubmitted();
       onClose();
       setRating(0);
