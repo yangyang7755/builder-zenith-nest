@@ -13,7 +13,11 @@ import {
 import BottomNavigation from "../components/BottomNavigation";
 
 export default function ProfileDanSmith() {
-  const [selectedTab, setSelectedTab] = useState("Climb");
+  const [following, setFollowing] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('completed');
+  const [activeSportTab, setActiveSportTab] = useState<'climbing' | 'cycling' | 'running'>('climbing');
   const navigate = useNavigate();
 
   const userProfile = {
