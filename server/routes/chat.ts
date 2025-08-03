@@ -103,6 +103,9 @@ export async function handleGetClubMessages(req: Request, res: Response) {
 // Get direct messages between two users
 export async function handleGetDirectMessages(req: Request, res: Response) {
   try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: "Database not configured" });
+    }
     const { other_user_id, limit, offset } = GetDirectMessagesSchema.parse({
       other_user_id: req.params.other_user_id,
       ...req.query
@@ -169,6 +172,9 @@ export async function handleGetDirectMessages(req: Request, res: Response) {
 // Send club message (HTTP endpoint, real-time handled by Socket.IO)
 export async function handleSendClubMessage(req: Request, res: Response) {
   try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: "Database not configured" });
+    }
     const { club_id, message } = SendClubMessageSchema.parse({
       club_id: req.params.club_id,
       ...req.body
@@ -240,6 +246,9 @@ export async function handleSendClubMessage(req: Request, res: Response) {
 // Send direct message (HTTP endpoint, real-time handled by Socket.IO)
 export async function handleSendDirectMessage(req: Request, res: Response) {
   try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: "Database not configured" });
+    }
     const { receiver_id, message } = SendDirectMessageSchema.parse(req.body);
 
     const userId = req.headers['x-user-id'] as string;
@@ -316,6 +325,9 @@ export async function handleSendDirectMessage(req: Request, res: Response) {
 // Mark direct messages as read
 export async function handleMarkMessagesRead(req: Request, res: Response) {
   try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: "Database not configured" });
+    }
     const { sender_id } = MarkMessagesReadSchema.parse(req.body);
 
     const userId = req.headers['x-user-id'] as string;
@@ -345,6 +357,9 @@ export async function handleMarkMessagesRead(req: Request, res: Response) {
 // Get online users for a club (this would be enhanced with Socket.IO for real-time)
 export async function handleGetClubOnlineUsers(req: Request, res: Response) {
   try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: "Database not configured" });
+    }
     const club_id = req.params.club_id;
     const userId = req.headers['x-user-id'] as string;
 
