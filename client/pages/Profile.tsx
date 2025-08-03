@@ -238,29 +238,33 @@ export default function Profile() {
           <h3 className="text-lg font-bold text-black mb-4">Clubs</h3>
           
           <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <img
-                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=40&h=40&fit=crop"
-                alt="Westway Climbing"
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <div className="flex-1">
-                <h4 className="font-medium text-black">Westway Climbing Centre</h4>
-                <p className="text-sm text-gray-600">245 members</p>
+            <Link to="/club-westway" className="block">
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <img
+                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=40&h=40&fit=crop"
+                  alt="Westway Climbing"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="flex-1">
+                  <h4 className="font-medium text-black">Westway Climbing Centre</h4>
+                  <p className="text-sm text-gray-600">245 members</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <img
-                src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=40&h=40&fit=crop"
-                alt="Richmond Cyclists"
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <div className="flex-1">
-                <h4 className="font-medium text-black">Richmond Cycling Club</h4>
-                <p className="text-sm text-gray-600">182 members</p>
+            </Link>
+
+            <Link to="/club-richmond" className="block">
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F7c405a1be5e04dc69eb62c5c70ba6efc?format=webp&width=800"
+                  alt="Richmond Cycling Club"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="flex-1">
+                  <h4 className="font-medium text-black">Richmond Cycling Club</h4>
+                  <p className="text-sm text-gray-600">182 members</p>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
 
