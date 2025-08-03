@@ -71,13 +71,34 @@ const defaultProfile: UserProfile = {
   country: "",
   profession: "",
   university: "",
+  bio: "",
+  location: "",
+
   climbingLevel: "",
+  climbingExperience: "",
+  climbingMaxGrade: "",
+  climbingCertifications: [],
+  climbingSpecialties: [],
+  climbingSkills: [],
+
   cyclingLevel: "",
+  cyclingExperience: "",
+  cyclingDistance: "",
+  cyclingPace: "",
+  cyclingPreferences: [],
+
   runningLevel: "",
+  runningExperience: "",
+  runningDistance: "",
+  runningPace: "",
+  runningGoals: "",
+  runningPreferences: [],
+
   hikingLevel: "",
   skiiingLevel: "",
   surfingLevel: "",
   tennisLevel: "",
+
   gear: [],
   hideUniversity: false,
 };
