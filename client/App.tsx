@@ -35,6 +35,7 @@ import ClubRapha from "./pages/ClubRapha";
 import ClubVauxwall from "./pages/ClubVauxwall";
 import ClubRichmond from "./pages/ClubRichmond";
 import ClubThames from "./pages/ClubThames";
+import ClubUCLMC from "./pages/ClubUCLMC";
 import CoachHolly from "./pages/CoachHolly";
 import ProfileCoachHolly from "./pages/ProfileCoachHolly";
 import ProfileDanSmith from "./pages/ProfileDanSmith";
