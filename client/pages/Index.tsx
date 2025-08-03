@@ -205,6 +205,30 @@ export default function Index() {
     }
   };
 
+  const testCreateActivity = async () => {
+    console.log("Testing activity creation...");
+
+    const testActivity = {
+      title: "Test Backend Activity",
+      type: "climbing",
+      date: "2025-02-15",
+      time: "14:00",
+      location: "Test Location",
+      meetup_location: "Test Meetup Point",
+      max_participants: 10,
+      special_comments: "This is a test activity created through the backend API",
+      difficulty: "Beginner",
+    };
+
+    const result = await createActivity(testActivity);
+
+    if (result.success) {
+      alert("✅ Activity created successfully in backend!");
+    } else {
+      alert(`❌ Failed to create activity: ${result.error}`);
+    }
+  };
+
   return (
     <div className="react-native-container bg-white font-cabin relative native-scroll">
       {/* Status Bar */}
