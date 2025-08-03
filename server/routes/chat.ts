@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { supabaseAdminAdmin } from "../lib/supabaseAdmin";
+import { supabaseAdmin, getUserFromToken } from "../lib/supabase";
 import { z } from "zod";
 
 // Validation schemas
