@@ -7,14 +7,14 @@ import {
   User
 } from "lucide-react";
 
-// Black and bold tab configuration
+// Clean tab configuration matching app's design
 const tabs = [
   {
     id: 'home',
     name: 'Home',
     path: '/explore',
     icon: Home,
-    activeColor: '#FFFFFF',
+    activeColor: '#22C55E', // explore-green
     inactiveColor: '#6B7280'
   },
   {
@@ -22,7 +22,7 @@ const tabs = [
     name: 'Activities', 
     path: '/activities',
     icon: Search,
-    activeColor: '#FFFFFF',
+    activeColor: '#22C55E',
     inactiveColor: '#6B7280'
   },
   {
@@ -31,15 +31,15 @@ const tabs = [
     path: '/create',
     icon: Plus,
     activeColor: '#FFFFFF',
-    inactiveColor: '#FFFFFF',
-    isSpecial: true // Bold geometric center button
+    inactiveColor: '#6B7280',
+    isSpecial: true
   },
   {
     id: 'chat',
     name: 'Chat',
     path: '/chat',
     icon: MessageCircle,
-    activeColor: '#FFFFFF',
+    activeColor: '#22C55E',
     inactiveColor: '#6B7280'
   },
   {
@@ -47,7 +47,7 @@ const tabs = [
     name: 'Profile',
     path: '/profile',
     icon: User,
-    activeColor: '#FFFFFF',
+    activeColor: '#22C55E',
     inactiveColor: '#6B7280'
   }
 ];
@@ -70,96 +70,67 @@ export default function BottomNavigation() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
-      {/* Black and Bold Tab Bar */}
-      <div className="bg-black max-w-md mx-auto shadow-[0_-8px_32px_rgba(0,0,0,0.3)]">
-        {/* Tab Container with bold geometric design */}
-        <div className="flex items-end justify-around h-20 px-2 pb-3 pt-3 relative">
-          {tabs.map((tab, index) => {
+      <div className="bg-white border-t border-gray-200 max-w-md mx-auto">
+        <div className="flex items-center justify-around h-16 px-2">
+          {tabs.map((tab) => {
             const isActive = isTabActive(tab.path);
             const IconComponent = tab.icon;
 
-            // Special bold geometric design for the center Create button
-            if (tab.isSpecial) {
-              return (
-                <Link
-                  key={tab.id}
-                  to={tab.path}
-                  className="flex flex-col items-center justify-center absolute left-1/2 transform -translate-x-1/2 -top-4"
-                >
-                  {/* Bold hexagonal shape */}
-                  <div className="w-16 h-16 bg-white flex items-center justify-center mb-1 transition-all duration-200 active:scale-95 relative">
-                    {/* Hexagon shape using clip-path */}
-                    <div 
-                      className="absolute inset-0 bg-white"
-                      style={{
-                        clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'
-                      }}
-                    />
-                    <IconComponent
-                      size={28}
-                      color="#000000"
-                      strokeWidth={3}
-                      className="relative z-10"
-                    />
-                  </div>
-                  
-                  {/* Bold label */}
-                  <span className="text-[10px] font-bold text-white tracking-wide">
-                    {tab.name.toUpperCase()}
-                  </span>
-                </Link>
-              );
-            }
-
-            // Regular tabs with bold geometric design
             return (
               <Link
                 key={tab.id}
                 to={tab.path}
-                className="flex-1 flex flex-col items-center justify-center py-2 px-1 min-h-[64px] max-w-[64px] transition-all duration-200 active:scale-95"
+                className="flex-1 flex flex-col items-center justify-center py-2 px-1"
               >
-                {/* Bold icon container */}
-                <div className="relative mb-2">
-                  {/* Bold geometric background for active state */}
-                  {isActive && (
-                    <div className="absolute inset-0 w-12 h-12 bg-white transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
-                      {/* Diamond shape */}
-                      <div 
-                        className="w-full h-full bg-white"
-                        style={{
-                          clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
-                        }}
-                      />
-                    </div>
-                  )}
-                  
+                {/* Icon Container */}
+                <div
+                  className={`
+                    p-2 rounded-full transition-all duration-200 ease-in-out
+                    ${tab.isSpecial && isActive
+                      ? 'bg-explore-green shadow-md'
+                      : tab.isSpecial
+                        ? 'bg-gray-100 hover:bg-gray-200'
+                        : isActive
+                          ? 'bg-green-50'
+                          : 'hover:bg-gray-50'
+                    }
+                  `}
+                >
                   <IconComponent
-                    size={24}
-                    color={isActive ? '#000000' : tab.inactiveColor}
-                    strokeWidth={isActive ? 3 : 2}
-                    className="relative z-10 transition-all duration-200"
+                    size={tab.isSpecial ? 24 : 20}
+                    color={
+                      isActive
+                        ? tab.activeColor
+                        : tab.inactiveColor
+                    }
+                    strokeWidth={isActive ? 2.5 : 2}
                   />
                 </div>
 
-                {/* Bold tab label */}
+                {/* Tab Label */}
                 <span
                   className={`
-                    text-[9px] font-bold tracking-wide transition-colors duration-200 leading-tight
-                    ${isActive ? 'text-white' : 'text-gray-500'}
+                    text-xs font-medium mt-1 transition-colors duration-200
+                    ${isActive
+                      ? 'text-explore-green'
+                      : 'text-gray-500'
+                    }
                   `}
                 >
-                  {tab.name.toUpperCase()}
+                  {tab.name}
                 </span>
+
+                {/* Active Indicator */}
+                {isActive && !tab.isSpecial && (
+                  <div className="w-1 h-1 bg-explore-green rounded-full mt-0.5" />
+                )}
               </Link>
             );
           })}
         </div>
 
-        {/* Bold bottom accent bar */}
-        <div className="h-1 bg-gradient-to-r from-gray-800 via-white to-gray-800" />
-        
-        {/* Safe area for devices with home indicator */}
-        <div className="h-[env(safe-area-inset-bottom)] bg-black min-h-[8px]" />
+        {/* Safe Area */}
+        <div className="h-safe-area-inset-bottom bg-white" />
       </div>
     </div>
   );
