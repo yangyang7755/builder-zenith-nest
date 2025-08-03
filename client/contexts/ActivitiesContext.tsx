@@ -99,6 +99,26 @@ const demoActivities: Activity[] = [
     club: "oucc",
     createdAt: new Date(),
   },
+  {
+    id: "mens-football-training",
+    type: "running",
+    title: "Men's Football Training Session",
+    date: "2025-08-12",
+    time: "19:00",
+    location: "Hampstead Heath",
+    meetupLocation: "Hampstead Heath Athletics Track",
+    organizer: "London FC Training",
+    maxParticipants: "20",
+    difficulty: "Intermediate",
+    specialComments:
+      "High-intensity football training session focusing on fitness, technique, and team play. All skill levels welcome.",
+    imageSrc:
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=40&h=40&fit=crop&crop=face",
+    gender: "Male only",
+    visibility: "All",
+    club: null,
+    createdAt: new Date(),
+  },
 ];
 
 export function ActivitiesProvider({ children }: { children: ReactNode }) {
