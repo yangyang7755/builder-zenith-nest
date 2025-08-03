@@ -55,7 +55,7 @@ export default function ClubRichmond() {
           <ArrowLeft className="w-6 h-6 text-black" />
         </button>
         <h1 className="text-xl font-bold text-black font-cabin">
-          Richmond Park Runners
+          Richmond Cycling Club
         </h1>
         <div className="w-6"></div>
       </div>
