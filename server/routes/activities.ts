@@ -55,6 +55,11 @@ export const handleGetActivities = async (req: Request, res: Response) => {
 
     if (error) {
       console.error("Database error:", error);
+      // If table doesn't exist, return empty array instead of error
+      if (error.code === '42P01') {
+        console.log("Database tables not set up yet, returning empty array");
+        return res.json([]);
+      }
       return res.status(500).json({ error: "Failed to fetch activities" });
     }
 
