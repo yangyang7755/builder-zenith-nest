@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -19,7 +19,8 @@ export default function Profile() {
   const [following, setFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
-  const [showReviews, setShowReviews] = useState(false);
+  const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('completed');
+  const activitiesRef = useRef<HTMLDivElement>(null);
 
   // Use the profile hook to get real data when user is logged in
   const { profile, followStats, loading } = useProfile(user?.id);
