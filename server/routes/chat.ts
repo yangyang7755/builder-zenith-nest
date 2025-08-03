@@ -32,6 +32,9 @@ const MarkMessagesReadSchema = z.object({
 // Get club chat messages
 export async function handleGetClubMessages(req: Request, res: Response) {
   try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: "Database not configured" });
+    }
     const { club_id, limit, offset } = GetClubMessagesSchema.parse({
       club_id: req.params.club_id,
       ...req.query
