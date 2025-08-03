@@ -239,6 +239,32 @@ export default function Index() {
           <h1 className="text-3xl font-bold text-explore-green font-cabin">
             Explore!
           </h1>
+
+          {/* Backend Status Indicator */}
+          <div className="mt-2 flex items-center justify-center gap-2 text-sm">
+            {loading ? (
+              <>
+                <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                <span className="text-gray-600">Loading activities...</span>
+              </>
+            ) : error ? (
+              <>
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <span className="text-gray-600">Using demo data</span>
+                <button
+                  onClick={refreshActivities}
+                  className="text-explore-green hover:underline ml-2"
+                >
+                  Retry
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-gray-600">Connected to backend</span>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Location Selector */}
