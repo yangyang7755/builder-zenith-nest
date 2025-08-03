@@ -1,133 +1,153 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MapPin, Users, Star, Bookmark } from "lucide-react";
-import { useActivities } from "../contexts/ActivitiesContext";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Bookmark, Clock, MapPin, Users, CheckCircle } from "lucide-react";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
-import FilterSystem, { FilterOptions } from "../components/FilterSystem";
-import MapView from "../components/MapView";
-import EnhancedMapView from "../components/EnhancedMapView";
+import { Activity } from "../contexts/ActivitiesContext";
+import BackendTest from "../components/BackendTest";
+import DemoAuth from "../components/DemoAuth";
+import UserNav from "../components/UserNav";
 import BottomNavigation from "../components/BottomNavigation";
 
 export default function Activities() {
-  const { activities } = useActivities();
-  const { saveActivity, unsaveActivity, isActivitySaved } =
-    useSavedActivities();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [showMapView, setShowMapView] = useState(false);
-  const [filteredActivities, setFilteredActivities] = useState(activities);
+  const { savedActivities, unsaveActivity } = useSavedActivities();
+  const [selectedTab, setSelectedTab] = useState("Saved");
 
-  // Check URL parameters for specific activity filter
-  const urlParams = new URLSearchParams(location.search);
-  const filterParam = urlParams.get("filter");
+  // Sort activities by date (future vs past)
+  const now = new Date();
+  const today = now.toISOString().split("T")[0];
 
-  const [filters, setFilters] = useState<FilterOptions>({
-    activityType: filterParam
-      ? [filterParam.charAt(0).toUpperCase() + filterParam.slice(1)]
-      : [
-          "Cycling",
-          "Climbing",
-          "Running",
-          "Hiking",
-          "Skiing",
-          "Surfing",
-          "Tennis",
-        ],
-    numberOfPeople: { min: 1, max: 50 },
-    location: "",
-    date: { start: "", end: "" },
-    gender: [],
-    age: { min: 16, max: 80 },
-    gear: [],
-    pace: { min: 0, max: 100 },
-    distance: { min: 0, max: 200 },
-    elevation: { min: 0, max: 5000 },
-    clubOnly: false,
+  const upcomingSavedActivities = savedActivities.filter((activity) => {
+    const activityDate = new Date(activity.date);
+    const activityDateString = activityDate.toISOString().split("T")[0];
+    return activityDateString >= today;
   });
 
-  const formatActivityDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
+  const pastSavedActivities = savedActivities.filter((activity) => {
+    const activityDate = new Date(activity.date);
+    const activityDateString = activityDate.toISOString().split("T")[0];
+    return activityDateString < today;
+  });
+
+  // Sample joined activities (activities the user has joined)
+  const joinedActivities = [
+    {
+      id: "joined-1",
+      title: "Westway Women's+ Climbing Morning",
+      date: "2025-01-26",
+      time: "10:00",
+      location: "Westway Climbing Centre",
+      organizer: "Coach Holly Peristiani",
+      type: "climbing",
+      status: "confirmed",
+      maxParticipants: "12",
+      specialComments: "",
+      meetupLocation: "Westway Climbing Centre",
+      gender: "Female only",
+      visibility: "All",
+      createdAt: new Date(),
+    },
+    {
+      id: "joined-2",
+      title: "Sunday Morning Social Ride",
+      date: "2025-02-02",
+      time: "08:00",
+      location: "Richmond Park",
+      organizer: "Richmond Cycling Club",
+      type: "cycling",
+      status: "confirmed",
+      maxParticipants: "15",
+      specialComments: "",
+      meetupLocation: "Richmond Park Main Gate",
+      gender: "All genders",
+      visibility: "All",
+      createdAt: new Date(),
+    },
+  ];
+
+  const navigate = useNavigate();
+
+  const handleActivityClick = (activity: Activity) => {
+    if (activity.type === "cycling") {
+      navigate("/activity/sunday-morning-ride");
+    } else if (activity.type === "climbing") {
+      navigate("/activity/westway-womens-climb");
+    } else if (activity.type === "running") {
+      navigate("/activity/westway-womens-climb"); // Default for now
+    } else {
+      navigate("/activity/westway-womens-climb"); // Default
+    }
   };
 
-  const applyFilters = (newFilters: FilterOptions) => {
-    setFilters(newFilters);
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case "cycling":
+        return "🚴";
+      case "climbing":
+        return "🧗";
+      case "running":
+        return "🏃";
+      case "hiking":
+        return "🥾";
+      case "skiing":
+        return "🎿";
+      case "surfing":
+        return "🏄";
+      case "tennis":
+        return "🎾";
+      default:
+        return "⚡";
+    }
   };
 
-  const handleActivitySelect = (activity: any) => {
-    setShowMapView(false);
-  };
+  const ActivityCard = ({ activity }: { activity: any }) => (
+    <div
+      onClick={() => handleActivityClick(activity)}
+      className="bg-white rounded-lg border border-gray-200 p-4 mb-4 cursor-pointer hover:shadow-md transition-shadow"
+    >
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex-1">
+          <h3 className="font-bold text-lg text-black font-cabin mb-1">
+            {activity.title}
+          </h3>
+          <p className="text-sm text-gray-600 font-cabin">
+            By {activity.organizer}
+          </p>
+        </div>
+        <div className="text-2xl ml-2">{getActivityIcon(activity.type)}</div>
+      </div>
 
-  useEffect(() => {
-    let filtered = activities;
+      <div className="space-y-2 mb-3">
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Clock className="w-4 h-4" />
+          <span className="font-cabin">
+            {new Date(activity.date).toLocaleDateString("en-GB", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            })}{" "}
+            at {activity.time}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <MapPin className="w-4 h-4" />
+          <span className="font-cabin">{activity.location}</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Users className="w-4 h-4" />
+          <span className="font-cabin">Max {activity.maxParticipants} people</span>
+        </div>
+      </div>
 
-    // Apply comprehensive filters
-    if (filters.activityType.length > 0) {
-      filtered = filtered.filter((activity) =>
-        filters.activityType.some(
-          (type) =>
-            activity.type === type.toLowerCase() ||
-            (type === "Cycling" && activity.type === "cycling") ||
-            (type === "Climbing" && activity.type === "climbing") ||
-            (type === "Running" && activity.type === "running") ||
-            (type === "Hiking" && activity.type === "hiking") ||
-            (type === "Skiing" && activity.type === "skiing") ||
-            (type === "Surfing" && activity.type === "surfing") ||
-            (type === "Tennis" && activity.type === "tennis"),
-        ),
-      );
-    }
-
-    // Filter by date range
-    if (filters.date.start || filters.date.end) {
-      filtered = filtered.filter((activity) => {
-        const activityDate = new Date(activity.date);
-        const startDate = filters.date.start
-          ? new Date(filters.date.start)
-          : null;
-        const endDate = filters.date.end ? new Date(filters.date.end) : null;
-
-        if (startDate && activityDate < startDate) return false;
-        if (endDate && activityDate > endDate) return false;
-        return true;
-      });
-    }
-
-    // Filter by location
-    if (filters.location) {
-      filtered = filtered.filter(
-        (activity) =>
-          activity.location
-            .toLowerCase()
-            .includes(filters.location.toLowerCase()) ||
-          activity.meetupLocation
-            .toLowerCase()
-            .includes(filters.location.toLowerCase()),
-      );
-    }
-
-    // Filter by number of people
-    filtered = filtered.filter((activity) => {
-      const maxPeople = parseInt(activity.maxParticipants) || 50;
-      return (
-        maxPeople >= filters.numberOfPeople.min &&
-        maxPeople <= filters.numberOfPeople.max
-      );
-    });
-
-    // Filter by gender
-    if (filters.gender.length > 0) {
-      filtered = filtered.filter((activity) =>
-        filters.gender.includes(activity.gender || "All genders"),
-      );
-    }
-
-    setFilteredActivities(filtered);
-  }, [activities, filters]);
+      {activity.status && (
+        <div className="flex items-center gap-2 mt-3">
+          <CheckCircle className="w-4 h-4 text-green-500" />
+          <span className="text-sm font-medium text-green-600 font-cabin capitalize">
+            {activity.status}
+          </span>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="react-native-container bg-white font-cabin relative native-scroll">
@@ -157,396 +177,112 @@ export default function Activities() {
       </div>
 
       {/* Main Content */}
-      <div className="px-6 pb-20">
+      <div className="px-6 pb-24">
         {/* Title */}
         <div className="text-center py-6">
           <h1 className="text-3xl font-bold text-explore-green font-cabin">
-            {filterParam
-              ? `${filterParam.charAt(0).toUpperCase() + filterParam.slice(1)} Activities`
-              : "All Activities"}
+            All Activities
           </h1>
         </div>
 
-        {/* Filter System */}
-        <FilterSystem
-          onFiltersChange={applyFilters}
-          onShowMap={() => setShowMapView(true)}
-          currentFilters={filters}
-        />
-
-        {/* Activities List */}
-        <div className="space-y-4 mt-6">
-          {filteredActivities.length === 0 ? (
-            <div className="text-center py-8">
-              <div className="text-gray-400 mb-4">
-                <Users className="w-16 h-16 mx-auto" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                No activities found
-              </h3>
-              <p className="text-gray-500 mb-4">
-                Try adjusting your filters or create a new activity
-              </p>
-              <Link
-                to="/create"
-                className="inline-block bg-explore-green text-white px-6 py-3 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
-              >
-                Create Activity
-              </Link>
-            </div>
-          ) : (
-            filteredActivities.map((activity) => (
-              <ActivityCard
-                key={activity.id}
-                activity={activity}
-                formatActivityDate={formatActivityDate}
-              />
-            ))
-          )}
+        {/* Tab Navigation */}
+        <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
+          <button
+            onClick={() => setSelectedTab("Saved")}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              selectedTab === "Saved"
+                ? "bg-white text-explore-green shadow-sm"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Saved Activities
+          </button>
+          <button
+            onClick={() => setSelectedTab("Joined")}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              selectedTab === "Joined"
+                ? "bg-white text-explore-green shadow-sm"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Joined Activities
+          </button>
         </div>
 
-        {/* Show sample activities if no user activities */}
-        {activities.length === 0 && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">
-              Sample Activities
-            </h3>
-            <div className="space-y-4">
-              <SampleActivityCard
-                title="Westway Women's Climbing Morning"
-                type="climbing"
-                date="6 August 2025"
-                location="Westway Climbing Centre"
-                organizer="Coach Holly Peristiani"
-                participants="8/12"
-                difficulty="Intermediate"
-              />
-              <SampleActivityCard
-                title="Sunday Morning Social Ride"
-                type="cycling"
-                date="10 August 2025"
-                location="Richmond Park"
-                organizer="Richmond Cycling Club"
-                participants="12/15"
-                difficulty="Beginner"
-                distance="25km"
-              />
-            </div>
+        {/* Content */}
+        {selectedTab === "Saved" && (
+          <div>
+            <h2 className="text-xl font-bold text-black font-cabin mb-4">
+              Upcoming Activities ({upcomingSavedActivities.length})
+            </h2>
+            {upcomingSavedActivities.length > 0 ? (
+              upcomingSavedActivities.map((activity, index) => (
+                <ActivityCard key={index} activity={activity} />
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <Bookmark className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 font-cabin">
+                  No upcoming saved activities
+                </p>
+                <Link
+                  to="/explore"
+                  className="text-explore-green font-medium font-cabin hover:underline"
+                >
+                  Explore activities to save
+                </Link>
+              </div>
+            )}
+
+            {pastSavedActivities.length > 0 && (
+              <div className="mt-8">
+                <h2 className="text-xl font-bold text-black font-cabin mb-4">
+                  Past Activities ({pastSavedActivities.length})
+                </h2>
+                {pastSavedActivities.map((activity, index) => (
+                  <ActivityCard key={index} activity={activity} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {selectedTab === "Joined" && (
+          <div>
+            <h2 className="text-xl font-bold text-black font-cabin mb-4">
+              Joined Activities ({joinedActivities.length})
+            </h2>
+            {joinedActivities.length > 0 ? (
+              joinedActivities.map((activity, index) => (
+                <ActivityCard key={index} activity={activity} />
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <CheckCircle className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 font-cabin">
+                  No joined activities yet
+                </p>
+                <Link
+                  to="/explore"
+                  className="text-explore-green font-medium font-cabin hover:underline"
+                >
+                  Find activities to join
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>
 
-      {/* Enhanced Map View */}
-      {showMapView && (
-        <EnhancedMapView
-          activities={filteredActivities}
-          onClose={() => setShowMapView(false)}
-          onActivitySelect={handleActivitySelect}
-        />
-      )}
+      {/* Development Tools */}
+      <div className="px-6 pb-6">
+        <BackendTest />
+        <DemoAuth />
+        <UserNav />
+      </div>
 
       {/* Bottom Navigation */}
       <BottomNavigation />
-    </div>
-  );
-}
-
-function ActivityCard({
-  activity,
-  formatActivityDate,
-}: {
-  activity: any;
-  formatActivityDate: (date: string) => string;
-}) {
-  const { saveActivity, unsaveActivity, isActivitySaved } =
-    useSavedActivities();
-  const navigate = useNavigate();
-
-  const handleSaveClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (isActivitySaved(activity.id)) {
-      unsaveActivity(activity.id);
-    } else {
-      saveActivity(activity);
-    }
-  };
-
-  const handleCardClick = () => {
-    navigate(`/activity/${activity.id}`);
-  };
-
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "cycling":
-        return "🚴";
-      case "climbing":
-        return "🧗";
-      case "running":
-        return "🏃";
-      case "hiking":
-        return "🥾";
-      case "skiing":
-        return "🎿";
-      case "surfing":
-        return "🏄";
-      case "tennis":
-        return "🎾";
-      default:
-        return "⚡";
-    }
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty?.toLowerCase()) {
-      case "beginner":
-        return "bg-green-100 text-green-700";
-      case "intermediate":
-        return "bg-yellow-100 text-yellow-700";
-      case "advanced":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  return (
-    <div
-      className="border-2 border-gray-200 rounded-lg p-4 bg-white cursor-pointer hover:shadow-lg transition-shadow duration-200"
-      onClick={handleCardClick}
-    >
-      {/* Header */}
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center gap-2 flex-1">
-          <span className="text-xl">{getActivityIcon(activity.type)}</span>
-          <h3 className="font-bold text-black font-cabin text-lg line-clamp-2 leading-tight flex-1">
-            {activity.title}
-          </h3>
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <button
-            onClick={handleSaveClick}
-            className="p-1 hover:bg-gray-100 rounded transition-colors"
-            title={
-              isActivitySaved(activity.id) ? "Unsave activity" : "Save activity"
-            }
-          >
-            <Bookmark
-              className={`w-5 h-5 ${
-                isActivitySaved(activity.id)
-                  ? "fill-explore-green text-explore-green"
-                  : "text-gray-400 hover:text-gray-600"
-              }`}
-            />
-          </button>
-          {activity.difficulty && (
-            <span
-              className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}
-            >
-              {activity.difficulty}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Organizer */}
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-sm text-gray-600 font-cabin">
-          By {activity.organizer}
-        </span>
-      </div>
-
-      {/* Details */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-700 font-cabin">
-            📅 {formatActivityDate(activity.date)}
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-gray-500" />
-          <span className="text-sm text-gray-700 font-cabin">
-            {activity.location}
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-gray-500" />
-          <span className="text-sm text-gray-700 font-cabin">
-            Max {activity.maxParticipants} participants
-          </span>
-        </div>
-      </div>
-
-      {/* Activity-specific metrics */}
-      {(activity.type === "cycling" || activity.type === "running") &&
-        (activity.distance || activity.pace) && (
-          <div className="mt-3 flex gap-4">
-            {activity.distance && (
-              <div className="text-sm text-gray-600">
-                {getActivityIcon(activity.type)} {activity.distance}
-                {activity.distanceUnit}
-              </div>
-            )}
-            {activity.pace && (
-              <div className="text-sm text-gray-600">
-                ⚡ {activity.pace} {activity.paceUnit}
-              </div>
-            )}
-          </div>
-        )}
-
-      {activity.type === "climbing" && activity.climbingLevel && (
-        <div className="mt-3">
-          <div className="text-sm text-gray-600">
-            🧗 Level: {activity.climbingLevel}
-          </div>
-        </div>
-      )}
-
-      {activity.type === "hiking" &&
-        (activity.distance || activity.elevation) && (
-          <div className="mt-3 flex gap-4">
-            {activity.distance && (
-              <div className="text-sm text-gray-600">
-                🥾 {activity.distance}
-                {activity.distanceUnit}
-              </div>
-            )}
-            {activity.elevation && (
-              <div className="text-sm text-gray-600">
-                ⛰️ {activity.elevation}
-                {activity.elevationUnit}
-              </div>
-            )}
-          </div>
-        )}
-
-      {(activity.type === "skiing" ||
-        activity.type === "surfing" ||
-        activity.type === "tennis") &&
-        activity.difficulty && (
-          <div className="mt-3">
-            <div className="text-sm text-gray-600">
-              {getActivityIcon(activity.type)} {activity.difficulty} level
-            </div>
-          </div>
-        )}
-    </div>
-  );
-}
-
-function SampleActivityCard({
-  title,
-  type,
-  date,
-  location,
-  organizer,
-  participants,
-  difficulty,
-  distance,
-}: {
-  title: string;
-  type: string;
-  date: string;
-  location: string;
-  organizer: string;
-  participants: string;
-  difficulty: string;
-  distance?: string;
-}) {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    if (type === "cycling") {
-      navigate("/activity/sunday-morning-ride");
-    } else {
-      navigate("/activity/westway-womens-climb");
-    }
-  };
-
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "cycling":
-        return "🚴";
-      case "climbing":
-        return "🧗";
-      case "running":
-        return "🏃";
-      case "hiking":
-        return "🥾";
-      case "skiing":
-        return "🎿";
-      case "surfing":
-        return "🏄";
-      case "tennis":
-        return "🎾";
-      default:
-        return "⚡";
-    }
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty?.toLowerCase()) {
-      case "beginner":
-        return "bg-green-100 text-green-700";
-      case "intermediate":
-        return "bg-yellow-100 text-yellow-700";
-      case "advanced":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  return (
-    <div
-      className="border-2 border-gray-200 rounded-lg p-4 bg-gray-50 cursor-pointer hover:shadow-lg transition-shadow duration-200"
-      onClick={handleClick}
-    >
-      {/* Header */}
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center gap-2 flex-1">
-          <span className="text-xl">{getActivityIcon(type)}</span>
-          <h3 className="font-bold text-black font-cabin text-lg line-clamp-2 leading-tight flex-1">
-            {title}
-          </h3>
-        </div>
-        <span
-          className={`text-xs px-2 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(difficulty)}`}
-        >
-          {difficulty}
-        </span>
-      </div>
-
-      {/* Organizer */}
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-sm text-gray-600 font-cabin">By {organizer}</span>
-      </div>
-
-      {/* Details */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-700 font-cabin">📅 {date}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-gray-500" />
-          <span className="text-sm text-gray-700 font-cabin">{location}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-gray-500" />
-          <span className="text-sm text-gray-700 font-cabin">
-            {participants} participants
-          </span>
-        </div>
-      </div>
-
-      {distance && (
-        <div className="mt-3">
-          <div className="text-sm text-gray-600">
-            {getActivityIcon(type)} {distance}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
