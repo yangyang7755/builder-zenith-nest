@@ -201,6 +201,48 @@ class ApiService {
     });
   }
 
+  // Chat methods
+  async getClubMessages(clubId: string, limit: number = 50, offset: number = 0) {
+    const params = new URLSearchParams();
+    params.append("limit", limit.toString());
+    params.append("offset", offset.toString());
+
+    return this.request<any[]>(`/clubs/${clubId}/messages?${params.toString()}`);
+  }
+
+  async sendClubMessage(clubId: string, message: string) {
+    return this.request<any>(`/clubs/${clubId}/messages`, {
+      method: "POST",
+      body: JSON.stringify({ message }),
+    });
+  }
+
+  async getClubOnlineUsers(clubId: string) {
+    return this.request<any[]>(`/clubs/${clubId}/online-users`);
+  }
+
+  async getDirectMessages(otherUserId: string, limit: number = 50, offset: number = 0) {
+    const params = new URLSearchParams();
+    params.append("limit", limit.toString());
+    params.append("offset", offset.toString());
+
+    return this.request<any[]>(`/messages/${otherUserId}?${params.toString()}`);
+  }
+
+  async sendDirectMessage(receiverId: string, message: string) {
+    return this.request<any>("/messages", {
+      method: "POST",
+      body: JSON.stringify({ receiver_id: receiverId, message }),
+    });
+  }
+
+  async markMessagesAsRead(senderId: string) {
+    return this.request<void>("/messages/mark-read", {
+      method: "POST",
+      body: JSON.stringify({ sender_id: senderId }),
+    });
+  }
+
   // Health check
   async ping() {
     return this.request<{ message: string }>("/ping");
