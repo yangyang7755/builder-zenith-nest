@@ -10,7 +10,7 @@ import ActivityCard from "../components/ActivityCard";
 import BottomNavigation from "../components/BottomNavigation";
 
 export default function Index() {
-  const { activities, searchActivities } = useActivities();
+  const { activities, searchActivities, loading, error, refreshActivities } = useActivities();
   const { showWelcomeMessage, dismissWelcomeMessage, userProfile } = useOnboarding();
   const { getUserClubs, isClubMember } = useClub();
   const [searchParams] = useSearchParams();
@@ -1268,7 +1268,7 @@ function CyclingExploreSection() {
   const training = [
     {
       title: "Hill Climbing Intervals",
-      date: "📅 Thursday, 6:00 PM",
+      date: "���� Thursday, 6:00 PM",
       location: "📍Leith Hill, Surrey",
       organizer: "Watts Cycling Club",
       distance: "35km",
