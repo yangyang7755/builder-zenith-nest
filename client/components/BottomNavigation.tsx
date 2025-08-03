@@ -7,23 +7,23 @@ import {
   User
 } from "lucide-react";
 
-// React Native-style tab configuration with authentic mobile patterns
+// Black and bold tab configuration
 const tabs = [
   {
     id: 'home',
     name: 'Home',
     path: '/explore',
     icon: Home,
-    activeColor: '#007AFF', // iOS blue
-    inactiveColor: '#8E8E93' // iOS gray
+    activeColor: '#FFFFFF',
+    inactiveColor: '#6B7280'
   },
   {
     id: 'activities',
     name: 'Activities', 
     path: '/activities',
     icon: Search,
-    activeColor: '#007AFF',
-    inactiveColor: '#8E8E93'
+    activeColor: '#FFFFFF',
+    inactiveColor: '#6B7280'
   },
   {
     id: 'create',
@@ -32,23 +32,23 @@ const tabs = [
     icon: Plus,
     activeColor: '#FFFFFF',
     inactiveColor: '#FFFFFF',
-    isSpecial: true // Floating action button style
+    isSpecial: true // Bold geometric center button
   },
   {
     id: 'chat',
     name: 'Chat',
     path: '/chat',
     icon: MessageCircle,
-    activeColor: '#007AFF',
-    inactiveColor: '#8E8E93'
+    activeColor: '#FFFFFF',
+    inactiveColor: '#6B7280'
   },
   {
     id: 'profile',
     name: 'Profile',
     path: '/profile',
     icon: User,
-    activeColor: '#007AFF',
-    inactiveColor: '#8E8E93'
+    activeColor: '#FFFFFF',
+    inactiveColor: '#6B7280'
   }
 ];
 
@@ -70,77 +70,96 @@ export default function BottomNavigation() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
-      {/* React Native-style Tab Bar */}
-      <div className="bg-white/95 backdrop-blur-lg border-t border-gray-200/50 max-w-md mx-auto shadow-[0_-2px_20px_rgba(0,0,0,0.08)]">
-        {/* Tab Container with React Native spacing */}
-        <div className="flex items-end justify-around h-20 px-1 pb-2 pt-2 relative">
+      {/* Black and Bold Tab Bar */}
+      <div className="bg-black max-w-md mx-auto shadow-[0_-8px_32px_rgba(0,0,0,0.3)]">
+        {/* Tab Container with bold geometric design */}
+        <div className="flex items-end justify-around h-20 px-2 pb-3 pt-3 relative">
           {tabs.map((tab, index) => {
             const isActive = isTabActive(tab.path);
             const IconComponent = tab.icon;
 
-            // Special styling for the center Create button (React Native FAB pattern)
+            // Special bold geometric design for the center Create button
             if (tab.isSpecial) {
               return (
                 <Link
                   key={tab.id}
                   to={tab.path}
-                  className="flex flex-col items-center justify-center absolute left-1/2 transform -translate-x-1/2 -top-3"
+                  className="flex flex-col items-center justify-center absolute left-1/2 transform -translate-x-1/2 -top-4"
                 >
-                  {/* Floating Action Button */}
-                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full shadow-lg flex items-center justify-center mb-1 transition-all duration-200 active:scale-95">
+                  {/* Bold hexagonal shape */}
+                  <div className="w-16 h-16 bg-white flex items-center justify-center mb-1 transition-all duration-200 active:scale-95 relative">
+                    {/* Hexagon shape using clip-path */}
+                    <div 
+                      className="absolute inset-0 bg-white"
+                      style={{
+                        clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'
+                      }}
+                    />
                     <IconComponent
-                      size={24}
-                      color="#FFFFFF"
-                      strokeWidth={2.5}
+                      size={28}
+                      color="#000000"
+                      strokeWidth={3}
+                      className="relative z-10"
                     />
                   </div>
                   
-                  {/* Label */}
-                  <span className="text-[10px] font-medium text-gray-600 mt-1">
-                    {tab.name}
+                  {/* Bold label */}
+                  <span className="text-[10px] font-bold text-white tracking-wide">
+                    {tab.name.toUpperCase()}
                   </span>
                 </Link>
               );
             }
 
-            // Regular tab styling (React Native pattern)
+            // Regular tabs with bold geometric design
             return (
               <Link
                 key={tab.id}
                 to={tab.path}
-                className="flex-1 flex flex-col items-center justify-center py-1 px-1 min-h-[60px] max-w-[60px] transition-all duration-200 active:scale-95"
+                className="flex-1 flex flex-col items-center justify-center py-2 px-1 min-h-[64px] max-w-[64px] transition-all duration-200 active:scale-95"
               >
-                {/* Icon with React Native-style active state */}
-                <div className="relative">
+                {/* Bold icon container */}
+                <div className="relative mb-2">
+                  {/* Bold geometric background for active state */}
+                  {isActive && (
+                    <div className="absolute inset-0 w-12 h-12 bg-white transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+                      {/* Diamond shape */}
+                      <div 
+                        className="w-full h-full bg-white"
+                        style={{
+                          clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
+                        }}
+                      />
+                    </div>
+                  )}
+                  
                   <IconComponent
                     size={24}
-                    color={isActive ? tab.activeColor : tab.inactiveColor}
-                    strokeWidth={isActive ? 2.5 : 2}
-                    className="transition-all duration-200"
+                    color={isActive ? '#000000' : tab.inactiveColor}
+                    strokeWidth={isActive ? 3 : 2}
+                    className="relative z-10 transition-all duration-200"
                   />
-                  
-                  {/* Active indicator (React Native style) */}
-                  {isActive && (
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-4 h-0.5 bg-blue-500 rounded-full" />
-                  )}
                 </div>
 
-                {/* Tab Label with React Native typography */}
+                {/* Bold tab label */}
                 <span
                   className={`
-                    text-[10px] font-medium mt-1.5 transition-colors duration-200 leading-tight
-                    ${isActive ? 'text-blue-500' : 'text-gray-500'}
+                    text-[9px] font-bold tracking-wide transition-colors duration-200 leading-tight
+                    ${isActive ? 'text-white' : 'text-gray-500'}
                   `}
                 >
-                  {tab.name}
+                  {tab.name.toUpperCase()}
                 </span>
               </Link>
             );
           })}
         </div>
 
-        {/* iOS-style safe area for devices with home indicator */}
-        <div className="h-[env(safe-area-inset-bottom)] bg-white/95 backdrop-blur-lg min-h-[8px]" />
+        {/* Bold bottom accent bar */}
+        <div className="h-1 bg-gradient-to-r from-gray-800 via-white to-gray-800" />
+        
+        {/* Safe area for devices with home indicator */}
+        <div className="h-[env(safe-area-inset-bottom)] bg-black min-h-[8px]" />
       </div>
     </div>
   );
