@@ -73,8 +73,8 @@ export default function DirectChat({
         return;
       }
 
-      if (response.data) {
-        setMessages(response.data);
+      if (response.data && response.data.data) {
+        setMessages(response.data.data);
         scrollToBottom();
         
         // Mark messages as read
