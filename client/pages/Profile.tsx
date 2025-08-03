@@ -81,9 +81,19 @@ export default function Profile() {
                   </div>
                 ) : (
                   <>
-                    <span>{displayProfile.followers || 0} Followers</span>
+                    <button
+                      onClick={() => setShowFollowers(true)}
+                      className="hover:text-explore-green transition-colors"
+                    >
+                      {displayProfile.followers || 0} Followers
+                    </button>
                     <span>•</span>
-                    <span>{displayProfile.following || 0} Following</span>
+                    <button
+                      onClick={() => setShowFollowing(true)}
+                      className="hover:text-explore-green transition-colors"
+                    >
+                      {displayProfile.following || 0} Following
+                    </button>
                   </>
                 )}
               </div>
