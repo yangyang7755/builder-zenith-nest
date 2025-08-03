@@ -79,8 +79,8 @@ export default function ChatRoom({ clubId, clubName }: ChatRoomProps) {
     try {
       const response = await apiService.getClubOnlineUsers(clubId);
       
-      if (response.data) {
-        setOnlineUsers(response.data);
+      if (response.data && response.data.data) {
+        setOnlineUsers(response.data.data);
       }
     } catch (error) {
       console.error("Error loading online users:", error);
