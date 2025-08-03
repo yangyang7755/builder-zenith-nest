@@ -19,30 +19,8 @@ export default function ProfileCoachHolly() {
   const [activeSportTab, setActiveSportTab] = useState<'climbing' | 'cycling' | 'running'>('climbing');
   const activitiesRef = useRef<HTMLDivElement>(null);
 
-  // Load coach profile from standardized profiles service
-  const profileData = getUserProfile("coach-holly");
-  if (!profileData) {
-    return <div className="min-h-screen bg-white flex items-center justify-center">Profile not found</div>;
-  }
-
-  const personalDetails = formatPersonalDetails(profileData);
-  const skillLevels = getSkillLevels(profileData);
-
-  const userProfile = {
-    name: profileData.name,
-    bio: profileData.bio,
-    location: profileData.location,
-    profileImage: profileData.profileImage,
-    followers: profileData.followers,
-    following: profileData.following,
-    overallRating: profileData.overallRating,
-    totalReviews: profileData.totalReviews,
-    sports: profileData.sports,
-    skillLevels: skillLevels,
-    personalDetails: {
-      ...personalDetails,
-      languages: profileData.languages,
-    },
+  const handleFollow = () => {
+    setFollowing(!following);
   };
 
   const climbingData = {
