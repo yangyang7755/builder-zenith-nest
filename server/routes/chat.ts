@@ -239,6 +239,27 @@ export async function handleGetDirectMessages(req: Request, res: Response) {
 
     if (error) {
       console.error("Error fetching direct messages:", error);
+      // In development, fall back to demo data on database errors
+      if (process.env.NODE_ENV !== "production") {
+        return res.json({
+          success: true,
+          data: [
+            {
+              id: "dm-1",
+              sender_id: "demo-user-1",
+              receiver_id: "demo-user-2",
+              sender_name: "Demo User",
+              sender_avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+              receiver_name: "Other User",
+              receiver_avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+              message: "Database error - showing demo direct message.",
+              created_at: new Date().toISOString(),
+              read_at: null,
+              is_sent_by_me: true
+            }
+          ]
+        });
+      }
       return res.status(500).json({ error: "Failed to fetch messages" });
     }
 
