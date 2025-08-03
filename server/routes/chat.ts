@@ -29,6 +29,15 @@ const MarkMessagesReadSchema = z.object({
   sender_id: z.string(),
 });
 
+// Helper function to get authenticated user
+async function getAuthenticatedUser(req: Request) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return null;
+  }
+  return await getUserFromToken(authHeader);
+}
+
 // Get club chat messages
 export async function handleGetClubMessages(req: Request, res: Response) {
   try {
@@ -37,8 +46,7 @@ export async function handleGetClubMessages(req: Request, res: Response) {
     }
 
     // Get user from Authorization header
-    const authHeader = req.headers.authorization;
-    const user = await getUserFromToken(authHeader || '');
+    const user = await getAuthenticatedUser(req);
     if (!user) {
       return res.status(401).json({ error: "Authentication required" });
     }
@@ -53,7 +61,7 @@ export async function handleGetClubMessages(req: Request, res: Response) {
       .from("club_memberships")
       .select("*")
       .eq("club_id", club_id)
-      .eq("user_id", userId)
+      .eq("user_id", user.id)
       .eq("status", "approved")
       .single();
 
@@ -109,15 +117,17 @@ export async function handleGetDirectMessages(req: Request, res: Response) {
     if (!supabaseAdmin) {
       return res.status(500).json({ error: "Database not configured" });
     }
+
+    // Get user from Authorization header
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
     const { other_user_id, limit, offset } = GetDirectMessagesSchema.parse({
       other_user_id: req.params.other_user_id,
       ...req.query
     });
-
-    const userId = req.headers['x-user-id'] as string;
-    if (!userId) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
 
     // Get messages between the two users
     const { data: messages, error } = await supabaseAdmin
@@ -140,7 +150,7 @@ export async function handleGetDirectMessages(req: Request, res: Response) {
           profile_image
         )
       `)
-      .or(`and(sender_id.eq.${userId},receiver_id.eq.${other_user_id}),and(sender_id.eq.${other_user_id},receiver_id.eq.${userId})`)
+      .or(`and(sender_id.eq.${user.id},receiver_id.eq.${other_user_id}),and(sender_id.eq.${other_user_id},receiver_id.eq.${user.id})`)
       .order("created_at", { ascending: true })
       .range(offset, offset + limit - 1);
 
@@ -162,7 +172,7 @@ export async function handleGetDirectMessages(req: Request, res: Response) {
         message: msg.message,
         created_at: msg.created_at,
         read_at: msg.read_at,
-        is_sent_by_me: msg.sender_id === userId
+        is_sent_by_me: msg.sender_id === user.id
       })) || []
     });
 
@@ -178,22 +188,24 @@ export async function handleSendClubMessage(req: Request, res: Response) {
     if (!supabaseAdmin) {
       return res.status(500).json({ error: "Database not configured" });
     }
+
+    // Get user from Authorization header
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
     const { club_id, message } = SendClubMessageSchema.parse({
       club_id: req.params.club_id,
       ...req.body
     });
-
-    const userId = req.headers['x-user-id'] as string;
-    if (!userId) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
 
     // Verify user is member of the club
     const { data: membership } = await supabaseAdmin
       .from("club_memberships")
       .select("*")
       .eq("club_id", club_id)
-      .eq("user_id", userId)
+      .eq("user_id", user.id)
       .eq("status", "approved")
       .single();
 
@@ -206,7 +218,7 @@ export async function handleSendClubMessage(req: Request, res: Response) {
       .from("chat_messages")
       .insert({
         club_id,
-        user_id: userId,
+        user_id: user.id,
         message
       })
       .select(`
@@ -252,12 +264,14 @@ export async function handleSendDirectMessage(req: Request, res: Response) {
     if (!supabaseAdmin) {
       return res.status(500).json({ error: "Database not configured" });
     }
-    const { receiver_id, message } = SendDirectMessageSchema.parse(req.body);
 
-    const userId = req.headers['x-user-id'] as string;
-    if (!userId) {
+    // Get user from Authorization header
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
       return res.status(401).json({ error: "Authentication required" });
     }
+
+    const { receiver_id, message } = SendDirectMessageSchema.parse(req.body);
 
     // Verify receiver exists
     const { data: receiver } = await supabaseAdmin
@@ -274,7 +288,7 @@ export async function handleSendDirectMessage(req: Request, res: Response) {
     const { data: newMessage, error } = await supabaseAdmin
       .from("direct_messages")
       .insert({
-        sender_id: userId,
+        sender_id: user.id,
         receiver_id,
         message
       })
@@ -331,17 +345,19 @@ export async function handleMarkMessagesRead(req: Request, res: Response) {
     if (!supabaseAdmin) {
       return res.status(500).json({ error: "Database not configured" });
     }
-    const { sender_id } = MarkMessagesReadSchema.parse(req.body);
 
-    const userId = req.headers['x-user-id'] as string;
-    if (!userId) {
+    // Get user from Authorization header
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
       return res.status(401).json({ error: "Authentication required" });
     }
+
+    const { sender_id } = MarkMessagesReadSchema.parse(req.body);
 
     // Call the database function to mark messages as read
     const { error } = await supabaseAdmin.rpc('mark_messages_as_read', {
       sender_user_id: sender_id,
-      receiver_user_id: userId
+      receiver_user_id: user.id
     });
 
     if (error) {
@@ -363,12 +379,14 @@ export async function handleGetClubOnlineUsers(req: Request, res: Response) {
     if (!supabaseAdmin) {
       return res.status(500).json({ error: "Database not configured" });
     }
-    const club_id = req.params.club_id;
-    const userId = req.headers['x-user-id'] as string;
 
-    if (!userId) {
+    // Get user from Authorization header
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
       return res.status(401).json({ error: "Authentication required" });
     }
+
+    const club_id = req.params.club_id;
 
     // Get club members (in production, this would check Socket.IO connections)
     const { data: members, error } = await supabaseAdmin
