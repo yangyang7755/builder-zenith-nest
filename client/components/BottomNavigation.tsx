@@ -87,11 +87,11 @@ export default function BottomNavigation() {
                   className={`
                     p-2 rounded-full transition-all duration-200 ease-in-out
                     ${tab.isSpecial && isActive
-                      ? 'bg-explore-green shadow-lg shadow-green-800/30'
+                      ? 'bg-explore-green shadow-lg shadow-green-900/60'
                       : tab.isSpecial
                         ? 'bg-gray-100 hover:bg-gray-200'
                         : isActive
-                          ? 'bg-green-50 shadow-md shadow-green-800/20'
+                          ? 'bg-green-100 shadow-lg shadow-green-900/40'
                           : 'hover:bg-gray-50'
                     }
                   `}
