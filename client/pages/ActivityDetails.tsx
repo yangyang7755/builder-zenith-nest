@@ -771,7 +771,7 @@ export default function ActivityDetails() {
               )}
               {activity.skiPass && (
                 <div className="flex items-center gap-2">
-                  <span className="text-blue-600">🎿</span>
+                  <span className="text-blue-600">���</span>
                   <span className="text-sm font-cabin">
                     Ski pass: {activity.skiPass}
                   </span>
@@ -922,7 +922,7 @@ export default function ActivityDetails() {
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >
-          Request to join
+          Join
         </button>
       </div>
 
