@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { 
-  ArrowLeft, 
-  Share, 
-  Edit, 
-  CheckCircle,
-  Home,
-  Clock,
-  Plus,
-  MessageSquare,
-  User
+import {
+  ArrowLeft,
+  Share,
+  Edit,
+  CheckCircle
 } from "lucide-react";
 import { maddieWeiProfile } from "@/data/demoProfiles";
 import { useAuth } from "@/contexts/AuthContext";
+import BottomNavigation from "../components/BottomNavigation";
 
 export default function Profile() {
   const { user } = useAuth();
