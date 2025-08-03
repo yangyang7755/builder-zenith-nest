@@ -67,7 +67,7 @@ export default function FilterSystem({
 
   const clearAllFilters = () => {
     const clearedFilters: FilterOptions = {
-      activityType: ["Cycling", "Climbing"], // Keep default activity types
+      activityType: [], // Clear all activity types including cycling and climbing
       numberOfPeople: { min: 1, max: 50 },
       location: "",
       locationRange: 10,
