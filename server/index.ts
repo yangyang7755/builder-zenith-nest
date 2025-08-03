@@ -79,5 +79,18 @@ export function createServer() {
   app.get("/api/user/clubs", handleGetUserClubs);
   app.get("/api/user/activities", handleGetUserActivities);
 
+  // Reviews routes
+  app.get("/api/reviews", handleGetReviews);
+  app.post("/api/reviews", handleCreateReview);
+  app.put("/api/reviews/:id", handleUpdateReview);
+  app.delete("/api/reviews/:id", handleDeleteReview);
+
+  // Followers routes
+  app.get("/api/users/:user_id/followers", handleGetFollowers);
+  app.get("/api/users/:user_id/following", handleGetFollowing);
+  app.get("/api/users/:user_id/follow-stats", handleGetFollowStats);
+  app.post("/api/follow", handleFollowUser);
+  app.delete("/api/follow/:user_id", handleUnfollowUser);
+
   return app;
 }
