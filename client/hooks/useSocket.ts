@@ -47,6 +47,7 @@ export function useSocket(): UseSocketReturn {
   // Initialize socket connection
   useEffect(() => {
     if (user && !socketRef.current) {
+      // For development, connect to the Vite dev server port
       const socketUrl = import.meta.env.VITE_SOCKET_URL || window.location.origin;
       
       socketRef.current = io(socketUrl, {
