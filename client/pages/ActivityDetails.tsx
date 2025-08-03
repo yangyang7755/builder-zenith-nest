@@ -326,6 +326,7 @@ export default function ActivityDetails() {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   const { activities } = useActivities();
 
@@ -757,7 +758,7 @@ export default function ActivityDetails() {
               )}
               {activity.meetupPoint && (
                 <div className="flex items-center gap-2">
-                  <span className="text-red-600">����</span>
+                  <span className="text-red-600">📍</span>
                   <span className="text-sm font-cabin">
                     Meetup: {activity.meetupPoint}
                   </span>
