@@ -65,8 +65,13 @@ export function setupSocketServer(app: any) {
     // Handle direct messages
     socket.on("direct_message", async (data) => {
       const { senderId, receiverId, message } = data;
-      
+
       try {
+        if (!supabaseAdmin) {
+          socket.emit("error", { message: "Database not configured" });
+          return;
+        }
+
         // Save message to database
         const { data: newMessage, error } = await supabaseAdmin
           .from("direct_messages")
