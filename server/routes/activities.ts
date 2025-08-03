@@ -178,13 +178,11 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
       .from("activities")
       .update(updates)
       .eq("id", id)
-      .select(
-        `
+      .select(`
         *,
-        organizer:profiles!organizer_id(id, full_name, email),
-        club:clubs(id, name)
-      `,
-      )
+        profiles!organizer_id(id, full_name, email),
+        clubs(id, name)
+      `)
       .single();
 
     if (error) {
