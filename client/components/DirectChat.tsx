@@ -141,8 +141,8 @@ export default function DirectChat({
           return;
         }
 
-        if (response.data) {
-          setMessages((prev) => [...prev, response.data]);
+        if (response.data && response.data.data) {
+          setMessages((prev) => [...prev, response.data.data]);
           scrollToBottom();
         }
       }
