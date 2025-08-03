@@ -10,7 +10,7 @@ import ActivityCard from "../components/ActivityCard";
 import BottomNavigation from "../components/BottomNavigation";
 
 export default function Index() {
-  const { activities, searchActivities, loading, error, refreshActivities } = useActivities();
+  const { activities, searchActivities, loading, error, refreshActivities, createActivity } = useActivities();
   const { showWelcomeMessage, dismissWelcomeMessage, userProfile } = useOnboarding();
   const { getUserClubs, isClubMember } = useClub();
   const [searchParams] = useSearchParams();
