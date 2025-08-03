@@ -63,7 +63,24 @@ export default function Onboarding() {
 
   const genderOptions = ["Female", "Male", "Non-binary", "Prefer not to say"];
 
-  const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
+  const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert", "Professional"];
+
+  // Climbing specific options
+  const climbingCertifications = ["Lead Climbing", "First Aid", "Rescue Training", "Instructor", "Guide"];
+  const climbingSpecialties = ["Coaching", "Route Setting", "Youth Instruction", "Adaptive Climbing"];
+  const climbingSkills = ["Indoor", "Outdoor", "Top Rope", "Lead", "Bouldering", "Traditional", "Sport"];
+  const climbingGrades = ["V0-V2/4a-5a", "V3-V4/5b-5c", "V5-V6/6a-6b", "V7-V8/6c-7a", "V9+/7b+"];
+
+  // Cycling specific options
+  const cyclingDistances = ["10-20km", "20-40km", "40-60km", "60-100km", "100km+"];
+  const cyclingPaces = ["15-20 kph", "20-25 kph", "25-30 kph", "30-35 kph", "35+ kph"];
+  const cyclingPreferences = ["Road", "Social Rides", "Commuting", "Group Leader", "Racing", "Mountain", "Gravel"];
+
+  // Running specific options
+  const runningDistances = ["1-5km", "5-10km", "10-15km", "15-25km", "25km+"];
+  const runningPaces = ["8+ min/km", "6-8 min/km", "5-6 min/km", "4-5 min/km", "Under 4 min/km"];
+  const runningGoals = ["Weight Loss", "5K Race", "10K Race", "Half Marathon", "Marathon", "Trail Running"];
+  const runningPreferences = ["Trail", "Road", "Morning Runs", "Evening Runs", "Group Runs", "Solo"];
 
   const availableGear = [
     "Bouldering pad", "Quickdraws", "Rope", "Helmet", "Harness", "Climbing shoes",
