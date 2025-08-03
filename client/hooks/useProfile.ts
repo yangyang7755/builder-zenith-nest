@@ -37,8 +37,8 @@ export function useProfile(userId?: string) {
         const profileEndpoint = userId === 'me' ? '/api/profile' : `/api/users/${userId}/profile`;
         
         const [profileRes, followStatsRes] = await Promise.all([
-          ApiService.get(profileEndpoint).catch(() => null),
-          ApiService.get(`/api/users/${userId}/follow-stats`).catch(() => ({ followers: 0, following: 0 }))
+          apiService.getProfile().catch(() => null),
+          fetch(`/api/users/${userId}/follow-stats`).then(r => r.json()).catch(() => ({ followers: 0, following: 0 }))
         ]);
 
         if (profileRes) {
