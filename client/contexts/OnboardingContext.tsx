@@ -9,13 +9,35 @@ export interface UserProfile {
   country: string;
   profession: string;
   university: string;
+  bio?: string;
+  location?: string;
+
+  // Enhanced sports information
   climbingLevel?: string;
+  climbingExperience?: string;
+  climbingMaxGrade?: string;
+  climbingCertifications?: string[];
+  climbingSpecialties?: string[];
+  climbingSkills?: string[];
+
   cyclingLevel?: string;
+  cyclingExperience?: string;
+  cyclingDistance?: string;
+  cyclingPace?: string;
+  cyclingPreferences?: string[];
+
   runningLevel?: string;
+  runningExperience?: string;
+  runningDistance?: string;
+  runningPace?: string;
+  runningGoals?: string;
+  runningPreferences?: string[];
+
   hikingLevel?: string;
   skiiingLevel?: string;
   surfingLevel?: string;
   tennisLevel?: string;
+
   gear?: string[];
   hideUniversity?: boolean;
 }
