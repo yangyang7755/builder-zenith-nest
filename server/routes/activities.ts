@@ -35,7 +35,10 @@ export const handleGetActivities = async (req: Request, res: Response) => {
 
     let query = supabaseAdmin
       .from("activities")
-      .select("*")
+      .select(`
+        *,
+        participant_count
+      `)
       .order("date", { ascending: true });
 
     // Apply filters
