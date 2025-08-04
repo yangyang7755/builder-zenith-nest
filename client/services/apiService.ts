@@ -18,6 +18,15 @@ class ApiService {
   ): Promise<ApiResponse<T>> {
     const maxRetries = 2;
 
+    // Create a unique key for this request
+    const requestKey = `${options.method || 'GET'}-${endpoint}-${JSON.stringify(options.body || {})}`;
+
+    // Check if we already have a pending request for this
+    if (this.pendingRequests.has(requestKey)) {
+      console.log('Reusing pending request for:', requestKey);
+      return this.pendingRequests.get(requestKey);
+    }
+
     try {
       const authHeader = await getAuthHeader();
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
