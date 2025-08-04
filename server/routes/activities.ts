@@ -74,49 +74,171 @@ const ListActivitiesSchema = z.object({
   offset: z.string().transform(val => parseInt(val) || 0).optional(),
 });
 
+// GET /api/activities - List activities with filtering/search
 export const handleGetActivities = async (req: Request, res: Response) => {
   try {
-    // Check if Supabase is configured
+    const filters = ListActivitiesSchema.parse(req.query);
+
+    // Demo mode - return mock data if no database
     if (!supabaseAdmin) {
-      return res.json([]); // Return empty array for development
+      const demoActivities = [
+        {
+          id: "demo-activity-1",
+          title: "Morning Richmond Park Cycle",
+          description: "Join us for a scenic morning ride through Richmond Park!",
+          activity_type: "cycling",
+          organizer_id: "demo-user-1",
+          club_id: null,
+          date_time: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+          location: "Richmond Park, London",
+          coordinates: { lat: 51.4513, lng: -0.2719 },
+          max_participants: 15,
+          current_participants: 8,
+          difficulty_level: "intermediate",
+          activity_image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7f09?w=600&h=400&fit=crop",
+          status: "upcoming",
+          price_per_person: 0,
+          created_at: new Date().toISOString(),
+          organizer: {
+            id: "demo-user-1",
+            full_name: "Sarah Johnson",
+            profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
+          }
+        },
+        {
+          id: "demo-activity-2",
+          title: "Beginner Rock Climbing",
+          description: "Perfect for newcomers to climbing. All equipment provided!",
+          activity_type: "climbing",
+          organizer_id: "demo-user-2",
+          club_id: "westway",
+          date_time: new Date(Date.now() + 172800000).toISOString(), // Day after tomorrow
+          location: "Westway Climbing Centre, London",
+          coordinates: { lat: 51.5200, lng: -0.2367 },
+          max_participants: 8,
+          current_participants: 5,
+          difficulty_level: "beginner",
+          activity_image: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=600&h=400&fit=crop",
+          status: "upcoming",
+          price_per_person: 15.00,
+          created_at: new Date().toISOString(),
+          organizer: {
+            id: "demo-user-2",
+            full_name: "Mike Chen",
+            profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+          }
+        }
+      ];
+
+      return res.json({
+        success: true,
+        data: demoActivities,
+        pagination: {
+          total: demoActivities.length,
+          limit: filters.limit || 20,
+          offset: filters.offset || 0
+        }
+      });
     }
 
-    const { club, type, location } = req.query;
-
+    // Build query with enhanced filtering
     let query = supabaseAdmin
       .from("activities")
-      .select("*")
-      .order("date", { ascending: true });
+      .select(`
+        *,
+        organizer:profiles!organizer_id (
+          id,
+          full_name,
+          profile_image
+        ),
+        club:clubs (
+          id,
+          name,
+          profile_image
+        ),
+        current_participants:activity_participants(count)
+      `)
+      .order("date_time", { ascending: true });
 
     // Apply filters
-    if (club) {
-      query = query.eq("club_id", club);
+    if (filters.club_id) {
+      query = query.eq("club_id", filters.club_id);
     }
 
-    if (type) {
-      query = query.eq("type", type);
+    if (filters.activity_type) {
+      query = query.eq("activity_type", filters.activity_type);
     }
 
-    if (location) {
-      query = query.ilike("location", `%${location}%`);
+    if (filters.location) {
+      query = query.ilike("location", `%${filters.location}%`);
     }
 
-    const { data: activities, error } = await query;
+    if (filters.difficulty_level) {
+      query = query.eq("difficulty_level", filters.difficulty_level);
+    }
+
+    if (filters.status) {
+      query = query.eq("status", filters.status);
+    } else {
+      // Default to showing only upcoming activities
+      query = query.eq("status", "upcoming");
+    }
+
+    if (filters.date_from) {
+      query = query.gte("date_time", filters.date_from);
+    }
+
+    if (filters.date_to) {
+      query = query.lte("date_time", filters.date_to);
+    }
+
+    // Apply pagination
+    const limit = filters.limit || 20;
+    const offset = filters.offset || 0;
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: activities, error, count } = await query;
 
     if (error) {
       console.error("Database error:", error);
-      // If table doesn't exist, return empty array instead of error
+      // If table doesn't exist, return demo data
       if (error.code === '42P01') {
-        console.log("Database tables not set up yet, returning empty array");
-        return res.json([]);
+        console.log("Database tables not set up yet, returning demo data");
+        return res.json({
+          success: true,
+          data: [],
+          pagination: { total: 0, limit, offset }
+        });
       }
-      return res.status(500).json({ error: "Failed to fetch activities" });
+      return res.status(500).json({
+        success: false,
+        error: "Failed to fetch activities"
+      });
     }
 
-    res.json(activities || []);
+    res.json({
+      success: true,
+      data: activities || [],
+      pagination: {
+        total: count || 0,
+        limit,
+        offset
+      }
+    });
+
   } catch (error) {
     console.error("Server error:", error);
-    res.status(500).json({ error: "Failed to fetch activities" });
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid query parameters",
+        details: error.errors
+      });
+    }
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch activities"
+    });
   }
 };
 
