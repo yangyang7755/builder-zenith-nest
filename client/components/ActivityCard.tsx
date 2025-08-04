@@ -42,6 +42,8 @@ export default function ActivityCard({
   const { saveActivity, unsaveActivity, isActivitySaved } =
     useSavedActivities();
   const { hasRequestedActivity } = useChat();
+  const { createTouchableProps } = useTouchFeedback();
+  const haptic = useHaptic();
 
   const currentActivityId = activityId || `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase();
 
