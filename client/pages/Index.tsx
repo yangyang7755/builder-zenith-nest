@@ -305,7 +305,7 @@ export default function Index() {
   };
 
   return (
-    <div className="react-native-container bg-white font-cabin relative native-scroll">
+    <div ref={pullRefreshRef} className="react-native-container bg-white font-cabin relative native-scroll">
       {/* Status Bar */}
       <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
         <span>9:41</span>
