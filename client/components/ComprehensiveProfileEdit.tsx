@@ -219,23 +219,29 @@ export function ComprehensiveProfileEdit({
   const handleSave = async () => {
     setSaving(true);
     try {
+      // Helper function to clean empty strings
+      const cleanValue = (value: any) => {
+        if (typeof value === 'string' && value.trim() === '') return undefined;
+        return value;
+      };
+
       // Prepare comprehensive profile data for API
       const updateData = {
         // Basic Info
-        full_name: profileData.full_name,
-        bio: profileData.bio,
-        email: profileData.email,
-        phone: profileData.phone,
-        profile_image: profileData.profile_image,
+        full_name: cleanValue(profileData.full_name),
+        bio: cleanValue(profileData.bio),
+        email: cleanValue(profileData.email),
+        phone: cleanValue(profileData.phone),
+        profile_image: cleanValue(profileData.profile_image),
 
         // Personal Details
-        gender: profileData.gender,
+        gender: cleanValue(profileData.gender),
         age: profileData.age ? parseInt(profileData.age.toString()) : undefined,
-        date_of_birth: profileData.date_of_birth,
-        nationality: profileData.nationality,
-        institution: profileData.institution,
-        occupation: profileData.occupation,
-        location: profileData.location,
+        date_of_birth: cleanValue(profileData.date_of_birth),
+        nationality: cleanValue(profileData.nationality),
+        institution: cleanValue(profileData.institution),
+        occupation: cleanValue(profileData.occupation),
+        location: cleanValue(profileData.location),
 
         // Visibility Settings
         visibility_settings: profileData.visibility,
