@@ -339,13 +339,34 @@ export const handleGetActivity = async (req: Request, res: Response) => {
 // POST /api/activities - Create new activities
 export const handleCreateActivity = async (req: Request, res: Response) => {
   try {
-    // Get user from auth token
-    const user = await getUserFromToken(req.headers.authorization || "");
+    const user = await getAuthenticatedUser(req);
     if (!user) {
-      return res.status(401).json({ error: "Authentication required" });
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required"
+      });
     }
 
     const validatedData = ActivitySchema.parse(req.body);
+
+    // Demo mode support
+    if (!supabaseAdmin) {
+      const demoActivity = {
+        id: `demo-activity-${Date.now()}`,
+        ...validatedData,
+        organizer_id: user.id,
+        current_participants: 0,
+        status: "upcoming",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      return res.status(201).json({
+        success: true,
+        data: demoActivity,
+        message: "Activity created successfully (demo mode)"
+      });
+    }
 
     // If club_id is provided, verify user is a member of that club
     if (validatedData.club_id) {
@@ -358,13 +379,20 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
         .single();
 
       if (!membership) {
-        return res
-          .status(403)
-          .json({
-            error:
-              "You must be a member of this club to create activities for it",
-          });
+        return res.status(403).json({
+          success: false,
+          error: "You must be a member of this club to create activities for it",
+        });
       }
+    }
+
+    // Ensure date_time is in the future
+    const activityDateTime = new Date(validatedData.date_time);
+    if (activityDateTime <= new Date()) {
+      return res.status(400).json({
+        success: false,
+        error: "Activity date must be in the future"
+      });
     }
 
     const { data: newActivity, error } = await supabaseAdmin
@@ -372,25 +400,45 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
       .insert({
         ...validatedData,
         organizer_id: user.id,
+        status: "upcoming"
       })
-      .select("*")
+      .select(`
+        *,
+        organizer:profiles!organizer_id (
+          id,
+          full_name,
+          profile_image
+        )
+      `)
       .single();
 
     if (error) {
       console.error("Database error:", error);
-      return res.status(500).json({ error: "Failed to create activity" });
+      return res.status(500).json({
+        success: false,
+        error: "Failed to create activity"
+      });
     }
 
-    res.status(201).json(newActivity);
+    res.status(201).json({
+      success: true,
+      data: newActivity,
+      message: "Activity created successfully"
+    });
+
   } catch (error) {
+    console.error("Create activity error:", error);
     if (error instanceof z.ZodError) {
-      res
-        .status(400)
-        .json({ error: "Invalid activity data", details: error.errors });
-    } else {
-      console.error("Server error:", error);
-      res.status(500).json({ error: "Failed to create activity" });
+      return res.status(400).json({
+        success: false,
+        error: "Invalid activity data",
+        details: error.errors
+      });
     }
+    res.status(500).json({
+      success: false,
+      error: "Failed to create activity"
+    });
   }
 };
 
