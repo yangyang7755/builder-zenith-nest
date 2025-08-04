@@ -104,6 +104,8 @@ export default function Profile() {
       // Demo mode - update local state
       setLocalProfileData(updatedProfile);
     }
+    // Always refresh visibility settings
+    refreshVisibility();
   };
 
   const handleFollow = () => {
@@ -293,7 +295,7 @@ export default function Profile() {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              ���� Climbing
+              🧗 Climbing
             </button>
             <button
               onClick={() => setActiveSportTab('cycling')}
