@@ -212,3 +212,27 @@ export function useChat() {
   }
   return context;
 }
+
+// Helper function for chat notifications
+function showChatNotification(message: string) {
+  const toast = document.createElement('div');
+  toast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 z-[1001] bg-blue-600 text-white px-4 py-2 rounded-lg font-medium max-w-sm mx-4 text-center';
+  toast.textContent = message;
+
+  document.body.appendChild(toast);
+
+  // Animate in
+  setTimeout(() => {
+    toast.style.opacity = '0.9';
+  }, 100);
+
+  // Remove after 4 seconds
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => {
+      if (document.body.contains(toast)) {
+        document.body.removeChild(toast);
+      }
+    }, 300);
+  }, 4000);
+}
