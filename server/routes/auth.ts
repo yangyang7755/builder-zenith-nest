@@ -3,10 +3,65 @@ import { z } from "zod";
 import { supabaseAdmin, getUserFromToken } from "../lib/supabase";
 
 const ProfileUpdateSchema = z.object({
+  // Basic Info
   full_name: z.string().optional(),
-  university: z.string().optional(),
   bio: z.string().optional(),
-  profile_image: z.string().url().optional(),
+  profile_image: z.string().optional(),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
+
+  // Personal Details
+  gender: z.string().optional(),
+  age: z.number().min(13).max(120).optional(),
+  date_of_birth: z.string().optional(),
+  nationality: z.string().optional(),
+  institution: z.string().optional(),
+  university: z.string().optional(), // Keep for backward compatibility
+  occupation: z.string().optional(),
+  location: z.string().optional(),
+
+  // Visibility Settings
+  visibility_settings: z.object({
+    profile_image: z.boolean().optional(),
+    full_name: z.boolean().optional(),
+    bio: z.boolean().optional(),
+    email: z.boolean().optional(),
+    phone: z.boolean().optional(),
+    gender: z.boolean().optional(),
+    age: z.boolean().optional(),
+    date_of_birth: z.boolean().optional(),
+    nationality: z.boolean().optional(),
+    institution: z.boolean().optional(),
+    occupation: z.boolean().optional(),
+    location: z.boolean().optional(),
+    sports: z.boolean().optional(),
+    achievements: z.boolean().optional(),
+    activities: z.boolean().optional(),
+    reviews: z.boolean().optional(),
+    followers: z.boolean().optional(),
+    following: z.boolean().optional(),
+  }).optional(),
+
+  // Sports and Achievements (will be handled separately)
+  sports: z.array(z.object({
+    id: z.string(),
+    sport: z.string(),
+    level: z.string(),
+    experience: z.string().optional(),
+    maxGrade: z.string().optional(),
+    certifications: z.array(z.string()).optional(),
+    specialties: z.array(z.string()).optional(),
+    preferences: z.array(z.string()).optional(),
+  })).optional(),
+
+  achievements: z.array(z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string().optional(),
+    date: z.string().optional(),
+    category: z.string().optional(),
+    verified: z.boolean().optional(),
+  })).optional(),
 });
 
 export const handleGetProfile = async (req: Request, res: Response) => {
