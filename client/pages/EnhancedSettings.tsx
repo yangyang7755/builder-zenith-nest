@@ -232,7 +232,7 @@ export default function EnhancedSettings() {
             icon={<User className="w-5 h-5" />}
             title="Edit Profile"
             subtitle="Update your personal information and photo"
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate("/profile/edit-comprehensive")}
           />
           <SettingsItem
             icon={<Mail className="w-5 h-5" />}
