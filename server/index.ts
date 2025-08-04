@@ -113,5 +113,8 @@ export function createServer() {
   // Upload routes
   app.use("/api/uploads", uploadsRouter);
 
+  // Health check routes
+  app.use("/api/health", healthRouter);
+
   return app;
 }
