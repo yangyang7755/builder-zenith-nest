@@ -68,8 +68,6 @@ export default function ActivityCard({
 
   const handleSaveClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
-    const currentActivityId =
-      activityId || `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase();
 
     if (isActivitySaved(currentActivityId)) {
       unsaveActivity(currentActivityId);
