@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
 import { useOnboarding } from "../contexts/OnboardingContext";
 import { useClub } from "../contexts/ClubContext";
+import { useChat } from "../contexts/ChatContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
 import ActivityCard from "../components/ActivityCard";
+import RequestJoinModal from "../components/RequestJoinModal";
 import BottomNavigation from "../components/BottomNavigation";
 import { FloatingSettingsButton } from "../components/FloatingSettingsButton";
 
