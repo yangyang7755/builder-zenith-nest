@@ -33,15 +33,24 @@
     background: #f8f9fa;
     position: relative;
     overflow-x: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   .native-scroll {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+    overscroll-behavior: contain;
   }
 
   .native-button-press {
     transition: all 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
   }
 
   .native-button-press:active {
@@ -77,6 +86,276 @@
 
   .haptic-heavy:active {
     transform: scale(0.95);
+  }
+
+  /* Native card and list styles */
+  .native-card {
+    background: white;
+    border-radius: 12px;
+    margin: 8px 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e8e8e8;
+  }
+
+  .native-list-item {
+    background: white;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 16px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .native-list-item:active {
+    background-color: #f5f5f5;
+  }
+
+  /* Native input styles */
+  .native-input {
+    background: #f8f9fa;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 44px; /* iOS minimum touch target */
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  .native-input:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+  }
+
+  /* Native button styles */
+  .native-button {
+    background: #007AFF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    min-height: 44px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s ease;
+  }
+
+  .native-button:active {
+    transform: scale(0.96);
+    background: #0056b3;
+  }
+
+  .native-button:disabled {
+    background: #c7c7cc;
+    color: #8e8e93;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .native-button-secondary {
+    background: #f8f9fa;
+    color: #007AFF;
+    border: 1px solid #007AFF;
+  }
+
+  .native-button-secondary:active {
+    background: #e8f4ff;
+  }
+
+  .native-button-destructive {
+    background: #FF3B30;
+  }
+
+  .native-button-destructive:active {
+    background: #d70015;
+  }
+
+  /* Native navigation styles */
+  .native-header {
+    background: white;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid #e8e8e8;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .native-tab-bar {
+    background: white;
+    height: 84px; /* Includes safe area */
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: env(safe-area-inset-bottom, 34px);
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 428px;
+    z-index: 100;
+  }
+
+  .native-tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 12px;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+  }
+
+  .native-tab-item:active {
+    opacity: 0.6;
+  }
+
+  /* Pull-to-refresh indicator */
+  .pull-refresh {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-60px);
+    transition: transform 0.3s ease;
+  }
+
+  .pull-refresh.active {
+    transform: translateY(0);
+  }
+
+  /* Native modal styles */
+  .native-modal {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 428px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .native-modal-content {
+    background: white;
+    border-radius: 16px 16px 0 0;
+    padding: 24px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .native-modal.open .native-modal-content {
+    transform: translateY(0);
+  }
+
+  /* Swipe gestures */
+  .swipe-item {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .swipe-actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background: #ff3b30;
+    padding: 0 16px;
+    transform: translateX(100%);
+    transition: transform 0.2s ease;
+  }
+
+  .swipe-item.swiped .swipe-actions {
+    transform: translateX(0);
+  }
+
+  /* Loading states */
+  .native-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+
+  .native-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #e8e8e8;
+    border-top: 2px solid #007AFF;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Native search bar */
+  .native-search {
+    background: #f0f0f0;
+    border-radius: 20px;
+    padding: 8px 16px;
+    margin: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .native-search input {
+    background: transparent;
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 16px;
+  }
+
+  /* Touch feedback for all interactive elements */
+  .touchable {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .touchable:active {
+    opacity: 0.8;
+  }
+
+  /* Prevent iOS bounce on body */
+  body {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  #root {
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
