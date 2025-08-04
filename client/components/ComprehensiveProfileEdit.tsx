@@ -442,8 +442,8 @@ export function ComprehensiveProfileEdit({
                   <Input
                     id="age"
                     type="number"
-                    value={profileData.age}
-                    onChange={(e) => updateField('age', parseInt(e.target.value))}
+                    value={profileData.age || ''}
+                    onChange={(e) => updateField('age', e.target.value ? parseInt(e.target.value) || 0 : 0)}
                     placeholder="Age"
                   />
                   <VisibilityControl field="age" label="Show age" />
