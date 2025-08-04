@@ -4,11 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  VITE_SUPABASE_URL = ""
+  VITE_SUPABASE_ANON_KEY = ""
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[functions]
-  directory = "netlify/functions"
