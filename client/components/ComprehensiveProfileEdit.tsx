@@ -263,6 +263,9 @@ export function ComprehensiveProfileEdit({
         Object.entries(updateData).filter(([_, value]) => value !== undefined)
       );
 
+      // Add small delay to prevent racing conditions
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // Update profile via direct fetch to avoid stream issues
       console.log('Sending profile update data:', cleanUpdateData);
 
