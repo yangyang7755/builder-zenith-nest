@@ -217,7 +217,14 @@ export function ComprehensiveProfileEdit({
   };
 
   const handleSave = async () => {
+    console.log('handleSave called, isSaving:', isSaving);
+    if (isSaving) {
+      console.log('Already saving, returning early');
+      return;
+    }
+
     setSaving(true);
+    console.log('Starting profile save process...');
     try {
       // Helper function to clean empty strings
       const cleanValue = (value: any) => {
