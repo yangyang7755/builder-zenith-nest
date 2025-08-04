@@ -495,13 +495,14 @@ export default function ClubManagementEnhanced({
                   <Label>Club Image</Label>
                   {isEditing && isManager() ? (
                     <ImageUpload
-                      currentImage={club.profile_image || ""}
+                      currentImageUrl={club.profile_image || ""}
                       onImageChange={(url) =>
-                        setEditForm({ ...editForm, profile_image: url })
+                        setEditForm({ ...editForm, profile_image: url || "" })
                       }
-                      variant="rectangle"
-                      size="md"
-                      placeholder="Club Photo"
+                      uploadType="club"
+                      entityId={club.id}
+                      showPreview={true}
+                      className="max-w-md"
                     />
                   ) : (
                     <div className="h-32 w-48 border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
