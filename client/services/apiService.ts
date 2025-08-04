@@ -3,6 +3,31 @@ import { getAuthHeader } from "../lib/supabase";
 // API base URL - backend is served from same port as client via Vite middleware
 const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
+// Check if backend is available
+let backendAvailable: boolean | null = null;
+
+const checkBackendAvailability = async (): Promise<boolean> => {
+  // Return cached result if already checked
+  if (backendAvailable !== null) {
+    return backendAvailable;
+  }
+
+  try {
+    // Try a simple ping to check if backend is available
+    const response = await fetch(`${API_BASE_URL}/ping`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(2000) // 2 second timeout
+    });
+    backendAvailable = response.ok;
+    console.log(`Backend availability check: ${backendAvailable ? 'Available' : 'Unavailable'}`);
+    return backendAvailable;
+  } catch (error) {
+    console.log('Backend not available, using demo mode');
+    backendAvailable = false;
+    return false;
+  }
+};
+
 interface ApiResponse<T> {
   data?: T;
   error?: string;
