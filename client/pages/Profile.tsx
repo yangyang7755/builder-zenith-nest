@@ -40,6 +40,8 @@ export default function Profile() {
       if (savedProfileData) {
         try {
           const parsedData = JSON.parse(savedProfileData);
+          console.log('Loading profile data from localStorage:', parsedData);
+          console.log('Profile image from localStorage:', parsedData.profile_image);
           setLocalProfileData(parsedData);
         } catch (error) {
           console.error('Failed to parse saved profile data:', error);
