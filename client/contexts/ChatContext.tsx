@@ -35,6 +35,7 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
+  const [requestedActivities, setRequestedActivities] = useState<Set<string>>(new Set());
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     // Default messages for demonstration
     {
