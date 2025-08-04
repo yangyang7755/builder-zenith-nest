@@ -144,6 +144,7 @@ const App = () => (
                             element={<ClubWestway />}
                           />
                           <Route path="/club/oucc" element={<ClubOxford />} />
+                          <Route path="/club/oxford" element={<ClubOxford />} />
                           <Route
                             path="/club/oxford-cycling"
                             element={<ClubOxford />}
