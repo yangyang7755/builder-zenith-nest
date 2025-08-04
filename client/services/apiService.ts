@@ -27,11 +27,22 @@ class ApiService {
       // Read response body once, whether success or error
       let responseData;
       try {
-        responseData = await response.json();
+        // Check if the response body has already been consumed
+        if (response.bodyUsed) {
+          console.warn('Response body already consumed, creating fallback response');
+          responseData = {};
+        } else {
+          const responseText = await response.text();
+          if (responseText) {
+            responseData = JSON.parse(responseText);
+          } else {
+            responseData = {};
+          }
+        }
       } catch (parseError) {
         console.error('Failed to parse response:', parseError);
         return {
-          error: `HTTP error! status: ${response.status} (failed to parse response)`,
+          error: `Failed to parse response: ${parseError instanceof Error ? parseError.message : parseError}`,
           status: response.status
         };
       }
