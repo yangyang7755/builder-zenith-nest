@@ -132,8 +132,60 @@ export default function Profile() {
     refreshVisibility();
   };
 
+  // Load user's activity history
+  useEffect(() => {
+    const loadActivityHistory = async () => {
+      if (!user) return; // Skip if not authenticated
+
+      setLoadingHistory(true);
+      try {
+        const response = await apiService.getUserActivityHistory({
+          status: 'completed',
+          limit: 10
+        });
+
+        if (response.data?.success) {
+          setActivityHistory(response.data.data || []);
+        } else if (response.data && Array.isArray(response.data)) {
+          setActivityHistory(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to load activity history:', error);
+      } finally {
+        setLoadingHistory(false);
+      }
+    };
+
+    loadActivityHistory();
+  }, [user]);
+
   const handleFollow = () => {
     setFollowing(!following);
+  };
+
+  // Helper function to get activity type emoji
+  const getActivityEmoji = (type: string) => {
+    const emojis: { [key: string]: string } = {
+      cycling: '🚴',
+      climbing: '🧗',
+      running: '🏃',
+      hiking: '🥾',
+      skiing: '⛷️',
+      surfing: '🏄',
+      tennis: '🎾',
+      general: '⚡'
+    };
+    return emojis[type] || '⚡';
+  };
+
+  // Helper function to format date
+  const formatActivityDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
   };
 
   return (
