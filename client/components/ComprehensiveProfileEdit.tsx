@@ -251,7 +251,9 @@ export function ComprehensiveProfileEdit({
       console.log('API response:', result);
 
       if (result.error) {
-        console.error('API error details:', result);
+        console.error('API error details:', JSON.stringify(result, null, 2));
+        console.error('Error string:', result.error);
+        console.error('Full result object:', result);
         throw new Error(result.error);
       }
 
