@@ -331,6 +331,11 @@ export default function Index() {
         </div>
       </div>
 
+      {/* Pull to refresh indicator */}
+      <div className="pull-refresh">
+        <div className="native-spinner"></div>
+      </div>
+
       {/* Main Content */}
       <div className="px-3 pb-20">
         {/* Header */}
