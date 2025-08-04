@@ -219,6 +219,19 @@ export function ComprehensiveProfileEdit({
   const handleSave = async () => {
     setSaving(true);
     try {
+      // Check if user is authenticated or in demo mode
+      if (!user) {
+        // Demo mode - just simulate save and show success
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        onProfileUpdate?.(profileData);
+        toast({
+          title: "Profile Updated",
+          description: "Your profile has been successfully updated.",
+        });
+        navigate('/profile');
+        return;
+      }
+
       // Prepare profile data for API
       const updateData = {
         full_name: profileData.full_name,
