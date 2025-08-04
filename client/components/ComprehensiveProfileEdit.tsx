@@ -221,8 +221,9 @@ export function ComprehensiveProfileEdit({
     try {
       // Check if user is authenticated or in demo mode
       if (!user) {
-        // Demo mode - just simulate save and show success
+        // Demo mode - save to localStorage and simulate save
         await new Promise(resolve => setTimeout(resolve, 1000));
+        localStorage.setItem('demoProfileData', JSON.stringify(profileData));
         onProfileUpdate?.(profileData);
         toast({
           title: "Profile Updated",
