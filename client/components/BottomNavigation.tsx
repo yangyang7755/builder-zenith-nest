@@ -69,9 +69,8 @@ export default function BottomNavigation() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="bg-white border-t border-gray-200 max-w-md mx-auto">
-        <div className="flex items-center justify-around h-16 px-2">
+    <div className="native-tab-bar">
+      <div className="flex items-center justify-around">
           {tabs.map((tab) => {
             const isActive = isTabActive(tab.path);
             const IconComponent = tab.icon;
@@ -80,7 +79,7 @@ export default function BottomNavigation() {
               <Link
                 key={tab.id}
                 to={tab.path}
-                className="flex-1 flex flex-col items-center justify-center py-2 px-1"
+                className="native-tab-item"
               >
                 {/* Icon Container */}
                 <div
@@ -127,10 +126,6 @@ export default function BottomNavigation() {
               </Link>
             );
           })}
-        </div>
-
-        {/* Safe Area */}
-        <div className="h-safe-area-inset-bottom bg-white" />
       </div>
     </div>
   );
