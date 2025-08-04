@@ -467,66 +467,116 @@ export default function SimpleInteractiveMap({
             </div>
           </div>
 
-          {/* Activities List */}
+          {/* Activities List or Location Selection */}
           <div className="h-1/3 bg-white border-t p-4 overflow-y-auto">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-medium">Activities</h2>
-              <span className="text-xs text-gray-500">{activitiesWithCoords.length} total</span>
-            </div>
-            
-            <div className="space-y-2">
-              {activitiesWithCoords.map((activity) => {
-                const style = getActivityMarkerStyle(activity.type);
-                const isSelected = selectedActivity?.id === activity.id;
-                
-                return (
-                  <div
-                    key={activity.id}
-                    id={`activity-${activity.id}`}
-                    className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                      isSelected ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 hover:bg-gray-100'
-                    }`}
-                    onClick={() => handleActivityClick(activity)}
-                  >
-                    <div 
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-sm"
-                      style={{ backgroundColor: style.color }}
-                    >
-                      {style.emoji}
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm truncate">{activity.title}</p>
-                      <div className="flex items-center gap-2 text-xs text-gray-600">
-                        <span>{activity.location}</span>
-                        <span>•</span>
-                        <span>{activity.date}</span>
-                        <span>•</span>
-                        <span>{activity.time}</span>
-                      </div>
-                    </div>
-                    
+            {mode === 'select' ? (
+              /* Location Selection UI */
+              <div className="space-y-4">
+                <div className="text-center">
+                  <h2 className="text-lg font-medium mb-2">Select Location</h2>
+                  <p className="text-sm text-gray-600">
+                    {selectedLocation
+                      ? "Tap 'Confirm' to use this location"
+                      : "Tap anywhere on the map to select a location"
+                    }
+                  </p>
+                </div>
+
+                {selectedLocation && (
+                  <div className="bg-gray-50 rounded-lg p-3 space-y-2">
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">
-                        {activity.type}
-                      </Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="p-1 h-6 w-6"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openInMaps(activity);
-                        }}
-                        title="Open in maps"
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                      </Button>
+                      <MapPin className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm font-medium">Selected Location</span>
                     </div>
+                    <p className="text-sm text-gray-600">
+                      {coordinatesToAddress(selectedLocation)}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Coordinates: {selectedLocation.lat.toFixed(4)}, {selectedLocation.lng.toFixed(4)}
+                    </p>
                   </div>
-                );
-              })}
-            </div>
+                )}
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={onClose}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="flex-1 bg-explore-green hover:bg-green-600"
+                    onClick={confirmLocationSelection}
+                    disabled={!selectedLocation}
+                  >
+                    Confirm Location
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              /* Activities List */
+              <>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-sm font-medium">Activities</h2>
+                  <span className="text-xs text-gray-500">{activitiesWithCoords.length} total</span>
+                </div>
+
+                <div className="space-y-2">
+                  {activitiesWithCoords.map((activity) => {
+                    const style = getActivityMarkerStyle(activity.type);
+                    const isSelected = selectedActivity?.id === activity.id;
+
+                    return (
+                      <div
+                        key={activity.id}
+                        id={`activity-${activity.id}`}
+                        className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                          isSelected ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 hover:bg-gray-100'
+                        }`}
+                        onClick={() => handleActivityClick(activity)}
+                      >
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-sm"
+                          style={{ backgroundColor: style.color }}
+                        >
+                          {style.emoji}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{activity.title}</p>
+                          <div className="flex items-center gap-2 text-xs text-gray-600">
+                            <span>{activity.location}</span>
+                            <span>•</span>
+                            <span>{activity.date}</span>
+                            <span>•</span>
+                            <span>{activity.time}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {activity.type}
+                          </Badge>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="p-1 h-6 w-6"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openInMaps(activity);
+                            }}
+                            title="Open in maps"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Selected Activity Details */}
