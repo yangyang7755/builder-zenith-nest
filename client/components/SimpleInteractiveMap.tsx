@@ -300,10 +300,10 @@ export default function SimpleInteractiveMap({
               variant="outline"
               size="sm"
               onClick={() => {
-                // Force map refresh by regenerating URL
+                // Force map refresh by using current URL
                 const iframe = document.querySelector('iframe[title="Activity locations map"]') as HTMLIFrameElement;
-                if (iframe) {
-                  iframe.src = generateOSMUrl();
+                if (iframe && mapUrl) {
+                  iframe.src = mapUrl + '&refresh=' + Date.now(); // Add timestamp to force refresh
                 }
               }}
               title="Refresh map"
