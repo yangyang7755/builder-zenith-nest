@@ -255,10 +255,10 @@ export default function ActivityCard({
           <button
             onClick={handleRequestClick}
             disabled={isRequested}
-            className={`w-full py-3 rounded-lg text-sm font-cabin font-medium transition-colors ${
+            className={`w-full native-button ${
               isRequested
-                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-explore-green text-white hover:bg-explore-green-dark"
+                ? "native-button:disabled"
+                : ""
             }`}
           >
             {isRequested ? "Pending" : "Request to join"}
