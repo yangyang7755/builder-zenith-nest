@@ -70,6 +70,7 @@ export default function SimpleInteractiveMap({
     east: initialCenter.lng + 0.05,
     west: initialCenter.lng - 0.05,
   });
+  const [mapUrl, setMapUrl] = useState<string>('');
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   // Handle map click for location selection
