@@ -165,7 +165,7 @@ export default function Profile() {
                   alt={displayProfile.full_name}
                   className="object-cover"
                 />
-                <AvatarFallback className="bg-gray-200 text-gray-600 text-lg font-semibold">
+                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xl font-bold">
                   {displayProfile.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
                 </AvatarFallback>
               </Avatar>
