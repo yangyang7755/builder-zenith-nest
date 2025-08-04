@@ -6,6 +6,7 @@ import { useActivityDraft } from "../contexts/ActivityDraftContext";
 import { useToast } from "../contexts/ToastContext";
 import DateTimePicker from "../components/DateTimePicker";
 import BottomNavigation from "../components/BottomNavigation";
+import ImageUpload from "../components/ImageUpload";
 
 export default function CreateCycling() {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ export default function CreateCycling() {
     visibility: "All",
     difficulty: "Beginner",
     specialComments: "",
+    activityImage: "",
   });
 
   // Load draft on component mount
@@ -61,6 +63,7 @@ export default function CreateCycling() {
         visibility: draft.visibility || "All",
         difficulty: draft.difficulty || "Beginner",
         specialComments: draft.specialComments || "",
+        activityImage: draft.activityImage || "",
       });
       if (draft.subtype) {
         setSelectedType(draft.subtype);
@@ -110,6 +113,7 @@ export default function CreateCycling() {
       visibility: formData.visibility,
       difficulty: formData.difficulty,
       specialComments: formData.specialComments,
+      activityImage: formData.activityImage,
       subtype: selectedType,
       organizer: "You",
       location: formData.meetupLocation,
@@ -156,6 +160,7 @@ export default function CreateCycling() {
       maxParticipants: formData.maxRiders,
       specialComments: formData.specialComments,
       routeLink: formData.routeLink,
+      activityImage: formData.activityImage,
       cafeStop: formData.cafeStop,
       subtype: selectedType,
       gender: formData.femaleOnly ? "Female only" : "All genders",
@@ -165,8 +170,7 @@ export default function CreateCycling() {
       difficulty: formData.difficulty,
       club:
         formData.visibility === "Club members" ? "oxford-cycling" : undefined, // Assume cycling is for Oxford club
-      imageSrc:
-        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
+      imageSrc: formData.activityImage || "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     });
 
     // Delete draft on successful creation
@@ -555,6 +559,29 @@ export default function CreateCycling() {
                   }
                   className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin h-32 resize-none"
                   placeholder="Write down additional plans of the day here ..."
+                />
+              </div>
+
+              {/* Activity Image */}
+              <div className="mb-8">
+                <h3 className="text-lg font-medium text-black font-cabin mb-3">
+                  Activity Photo (Optional)
+                </h3>
+                <p className="text-sm text-gray-600 font-cabin mb-4">
+                  Add a photo to make your activity more appealing
+                </p>
+                <ImageUpload
+                  currentImageUrl={formData.activityImage}
+                  onImageChange={(url) =>
+                    setFormData({
+                      ...formData,
+                      activityImage: url || "",
+                    })
+                  }
+                  uploadType="activity"
+                  entityId={`temp-activity-${Date.now()}`}
+                  showPreview={true}
+                  className="max-w-md"
                 />
               </div>
 
