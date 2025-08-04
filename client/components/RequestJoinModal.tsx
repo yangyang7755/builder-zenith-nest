@@ -18,6 +18,8 @@ export default function RequestJoinModal({
   activityTitle,
   organizerName,
   organizerImage,
+  activityId,
+  onRequestSent,
 }: RequestJoinModalProps) {
   const [requestMessage, setRequestMessage] = useState("");
   const { addJoinRequest } = useChat();
