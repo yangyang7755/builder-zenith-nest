@@ -300,3 +300,8 @@ export const formatMemberCount = (count: number): string => {
 export const getActualMemberCount = (clubName: string): number => {
   return getClubMemberCount(clubName);
 };
+
+export const getPendingRequestsCount = (clubName: string): number => {
+  // In a real app, this would query pending join requests
+  return Math.floor(Math.random() * 10) + 1;
+};
