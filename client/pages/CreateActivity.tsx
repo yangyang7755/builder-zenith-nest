@@ -46,21 +46,21 @@ export default function CreateActivity() {
       name: "Skiing",
       icon: Snowflake,
       available: true,
-      route: "/create/skiing",
+      route: "/create/skiing-simple",
     },
     {
       id: "surfing",
       name: "Surfing",
       icon: Waves,
       available: true,
-      route: "/create/surfing",
+      route: "/create/surfing-simple",
     },
     {
       id: "tennis",
       name: "Tennis",
       icon: Zap,
       available: true,
-      route: "/create/tennis",
+      route: "/create/tennis-simple",
     },
   ];
 
