@@ -508,7 +508,7 @@ export function ComprehensiveProfileEdit({
                     <div className="flex items-center gap-4">
                       <Avatar className="w-20 h-20">
                         <AvatarImage src={profileData.profile_image || ''} />
-                        <AvatarFallback className="bg-gray-200 text-gray-600">
+                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-lg font-bold">
                           {profileData.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
