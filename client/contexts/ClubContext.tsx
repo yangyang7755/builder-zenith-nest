@@ -61,7 +61,41 @@ const USER_CLUBS_STORAGE_KEY = "explore_app_user_clubs";
 
 export function ClubProvider({ children }: { children: ReactNode }) {
   const [currentUserId] = useState("current-user"); // In real app, this would come from auth
-  
+
+  // Listen for club membership changes
+  useEffect(() => {
+    const handleMembershipChange = (event: CustomEvent) => {
+      const { action, clubId, userId } = event.detail;
+
+      setClubs(prev =>
+        prev.map(club => {
+          if (club.id === clubId) {
+            if (action === 'joined') {
+              return {
+                ...club,
+                members: [...club.members, userId],
+                memberCount: club.memberCount + 1
+              };
+            } else if (action === 'left') {
+              return {
+                ...club,
+                members: club.members.filter(id => id !== userId),
+                memberCount: Math.max(0, club.memberCount - 1)
+              };
+            }
+          }
+          return club;
+        })
+      );
+    };
+
+    window.addEventListener('clubMembershipChanged', handleMembershipChange as EventListener);
+
+    return () => {
+      window.removeEventListener('clubMembershipChanged', handleMembershipChange as EventListener);
+    };
+  }, []);
+
   const [clubs, setClubs] = useState<Club[]>(() => {
     try {
       const saved = localStorage.getItem(CLUBS_STORAGE_KEY);
