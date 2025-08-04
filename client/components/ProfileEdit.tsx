@@ -5,7 +5,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
-import { ImageUpload } from './ImageUpload';
+import ImageUpload from './ImageUpload';
 import { useToast } from '../hooks/use-toast';
 import { apiService } from '../services/apiService';
 import { Profile } from '../lib/supabase';
