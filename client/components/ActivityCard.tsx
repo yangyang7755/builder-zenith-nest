@@ -279,18 +279,34 @@ export default function ActivityCard({
           </div>
         )}
 
-        {/* Request to join button */}
+        {/* Participation button */}
         <div className="w-full">
+          {/* Participant count */}
+          <div className="flex justify-between items-center mb-2 text-xs text-gray-600">
+            <span>{participationStats.current_participants}/{participationStats.max_participants} participants</span>
+            {participationStats.is_full && <span className="text-red-600 font-medium">Full</span>}
+          </div>
+
           <button
             onClick={handleRequestClick}
-            disabled={isRequested}
+            disabled={isRequested && !isParticipating}
             className={`w-full native-button ${
-              isRequested
+              isRequested && !isParticipating
                 ? "native-button:disabled"
+                : isParticipating
+                ? "native-button-destructive"
+                : participationStats.is_full
+                ? "native-button-secondary"
                 : ""
             }`}
           >
-            {isRequested ? "Pending" : "Request to join"}
+            {isRequested && !isParticipating
+              ? "Pending"
+              : isParticipating
+              ? "Leave Activity"
+              : participationStats.is_full
+              ? "Request to Join"
+              : "Join Activity"}
           </button>
         </div>
       </div>
