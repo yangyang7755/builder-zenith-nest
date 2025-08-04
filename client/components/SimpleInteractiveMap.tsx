@@ -388,6 +388,32 @@ export default function SimpleInteractiveMap({
               );
             })}
 
+            {/* Selected Location Marker (for location selection mode) */}
+            {mode === 'select' && selectedLocation && (
+              (() => {
+                const { x, y } = latLngToPixel(selectedLocation.lat, selectedLocation.lng);
+
+                // Only show if within bounds
+                if (x >= 0 && y >= 0 && x <= (mapContainerRef.current?.offsetWidth || 0) && y <= (mapContainerRef.current?.offsetHeight || 0)) {
+                  return (
+                    <div
+                      className="absolute transform -translate-x-1/2 -translate-y-1/2 z-20"
+                      style={{
+                        left: `${x}px`,
+                        top: `${y}px`,
+                      }}
+                    >
+                      <div className="relative">
+                        <MapPin className="w-8 h-8 text-red-500 drop-shadow-lg" />
+                        <div className="absolute inset-0 w-8 h-8 rounded-full opacity-25 animate-ping bg-red-500" />
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })()
+            )}
+
             {/* User Location Marker */}
             {userLocation && (
               (() => {
