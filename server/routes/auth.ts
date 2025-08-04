@@ -251,33 +251,37 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
       }
     }
 
-    // Update achievements if provided
+    // Update achievements if provided (skip if tables don't exist)
     if (achievements && Array.isArray(achievements)) {
-      // Delete existing achievements
-      await supabaseAdmin
-        .from("profile_achievements")
-        .delete()
-        .eq("profile_id", user.id);
-
-      // Insert new achievements
-      if (achievements.length > 0) {
-        const achievementsData = achievements.map(achievement => ({
-          profile_id: user.id,
-          title: achievement.title,
-          description: achievement.description || '',
-          date: achievement.date || null,
-          category: achievement.category || '',
-          verified: achievement.verified || false,
-        }));
-
-        const { error: achievementsError } = await supabaseAdmin
+      try {
+        // Delete existing achievements
+        await supabaseAdmin
           .from("profile_achievements")
-          .insert(achievementsData);
+          .delete()
+          .eq("profile_id", user.id);
 
-        if (achievementsError) {
-          console.error("Achievements update error:", achievementsError);
-          // Don't fail the whole request, just log the error
+        // Insert new achievements
+        if (achievements.length > 0) {
+          const achievementsData = achievements.map(achievement => ({
+            profile_id: user.id,
+            title: achievement.title || '',
+            description: achievement.description || '',
+            date: achievement.date || null,
+            category: achievement.category || '',
+            verified: achievement.verified || false,
+          }));
+
+          const { error: achievementsError } = await supabaseAdmin
+            .from("profile_achievements")
+            .insert(achievementsData);
+
+          if (achievementsError) {
+            console.error("Achievements update error:", achievementsError);
+            // Don't fail the whole request, just log the error
+          }
         }
+      } catch (achievementsError) {
+        console.error("Achievements table may not exist, skipping achievements update:", achievementsError);
       }
     }
 
