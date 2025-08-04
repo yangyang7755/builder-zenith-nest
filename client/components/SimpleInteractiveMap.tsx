@@ -30,7 +30,9 @@ interface Activity {
 interface SimpleInteractiveMapProps {
   activities: Activity[];
   onClose: () => void;
-  onActivitySelect: (activity: Activity) => void;
+  onActivitySelect?: (activity: Activity) => void;
+  onLocationSelect?: (location: { lat: number; lng: number }, address: string) => void;
+  mode?: 'view' | 'select';
   initialCenter?: { lat: number; lng: number };
   userLocation?: { lat: number; lng: number } | null;
 }
