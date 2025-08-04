@@ -22,7 +22,7 @@ export default function RequestJoinModal({
   onRequestSent,
 }: RequestJoinModalProps) {
   const [requestMessage, setRequestMessage] = useState("");
-  const { addJoinRequest } = useChat();
+  const { addJoinRequest, hasRequestedActivity } = useChat();
 
   if (!isOpen) return null;
 
