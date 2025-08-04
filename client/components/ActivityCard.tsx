@@ -5,6 +5,7 @@ import RequestJoinModal from "./RequestJoinModal";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { Activity } from "../contexts/ActivitiesContext";
 import { useChat } from "../contexts/ChatContext";
+import { useActivityParticipation } from "../contexts/ActivityParticipationContext";
 import { useTouchFeedback, useHaptic } from "../hooks/useMobile";
 
 interface ActivityCardProps {
