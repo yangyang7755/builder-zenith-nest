@@ -629,34 +629,149 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
   }
 };
 
+// DELETE /api/activities/:id/leave - Leave an activity
 export const handleLeaveActivity = async (req: Request, res: Response) => {
   try {
     const { id } = req.params; // activity id
-    const user = await getUserFromToken(req.headers.authorization || "");
+    const user = await getAuthenticatedUser(req);
 
     if (!user) {
-      return res.status(401).json({ error: "Authentication required" });
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required"
+      });
     }
 
     if (!supabaseAdmin) {
-      return res.status(500).json({ error: "Database not configured" });
+      return res.json({
+        success: true,
+        message: "Successfully left activity (demo mode)"
+      });
     }
 
-    // Remove user from activity
+    // Check if user is actually a participant
+    const { data: participation } = await supabaseAdmin
+      .from("activity_participants")
+      .select("*")
+      .eq("activity_id", id)
+      .eq("user_id", user.id)
+      .eq("status", "joined")
+      .single();
+
+    if (!participation) {
+      return res.status(400).json({
+        success: false,
+        error: "You are not a participant in this activity"
+      });
+    }
+
+    // Update status to 'left' instead of deleting
     const { error } = await supabaseAdmin
       .from("activity_participants")
-      .delete()
+      .update({ status: "left" })
       .eq("activity_id", id)
       .eq("user_id", user.id);
 
     if (error) {
       console.error("Database error:", error);
-      return res.status(500).json({ error: "Failed to leave activity" });
+      return res.status(500).json({
+        success: false,
+        error: "Failed to leave activity"
+      });
     }
 
-    res.status(200).json({ message: "Successfully left activity" });
+    res.json({
+      success: true,
+      message: "Successfully left activity"
+    });
+
   } catch (error) {
     console.error("Server error:", error);
-    res.status(500).json({ error: "Failed to leave activity" });
+    res.status(500).json({
+      success: false,
+      error: "Failed to leave activity"
+    });
+  }
+};
+
+// GET /api/activities/:id/participants - Get participant list
+export const handleGetParticipants = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // activity id
+
+    if (!supabaseAdmin) {
+      // Demo mode participants
+      const demoParticipants = [
+        {
+          id: "demo-participant-1",
+          user_id: "demo-user-1",
+          activity_id: id,
+          joined_at: new Date().toISOString(),
+          status: "joined",
+          user: {
+            id: "demo-user-1",
+            full_name: "Sarah Johnson",
+            profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
+          }
+        },
+        {
+          id: "demo-participant-2",
+          user_id: "demo-user-2",
+          activity_id: id,
+          joined_at: new Date().toISOString(),
+          status: "joined",
+          user: {
+            id: "demo-user-2",
+            full_name: "Mike Chen",
+            profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+          }
+        }
+      ];
+
+      return res.json({
+        success: true,
+        data: demoParticipants
+      });
+    }
+
+    // Get all active participants for the activity
+    const { data: participants, error } = await supabaseAdmin
+      .from("activity_participants")
+      .select(`
+        id,
+        user_id,
+        activity_id,
+        joined_at,
+        status,
+        user:profiles (
+          id,
+          full_name,
+          profile_image,
+          email
+        )
+      `)
+      .eq("activity_id", id)
+      .eq("status", "joined")
+      .order("joined_at", { ascending: true });
+
+    if (error) {
+      console.error("Database error:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Failed to fetch participants"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: participants || []
+    });
+
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch participants"
+    });
   }
 };
