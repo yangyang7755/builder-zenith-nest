@@ -63,7 +63,9 @@ export default function Profile() {
           <ArrowLeft className="w-6 h-6 text-gray-600" />
         </Link>
         <span className="text-gray-500 font-medium">Profile</span>
-        <div className="w-6"></div>
+        <Link to="/settings" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+          <Settings className="w-6 h-6 text-gray-600" />
+        </Link>
       </div>
 
       {/* Profile Content */}
