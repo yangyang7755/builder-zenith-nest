@@ -56,6 +56,7 @@ import ProfileDemo from "./pages/ProfileDemo";
 import CreateClub from "./pages/CreateClub";
 import ClubManagerDashboard from "./pages/ClubManagerDashboard";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/AdminDashboard";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
 import { ChatProvider } from "./contexts/ChatContext";
 import { SavedActivitiesProvider } from "./contexts/SavedActivitiesContext";
