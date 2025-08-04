@@ -837,6 +837,94 @@ export const handleLeaveActivity = async (req: Request, res: Response) => {
 };
 
 // GET /api/activities/:id/participants - Get participant list
+// GET /api/activities/user/history - Get user's past activities
+export const handleGetUserActivityHistory = async (req: Request, res: Response) => {
+  try {
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required"
+      });
+    }
+
+    const { status = 'completed', limit = 20, offset = 0 } = req.query;
+
+    if (!supabaseAdmin) {
+      // Demo mode - return mock past activities
+      const demoHistory = [
+        {
+          id: "demo-past-1",
+          title: "Morning Cycle at Richmond Park",
+          description: "Great morning ride with the cycling group",
+          activity_type: "cycling",
+          date_time: new Date(Date.now() - 86400000 * 7).toISOString(), // 1 week ago
+          location: "Richmond Park",
+          organizer_name: "Sarah Johnson",
+          participation_status: "completed",
+          user_rating: 4.5,
+          review_count: 3
+        },
+        {
+          id: "demo-past-2",
+          title: "Climbing Session at Westway",
+          description: "Indoor climbing session for beginners",
+          activity_type: "climbing",
+          date_time: new Date(Date.now() - 86400000 * 14).toISOString(), // 2 weeks ago
+          location: "Westway Climbing Centre",
+          organizer_name: "Mike Chen",
+          participation_status: "completed",
+          user_rating: 5.0,
+          review_count: 2
+        }
+      ];
+
+      return res.json({
+        success: true,
+        data: demoHistory,
+        pagination: { total: demoHistory.length, limit: 20, offset: 0 }
+      });
+    }
+
+    // Get user's activity history from database
+    const { data: historyData, error } = await supabaseAdmin
+      .rpc('get_user_activity_history', {
+        user_uuid: user.id,
+        activity_status: status
+      });
+
+    if (error) {
+      console.error("Error fetching user activity history:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Failed to fetch activity history"
+      });
+    }
+
+    // Apply pagination
+    const startIndex = parseInt(offset as string) || 0;
+    const pageSize = parseInt(limit as string) || 20;
+    const paginatedData = historyData?.slice(startIndex, startIndex + pageSize) || [];
+
+    res.json({
+      success: true,
+      data: paginatedData,
+      pagination: {
+        total: historyData?.length || 0,
+        limit: pageSize,
+        offset: startIndex
+      }
+    });
+
+  } catch (error) {
+    console.error("Get user activity history error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch activity history"
+    });
+  }
+};
+
 export const handleGetParticipants = async (req: Request, res: Response) => {
   try {
     const { id } = req.params; // activity id
