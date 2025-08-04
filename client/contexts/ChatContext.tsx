@@ -29,6 +29,8 @@ interface ChatContextType {
   ) => void;
   addChatMessage: (message: Omit<ChatMessage, "id" | "timestamp">) => void;
   hasRequestedActivity: (activityId: string) => boolean;
+  respondToRequest: (requestId: string, response: "accepted" | "declined", message?: string) => void;
+  getConversationWith: (organizerName: string) => ChatMessage[];
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
