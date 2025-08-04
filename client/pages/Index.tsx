@@ -1317,12 +1317,30 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
       <button
         onClick={(e) => {
           e.stopPropagation();
-          alert(`Request to join ${activity.title}`);
+          if (!isRequested) {
+            setShowRequestModal(true);
+          }
         }}
-        className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+        disabled={isRequested}
+        className={`w-full py-3 rounded-lg text-sm font-cabin font-medium transition-colors ${
+          isRequested
+            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+            : "bg-explore-green text-white hover:bg-explore-green-dark"
+        }`}
       >
-        Request to join
+        {isRequested ? "Pending" : "Request to join"}
       </button>
+
+      {/* Request Modal */}
+      <RequestJoinModal
+        isOpen={showRequestModal}
+        onClose={() => setShowRequestModal(false)}
+        activityTitle={activity.title}
+        organizerName={activity.organizer}
+        organizerImage={activity.imageSrc}
+        activityId={activityId}
+        onRequestSent={handleRequestSent}
+      />
     </div>
   );
 }
@@ -1963,7 +1981,7 @@ function CarShareCard({
       {/* Header */}
       <div className="flex justify-between items-start mb-3">
         <h3 className="font-bold text-blue-800 font-cabin text-lg line-clamp-2 leading-tight flex-1 pr-2">
-          🚗 {destination}
+          ���� {destination}
         </h3>
         <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded-full font-cabin font-medium">
           {availableSeats} seats
