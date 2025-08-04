@@ -13,6 +13,7 @@ import { maddieWeiProfile } from "@/data/demoProfiles";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import BottomNavigation from "../components/BottomNavigation";
+import { ProfileEdit } from "../components/ProfileEdit";
 
 export default function Profile() {
   const { user } = useAuth();
