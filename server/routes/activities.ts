@@ -242,6 +242,101 @@ export const handleGetActivities = async (req: Request, res: Response) => {
   }
 };
 
+// GET /api/activities/:id - Get activity details
+export const handleGetActivity = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!supabaseAdmin) {
+      // Demo mode - return mock activity
+      const demoActivity = {
+        id: id,
+        title: "Demo Activity",
+        description: "This is a demo activity for development",
+        activity_type: "cycling",
+        organizer_id: "demo-user-1",
+        club_id: null,
+        date_time: new Date(Date.now() + 86400000).toISOString(),
+        location: "Demo Location",
+        coordinates: { lat: 51.5074, lng: -0.1278 },
+        max_participants: 10,
+        current_participants: 3,
+        difficulty_level: "beginner",
+        status: "upcoming",
+        price_per_person: 0,
+        created_at: new Date().toISOString(),
+        organizer: {
+          id: "demo-user-1",
+          full_name: "Demo User",
+          profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
+        },
+        participants: []
+      };
+
+      return res.json({
+        success: true,
+        data: demoActivity
+      });
+    }
+
+    const { data: activity, error } = await supabaseAdmin
+      .from("activities")
+      .select(`
+        *,
+        organizer:profiles!organizer_id (
+          id,
+          full_name,
+          profile_image,
+          email
+        ),
+        club:clubs (
+          id,
+          name,
+          profile_image
+        ),
+        participants:activity_participants!inner (
+          id,
+          joined_at,
+          status,
+          user:profiles (
+            id,
+            full_name,
+            profile_image
+          )
+        )
+      `)
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error("Database error:", error);
+      if (error.code === 'PGRST116') {
+        return res.status(404).json({
+          success: false,
+          error: "Activity not found"
+        });
+      }
+      return res.status(500).json({
+        success: false,
+        error: "Failed to fetch activity"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: activity
+    });
+
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch activity"
+    });
+  }
+};
+
+// POST /api/activities - Create new activities
 export const handleCreateActivity = async (req: Request, res: Response) => {
   try {
     // Get user from auth token
