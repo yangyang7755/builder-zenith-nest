@@ -1278,7 +1278,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
           <div>
             <div className="text-gray-500">Discipline</div>
             <div className="font-medium text-black">
-              ⛰��� {activity.discipline}
+              🧗‍♀️ {activity.discipline}
             </div>
           </div>
         </div>
@@ -1324,7 +1324,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.registration && (
               <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-cabin">
-                📝 {activity.registration}
+                ��� {activity.registration}
               </span>
             )}
           </div>
