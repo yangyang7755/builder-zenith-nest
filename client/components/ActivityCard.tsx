@@ -76,8 +76,10 @@ export default function ActivityCard({
     e.stopPropagation(); // Prevent card click
 
     if (isActivitySaved(currentActivityId)) {
+      haptic.light();
       unsaveActivity(currentActivityId);
     } else {
+      haptic.medium();
       // Create activity object for saving
       const activityToSave: Activity = {
         id: currentActivityId,
