@@ -147,24 +147,26 @@ export default function SimpleInteractiveMap({
     return styles[type.toLowerCase()] || { color: '#6B7280', emoji: '���' };
   };
 
-  // Add coordinates to activities if not present
-  const activitiesWithCoords = activities.map((activity) => {
-    if (activity.coordinates) return activity;
-    
-    // Try to match location to known coordinates
-    const locationKey = Object.keys(LOCATION_COORDINATES).find(key => 
-      activity.location.toLowerCase().includes(key)
-    );
-    
-    const coordinates = locationKey 
-      ? LOCATION_COORDINATES[locationKey]
-      : {
-          lat: initialCenter.lat + (Math.random() - 0.5) * 0.1,
-          lng: initialCenter.lng + (Math.random() - 0.5) * 0.1,
-        };
-    
-    return { ...activity, coordinates };
-  });
+  // Add coordinates to activities if not present - memoized to prevent infinite re-renders
+  const activitiesWithCoords = useMemo(() => {
+    return activities.map((activity) => {
+      if (activity.coordinates) return activity;
+
+      // Try to match location to known coordinates
+      const locationKey = Object.keys(LOCATION_COORDINATES).find(key =>
+        activity.location.toLowerCase().includes(key)
+      );
+
+      const coordinates = locationKey
+        ? LOCATION_COORDINATES[locationKey]
+        : {
+            lat: initialCenter.lat + (Math.random() - 0.5) * 0.1,
+            lng: initialCenter.lng + (Math.random() - 0.5) * 0.1,
+          };
+
+      return { ...activity, coordinates };
+    });
+  }, [activities, initialCenter]);
 
   // Generate Google Maps embed URL with markers
   const generateMapUrl = () => {
