@@ -69,9 +69,19 @@ export default function ActivityCard({
     setShowRequestModal(true);
   };
 
-  const handleRequestClick = (e: React.MouseEvent) => {
+  const handleRequestClick = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
-    if (!isRequested) {
+
+    if (isParticipating) {
+      // User is already participating, allow them to leave
+      haptic.medium();
+      await leaveActivity(currentActivityId, title);
+    } else if (canJoin && !isRequested) {
+      // User can join directly
+      haptic.medium();
+      await joinActivity(currentActivityId, title, organizer);
+    } else if (!isRequested) {
+      // Activity is full or requires request
       haptic.medium();
       setShowRequestModal(true);
     }
