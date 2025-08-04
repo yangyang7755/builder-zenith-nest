@@ -155,6 +155,16 @@ export default function Profile() {
           </p>
         </div>
 
+        {/* Profile Edit Section - Only show for authenticated users */}
+        {user && profile && (
+          <div className="px-6 pb-6">
+            <ProfileEdit
+              profile={profile}
+              onProfileUpdate={handleProfileUpdate}
+            />
+          </div>
+        )}
+
         {/* Personal Details Section */}
         <div className="px-6 pb-6">
           <h3 className="text-lg font-bold text-black mb-4">Personal Details</h3>
