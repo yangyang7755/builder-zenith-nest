@@ -340,6 +340,11 @@ export default function SimpleInteractiveMap({
                 return null;
               })()
             )}
+
+            {/* Activity Counter */}
+            <div className="absolute top-2 right-2 bg-black/75 text-white px-2 py-1 rounded text-xs font-medium z-10">
+              {activitiesWithCoords.length} activities
+            </div>
           </div>
 
           {/* Activities List */}
