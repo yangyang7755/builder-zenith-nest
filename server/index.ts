@@ -54,6 +54,7 @@ import {
 } from "./routes/chat";
 import uploadsRouter from "./routes/uploads";
 import healthRouter from "./routes/health";
+import { supabaseAdmin } from "./lib/supabase";
 
 export function createServer() {
   const app = express();
