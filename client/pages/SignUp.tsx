@@ -1,22 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import { userService } from "@/services/userService";
-import { User, Mail, Lock, Eye, EyeOff, UserPlus, MapPin, Building, GraduationCap, Phone } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Mail, User, Lock } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../hooks/use-toast";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -28,14 +14,6 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
     full_name: "",
-    bio: "",
-    phone: "",
-    gender: "",
-    age: "",
-    nationality: "",
-    institution: "",
-    occupation: "",
-    location: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -46,41 +24,29 @@ export default function SignUp() {
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
-    // Required fields
-    if (!formData.email) {
+    // Required fields validation
+    if (!formData.full_name.trim()) {
+      newErrors.full_name = "Name is required";
+    } else if (formData.full_name.length < 2) {
+      newErrors.full_name = "Name must be at least 2 characters";
+    }
+
+    if (!formData.email.trim()) {
       newErrors.email = "Email is required";
-    } else if (!userService.validateEmail(formData.email)) {
-      newErrors.email = "Email is invalid";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
     }
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else {
-      const passwordValidation = userService.validatePassword(formData.password);
-      if (!passwordValidation.isValid) {
-        newErrors.password = passwordValidation.errors[0];
-      }
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    if (!formData.full_name.trim()) {
-      newErrors.full_name = "Full name is required";
-    } else if (formData.full_name.length < 2) {
-      newErrors.full_name = "Full name must be at least 2 characters";
-    }
-
-    // Optional field validations
-    if (formData.age && (parseInt(formData.age) < 13 || parseInt(formData.age) > 120)) {
-      newErrors.age = "Age must be between 13 and 120";
-    }
-
-    if (formData.phone && formData.phone.length > 0 && formData.phone.length < 10) {
-      newErrors.phone = "Phone number must be at least 10 digits";
+      newErrors.confirmPassword = "Passwords don't match";
     }
 
     setErrors(newErrors);
@@ -96,43 +62,31 @@ export default function SignUp() {
 
     setLoading(true);
     try {
-      // Use the comprehensive user registration service
-      const registrationData = {
-        email: formData.email,
-        password: formData.password,
+      const { user, error } = await signUp(formData.email, formData.password, {
         full_name: formData.full_name,
-        bio: formData.bio || undefined,
-        phone: formData.phone || undefined,
-        gender: formData.gender || undefined,
-        age: formData.age ? parseInt(formData.age) : undefined,
-        nationality: formData.nationality || undefined,
-        institution: formData.institution || undefined,
-        occupation: formData.occupation || undefined,
-        location: formData.location || undefined,
-      };
+      });
 
-      const result = await userService.registerUser(registrationData);
-
-      if (result.error) {
+      if (error) {
         toast({
-          title: "Registration Failed",
-          description: result.error || "Failed to create account. Please try again.",
+          title: "Sign Up Failed",
+          description: error.message || "Failed to create account. Please try again.",
           variant: "destructive",
         });
         return;
       }
 
-      if (result.data) {
-        const isDemo = result.data.user?.id?.startsWith("demo-user-");
-
+      if (user) {
+        const isDemo = user.id?.includes("demo-user");
+        
         toast({
-          title: isDemo ? "Demo Account Created Successfully" : "Account Created Successfully",
+          title: isDemo ? "Demo Account Created! 🎉" : "Account Created Successfully! 🎉",
           description: isDemo
-            ? "Demo account created! You can now sign in with these credentials."
-            : "Your account has been created and saved to the database. You can now sign in.",
+            ? "Welcome to the demo! You can now explore all features."
+            : "Welcome! Complete your profile to get started.",
         });
 
-        navigate("/signin");
+        // Redirect to onboarding/profile setup
+        navigate("/onboarding");
       }
     } catch (error) {
       toast({
@@ -147,370 +101,220 @@ export default function SignUp() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <div className="mx-auto w-16 h-16 mb-4">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9e47fe83fd834e79a57361f8a278d9a9?format=webp&width=800"
-              alt="Wildpals Logo"
-              className="w-full h-full object-contain"
-            />
+    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
+      {/* Status Bar */}
+      <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
+        <span>9:41</span>
+        <div className="flex items-center gap-1">
+          <div className="flex gap-0.5">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="w-1 h-3 bg-black rounded-sm"></div>
+            ))}
           </div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Create your account
+          <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
+            <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Navigation Header */}
+      <div className="flex items-center justify-between p-6 pb-4">
+        <button onClick={() => navigate(-1)}>
+          <ArrowLeft className="w-6 h-6 text-black" />
+        </button>
+        <h1 className="text-xl font-bold text-black font-cabin">Create Account</h1>
+        <div className="w-6" />
+      </div>
+
+      {/* Content */}
+      <div className="px-6 pb-20">
+        {/* Welcome Text */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-explore-green font-cabin mb-2">
+            Join Wildpals
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Join our community of sports enthusiasts
+          <p className="text-gray-600 font-cabin">
+            Connect with fellow outdoor enthusiasts
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign Up</CardTitle>
-            <CardDescription>
-              Enter your information to create a new account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="full_name">Full Name</Label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <User className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="full_name"
-                      name="full_name"
-                      type="text"
-                      value={formData.full_name}
-                      onChange={(e) =>
-                        handleInputChange("full_name", e.target.value)
-                      }
-                      placeholder="Enter your full name"
-                      className="pl-10"
-                      disabled={loading}
-                    />
-                  </div>
-                  {errors.full_name && (
-                    <Alert className="mt-2">
-                      <AlertDescription className="text-red-600 text-sm">
-                        {errors.full_name}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="email">Email Address</Label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) =>
-                        handleInputChange("email", e.target.value)
-                      }
-                      placeholder="Enter your email"
-                      className="pl-10"
-                      disabled={loading}
-                    />
-                  </div>
-                  {errors.email && (
-                    <Alert className="mt-2">
-                      <AlertDescription className="text-red-600 text-sm">
-                        {errors.email}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="password">Password</Label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="password"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      value={formData.password}
-                      onChange={(e) =>
-                        handleInputChange("password", e.target.value)
-                      }
-                      placeholder="Enter your password"
-                      className="pl-10 pr-10"
-                      disabled={loading}
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
-                    </button>
-                  </div>
-                  {errors.password && (
-                    <Alert className="mt-2">
-                      <AlertDescription className="text-red-600 text-sm">
-                        {errors.password}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={formData.confirmPassword}
-                      onChange={(e) =>
-                        handleInputChange("confirmPassword", e.target.value)
-                      }
-                      placeholder="Confirm your password"
-                      className="pl-10 pr-10"
-                      disabled={loading}
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
-                    </button>
-                  </div>
-                  {errors.confirmPassword && (
-                    <Alert className="mt-2">
-                      <AlertDescription className="text-red-600 text-sm">
-                        {errors.confirmPassword}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                {/* Optional Profile Information */}
-                <div className="border-t pt-6 mt-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Additional Information (Optional)</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                    {/* Bio */}
-                    <div className="md:col-span-2">
-                      <Label htmlFor="bio">Bio</Label>
-                      <Textarea
-                        id="bio"
-                        name="bio"
-                        value={formData.bio}
-                        onChange={(e) => handleInputChange("bio", e.target.value)}
-                        placeholder="Tell us about yourself..."
-                        className="mt-1"
-                        disabled={loading}
-                        rows={3}
-                      />
-                    </div>
-
-                    {/* Phone */}
-                    <div>
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <div className="mt-1 relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Phone className="h-4 w-4 text-gray-400" />
-                        </div>
-                        <Input
-                          id="phone"
-                          name="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => handleInputChange("phone", e.target.value)}
-                          placeholder="Your phone number"
-                          className="pl-10"
-                          disabled={loading}
-                        />
-                      </div>
-                      {errors.phone && (
-                        <Alert className="mt-2">
-                          <AlertDescription className="text-red-600 text-sm">
-                            {errors.phone}
-                          </AlertDescription>
-                        </Alert>
-                      )}
-                    </div>
-
-                    {/* Gender */}
-                    <div>
-                      <Label htmlFor="gender">Gender</Label>
-                      <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Select gender" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="non-binary">Non-binary</SelectItem>
-                          <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Age */}
-                    <div>
-                      <Label htmlFor="age">Age</Label>
-                      <Input
-                        id="age"
-                        name="age"
-                        type="number"
-                        value={formData.age}
-                        onChange={(e) => handleInputChange("age", e.target.value)}
-                        placeholder="Your age"
-                        className="mt-1"
-                        disabled={loading}
-                        min="13"
-                        max="120"
-                      />
-                      {errors.age && (
-                        <Alert className="mt-2">
-                          <AlertDescription className="text-red-600 text-sm">
-                            {errors.age}
-                          </AlertDescription>
-                        </Alert>
-                      )}
-                    </div>
-
-                    {/* Location */}
-                    <div>
-                      <Label htmlFor="location">Location</Label>
-                      <div className="mt-1 relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <MapPin className="h-4 w-4 text-gray-400" />
-                        </div>
-                        <Input
-                          id="location"
-                          name="location"
-                          value={formData.location}
-                          onChange={(e) => handleInputChange("location", e.target.value)}
-                          placeholder="City, Country"
-                          className="pl-10"
-                          disabled={loading}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Nationality */}
-                    <div>
-                      <Label htmlFor="nationality">Nationality</Label>
-                      <Input
-                        id="nationality"
-                        name="nationality"
-                        value={formData.nationality}
-                        onChange={(e) => handleInputChange("nationality", e.target.value)}
-                        placeholder="Your nationality"
-                        className="mt-1"
-                        disabled={loading}
-                      />
-                    </div>
-
-                    {/* Institution */}
-                    <div>
-                      <Label htmlFor="institution">University/Institution</Label>
-                      <div className="mt-1 relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <GraduationCap className="h-4 w-4 text-gray-400" />
-                        </div>
-                        <Input
-                          id="institution"
-                          name="institution"
-                          value={formData.institution}
-                          onChange={(e) => handleInputChange("institution", e.target.value)}
-                          placeholder="Your university or school"
-                          className="pl-10"
-                          disabled={loading}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Occupation */}
-                    <div>
-                      <Label htmlFor="occupation">Occupation</Label>
-                      <div className="mt-1 relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Building className="h-4 w-4 text-gray-400" />
-                        </div>
-                        <Input
-                          id="occupation"
-                          name="occupation"
-                          value={formData.occupation}
-                          onChange={(e) => handleInputChange("occupation", e.target.value)}
-                          placeholder="Your job title"
-                          className="pl-10"
-                          disabled={loading}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Full Name */}
+          <div>
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
+              Full Name *
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <User className="w-5 h-5 text-gray-400" />
               </div>
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating Account..." : "Create Account"}
-              </Button>
-
-              <div className="text-center">
-                <p className="text-sm text-gray-600">
-                  Already have an account?{" "}
-                  <Link
-                    to="/signin"
-                    className="font-medium text-blue-600 hover:text-blue-500"
-                  >
-                    Sign in here
-                  </Link>
-                </p>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Demo Mode Info */}
-        <Card className="bg-green-50 border-green-200">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <p className="text-sm text-green-800 font-medium mb-2">
-                Demo Mode Active
-              </p>
-              <p className="text-xs text-green-600">
-                You can create a demo account with any email and password. No
-                real email verification required - perfect for testing!
-              </p>
+              <input
+                type="text"
+                value={formData.full_name}
+                onChange={(e) => handleInputChange("full_name", e.target.value)}
+                placeholder="Enter your full name"
+                className={`w-full pl-12 pr-4 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.full_name ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+              />
             </div>
-          </CardContent>
-        </Card>
+            {errors.full_name && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.full_name}</p>
+            )}
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
+              Email Address *
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="w-5 h-5 text-gray-400" />
+              </div>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                placeholder="Enter your email"
+                className={`w-full pl-12 pr-4 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+              />
+            </div>
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.email}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
+              Password *
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Lock className="w-5 h-5 text-gray-400" />
+              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={(e) => handleInputChange("password", e.target.value)}
+                placeholder="Create a password"
+                className={`w-full pl-12 pr-12 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5 text-gray-400" />
+                ) : (
+                  <Eye className="w-5 h-5 text-gray-400" />
+                )}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.password}</p>
+            )}
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
+              Confirm Password *
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Lock className="w-5 h-5 text-gray-400" />
+              </div>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                placeholder="Confirm your password"
+                className={`w-full pl-12 pr-12 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="w-5 h-5 text-gray-400" />
+                ) : (
+                  <Eye className="w-5 h-5 text-gray-400" />
+                )}
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.confirmPassword}</p>
+            )}
+          </div>
+
+          {/* Terms Text */}
+          <div className="text-center py-4">
+            <p className="text-sm text-gray-600 font-cabin">
+              By creating an account, you agree to our{" "}
+              <Link to="/terms" className="text-explore-green font-medium underline">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link to="/privacy" className="text-explore-green font-medium underline">
+                Privacy Policy
+              </Link>
+            </p>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-explore-green text-white py-4 px-6 rounded-lg font-cabin font-medium text-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Creating Account..." : "Create Account"}
+          </button>
+
+          {/* Sign In Link */}
+          <div className="text-center pt-4">
+            <p className="text-gray-600 font-cabin">
+              Already have an account?{" "}
+              <Link
+                to="/signin"
+                className="text-explore-green font-bold underline font-cabin"
+              >
+                Sign In
+              </Link>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
