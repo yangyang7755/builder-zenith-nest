@@ -360,7 +360,7 @@ export default function ClubOxford() {
                   </div>
                   <div className="flex gap-4 text-xs text-gray-600 font-cabin pl-13">
                     <span>📍 {event.location}</span>
-                    <span>��� {event.distance}</span>
+                    <span>🚴 {event.distance}</span>
                     <span>⚡ {event.pace}</span>
                   </div>
                 </div>
