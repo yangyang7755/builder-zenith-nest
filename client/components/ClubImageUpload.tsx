@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { ImageUpload } from './ImageUpload';
+import ImageUpload from './ImageUpload';
 import { useToast } from '../hooks/use-toast';
 import { apiService } from '../services/apiService';
 import { Club } from '../lib/supabase';
