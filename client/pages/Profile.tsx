@@ -184,7 +184,7 @@ export default function Profile() {
       cycling: '🚴',
       climbing: '🧗',
       running: '🏃',
-      hiking: '🥾',
+      hiking: '��',
       skiing: '⛷️',
       surfing: '🏄',
       tennis: '🎾',
@@ -713,29 +713,29 @@ export default function Profile() {
           
           <div className="space-y-3">
             <Link to="/club/westway" className="block">
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors touchable native-button-press">
                 <img
-                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=40&h=40&fit=crop"
+                  src={getClubProfileImage("Westway Climbing Centre")}
                   alt="Westway Climbing"
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div className="flex-1">
-                  <h4 className="font-medium text-black">Westway Climbing Centre</h4>
-                  <p className="text-sm text-gray-600">245 members</p>
+                  <h4 className="font-medium text-black">{getClubDisplayName("Westway Climbing Centre")}</h4>
+                  <p className="text-sm text-gray-600">{getClubMemberCount("Westway Climbing Centre")} members</p>
                 </div>
               </div>
             </Link>
 
             <Link to="/club/richmond-runners" className="block">
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors touchable native-button-press">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F7c405a1be5e04dc69eb62c5c70ba6efc?format=webp&width=800"
+                  src={getClubProfileImage("Richmond Cycling Club")}
                   alt="Richmond Cycling Club"
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div className="flex-1">
-                  <h4 className="font-medium text-black">Richmond Cycling Club</h4>
-                  <p className="text-sm text-gray-600">182 members</p>
+                  <h4 className="font-medium text-black">{getClubDisplayName("Richmond Cycling Club")}</h4>
+                  <p className="text-sm text-gray-600">{getClubMemberCount("Richmond Cycling Club")} members</p>
                 </div>
               </div>
             </Link>
