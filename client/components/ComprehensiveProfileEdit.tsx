@@ -371,6 +371,7 @@ export function ComprehensiveProfileEdit({
         const result = await uploadService.uploadProfileImage(compressedFile, user?.id || 'demo');
 
         if (result.data?.url) {
+          console.log('Server upload successful, URL:', result.data.url);
           updateField('profile_image', result.data.url);
           toast({
             title: "Photo Updated",
