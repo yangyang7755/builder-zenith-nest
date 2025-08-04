@@ -172,10 +172,14 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Authentication required" });
     }
 
+    console.log('Profile update request body:', req.body);
+
     const validatedData = ProfileUpdateSchema.parse(req.body);
+    console.log('Validated data:', validatedData);
 
     // Extract sports and achievements data
     const { sports, achievements, ...profileData } = validatedData;
+    console.log('Profile data to update:', profileData);
 
     // Start a transaction to update profile, sports, and achievements
     const { data: updatedProfile, error: profileError } = await supabaseAdmin
