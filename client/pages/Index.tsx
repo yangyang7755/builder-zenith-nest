@@ -1635,7 +1635,7 @@ function CyclingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.gear && (
               <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded font-cabin">
-                ��� {activity.gear}
+                ⚙️ {activity.gear}
               </span>
             )}
             {activity.focus && (
