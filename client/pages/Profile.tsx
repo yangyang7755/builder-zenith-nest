@@ -19,6 +19,7 @@ import { ProfileEdit } from "../components/ProfileEdit";
 import { ComprehensiveProfileEdit } from "../components/ComprehensiveProfileEdit";
 import { SettingsOverview } from "../components/SettingsOverview";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { apiService } from "../services/apiService";
 
 export default function Profile() {
   const { user } = useAuth();
