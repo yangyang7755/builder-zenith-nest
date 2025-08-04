@@ -206,7 +206,12 @@ export function ComprehensiveProfileEdit({
   });
 
   const updateField = (field: string, value: any) => {
-    setProfileData(prev => ({ ...prev, [field]: value }));
+    console.log(`Updating field ${field} with value:`, value);
+    setProfileData(prev => {
+      const updated = { ...prev, [field]: value };
+      console.log('Updated profile data:', updated);
+      return updated;
+    });
   };
 
   const updateVisibility = (field: keyof VisibilitySettings, visible: boolean) => {
