@@ -24,7 +24,8 @@ import {
   XCircle,
   Clock,
   MapPin,
-  Star
+  Star,
+  Plus
 } from "lucide-react";
 
 interface Member {
