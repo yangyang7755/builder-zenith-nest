@@ -79,13 +79,15 @@ export default function Profile() {
         {/* Profile Header */}
         <div className="px-6 pt-6 pb-4">
           <div className="flex items-start gap-4 mb-4">
-            <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 border-2 border-gray-200">
-              <img
-                src={displayProfile.profile_image}
-                alt={displayProfile.full_name}
-                className="w-full h-full object-cover"
-              />
-            </div>
+            {isVisible('profile_image') && (
+              <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 border-2 border-gray-200">
+                <img
+                  src={displayProfile.profile_image}
+                  alt={displayProfile.full_name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-black mb-2">{displayProfile.full_name}</h1>
               
