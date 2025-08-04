@@ -101,6 +101,8 @@ const App = () => (
                           />
                           <Route path="/signup" element={<SignUp />} />
                           <Route path="/signin" element={<SignIn />} />
+                          <Route path="/terms" element={<Terms />} />
+                          <Route path="/privacy" element={<Privacy />} />
                           <Route path="/onboarding" element={<Onboarding />} />
                           <Route path="/explore" element={<Index />} />
                           <Route path="/activities" element={<Activities />} />
