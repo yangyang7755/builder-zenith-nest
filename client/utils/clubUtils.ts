@@ -288,3 +288,15 @@ export const getNearbyClubs = (location: string, radius: number = 10): ClubData[
     .filter(club => club.location.toLowerCase().includes(location.toLowerCase()))
     .slice(0, 5);
 };
+
+// Additional helper functions for compatibility
+export const formatMemberCount = (count: number): string => {
+  if (count >= 1000) {
+    return `${(count / 1000).toFixed(1)}k`;
+  }
+  return count.toString();
+};
+
+export const getActualMemberCount = (clubName: string): number => {
+  return getClubMemberCount(clubName);
+};
