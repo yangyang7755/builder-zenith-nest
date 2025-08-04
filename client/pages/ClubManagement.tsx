@@ -69,6 +69,25 @@ export default function ClubManagement() {
     );
   }
 
+  if (!club) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-black mb-2">Club Not Found</h2>
+          <p className="text-gray-600 mb-4">
+            The club "{clubId}" could not be found.
+          </p>
+          <button
+            onClick={() => navigate('/explore')}
+            className="text-explore-green underline"
+          >
+            Back to Explore
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (!canManage) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
