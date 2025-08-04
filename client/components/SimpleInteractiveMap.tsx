@@ -190,42 +190,39 @@ export default function SimpleInteractiveMap({
     return `${baseUrl}?${params.toString()}`;
   };
 
-  // Generate OpenStreetMap embed URL as fallback
-  const generateOSMUrl = () => {
+  // Calculate map bounds and generate URL in useEffect to avoid infinite re-renders
+  useEffect(() => {
     const center = userLocation || initialCenter;
     // Calculate bounds that include all activities
     const allCoords = activitiesWithCoords
       .filter(a => a.coordinates)
       .map(a => a.coordinates!);
 
+    let bounds;
     if (allCoords.length > 0) {
       const lats = allCoords.map(c => c.lat);
       const lngs = allCoords.map(c => c.lng);
       const padding = 0.01;
 
-      const bounds = {
+      bounds = {
         north: Math.max(...lats) + padding,
         south: Math.min(...lats) - padding,
         east: Math.max(...lngs) + padding,
         west: Math.min(...lngs) - padding
       };
-
-      setMapBounds(bounds);
-
-      return `https://www.openstreetmap.org/export/embed.html?bbox=${bounds.west},${bounds.south},${bounds.east},${bounds.north}&layer=mapnik`;
+    } else {
+      bounds = {
+        north: center.lat + 0.05,
+        south: center.lat - 0.05,
+        east: center.lng + 0.05,
+        west: center.lng - 0.05
+      };
     }
 
-    const defaultBounds = {
-      north: center.lat + 0.05,
-      south: center.lat - 0.05,
-      east: center.lng + 0.05,
-      west: center.lng - 0.05
-    };
-
-    setMapBounds(defaultBounds);
-
-    return `https://www.openstreetmap.org/export/embed.html?bbox=${defaultBounds.west},${defaultBounds.south},${defaultBounds.east},${defaultBounds.north}&layer=mapnik`;
-  };
+    setMapBounds(bounds);
+    const url = `https://www.openstreetmap.org/export/embed.html?bbox=${bounds.west},${bounds.south},${bounds.east},${bounds.north}&layer=mapnik`;
+    setMapUrl(url);
+  }, [activitiesWithCoords, userLocation, initialCenter]);
 
   // Convert lat/lng to pixel coordinates relative to the map container
   const latLngToPixel = (lat: number, lng: number) => {
