@@ -50,15 +50,22 @@ const LOCATION_COORDINATES: { [key: string]: { lat: number; lng: number } } = {
   "regents park": { lat: 51.5268, lng: -0.1554 }
 };
 
-export default function SimpleInteractiveMap({ 
-  activities, 
-  onClose, 
+export default function SimpleInteractiveMap({
+  activities,
+  onClose,
   onActivitySelect,
   initialCenter = DEFAULT_CENTER,
-  userLocation 
+  userLocation
 }: SimpleInteractiveMapProps) {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [mapView, setMapView] = useState<'embedded' | 'list'>('embedded');
+  const [mapBounds, setMapBounds] = useState({
+    north: initialCenter.lat + 0.05,
+    south: initialCenter.lat - 0.05,
+    east: initialCenter.lng + 0.05,
+    west: initialCenter.lng - 0.05,
+  });
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
   // Activity type colors and icons
   const getActivityMarkerStyle = (type: string) => {
