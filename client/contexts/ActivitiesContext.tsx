@@ -214,8 +214,9 @@ const demoActivities: Activity[] = [
 
 export function ActivitiesProvider({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pagination, setPagination] = useState({ total: 0, limit: 20, offset: 0 });
 
   // Load activities from backend on component mount
   useEffect(() => {
