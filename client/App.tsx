@@ -74,6 +74,7 @@ import { ClubProvider } from "./contexts/ClubContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { FollowProvider } from "./contexts/FollowContext";
 import { ActivityCompletionProvider } from "./contexts/ActivityCompletionContext";
+import { UserProfileProvider } from "./contexts/UserProfileContext";
 import ToastContainer from "./components/ToastNotification";
 
 const queryClient = new QueryClient();
