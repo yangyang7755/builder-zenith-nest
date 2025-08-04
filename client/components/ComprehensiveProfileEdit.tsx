@@ -251,9 +251,14 @@ export function ComprehensiveProfileEdit({
         achievements: profileData.achievements
       };
 
+      // Remove undefined values to avoid sending unnecessary data
+      const cleanUpdateData = Object.fromEntries(
+        Object.entries(updateData).filter(([_, value]) => value !== undefined)
+      );
+
       // Update profile via API - this will now save to database
-      console.log('Sending profile update data:', updateData);
-      const result = await apiService.updateProfile(updateData);
+      console.log('Sending profile update data:', cleanUpdateData);
+      const result = await apiService.updateProfile(cleanUpdateData);
       console.log('API response:', result);
 
       if (result.error) {
