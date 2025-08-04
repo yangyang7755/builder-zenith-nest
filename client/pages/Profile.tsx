@@ -115,11 +115,6 @@ export default function Profile() {
     ...(localProfileData || {}) // Override with any local updates
   };
 
-  // Debug logging
-  console.log('Display Profile:', displayProfile);
-  console.log('Profile Image URL:', displayProfile.profile_image);
-  console.log('Local Profile Data:', localProfileData);
-
   const isDemo = !user;
 
   const handleProfileUpdate = (updatedProfile: any) => {
