@@ -43,6 +43,15 @@ class ApiService {
   ): Promise<ApiResponse<T>> {
     const maxRetries = 2;
 
+    // Check if backend is available first (except for ping endpoint)
+    if (endpoint !== '/ping') {
+      const isBackendAvailable = await checkBackendAvailability();
+      if (!isBackendAvailable) {
+        console.log('Backend unavailable, returning demo mode indicator');
+        return { error: 'BACKEND_UNAVAILABLE' };
+      }
+    }
+
     // Create a unique key for this request
     const requestKey = `${options.method || 'GET'}-${endpoint}-${JSON.stringify(options.body || {})}`;
 
