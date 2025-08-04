@@ -785,3 +785,5 @@ export function ComprehensiveProfileEdit({
     </Card>
   );
 }
+
+export default ComprehensiveProfileEdit;
