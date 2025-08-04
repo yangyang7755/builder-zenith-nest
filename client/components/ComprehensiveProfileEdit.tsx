@@ -256,8 +256,20 @@ export function ComprehensiveProfileEdit({
         Object.entries(updateData).filter(([_, value]) => value !== undefined)
       );
 
-      // Update profile via API - this will now save to database
-      console.log('Sending profile update data:', cleanUpdateData);
+      // TEMPORARILY: Test with debug endpoint
+      console.log('Sending profile update data to debug endpoint:', cleanUpdateData);
+
+      const debugResponse = await fetch('/api/debug/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cleanUpdateData)
+      });
+
+      const debugResult = await debugResponse.json();
+      console.log('Debug endpoint response:', debugResult);
+
+      // Also try the real endpoint
+      console.log('Now trying real profile update...');
       const result = await apiService.updateProfile(cleanUpdateData);
       console.log('API response:', result);
 
