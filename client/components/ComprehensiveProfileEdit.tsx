@@ -254,8 +254,6 @@ export function ComprehensiveProfileEdit({
 
       // For demo mode (no user), also save to localStorage as backup
       if (!user) {
-        console.log('Saving profile data to localStorage:', profileData);
-        console.log('Profile image URL:', profileData.profile_image);
         localStorage.setItem('demoProfileData', JSON.stringify(profileData));
         localStorage.setItem('profile_visibility_demo', JSON.stringify(profileData.visibility));
       }
