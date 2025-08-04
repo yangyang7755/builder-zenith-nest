@@ -184,7 +184,7 @@ export default function Profile() {
       cycling: '🚴',
       climbing: '🧗',
       running: '🏃',
-      hiking: '��',
+      hiking: '🥾',
       skiing: '⛷️',
       surfing: '🏄',
       tennis: '🎾',
