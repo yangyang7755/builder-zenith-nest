@@ -46,16 +46,20 @@ export default function SignUp() {
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
+    // Required fields
     if (!formData.email) {
       newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!userService.validateEmail(formData.email)) {
       newErrors.email = "Email is invalid";
     }
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else {
+      const passwordValidation = userService.validatePassword(formData.password);
+      if (!passwordValidation.isValid) {
+        newErrors.password = passwordValidation.errors[0];
+      }
     }
 
     if (!formData.confirmPassword) {
@@ -66,6 +70,17 @@ export default function SignUp() {
 
     if (!formData.full_name.trim()) {
       newErrors.full_name = "Full name is required";
+    } else if (formData.full_name.length < 2) {
+      newErrors.full_name = "Full name must be at least 2 characters";
+    }
+
+    // Optional field validations
+    if (formData.age && (parseInt(formData.age) < 13 || parseInt(formData.age) > 120)) {
+      newErrors.age = "Age must be between 13 and 120";
+    }
+
+    if (formData.phone && formData.phone.length > 0 && formData.phone.length < 10) {
+      newErrors.phone = "Phone number must be at least 10 digits";
     }
 
     setErrors(newErrors);
