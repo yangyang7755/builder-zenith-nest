@@ -186,7 +186,7 @@ export default function SimpleInteractiveMap({
       football: { color: '#F97316', emoji: '⚽' },
       yoga: { color: '#EC4899', emoji: '🧘' },
     };
-    return styles[type.toLowerCase()] || { color: '#6B7280', emoji: '���' };
+    return styles[type.toLowerCase()] || { color: '#6B7280', emoji: '📍' };
   };
 
   // Add coordinates to activities if not present - memoized to prevent infinite re-renders
