@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { apiService } from "../services/apiService";
+import { useUserProfile } from "./UserProfileContext";
 
 export interface Activity {
   id: string;
