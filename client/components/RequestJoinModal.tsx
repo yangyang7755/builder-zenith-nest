@@ -8,6 +8,8 @@ interface RequestJoinModalProps {
   activityTitle: string;
   organizerName: string;
   organizerImage: string;
+  activityId: string;
+  onRequestSent: () => void;
 }
 
 export default function RequestJoinModal({
