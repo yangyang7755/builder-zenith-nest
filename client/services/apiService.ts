@@ -66,18 +66,38 @@ class ApiService {
         // Check if the response body has already been consumed
         if (response.bodyUsed) {
           console.warn('Response body already consumed, creating fallback response');
-          responseData = {};
+          responseData = { error: 'Response body already consumed' };
         } else {
-          const responseText = await response.text();
-          if (responseText.trim()) {
-            try {
-              responseData = JSON.parse(responseText);
-            } catch (jsonError) {
-              console.warn('Failed to parse JSON, using text as fallback:', responseText);
-              responseData = { message: responseText };
+          // Clone the response to prevent body stream consumption issues
+          const responseClone = response.clone();
+
+          try {
+            const responseText = await response.text();
+            if (responseText.trim()) {
+              try {
+                responseData = JSON.parse(responseText);
+              } catch (jsonError) {
+                console.warn('Failed to parse JSON, trying with clone:', responseText.substring(0, 100));
+                try {
+                  const cloneText = await responseClone.text();
+                  responseData = JSON.parse(cloneText);
+                } catch (cloneError) {
+                  console.warn('Clone also failed, using text as fallback');
+                  responseData = { message: responseText };
+                }
+              }
+            } else {
+              responseData = {};
             }
-          } else {
-            responseData = {};
+          } catch (textError) {
+            console.warn('Failed to read text, trying clone:', textError);
+            try {
+              const cloneText = await responseClone.text();
+              responseData = cloneText ? JSON.parse(cloneText) : {};
+            } catch (cloneError) {
+              console.error('Both original and clone failed:', cloneError);
+              responseData = { error: 'Failed to read response body' };
+            }
           }
         }
       } catch (parseError) {
