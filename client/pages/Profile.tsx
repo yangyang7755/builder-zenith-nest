@@ -50,6 +50,22 @@ export default function Profile() {
     }
   }, [user]);
 
+  // Force check localStorage on each profile page visit
+  useEffect(() => {
+    if (!user) {
+      const savedProfileData = localStorage.getItem('demoProfileData');
+      if (savedProfileData) {
+        try {
+          const parsedData = JSON.parse(savedProfileData);
+          console.log('Force refresh - loading profile data:', parsedData);
+          setLocalProfileData(parsedData);
+        } catch (error) {
+          console.error('Failed to parse saved profile data:', error);
+        }
+      }
+    }
+  }, []); // Run on every mount
+
   // Refresh profile when returning to this page
   useEffect(() => {
     const handleFocus = () => {
@@ -61,6 +77,7 @@ export default function Profile() {
         if (savedProfileData) {
           try {
             const parsedData = JSON.parse(savedProfileData);
+            console.log('Focus event - loading profile data:', parsedData);
             setLocalProfileData(parsedData);
           } catch (error) {
             console.error('Failed to parse saved profile data:', error);
