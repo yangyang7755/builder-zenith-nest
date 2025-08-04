@@ -323,22 +323,24 @@ export default function CreateClub() {
               <div>
                 <Label className="font-cabin mb-3 block">Club Logo/Profile Picture</Label>
                 <ImageUpload
-                  currentImage={formData.profileImage}
-                  onImageChange={(url) => updateFormData("profileImage", url)}
-                  variant="avatar"
-                  size="lg"
-                  placeholder="Upload Club Logo"
+                  currentImageUrl={formData.profileImage}
+                  onImageChange={(url) => updateFormData("profileImage", url || "")}
+                  uploadType="club"
+                  entityId={`temp-club-${Date.now()}`}
+                  showPreview={true}
+                  className="max-w-md"
                 />
               </div>
 
               <div>
                 <Label className="font-cabin mb-3 block">Cover Photo</Label>
                 <ImageUpload
-                  currentImage={formData.coverImage}
-                  onImageChange={(url) => updateFormData("coverImage", url)}
-                  variant="cover"
-                  size="lg"
-                  placeholder="Upload Cover Photo"
+                  currentImageUrl={formData.coverImage}
+                  onImageChange={(url) => updateFormData("coverImage", url || "")}
+                  uploadType="club"
+                  entityId={`temp-cover-${Date.now()}`}
+                  showPreview={true}
+                  className="max-w-md"
                 />
               </div>
 
