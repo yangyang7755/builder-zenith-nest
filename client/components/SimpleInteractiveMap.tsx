@@ -267,9 +267,14 @@ export default function SimpleInteractiveMap({
             <X className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-lg font-bold">Activity Map</h1>
+            <h1 className="text-lg font-bold">
+              {mode === 'select' ? 'Select Location' : 'Activity Map'}
+            </h1>
             <p className="text-sm text-gray-500">
-              {activitiesWithCoords.length} activities shown
+              {mode === 'select'
+                ? 'Tap on the map to select a location'
+                : `${activitiesWithCoords.length} activities shown`
+              }
             </p>
           </div>
         </div>
