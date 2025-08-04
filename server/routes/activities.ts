@@ -442,13 +442,25 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
   }
 };
 
+// PUT /api/activities/:id - Update activity (for organizers)
 export const handleUpdateActivity = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const user = await getUserFromToken(req.headers.authorization || "");
+    const user = await getAuthenticatedUser(req);
 
     if (!user) {
-      return res.status(401).json({ error: "Authentication required" });
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required"
+      });
+    }
+
+    if (!supabaseAdmin) {
+      return res.json({
+        success: true,
+        data: { id, ...req.body },
+        message: "Activity updated successfully (demo mode)"
+      });
     }
 
     // First check if activity exists and user has permission
@@ -459,7 +471,10 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
       .single();
 
     if (!activity) {
-      return res.status(404).json({ error: "Activity not found" });
+      return res.status(404).json({
+        success: false,
+        error: "Activity not found"
+      });
     }
 
     // Check if user is the organizer or a club manager
@@ -479,45 +494,87 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
     }
 
     if (!hasPermission) {
-      return res
-        .status(403)
-        .json({ error: "You don't have permission to update this activity" });
+      return res.status(403).json({
+        success: false,
+        error: "You don't have permission to update this activity"
+      });
     }
 
-    const updates = ActivitySchema.partial().parse(req.body);
+    const updates = UpdateActivitySchema.parse(req.body);
+
+    // Validate date_time if provided
+    if (updates.date_time) {
+      const activityDateTime = new Date(updates.date_time);
+      if (activityDateTime <= new Date()) {
+        return res.status(400).json({
+          success: false,
+          error: "Activity date must be in the future"
+        });
+      }
+    }
 
     const { data: updatedActivity, error } = await supabaseAdmin
       .from("activities")
-      .update(updates)
+      .update({ ...updates, updated_at: new Date().toISOString() })
       .eq("id", id)
-      .select("*")
+      .select(`
+        *,
+        organizer:profiles!organizer_id (
+          id,
+          full_name,
+          profile_image
+        )
+      `)
       .single();
 
     if (error) {
       console.error("Database error:", error);
-      return res.status(500).json({ error: "Failed to update activity" });
+      return res.status(500).json({
+        success: false,
+        error: "Failed to update activity"
+      });
     }
 
-    res.json(updatedActivity);
+    res.json({
+      success: true,
+      data: updatedActivity,
+      message: "Activity updated successfully"
+    });
+
   } catch (error) {
+    console.error("Update activity error:", error);
     if (error instanceof z.ZodError) {
-      res
-        .status(400)
-        .json({ error: "Invalid update data", details: error.errors });
-    } else {
-      console.error("Server error:", error);
-      res.status(500).json({ error: "Failed to update activity" });
+      return res.status(400).json({
+        success: false,
+        error: "Invalid update data",
+        details: error.errors
+      });
     }
+    res.status(500).json({
+      success: false,
+      error: "Failed to update activity"
+    });
   }
 };
 
+// DELETE /api/activities/:id - Cancel activity
 export const handleDeleteActivity = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const user = await getUserFromToken(req.headers.authorization || "");
+    const user = await getAuthenticatedUser(req);
 
     if (!user) {
-      return res.status(401).json({ error: "Authentication required" });
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required"
+      });
+    }
+
+    if (!supabaseAdmin) {
+      return res.json({
+        success: true,
+        message: "Activity cancelled successfully (demo mode)"
+      });
     }
 
     // Check if activity exists and user has permission
@@ -528,7 +585,10 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
       .single();
 
     if (!activity) {
-      return res.status(404).json({ error: "Activity not found" });
+      return res.status(404).json({
+        success: false,
+        error: "Activity not found"
+      });
     }
 
     // Check if user is the organizer or a club manager
@@ -548,25 +608,40 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
     }
 
     if (!hasPermission) {
-      return res
-        .status(403)
-        .json({ error: "You don't have permission to delete this activity" });
+      return res.status(403).json({
+        success: false,
+        error: "You don't have permission to delete this activity"
+      });
     }
 
+    // Instead of deleting, mark as cancelled to preserve history
     const { error } = await supabaseAdmin
       .from("activities")
-      .delete()
+      .update({
+        status: "cancelled",
+        updated_at: new Date().toISOString()
+      })
       .eq("id", id);
 
     if (error) {
       console.error("Database error:", error);
-      return res.status(500).json({ error: "Failed to delete activity" });
+      return res.status(500).json({
+        success: false,
+        error: "Failed to cancel activity"
+      });
     }
 
-    res.json({ message: "Activity deleted successfully" });
+    res.json({
+      success: true,
+      message: "Activity cancelled successfully"
+    });
+
   } catch (error) {
-    console.error("Server error:", error);
-    res.status(500).json({ error: "Failed to delete activity" });
+    console.error("Delete activity error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to cancel activity"
+    });
   }
 };
 
