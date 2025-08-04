@@ -185,14 +185,22 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
     const { sports, achievements, ...profileData } = validatedData;
     console.log('Profile data to update:', profileData);
 
+    // Filter out undefined values and prepare clean update data
+    const cleanProfileData = Object.fromEntries(
+      Object.entries(profileData).filter(([_, value]) => value !== undefined)
+    );
+
+    // Add institution mapping for backward compatibility
+    if (cleanProfileData.institution || cleanProfileData.university) {
+      cleanProfileData.institution = cleanProfileData.institution || cleanProfileData.university;
+    }
+
+    console.log('Clean profile data for update:', cleanProfileData);
+
     // Start a transaction to update profile, sports, and achievements
     const { data: updatedProfile, error: profileError } = await supabaseAdmin
       .from("profiles")
-      .update({
-        ...profileData,
-        // Map university to institution for consistency
-        institution: profileData.institution || profileData.university,
-      })
+      .update(cleanProfileData)
       .eq("id", user.id)
       .select("*")
       .single();
