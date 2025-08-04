@@ -357,13 +357,10 @@ export function ComprehensiveProfileEdit({
 
     setUploadingPhoto(true);
     try {
-      // Try to upload to server first
-      console.log('Starting photo upload...');
-
+      // Upload to server
       const result = await uploadService.uploadProfileImage(file, user?.id || 'demo');
 
       if (result.data?.url) {
-        console.log('Server upload successful, URL:', result.data.url);
         updateField('profile_image', result.data.url);
         toast({
           title: "Photo Updated",
