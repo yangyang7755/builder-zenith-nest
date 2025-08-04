@@ -54,6 +54,9 @@ export default function ActivityCard({
   const haptic = useHaptic();
 
   const currentActivityId = activityId || `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase();
+  const isParticipating = isUserParticipating(currentActivityId);
+  const participationStats = getParticipationStats(currentActivityId);
+  const canJoin = canJoinActivity(currentActivityId);
 
   useEffect(() => {
     // Check if this activity has already been requested
