@@ -3,46 +3,137 @@ import { apiService } from "../services/apiService";
 
 export interface Activity {
   id: string;
-  type: "cycling" | "climbing" | "running" | "hiking" | "skiing" | "surfing" | "tennis";
   title: string;
-  date: string;
-  time: string;
+  description?: string;
+  activity_type: "cycling" | "climbing" | "running" | "hiking" | "skiing" | "surfing" | "tennis" | "general";
+  date_time: string; // ISO 8601 format
   location: string;
-  meetupLocation: string;
-  organizer: string;
-  distance?: string;
-  distanceUnit?: "km" | "miles";
-  elevation?: string;
-  elevationUnit?: "m" | "feet";
-  pace?: string;
-  paceUnit?: "kph" | "mph";
-  maxParticipants: string;
-  specialComments: string;
+  coordinates?: { lat: number; lng: number };
+  max_participants: number;
+  current_participants: number;
+  difficulty_level: "beginner" | "intermediate" | "advanced" | "all";
+  activity_image?: string;
+  route_link?: string;
+  special_requirements?: string;
+  price_per_person: number;
+  status: "upcoming" | "ongoing" | "completed" | "cancelled";
+  organizer_id: string;
+  club_id?: string;
+  activity_data?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+
+  // Related data from joins
+  organizer?: {
+    id: string;
+    full_name: string;
+    profile_image?: string;
+    email?: string;
+  };
+  club?: {
+    id: string;
+    name: string;
+    profile_image?: string;
+  };
+  participants?: ActivityParticipant[];
+
+  // Legacy fields for backward compatibility
+  type?: string;
+  date?: string;
+  time?: string;
+  meetupLocation?: string;
+  organizer?: string;
+  maxParticipants?: string;
+  specialComments?: string;
   imageSrc?: string;
-  climbingLevel?: string;
-  languages?: string;
-  gearRequired?: string;
-  routeLink?: string;
-  cafeStop?: string;
-  subtype?: string;
-  gender?: string;
-  ageMin?: string;
-  ageMax?: string;
   visibility?: string;
-  club?: string; // Club ID if this is a club activity
-  difficulty?: string;
-  createdAt: Date;
-  organizer_id?: string; // Backend field
+  createdAt?: Date;
+}
+
+export interface ActivityParticipant {
+  id: string;
+  user_id: string;
+  activity_id: string;
+  joined_at: string;
+  status: "joined" | "left" | "completed" | "cancelled";
+  user: {
+    id: string;
+    full_name: string;
+    profile_image?: string;
+    email?: string;
+  };
 }
 
 interface ActivitiesContextType {
   activities: Activity[];
   loading: boolean;
   error: string | null;
-  addActivity: (activity: Omit<Activity, "id" | "createdAt">) => Promise<boolean>;
-  searchActivities: (query: string) => Activity[];
+  pagination: { total: number; limit: number; offset: number };
+
+  // Core CRUD operations
+  getActivities: (filters?: ActivityFilters) => Promise<void>;
+  getActivity: (activityId: string) => Promise<Activity | null>;
+  createActivity: (activityData: CreateActivityData) => Promise<{ success: boolean; error?: string; data?: Activity }>;
+  updateActivity: (activityId: string, updates: UpdateActivityData) => Promise<{ success: boolean; error?: string }>;
+  deleteActivity: (activityId: string) => Promise<{ success: boolean; error?: string }>;
+
+  // Participation operations
+  joinActivity: (activityId: string) => Promise<{ success: boolean; error?: string }>;
+  leaveActivity: (activityId: string) => Promise<{ success: boolean; error?: string }>;
+  getActivityParticipants: (activityId: string) => Promise<ActivityParticipant[]>;
+
+  // Utility operations
+  searchActivities: (query: string, filters?: ActivityFilters) => Promise<void>;
   refreshActivities: () => Promise<void>;
-  createActivity: (activityData: any) => Promise<{ success: boolean; error?: string }>;
+
+  // Legacy methods for backward compatibility
+  addActivity: (activity: any) => Promise<boolean>;
+}
+
+export interface ActivityFilters {
+  club_id?: string;
+  activity_type?: string;
+  location?: string;
+  difficulty_level?: string;
+  date_from?: string;
+  date_to?: string;
+  status?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export interface CreateActivityData {
+  title: string;
+  description?: string;
+  activity_type: string;
+  date_time: string;
+  location: string;
+  coordinates?: { lat: number; lng: number };
+  max_participants?: number;
+  difficulty_level?: string;
+  activity_image?: string;
+  route_link?: string;
+  special_requirements?: string;
+  price_per_person?: number;
+  club_id?: string;
+  activity_data?: Record<string, any>;
+}
+
+export interface UpdateActivityData {
+  title?: string;
+  description?: string;
+  activity_type?: string;
+  date_time?: string;
+  location?: string;
+  coordinates?: { lat: number; lng: number };
+  max_participants?: number;
+  difficulty_level?: string;
+  activity_image?: string;
+  route_link?: string;
+  special_requirements?: string;
+  price_per_person?: number;
+  club_id?: string;
+  activity_data?: Record<string, any>;
 }
 
 const ActivitiesContext = createContext<ActivitiesContextType | undefined>(
