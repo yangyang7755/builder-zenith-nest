@@ -132,6 +132,50 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     return requestedActivities.has(activityId);
   };
 
+  const respondToRequest = (requestId: string, response: "accepted" | "declined", message?: string) => {
+    // Update the request status
+    setJoinRequests(prev =>
+      prev.map(req =>
+        req.id === requestId
+          ? { ...req, status: response }
+          : req
+      )
+    );
+
+    // Find the request to get details
+    const request = joinRequests.find(req => req.id === requestId);
+    if (!request) return;
+
+    // Add organizer's response to chat
+    const responseMessage: ChatMessage = {
+      id: Date.now().toString() + "_response",
+      type: "general",
+      sender: request.activityOrganizer,
+      content: response === "accepted"
+        ? `Great news! Your request to join "${request.activityTitle}" has been accepted! 🎉 ${message || "See you there!"}`
+        : `Sorry, your request to join "${request.activityTitle}" has been declined. ${message || "Better luck next time!"}`,
+      timestamp: new Date(),
+      activityTitle: request.activityTitle,
+      activityOrganizer: request.activityOrganizer,
+    };
+
+    setChatMessages(prev => [responseMessage, ...prev]);
+
+    // Show notification
+    showChatNotification(
+      response === "accepted"
+        ? `Your request to join "${request.activityTitle}" was accepted!`
+        : `Your request to join "${request.activityTitle}" was declined.`
+    );
+  };
+
+  const getConversationWith = (organizerName: string): ChatMessage[] => {
+    return chatMessages.filter(msg =>
+      msg.sender === organizerName ||
+      (msg.sender === "You" && msg.activityOrganizer === organizerName)
+    ).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  };
+
   const addChatMessage = (
     messageData: Omit<ChatMessage, "id" | "timestamp">,
   ) => {
