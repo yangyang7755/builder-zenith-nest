@@ -195,7 +195,12 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
 
     if (profileError) {
       console.error("Profile update error:", profileError);
-      return res.status(500).json({ error: "Failed to update profile" });
+      console.error("Profile update data that failed:", profileData);
+      return res.status(500).json({
+        error: "Failed to update profile",
+        details: profileError.message,
+        code: profileError.code
+      });
     }
 
     // Update sports if provided
