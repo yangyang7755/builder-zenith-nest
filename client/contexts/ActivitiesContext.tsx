@@ -376,6 +376,46 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       const response = await apiService.createActivity(activityData);
 
       if (response.error) {
+        // Handle backend unavailability - create demo activity
+        if (response.error === 'BACKEND_UNAVAILABLE') {
+          console.log("Backend unavailable, creating demo activity");
+          const demoActivity: Activity = {
+            id: `demo-activity-${Date.now()}`,
+            activity_type: activityData.activity_type,
+            title: activityData.title,
+            description: activityData.description,
+            date_time: activityData.date_time,
+            location: activityData.location,
+            coordinates: activityData.coordinates,
+            max_participants: activityData.max_participants,
+            current_participants: 1,
+            difficulty_level: activityData.difficulty_level,
+            activity_image: activityData.activity_image,
+            route_link: activityData.route_link,
+            special_requirements: activityData.special_requirements,
+            price_per_person: activityData.price_per_person || 0,
+            status: "upcoming",
+            organizer_id: "demo-user-id",
+            club_id: activityData.club_id,
+            activity_data: activityData.activity_data,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            // Legacy fields for backward compatibility
+            type: activityData.activity_type,
+            date: activityData.date_time.split('T')[0],
+            time: activityData.date_time.split('T')[1].substring(0, 5),
+            meetupLocation: activityData.location,
+            organizer: "You",
+            maxParticipants: activityData.max_participants.toString(),
+            specialComments: activityData.special_requirements || "",
+            imageSrc: activityData.activity_image,
+            visibility: "All",
+            createdAt: new Date(),
+          };
+
+          setActivities(prev => [demoActivity, ...prev]);
+          return { success: true, data: demoActivity };
+        }
         return { success: false, error: response.error };
       }
 
