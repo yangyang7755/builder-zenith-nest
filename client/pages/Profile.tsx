@@ -252,7 +252,7 @@ export default function Profile() {
                           onClick={() => setShowFollowers(true)}
                           className="hover:text-explore-green transition-colors"
                         >
-                          {displayProfile.followers || 0} Followers
+                          {getFollowerCount(currentUserId)} Followers
                         </button>
                       )}
                       {isVisible('followers') && isVisible('following') && <span>•</span>}
