@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -13,7 +15,8 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { User, Mail, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
+import { userService } from "@/services/userService";
+import { User, Mail, Lock, Eye, EyeOff, UserPlus, MapPin, Building, GraduationCap, Phone } from "lucide-react";
 
 export default function SignUp() {
   const navigate = useNavigate();
