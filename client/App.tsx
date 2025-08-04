@@ -227,6 +227,10 @@ const App = () => (
                               />
                             }
                           />
+                          <Route
+                            path="/club/:clubId/settings"
+                            element={<ClubManagement />}
+                          />
                           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                           <Route path="*" element={<NotFound />} />
                         </Routes>
