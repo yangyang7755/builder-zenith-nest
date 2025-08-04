@@ -12,6 +12,9 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useToast } from '../hooks/use-toast';
+import { uploadService } from '../services/uploadService';
+import { apiService } from '../services/apiService';
+import { useAuth } from '../contexts/AuthContext';
 import {
   ArrowLeft,
   User,
@@ -135,14 +138,16 @@ interface ComprehensiveProfileEditProps {
   className?: string;
 }
 
-export function ComprehensiveProfileEdit({ 
-  profile, 
-  onProfileUpdate, 
-  className = '' 
+export function ComprehensiveProfileEdit({
+  profile,
+  onProfileUpdate,
+  className = ''
 }: ComprehensiveProfileEditProps) {
   const [isSaving, setSaving] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [profileData, setProfileData] = useState<ProfileData>({
     full_name: profile?.full_name || 'Maddie Wei',
@@ -214,9 +219,31 @@ export function ComprehensiveProfileEdit({
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Prepare profile data for API
+      const updateData = {
+        full_name: profileData.full_name,
+        bio: profileData.bio,
+        email: profileData.email,
+        phone: profileData.phone,
+        gender: profileData.gender,
+        age: profileData.age,
+        date_of_birth: profileData.date_of_birth,
+        nationality: profileData.nationality,
+        institution: profileData.institution,
+        occupation: profileData.occupation,
+        location: profileData.location,
+        profile_image: profileData.profile_image,
+        // Add visibility settings
+        visibility_settings: profileData.visibility
+      };
+
+      // Update profile via API
+      const result = await apiService.updateProfile(updateData);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       onProfileUpdate?.(profileData);
       toast({
         title: "Profile Updated",
@@ -224,6 +251,7 @@ export function ComprehensiveProfileEdit({
       });
       navigate('/profile');
     } catch (error) {
+      console.error('Profile update error:', error);
       toast({
         title: "Error",
         description: "Failed to update profile. Please try again.",
@@ -292,10 +320,56 @@ export function ComprehensiveProfileEdit({
   const updateAchievement = (id: string, updates: Partial<Achievement>) => {
     setProfileData(prev => ({
       ...prev,
-      achievements: prev.achievements.map(achievement => 
+      achievements: prev.achievements.map(achievement =>
         achievement.id === id ? { ...achievement, ...updates } : achievement
       )
     }));
+  };
+
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file
+    const validationError = uploadService.validateImageFile(file);
+    if (validationError) {
+      toast({
+        title: "Invalid File",
+        description: validationError,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingPhoto(true);
+    try {
+      // Compress and upload image
+      const compressedFile = await uploadService.compressImage(file, 800, 0.8);
+      const result = await uploadService.uploadProfileImage(compressedFile, user?.id);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      if (result.data?.url) {
+        updateField('profile_image', result.data.url);
+        toast({
+          title: "Photo Updated",
+          description: "Your profile photo has been updated successfully.",
+        });
+      }
+    } catch (error) {
+      console.error('Photo upload error:', error);
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload photo. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingPhoto(false);
+      // Reset file input
+      event.target.value = '';
+    }
   };
 
   const VisibilityControl = ({ field, label }: { field: keyof VisibilitySettings, label: string }) => (
@@ -406,10 +480,36 @@ export function ComprehensiveProfileEdit({
                         </AvatarFallback>
                       </Avatar>
                       <div className="space-y-2">
-                        <Button variant="outline" size="sm">
-                          <Camera className="h-4 w-4 mr-2" />
-                          Change Photo
-                        </Button>
+                        <div className="relative">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handlePhotoUpload}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            id="photo-upload"
+                            disabled={uploadingPhoto}
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={uploadingPhoto}
+                            asChild
+                          >
+                            <label htmlFor="photo-upload" className="cursor-pointer">
+                              {uploadingPhoto ? (
+                                <>
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                                  Uploading...
+                                </>
+                              ) : (
+                                <>
+                                  <Camera className="h-4 w-4 mr-2" />
+                                  Change Photo
+                                </>
+                              )}
+                            </label>
+                          </Button>
+                        </div>
                         <VisibilityControl field="profile_image" label="Show profile picture" />
                       </div>
                     </div>
