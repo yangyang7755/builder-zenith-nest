@@ -247,9 +247,14 @@ export default function ActivityCard({
         <div className="w-full">
           <button
             onClick={handleRequestClick}
-            className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+            disabled={isRequested}
+            className={`w-full py-3 rounded-lg text-sm font-cabin font-medium transition-colors ${
+              isRequested
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-explore-green text-white hover:bg-explore-green-dark"
+            }`}
           >
-            Request to join
+            {isRequested ? "Pending" : "Request to join"}
           </button>
         </div>
       </div>
