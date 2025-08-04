@@ -141,8 +141,12 @@ export const handleGetProfile = async (req: Request, res: Response) => {
 
 export const handleUpdateProfile = async (req: Request, res: Response) => {
   try {
+    console.log('Profile update - checking Supabase configuration...');
+    console.log('supabaseAdmin exists:', !!supabaseAdmin);
+
     // Check if Supabase is configured
     if (!supabaseAdmin) {
+      console.log('Running in demo mode - returning demo response');
       // Return demo success response for development
       const demoProfile = {
         id: "demo-user-id",
