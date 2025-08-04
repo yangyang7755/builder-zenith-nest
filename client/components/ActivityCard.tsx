@@ -225,9 +225,11 @@ export default function ActivityCard({
         {/* Date and Location */}
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2">
+            <span className="text-sm">📅</span>
             <span className="text-sm text-black font-cabin">{date}</span>
           </div>
           <div className="flex items-center gap-2">
+            <span className="text-sm">📍</span>
             <span className="text-sm text-black font-cabin">{location}</span>
           </div>
         </div>
