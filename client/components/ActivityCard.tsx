@@ -43,6 +43,13 @@ export default function ActivityCard({
   const { saveActivity, unsaveActivity, isActivitySaved } =
     useSavedActivities();
   const { hasRequestedActivity } = useChat();
+  const {
+    joinActivity,
+    leaveActivity,
+    isUserParticipating,
+    getParticipationStats,
+    canJoinActivity
+  } = useActivityParticipation();
   const { createTouchableProps } = useTouchFeedback();
   const haptic = useHaptic();
 
