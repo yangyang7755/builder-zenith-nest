@@ -246,9 +246,12 @@ export function ComprehensiveProfileEdit({
       };
 
       // Update profile via API - this will now save to database
+      console.log('Sending profile update data:', updateData);
       const result = await apiService.updateProfile(updateData);
+      console.log('API response:', result);
 
       if (result.error) {
+        console.error('API error details:', result);
         throw new Error(result.error);
       }
 
