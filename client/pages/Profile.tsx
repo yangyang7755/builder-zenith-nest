@@ -596,14 +596,16 @@ export default function Profile() {
         </div>
 
         {/* Location Section */}
-        <div className="px-6 pb-8">
-          <h3 className="text-lg font-bold text-black mb-4">Location</h3>
-          
-          <div className="flex items-center gap-2 text-gray-600">
-            <MapPin className="w-5 h-5" />
-            <span className="text-sm">London, UK</span>
+        {isVisible('location') && (
+          <div className="px-6 pb-8">
+            <h3 className="text-lg font-bold text-black mb-4">Location</h3>
+
+            <div className="flex items-center gap-2 text-gray-600">
+              <MapPin className="w-5 h-5" />
+              <span className="text-sm">London, UK</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Followers Modal */}
