@@ -180,8 +180,8 @@ export const handleGetActivities = async (req: Request, res: Response) => {
     if (filters.status) {
       query = query.eq("status", filters.status);
     } else {
-      // Default to showing only upcoming activities
-      query = query.eq("status", "upcoming");
+      // Default to showing only upcoming activities for explore page
+      query = query.in("status", ["upcoming", "ongoing"]);
     }
 
     if (filters.date_from) {
