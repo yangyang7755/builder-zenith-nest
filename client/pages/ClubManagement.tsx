@@ -40,7 +40,7 @@ export default function ClubManagement() {
 
   const [activeTab, setActiveTab] = useState<
     "overview" | "members" | "requests" | "settings"
-  >("overview");
+  >(isSettingsRoute ? "settings" : "overview");
   const [isEditing, setIsEditing] = useState(false);
 
   const club = clubId ? getClubById(clubId) : null;
