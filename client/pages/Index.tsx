@@ -535,7 +535,7 @@ export default function Index() {
             />
             <CarShareCard
               destination="Snowdonia"
-              date="📅 17 August 2025"
+              date="�� 17 August 2025"
               time="6:00 AM"
               driver="Sarah Chen"
               availableSeats={2}
@@ -746,7 +746,7 @@ function MixedActivitiesSection({
     {
       title: "Intermediate Chaingang",
       date: `📅 ${formatActivityDate("2025-01-28")}`,
-      location: "📍 Box Hill, Surrey",
+      location: "�� Box Hill, Surrey",
       imageSrc:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       type: "cycling",
@@ -1633,12 +1633,30 @@ function CyclingActivityCard({ activity }: { activity: any }) {
       <button
         onClick={(e) => {
           e.stopPropagation();
-          alert(`Request to join ${activity.title}`);
+          if (!isRequested) {
+            setShowRequestModal(true);
+          }
         }}
-        className="w-full bg-explore-green text-white py-3 rounded-lg text-sm font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+        disabled={isRequested}
+        className={`w-full py-3 rounded-lg text-sm font-cabin font-medium transition-colors ${
+          isRequested
+            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+            : "bg-explore-green text-white hover:bg-explore-green-dark"
+        }`}
       >
-        Request to join
+        {isRequested ? "Pending" : "Request to join"}
       </button>
+
+      {/* Request Modal */}
+      <RequestJoinModal
+        isOpen={showRequestModal}
+        onClose={() => setShowRequestModal(false)}
+        activityTitle={activity.title}
+        organizerName={activity.organizer}
+        organizerImage={activity.imageSrc}
+        activityId={activityId}
+        onRequestSent={handleRequestSent}
+      />
     </div>
   );
 }
