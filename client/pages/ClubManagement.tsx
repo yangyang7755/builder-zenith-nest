@@ -497,27 +497,15 @@ export default function ClubManagement() {
               </div>
             </div>
 
-            <div>
-              <h3 className="text-lg font-bold text-black mb-4">Club Images</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Profile Image
-                  </label>
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={club.profileImage}
-                      alt={club.name}
-                      className="w-16 h-16 rounded-lg object-cover border border-gray-200"
-                    />
-                    <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                      <Upload className="w-4 h-4" />
-                      Change Image
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ClubImageUpload
+              club={club}
+              onClubUpdate={(updatedClub) => {
+                // Update club in context
+                updateClub(club.id, {
+                  profile_image: updatedClub.profile_image
+                });
+              }}
+            />
           </div>
         )}
       </div>
