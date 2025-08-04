@@ -83,12 +83,14 @@ const App = () => (
     <TooltipProvider>
       <ToastProvider>
         <AuthProvider>
-          <ClubProvider>
-            <OnboardingProvider>
-              <ActivitiesProvider>
-                <SavedActivitiesProvider>
-                  <ActivityDraftProvider>
-                    <ChatProvider>
+          <FollowProvider>
+            <ClubProvider>
+              <OnboardingProvider>
+                <ActivitiesProvider>
+                  <ActivityCompletionProvider>
+                    <SavedActivitiesProvider>
+                      <ActivityDraftProvider>
+                        <ChatProvider>
                       <Toaster />
                       <Sonner />
                       <ToastContainer />
@@ -278,12 +280,14 @@ const App = () => (
                           <Route path="*" element={<NotFound />} />
                         </Routes>
                       </BrowserRouter>
-                    </ChatProvider>
-                  </ActivityDraftProvider>
-                </SavedActivitiesProvider>
-              </ActivitiesProvider>
-            </OnboardingProvider>
-          </ClubProvider>
+                        </ChatProvider>
+                      </ActivityDraftProvider>
+                    </SavedActivitiesProvider>
+                  </ActivityCompletionProvider>
+                </ActivitiesProvider>
+              </OnboardingProvider>
+            </ClubProvider>
+          </FollowProvider>
         </AuthProvider>
       </ToastProvider>
     </TooltipProvider>
