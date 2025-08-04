@@ -89,7 +89,7 @@ export default function RequestJoinModal({
             value={requestMessage}
             onChange={(e) => setRequestMessage(e.target.value)}
             placeholder="Hi! I'd like to join this activity..."
-            className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin h-20 resize-none"
+            className="w-full native-input h-20 resize-none font-cabin"
           />
         </div>
 
