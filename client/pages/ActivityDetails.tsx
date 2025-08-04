@@ -817,7 +817,7 @@ export default function ActivityDetails() {
               )}
               {activity.skiPass && (
                 <div className="flex items-center gap-2">
-                  <span className="text-blue-600">���</span>
+                  <span className="text-blue-600">⛷️</span>
                   <span className="text-sm font-cabin">
                     Ski pass: {activity.skiPass}
                   </span>
