@@ -64,6 +64,8 @@ export default function Profile() {
           }
         }
       }
+      // Always refresh visibility settings
+      refreshVisibility();
     };
 
     window.addEventListener('focus', handleFocus);
