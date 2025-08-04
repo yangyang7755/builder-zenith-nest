@@ -31,6 +31,18 @@ export default function Profile() {
   // Use the profile hook to get real data when user is logged in
   const { profile, followStats, loading, refetch } = useProfile(user?.id);
 
+  // Refresh profile when returning to this page
+  useEffect(() => {
+    const handleFocus = () => {
+      if (user?.id && refetch) {
+        refetch();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user?.id, refetch]);
+
   // Use visibility hook to control what's shown
   const { isVisible } = useProfileVisibility(user?.id);
 
