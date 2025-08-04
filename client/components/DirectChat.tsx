@@ -59,10 +59,18 @@ export default function DirectChat({
 
   // Load initial messages
   const loadMessages = async () => {
+    // Prevent concurrent calls
+    if (loading) {
+      console.log('Already loading messages, skipping...');
+      return;
+    }
+
     try {
       setLoading(true);
+      console.log('Loading messages for user:', otherUserId);
+
       const response = await apiService.getDirectMessages(otherUserId);
-      
+
       if (response.error) {
         console.error("Failed to load messages:", response.error);
         toast({
@@ -76,12 +84,22 @@ export default function DirectChat({
       if (response.data && response.data.data) {
         setMessages(response.data.data);
         scrollToBottom();
-        
+
         // Mark messages as read
-        await apiService.markMessagesAsRead(otherUserId);
+        try {
+          await apiService.markMessagesAsRead(otherUserId);
+        } catch (markReadError) {
+          console.warn('Failed to mark messages as read:', markReadError);
+          // Don't throw error for marking as read
+        }
       }
     } catch (error) {
       console.error("Error loading messages:", error);
+      toast({
+        title: "Chat Error",
+        description: error instanceof Error ? error.message : "Failed to load messages",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
