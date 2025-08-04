@@ -668,10 +668,17 @@ export default function CreateClub() {
           ) : (
             <Button
               onClick={handleSubmit}
-              disabled={!isStepComplete()}
+              disabled={!isStepComplete() || isSubmitting}
               className="flex-1 bg-explore-green text-white font-cabin hover:bg-green-600"
             >
-              Create Club
+              {isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Creating Club...
+                </>
+              ) : (
+                "Create Club"
+              )}
             </Button>
           )}
         </div>
