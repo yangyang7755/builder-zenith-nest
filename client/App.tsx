@@ -90,8 +90,9 @@ const App = () => (
               <ClubProvider>
               <OnboardingProvider>
                 <ActivitiesProvider>
-                  <ActivityCompletionProvider>
-                    <SavedActivitiesProvider>
+                  <ActivityParticipationProvider>
+                    <ActivityCompletionProvider>
+                      <SavedActivitiesProvider>
                       <ActivityDraftProvider>
                         <ChatProvider>
                       <Toaster />
@@ -287,6 +288,7 @@ const App = () => (
                       </ActivityDraftProvider>
                     </SavedActivitiesProvider>
                   </ActivityCompletionProvider>
+                  </ActivityParticipationProvider>
                 </ActivitiesProvider>
               </OnboardingProvider>
               </ClubProvider>
