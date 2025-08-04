@@ -353,6 +353,134 @@ class ApiService {
     });
   }
 
+  // Activities methods
+  async getActivities(filters?: {
+    club_id?: string;
+    activity_type?: string;
+    location?: string;
+    difficulty_level?: string;
+    date_from?: string;
+    date_to?: string;
+    status?: string;
+    limit?: number;
+    offset?: number;
+  }) {
+    const params = new URLSearchParams();
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const queryString = params.toString();
+    return this.request<any>(`/activities${queryString ? `?${queryString}` : ""}`);
+  }
+
+  async getActivity(activityId: string) {
+    return this.request<any>(`/activities/${activityId}`);
+  }
+
+  async createActivity(activityData: {
+    title: string;
+    description?: string;
+    activity_type: string;
+    date_time: string;
+    location: string;
+    coordinates?: { lat: number; lng: number };
+    max_participants?: number;
+    difficulty_level?: string;
+    activity_image?: string;
+    route_link?: string;
+    special_requirements?: string;
+    price_per_person?: number;
+    club_id?: string;
+    activity_data?: Record<string, any>;
+  }) {
+    return this.request<any>("/activities", {
+      method: "POST",
+      body: JSON.stringify(activityData),
+    });
+  }
+
+  async updateActivity(activityId: string, updates: {
+    title?: string;
+    description?: string;
+    activity_type?: string;
+    date_time?: string;
+    location?: string;
+    coordinates?: { lat: number; lng: number };
+    max_participants?: number;
+    difficulty_level?: string;
+    activity_image?: string;
+    route_link?: string;
+    special_requirements?: string;
+    price_per_person?: number;
+    club_id?: string;
+    activity_data?: Record<string, any>;
+  }) {
+    return this.request<any>(`/activities/${activityId}`, {
+      method: "PUT",
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async deleteActivity(activityId: string) {
+    return this.request<void>(`/activities/${activityId}`, {
+      method: "DELETE",
+    });
+  }
+
+  // Activity participation methods
+  async joinActivity(activityId: string) {
+    return this.request<any>(`/activities/${activityId}/join`, {
+      method: "POST",
+    });
+  }
+
+  async leaveActivity(activityId: string) {
+    return this.request<any>(`/activities/${activityId}/leave`, {
+      method: "DELETE",
+    });
+  }
+
+  async getActivityParticipants(activityId: string) {
+    return this.request<any[]>(`/activities/${activityId}/participants`);
+  }
+
+  // Convenience methods for common use cases
+  async getUserActivities(userId?: string, status?: string) {
+    const filters: any = {};
+    if (status) filters.status = status;
+
+    // If userId is provided, this would need a separate endpoint
+    // For now, we'll get all activities and filter client-side if needed
+    return this.getActivities(filters);
+  }
+
+  async getClubActivities(clubId: string, status?: string) {
+    const filters: any = { club_id: clubId };
+    if (status) filters.status = status;
+
+    return this.getActivities(filters);
+  }
+
+  async searchActivities(searchTerm: string, filters?: {
+    activity_type?: string;
+    difficulty_level?: string;
+    date_from?: string;
+    date_to?: string;
+  }) {
+    const searchFilters = {
+      location: searchTerm, // Search by location for now
+      ...filters
+    };
+
+    return this.getActivities(searchFilters);
+  }
+
   // Health check
   async ping() {
     return this.request<{ message: string }>("/ping");
