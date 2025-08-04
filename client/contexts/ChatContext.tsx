@@ -94,43 +94,36 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     // Mark this activity as requested
     setRequestedActivities((prev) => new Set([...prev, requestData.activityId]));
 
-    // Check if there's already a chat with this organizer for this specific activity
-    const existingChatIndex = chatMessages.findIndex(
-      (msg) =>
-        msg.sender === requestData.activityOrganizer &&
-        msg.type === "join_request" &&
-        msg.activityTitle === requestData.activityTitle,
-    );
+    // Create live chat message between user and organizer
+    const liveChatMessage: ChatMessage = {
+      id: Date.now().toString() + "_live_chat",
+      type: "join_request",
+      sender: "You", // Current user
+      content: `Hi! I'd like to join "${requestData.activityTitle}". ${requestData.message || "Looking forward to it!"}`,
+      timestamp: new Date(),
+      activityTitle: requestData.activityTitle,
+      activityOrganizer: requestData.activityOrganizer,
+    };
 
-    if (existingChatIndex !== -1) {
-      // Update existing chat message with the new request
-      setChatMessages((prev) => {
-        const updated = [...prev];
-        updated[existingChatIndex] = {
-          ...updated[existingChatIndex],
-          content:
-            requestData.message ||
-            `You requested to join "${requestData.activityTitle}"`,
-          timestamp: new Date(),
-          activityTitle: requestData.activityTitle,
-        };
-        return updated;
-      });
-    } else {
-      // Create new chat message for this organizer and activity
-      const chatMessage: ChatMessage = {
-        id: Date.now().toString() + "_chat",
-        type: "join_request",
+    // Add to chat messages (this represents the live chat between user and organizer)
+    setChatMessages((prev) => [liveChatMessage, ...prev]);
+
+    // Simulate organizer's auto-response after a short delay
+    setTimeout(() => {
+      const organizerResponse: ChatMessage = {
+        id: Date.now().toString() + "_organizer_response",
+        type: "general",
         sender: requestData.activityOrganizer,
-        content:
-          requestData.message ||
-          `You requested to join "${requestData.activityTitle}"`,
+        content: `Thanks for your interest in "${requestData.activityTitle}"! I'll review your request and get back to you soon. 👍`,
         timestamp: new Date(),
         activityTitle: requestData.activityTitle,
         activityOrganizer: requestData.activityOrganizer,
       };
-      setChatMessages((prev) => [chatMessage, ...prev]);
-    }
+      setChatMessages((prev) => [organizerResponse, ...prev]);
+    }, 2000); // 2 second delay for realistic feel
+
+    // Show confirmation that message was sent to live chat
+    showChatNotification(`Your request has been sent to ${requestData.activityOrganizer} in your direct messages.`);
   };
 
   const hasRequestedActivity = (activityId: string) => {
