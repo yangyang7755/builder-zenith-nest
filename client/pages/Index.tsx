@@ -8,6 +8,7 @@ import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
 import ActivityCard from "../components/ActivityCard";
 import BottomNavigation from "../components/BottomNavigation";
+import { FloatingSettingsButton } from "../components/FloatingSettingsButton";
 
 // Mock coordinates for demo locations
 const LOCATION_COORDINATES: { [key: string]: { lat: number; lng: number } } = {
