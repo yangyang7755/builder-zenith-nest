@@ -228,6 +228,22 @@ export default function SimpleInteractiveMap({
             <MapPin className="w-4 h-4 mr-1" />
             List
           </Button>
+          {mapView === 'embedded' && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                // Force map refresh by regenerating URL
+                const iframe = document.querySelector('iframe[title="Activity locations map"]') as HTMLIFrameElement;
+                if (iframe) {
+                  iframe.src = generateOSMUrl();
+                }
+              }}
+              title="Refresh map"
+            >
+              🔄
+            </Button>
+          )}
         </div>
       </div>
 
