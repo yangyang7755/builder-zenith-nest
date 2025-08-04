@@ -19,7 +19,7 @@ interface ImageUploadProps {
   acceptedFormats?: string[];
 }
 
-export function ImageUpload({
+export default function ImageUpload({
   currentImageUrl,
   onImageChange,
   uploadType,
