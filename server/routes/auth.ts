@@ -96,14 +96,25 @@ export const handleGetProfile = async (req: Request, res: Response) => {
     const user = await getUserFromToken(req.headers.authorization || "");
 
     if (!user) {
-      // In demo mode, return sample profile instead of 401 error
+      // In demo mode, return comprehensive sample profile instead of 401 error
       const demoProfile = {
         id: "demo-user-1",
         email: "demo@example.com",
         full_name: "Demo User",
         university: "Demo University",
+        institution: "Demo University",
         bio: "Demo profile - authentication not configured",
         profile_image: null,
+        phone: null,
+        gender: null,
+        age: null,
+        date_of_birth: null,
+        nationality: null,
+        occupation: null,
+        location: null,
+        visibility_settings: {},
+        sports: [],
+        achievements: [],
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
