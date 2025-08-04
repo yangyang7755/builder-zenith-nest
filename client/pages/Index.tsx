@@ -1090,7 +1090,7 @@ function ClimbingExploreSection() {
     },
     {
       title: "Multi-pitch Climbing Course",
-      date: "�� 3 days, Aug 12-14",
+      date: "📅 3 days, Aug 12-14",
       location: "📍Lake District",
       organizer: "Mountain Skills Academy",
       grade: "Multi-pitch routes",
