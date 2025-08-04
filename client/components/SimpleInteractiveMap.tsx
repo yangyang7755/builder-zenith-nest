@@ -93,35 +93,77 @@ export default function SimpleInteractiveMap({
     setSelectedLocation({ lat, lng });
   };
 
-  // Convert coordinates to address (mock implementation)
+  // Convert coordinates to address (enhanced mock implementation)
   const coordinatesToAddress = (coords: { lat: number; lng: number }): string => {
-    // In a real app, you'd use a reverse geocoding API
+    // In a real app, you'd use a reverse geocoding API like Google Maps, Nominatim, etc.
+    // For now, we'll create a more comprehensive location system
+
+    const { lat, lng } = coords;
+
+    // Create a descriptive location based on coordinates
+    let locationName = "";
+
+    // Determine region/country first
+    if (lat >= 49 && lat <= 61 && lng >= -8 && lng <= 2) {
+      // UK region
+      if (lat >= 51.2 && lat <= 51.7 && lng >= -0.5 && lng <= 0.3) {
+        // London area
+        locationName = `London Area (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+      } else if (lat >= 50.7 && lat <= 51.6 && lng >= -0.8 && lng <= 0.5) {
+        // South England
+        locationName = `South England (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+      } else {
+        locationName = `UK (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+      }
+    } else if (lat >= 45 && lat <= 48 && lng >= -5 && lng <= 8) {
+      // France region
+      locationName = `France (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+    } else if (lat >= 45 && lat <= 47.5 && lng >= 5.5 && lng <= 15) {
+      // Alps region
+      locationName = `Alps Region (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+    } else if (lat >= 40 && lat <= 44 && lng >= -10 && lng <= 4) {
+      // Spain region
+      locationName = `Spain (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+    } else if (lat >= 48 && lat <= 55 && lng >= 5 && lng <= 15) {
+      // Germany region
+      locationName = `Germany (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+    } else if (lat >= 45 && lat <= 49 && lng >= 2 && lng <= 8) {
+      // France region
+      locationName = `France (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+    } else if (lat >= 35 && lat <= 42 && lng >= 12 && lng <= 20) {
+      // Italy region
+      locationName = `Italy (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+    } else if (lat >= 50.7 && lat <= 51.0 && lng >= -0.4 && lng <= 0.0) {
+      // Brighton area
+      locationName = `Brighton Area (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+    } else {
+      // Generic location with coordinates
+      locationName = `Selected Location (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+    }
+
+    // Check for specific well-known locations within a reasonable distance
     const knownLocations = [
-      { coords: { lat: 51.5074, lng: -0.1278 }, name: "Central London" },
-      { coords: { lat: 51.4545, lng: -0.2727 }, name: "Richmond Park" },
-      { coords: { lat: 51.5200, lng: -0.2375 }, name: "Westway Sports Centre" },
-      { coords: { lat: 51.5557, lng: -0.1657 }, name: "Hampstead Heath" },
+      { coords: { lat: 51.5074, lng: -0.1278 }, name: "Central London", radius: 0.05 },
+      { coords: { lat: 51.4545, lng: -0.2727 }, name: "Richmond Park", radius: 0.02 },
+      { coords: { lat: 51.5200, lng: -0.2375 }, name: "Westway Sports Centre", radius: 0.02 },
+      { coords: { lat: 51.5557, lng: -0.1657 }, name: "Hampstead Heath", radius: 0.02 },
+      { coords: { lat: 50.8429, lng: -0.1313 }, name: "Brighton", radius: 0.05 },
+      { coords: { lat: 46.8182, lng: 8.2275 }, name: "Swiss Alps", radius: 0.1 },
+      { coords: { lat: 40.4168, lng: -3.7038 }, name: "Madrid", radius: 0.1 },
     ];
 
-    // Find closest known location
-    let closest = knownLocations[0];
-    let minDistance = Math.sqrt(
-      Math.pow(coords.lat - closest.coords.lat, 2) +
-      Math.pow(coords.lng - closest.coords.lng, 2)
-    );
-
-    knownLocations.forEach(location => {
+    // Only use known location if very close (within radius)
+    for (const location of knownLocations) {
       const distance = Math.sqrt(
         Math.pow(coords.lat - location.coords.lat, 2) +
         Math.pow(coords.lng - location.coords.lng, 2)
       );
-      if (distance < minDistance) {
-        minDistance = distance;
-        closest = location;
+      if (distance < location.radius) {
+        return location.name;
       }
-    });
+    }
 
-    return closest.name;
+    return locationName;
   };
 
   // Confirm location selection
