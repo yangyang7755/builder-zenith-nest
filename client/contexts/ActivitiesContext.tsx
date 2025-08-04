@@ -221,6 +221,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { currentUserProfile } = useUserProfile();
 
   // Listen for profile updates and sync activity organizers/participants
   useEffect(() => {
