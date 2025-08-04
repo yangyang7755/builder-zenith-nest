@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check, Calendar, Globe, User, GraduationCap, Briefcase, Languages, Trophy, UserCheck, Target, Package } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Calendar, Globe, User, GraduationCap, Briefcase, Languages, Trophy, UserCheck, Target } from "lucide-react";
 import { useOnboarding } from "../contexts/OnboardingContext";
 
 export default function Onboarding() {
