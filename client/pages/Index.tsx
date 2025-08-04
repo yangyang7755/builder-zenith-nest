@@ -443,7 +443,7 @@ export default function Index() {
               age={28}
               climbingLevel="5.9-5.11"
               date="📅 Friday evenings"
-              location="�� Westway Climbing Centre"
+              location="📍 Westway Climbing Centre"
               description="Looking for a regular climbing partner for Friday evening sessions. I'm working on lead climbing and could use someone experienced."
               availability="Fridays 6-9pm"
               experience="2 years indoor, 6 months outdoor"
