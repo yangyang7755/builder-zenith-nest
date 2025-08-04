@@ -2,10 +2,37 @@ import { Request, Response } from "express";
 import { z } from "zod";
 import { supabaseAdmin, getUserFromToken, Database } from "../lib/supabase";
 
-// Activity schema for validation
+// Helper function to get authenticated user (with demo fallback)
+async function getAuthenticatedUser(req: Request) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    // In development without Supabase, return a demo user
+    if (process.env.NODE_ENV !== "production") {
+      return {
+        id: "demo-user-id",
+        email: "demo@example.com"
+      };
+    }
+    return null;
+  }
+
+  const user = await getUserFromToken(authHeader);
+  if (!user && process.env.NODE_ENV !== "production") {
+    // Fallback to demo user in development
+    return {
+      id: "demo-user-id",
+      email: "demo@example.com"
+    };
+  }
+
+  return user;
+}
+
+// Enhanced Activity schema for validation
 const ActivitySchema = z.object({
-  title: z.string().min(1),
-  type: z.enum([
+  title: z.string().min(1).max(255),
+  description: z.string().optional(),
+  activity_type: z.enum([
     "cycling",
     "climbing",
     "running",
@@ -13,15 +40,38 @@ const ActivitySchema = z.object({
     "skiing",
     "surfing",
     "tennis",
+    "general"
   ]),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), // YYYY-MM-DD format
-  time: z.string().regex(/^\d{2}:\d{2}$/), // HH:MM format
-  location: z.string().min(1),
-  meetup_location: z.string().min(1),
-  max_participants: z.number().positive().optional(),
-  special_comments: z.string().optional(),
-  difficulty: z.string().optional(),
-  club_id: z.string().optional(),
+  date_time: z.string().datetime(), // ISO 8601 format
+  location: z.string().min(1).max(255),
+  coordinates: z.object({
+    lat: z.number(),
+    lng: z.number()
+  }).optional(),
+  max_participants: z.number().positive().default(10),
+  difficulty_level: z.enum(["beginner", "intermediate", "advanced", "all"]).default("beginner"),
+  activity_image: z.string().url().optional(),
+  route_link: z.string().url().optional(),
+  special_requirements: z.string().optional(),
+  price_per_person: z.number().min(0).default(0),
+  club_id: z.string().uuid().optional(),
+  activity_data: z.record(z.any()).optional(), // Flexible JSONB data
+});
+
+// Schema for updating activities (all fields optional except organizer validation)
+const UpdateActivitySchema = ActivitySchema.partial();
+
+// Schema for listing activities with filters
+const ListActivitiesSchema = z.object({
+  club_id: z.string().uuid().optional(),
+  activity_type: z.string().optional(),
+  location: z.string().optional(),
+  difficulty_level: z.string().optional(),
+  date_from: z.string().datetime().optional(),
+  date_to: z.string().datetime().optional(),
+  status: z.enum(["upcoming", "ongoing", "completed", "cancelled"]).optional(),
+  limit: z.string().transform(val => parseInt(val) || 20).optional(),
+  offset: z.string().transform(val => parseInt(val) || 0).optional(),
 });
 
 export const handleGetActivities = async (req: Request, res: Response) => {
