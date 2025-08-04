@@ -450,6 +450,26 @@ class ApiService {
     return this.request<any[]>(`/activities/${activityId}/participants`);
   }
 
+  // Get user's activity history (past activities)
+  async getUserActivityHistory(filters?: {
+    status?: string;
+    limit?: number;
+    offset?: number;
+  }) {
+    const params = new URLSearchParams();
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    const queryString = params.toString();
+    return this.request<any>(`/activities/user/history${queryString ? `?${queryString}` : ""}`);
+  }
+
   // Convenience methods for common use cases
   async getUserActivities(userId?: string, status?: string) {
     const filters: any = {};
