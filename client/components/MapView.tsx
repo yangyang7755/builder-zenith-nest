@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import InteractiveMap from "./InteractiveMap";
+import SimpleInteractiveMap from "./SimpleInteractiveMap";
 import EnhancedMapView from "./EnhancedMapView";
 import { useToast } from "../hooks/use-toast";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { MapPin, Wifi, WifiOff } from "lucide-react";
+import { MapPin, Map as MapIcon, List } from "lucide-react";
 
 interface Activity {
   id: string;
