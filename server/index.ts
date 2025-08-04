@@ -99,6 +99,7 @@ export function createServer() {
   app.post("/api/activities/:id/join", handleJoinActivity);
   app.delete("/api/activities/:id/leave", handleLeaveActivity);
   app.get("/api/activities/:id/participants", handleGetParticipants);
+  app.get("/api/activities/user/history", handleGetUserActivityHistory);
 
   // Club routes
   app.get("/api/clubs", handleGetClubs);
