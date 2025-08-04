@@ -25,8 +25,10 @@ import {
   Clock,
   MapPin,
   Star,
-  Plus
+  Plus,
+  Camera
 } from "lucide-react";
+import ImageUpload from "@/components/ImageUpload";
 
 interface Member {
   id: string;
@@ -67,6 +69,8 @@ export default function ClubManagerDashboard() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
   const [inviteEmail, setInviteEmail] = useState("");
+  const [isEditingImage, setIsEditingImage] = useState(false);
+  const [profileImage, setProfileImage] = useState(clubData.profileImage);
 
   // Mock data - in real app this would come from API
   const clubData = {
@@ -221,6 +225,14 @@ export default function ClubManagerDashboard() {
     });
   };
 
+  const handleImageUpdate = (newImageUrl: string | null) => {
+    setProfileImage(newImageUrl || "");
+    toast({
+      title: "Image Updated",
+      description: "Club image has been updated successfully",
+    });
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active": return "bg-green-100 text-green-800";
@@ -259,12 +271,20 @@ export default function ClubManagerDashboard() {
       {/* Club Header */}
       <div className="px-6 mb-6">
         <div className="flex items-center gap-4 mb-4">
-          <Avatar className="w-16 h-16">
-            <AvatarImage src={clubData.profileImage} alt={clubData.name} />
-            <AvatarFallback className="text-lg">
-              {clubData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className="w-16 h-16">
+              <AvatarImage src={profileImage} alt={clubData.name} />
+              <AvatarFallback className="text-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                {clubData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <button
+              onClick={() => setIsEditingImage(!isEditingImage)}
+              className="absolute -bottom-1 -right-1 w-6 h-6 bg-explore-green text-white rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-colors"
+            >
+              <Camera className="w-3 h-3" />
+            </button>
+          </div>
           <div className="flex-1">
             <h2 className="text-xl font-bold text-black font-cabin">{clubData.name}</h2>
             <div className="flex items-center gap-2 text-sm text-gray-600 font-cabin">
@@ -275,6 +295,43 @@ export default function ClubManagerDashboard() {
             </div>
           </div>
         </div>
+
+        {/* Image Upload Section */}
+        {isEditingImage && (
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <div className="mb-3">
+              <h4 className="font-medium font-cabin text-sm mb-2">Update Club Image</h4>
+              <ImageUpload
+                currentImageUrl={profileImage}
+                onImageChange={handleImageUpdate}
+                uploadType="club"
+                entityId={clubData.id}
+                showPreview={true}
+                className="max-w-sm"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                onClick={() => setIsEditingImage(false)}
+                className="bg-explore-green text-white font-cabin hover:bg-green-600"
+              >
+                Done
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setProfileImage(clubData.profileImage);
+                  setIsEditingImage(false);
+                }}
+                className="font-cabin"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-4 mb-4">
