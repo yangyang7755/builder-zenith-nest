@@ -364,32 +364,22 @@ export function ComprehensiveProfileEdit({
 
     setUploadingPhoto(true);
     try {
-      // Always try backend upload first
-      const compressedFile = await uploadService.compressImage(file, 800, 0.8);
+      // Try to upload to server first
+      console.log('Starting photo upload...');
 
-      try {
-        const result = await uploadService.uploadProfileImage(compressedFile, user?.id || 'demo');
+      const result = await uploadService.uploadProfileImage(file, user?.id || 'demo');
 
-        if (result.data?.url) {
-          console.log('Server upload successful, URL:', result.data.url);
-          updateField('profile_image', result.data.url);
-          toast({
-            title: "Photo Updated",
-            description: "Your profile photo has been uploaded to the server.",
-          });
-        } else if (result.error) {
-          throw new Error(result.error);
-        }
-      } catch (uploadError) {
-        console.warn('Server upload failed, using local preview:', uploadError);
-        // Fallback to local URL for immediate preview
-        const objectUrl = URL.createObjectURL(file);
-        console.log('Local upload fallback, object URL:', objectUrl);
-        updateField('profile_image', objectUrl);
+      if (result.data?.url) {
+        console.log('Server upload successful, URL:', result.data.url);
+        updateField('profile_image', result.data.url);
         toast({
           title: "Photo Updated",
-          description: "Photo updated locally. Will sync to server when you save.",
+          description: "Your profile photo has been uploaded successfully.",
         });
+      } else if (result.error) {
+        throw new Error(result.error);
+      } else {
+        throw new Error('Upload failed - no URL returned');
       }
     } catch (error) {
       console.error('Photo upload error:', error);
