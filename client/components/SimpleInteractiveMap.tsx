@@ -324,7 +324,7 @@ export default function SimpleInteractiveMap({
             onClick={handleMapClick}
           >
             <iframe
-              src={generateOSMUrl()}
+              src={mapUrl}
               width="100%"
               height="100%"
               style={{ border: 0 }}
