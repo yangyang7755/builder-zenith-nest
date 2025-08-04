@@ -1102,7 +1102,7 @@ function ClimbingExploreSection() {
     },
     {
       title: "Portland Sport Trip",
-      date: "��� Long weekend, Sept 15-18",
+      date: "📅 Long weekend, Sept 15-18",
       location: "📍Portland, Dorset",
       organizer: "South Coast Climbing",
       grade: "5.8 - 5.12",
@@ -2031,7 +2031,7 @@ function CarShareCard({
       {/* Header */}
       <div className="flex justify-between items-start mb-3">
         <h3 className="font-bold text-blue-800 font-cabin text-lg line-clamp-2 leading-tight flex-1 pr-2">
-          ���� {destination}
+          🏔️ {destination}
         </h3>
         <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded-full font-cabin font-medium">
           {availableSeats} seats
