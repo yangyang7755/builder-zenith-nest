@@ -286,13 +286,19 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
 
     res.json(response);
   } catch (error) {
+    console.error("Profile update error caught:", error);
+
     if (error instanceof z.ZodError) {
+      console.error("Validation error details:", error.errors);
       res
         .status(400)
         .json({ error: "Invalid profile data", details: error.errors });
     } else {
       console.error("Server error:", error);
-      res.status(500).json({ error: "Failed to update profile" });
+      res.status(500).json({
+        error: "Failed to update profile",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   }
 };
