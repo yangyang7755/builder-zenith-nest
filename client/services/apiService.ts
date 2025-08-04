@@ -119,7 +119,7 @@ class ApiService {
       )) {
         console.log(`Retrying request (attempt ${retryCount + 1}/${maxRetries + 1})...`);
         await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1))); // exponential backoff
-        return this.request(endpoint, options, retryCount + 1);
+        return this.executeRequest(endpoint, options, retryCount + 1);
       }
 
       return {
