@@ -47,6 +47,7 @@ import {
   handleGetClubOnlineUsers,
 } from "./routes/chat";
 import uploadsRouter from "./routes/uploads";
+import healthRouter from "./routes/health";
 
 export function createServer() {
   const app = express();
