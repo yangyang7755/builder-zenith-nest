@@ -25,7 +25,24 @@ class ApiService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Try to get error details from response body
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        let errorDetails = null;
+
+        try {
+          const errorBody = await response.json();
+          console.error('Server error response:', errorBody);
+          errorMessage = errorBody.error || errorMessage;
+          errorDetails = errorBody.details || errorBody;
+        } catch (parseError) {
+          console.error('Failed to parse error response:', parseError);
+        }
+
+        return {
+          error: errorMessage,
+          details: errorDetails,
+          status: response.status
+        };
       }
 
       const data = await response.json();
