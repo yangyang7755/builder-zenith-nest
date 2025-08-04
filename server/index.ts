@@ -92,10 +92,12 @@ export function createServer() {
   // Activity routes
   app.get("/api/activities", handleGetActivities);
   app.post("/api/activities", handleCreateActivity);
+  app.get("/api/activities/:id", handleGetActivity);
   app.put("/api/activities/:id", handleUpdateActivity);
   app.delete("/api/activities/:id", handleDeleteActivity);
   app.post("/api/activities/:id/join", handleJoinActivity);
-  app.delete("/api/activities/:id/join", handleLeaveActivity);
+  app.delete("/api/activities/:id/leave", handleLeaveActivity);
+  app.get("/api/activities/:id/participants", handleGetParticipants);
 
   // Club routes
   app.get("/api/clubs", handleGetClubs);
