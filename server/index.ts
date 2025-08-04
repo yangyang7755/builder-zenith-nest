@@ -95,6 +95,14 @@ export function createServer() {
   app.get("/api/user/clubs", handleGetUserClubs);
   app.get("/api/user/activities", handleGetUserActivities);
 
+  // User Management routes
+  app.post("/api/users/register", handleUserRegistration);
+  app.get("/api/users", handleGetUsers);
+  app.get("/api/users/:userId/clubs", handleGetUserClubsNew);
+
+  // Enhanced Club Management
+  app.post("/api/clubs/create", handleClubCreation);
+
   // Reviews routes
   app.get("/api/reviews", handleGetReviews);
   app.post("/api/reviews", handleCreateReview);
