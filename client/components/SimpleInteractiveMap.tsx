@@ -179,6 +179,12 @@ export default function SimpleInteractiveMap({
 
   const handleActivityClick = (activity: Activity) => {
     setSelectedActivity(activity);
+
+    // Scroll the activity into view in the list below
+    const activityElement = document.getElementById(`activity-${activity.id}`);
+    if (activityElement) {
+      activityElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   };
 
   const openInMaps = (activity: Activity) => {
