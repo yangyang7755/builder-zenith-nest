@@ -384,6 +384,7 @@ export function ComprehensiveProfileEdit({
         console.warn('Server upload failed, using local preview:', uploadError);
         // Fallback to local URL for immediate preview
         const objectUrl = URL.createObjectURL(file);
+        console.log('Local upload fallback, object URL:', objectUrl);
         updateField('profile_image', objectUrl);
         toast({
           title: "Photo Updated",
