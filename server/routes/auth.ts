@@ -64,6 +64,22 @@ export const handleGetProfile = async (req: Request, res: Response) => {
 
 export const handleUpdateProfile = async (req: Request, res: Response) => {
   try {
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      // Return demo success response for development
+      const demoProfile = {
+        id: "demo-user-id",
+        email: req.body.email || "demo@example.com",
+        full_name: req.body.full_name || "Demo User",
+        bio: req.body.bio || "Demo user profile",
+        profile_image: req.body.profile_image || null,
+        university: req.body.institution || "Demo University",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      return res.json(demoProfile);
+    }
+
     const user = await getUserFromToken(req.headers.authorization || "");
 
     if (!user) {
