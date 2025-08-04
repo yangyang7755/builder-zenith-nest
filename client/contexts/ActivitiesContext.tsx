@@ -256,7 +256,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       date: backendActivity.date_time ? new Date(backendActivity.date_time).toISOString().split('T')[0] : undefined,
       time: backendActivity.date_time ? new Date(backendActivity.date_time).toTimeString().slice(0, 5) : undefined,
       meetupLocation: backendActivity.location,
-      organizer: backendActivity.organizer?.full_name || "Unknown",
+      organizerName: backendActivity.organizer?.full_name || "Unknown",
       maxParticipants: backendActivity.max_participants?.toString() || "10",
       specialComments: backendActivity.special_requirements || backendActivity.description || "",
       imageSrc: backendActivity.activity_image,
