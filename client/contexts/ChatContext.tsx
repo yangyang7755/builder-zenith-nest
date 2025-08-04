@@ -23,10 +23,12 @@ export interface ChatMessage {
 interface ChatContextType {
   joinRequests: JoinRequest[];
   chatMessages: ChatMessage[];
+  requestedActivities: Set<string>;
   addJoinRequest: (
-    request: Omit<JoinRequest, "id" | "timestamp" | "status">,
+    request: Omit<JoinRequest, "id" | "timestamp" | "status"> & { activityId: string },
   ) => void;
   addChatMessage: (message: Omit<ChatMessage, "id" | "timestamp">) => void;
+  hasRequestedActivity: (activityId: string) => boolean;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
