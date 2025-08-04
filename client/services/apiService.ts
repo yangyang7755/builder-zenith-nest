@@ -278,9 +278,7 @@ class ApiService {
     return this.request<any[]>("/user/clubs");
   }
 
-  async getUserActivities() {
-    return this.request<any[]>("/user/activities");
-  }
+
 
   async createClub(clubData: any) {
     return this.request<any>("/clubs", {
