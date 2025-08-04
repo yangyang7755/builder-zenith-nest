@@ -110,6 +110,34 @@ export function useProfile(userId?: string) {
     }
   };
 
+  const refetch = async () => {
+    if (!userId) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const profileEndpoint = userId === 'me' ? '/api/profile' : `/api/users/${userId}/profile`;
+
+      const [profileResult, followStatsResult] = await Promise.all([
+        userId === 'me' ? apiService.getProfile() : null,
+        apiService.getFollowStats(userId).catch(() => ({ data: { followers: 0, following: 0 } }))
+      ]);
+
+      if (profileResult && profileResult.data) {
+        setProfile(profileResult.data);
+      }
+
+      setFollowStats(followStatsResult.data || { followers: 0, following: 0 });
+
+    } catch (err) {
+      console.error('Failed to refetch profile data:', err);
+      setError('Failed to load profile data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     profile,
     followers,
@@ -121,12 +149,6 @@ export function useProfile(userId?: string) {
     fetchFollowing,
     followUser,
     unfollowUser,
-    refresh: () => {
-      if (userId) {
-        // Re-fetch profile data
-        setLoading(true);
-        setError(null);
-      }
-    }
+    refetch
   };
 }
