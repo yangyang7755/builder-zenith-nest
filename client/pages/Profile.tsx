@@ -25,7 +25,7 @@ export default function Profile() {
   const activitiesRef = useRef<HTMLDivElement>(null);
 
   // Use the profile hook to get real data when user is logged in
-  const { profile, followStats, loading } = useProfile(user?.id);
+  const { profile, followStats, loading, refetch } = useProfile(user?.id);
 
   // Use demo profile when not signed in or loading
   const displayProfile = (user && profile) ? {
@@ -44,6 +44,11 @@ export default function Profile() {
     reviews: 23
   };
   const isDemo = !user;
+
+  const handleProfileUpdate = (updatedProfile: any) => {
+    // Refresh profile data after update
+    refetch?.();
+  };
 
   const handleFollow = () => {
     setFollowing(!following);
