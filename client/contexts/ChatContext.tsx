@@ -195,7 +195,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         requestedActivities,
         addJoinRequest,
         addChatMessage,
-        hasRequestedActivity
+        hasRequestedActivity,
+        respondToRequest,
+        getConversationWith
       }}
     >
       {children}
