@@ -108,8 +108,22 @@ export default function DirectChat({
 
   useEffect(() => {
     if (otherUserId && user) {
-      loadMessages();
+      // Clear any existing timeout
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+
+      // Debounce the loadMessages call
+      loadingTimeoutRef.current = setTimeout(() => {
+        loadMessages();
+      }, 100);
     }
+
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
   }, [otherUserId, user?.id]);
 
   // Listen for real-time messages
