@@ -26,6 +26,7 @@ export default function Profile() {
   const [showFollowing, setShowFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('completed');
   const [activeSportTab, setActiveSportTab] = useState<'climbing' | 'cycling' | 'running'>('climbing');
+  const [localProfileData, setLocalProfileData] = useState<any>(null);
   const activitiesRef = useRef<HTMLDivElement>(null);
 
   // Use the profile hook to get real data when user is logged in
