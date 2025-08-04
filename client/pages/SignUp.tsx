@@ -316,6 +316,166 @@ export default function SignUp() {
                     </Alert>
                   )}
                 </div>
+
+                {/* Optional Profile Information */}
+                <div className="border-t pt-6 mt-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Additional Information (Optional)</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    {/* Bio */}
+                    <div className="md:col-span-2">
+                      <Label htmlFor="bio">Bio</Label>
+                      <Textarea
+                        id="bio"
+                        name="bio"
+                        value={formData.bio}
+                        onChange={(e) => handleInputChange("bio", e.target.value)}
+                        placeholder="Tell us about yourself..."
+                        className="mt-1"
+                        disabled={loading}
+                        rows={3}
+                      />
+                    </div>
+
+                    {/* Phone */}
+                    <div>
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Phone className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange("phone", e.target.value)}
+                          placeholder="Your phone number"
+                          className="pl-10"
+                          disabled={loading}
+                        />
+                      </div>
+                      {errors.phone && (
+                        <Alert className="mt-2">
+                          <AlertDescription className="text-red-600 text-sm">
+                            {errors.phone}
+                          </AlertDescription>
+                        </Alert>
+                      )}
+                    </div>
+
+                    {/* Gender */}
+                    <div>
+                      <Label htmlFor="gender">Gender</Label>
+                      <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="non-binary">Non-binary</SelectItem>
+                          <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Age */}
+                    <div>
+                      <Label htmlFor="age">Age</Label>
+                      <Input
+                        id="age"
+                        name="age"
+                        type="number"
+                        value={formData.age}
+                        onChange={(e) => handleInputChange("age", e.target.value)}
+                        placeholder="Your age"
+                        className="mt-1"
+                        disabled={loading}
+                        min="13"
+                        max="120"
+                      />
+                      {errors.age && (
+                        <Alert className="mt-2">
+                          <AlertDescription className="text-red-600 text-sm">
+                            {errors.age}
+                          </AlertDescription>
+                        </Alert>
+                      )}
+                    </div>
+
+                    {/* Location */}
+                    <div>
+                      <Label htmlFor="location">Location</Label>
+                      <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <MapPin className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <Input
+                          id="location"
+                          name="location"
+                          value={formData.location}
+                          onChange={(e) => handleInputChange("location", e.target.value)}
+                          placeholder="City, Country"
+                          className="pl-10"
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Nationality */}
+                    <div>
+                      <Label htmlFor="nationality">Nationality</Label>
+                      <Input
+                        id="nationality"
+                        name="nationality"
+                        value={formData.nationality}
+                        onChange={(e) => handleInputChange("nationality", e.target.value)}
+                        placeholder="Your nationality"
+                        className="mt-1"
+                        disabled={loading}
+                      />
+                    </div>
+
+                    {/* Institution */}
+                    <div>
+                      <Label htmlFor="institution">University/Institution</Label>
+                      <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <GraduationCap className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <Input
+                          id="institution"
+                          name="institution"
+                          value={formData.institution}
+                          onChange={(e) => handleInputChange("institution", e.target.value)}
+                          placeholder="Your university or school"
+                          className="pl-10"
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Occupation */}
+                    <div>
+                      <Label htmlFor="occupation">Occupation</Label>
+                      <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Building className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <Input
+                          id="occupation"
+                          name="occupation"
+                          value={formData.occupation}
+                          onChange={(e) => handleInputChange("occupation", e.target.value)}
+                          placeholder="Your job title"
+                          className="pl-10"
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
