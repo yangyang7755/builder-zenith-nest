@@ -169,8 +169,13 @@ export default function Profile() {
     loadActivityHistory();
   }, [user]);
 
-  const handleFollow = () => {
-    setFollowing(!following);
+  const handleFollow = async () => {
+    haptic.medium();
+    if (isFollowingUser) {
+      await unfollowUser(currentUserId);
+    } else {
+      await followUser(currentUserId);
+    }
   };
 
   // Helper function to get activity type emoji
