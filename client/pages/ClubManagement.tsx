@@ -21,6 +21,7 @@ import {
   getPendingRequestsCount,
   formatMemberCount,
 } from "../utils/clubUtils";
+import { ClubImageUpload } from "../components/ClubImageUpload";
 
 export default function ClubManagement() {
   const navigate = useNavigate();
