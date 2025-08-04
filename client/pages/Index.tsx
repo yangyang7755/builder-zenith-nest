@@ -1102,7 +1102,7 @@ function ClimbingExploreSection() {
     },
     {
       title: "Portland Sport Trip",
-      date: "📅 Long weekend, Sept 15-18",
+      date: "��� Long weekend, Sept 15-18",
       location: "📍Portland, Dorset",
       organizer: "South Coast Climbing",
       grade: "5.8 - 5.12",
@@ -1804,7 +1804,7 @@ function ActivityCard({
                   Distance
                 </div>
                 <div className="flex items-center justify-center gap-1">
-                  <span className="text-yellow-600">���</span>
+                  <span className="text-yellow-600">🚴</span>
                   <span className="text-sm font-medium text-black font-cabin">
                     {distance}
                   </span>
