@@ -56,6 +56,7 @@ export default function DirectChat({
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load initial messages
   const loadMessages = async () => {
