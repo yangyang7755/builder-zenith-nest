@@ -48,13 +48,7 @@ export default function Profile() {
   const { isVisible } = useProfileVisibility(user?.id);
 
   // Use demo profile when not signed in or loading
-  const displayProfile = (user && profile) ? {
-    ...profile,
-    followers: followStats.followers,
-    following: followStats.following,
-    rating: profile.average_rating || 0,
-    reviews: profile.total_reviews || 0
-  } : {
+  const baseDemoProfile = {
     ...maddieWeiProfile,
     full_name: "Maddie Wei",
     profile_image: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fb4460a1279a84ad1b10626393196b1cf?format=webp&width=800",
@@ -62,6 +56,17 @@ export default function Profile() {
     following: 87,
     rating: 4.8,
     reviews: 23
+  };
+
+  const displayProfile = (user && profile) ? {
+    ...profile,
+    followers: followStats.followers,
+    following: followStats.following,
+    rating: profile.average_rating || 0,
+    reviews: profile.total_reviews || 0
+  } : {
+    ...baseDemoProfile,
+    ...(localProfileData || {}) // Override with any local updates
   };
   const isDemo = !user;
 
