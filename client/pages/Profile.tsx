@@ -32,11 +32,37 @@ export default function Profile() {
   // Use the profile hook to get real data when user is logged in
   const { profile, followStats, loading, refetch } = useProfile(user?.id);
 
+  // Load demo profile data from localStorage on mount
+  useEffect(() => {
+    if (!user) {
+      const savedProfileData = localStorage.getItem('demoProfileData');
+      if (savedProfileData) {
+        try {
+          const parsedData = JSON.parse(savedProfileData);
+          setLocalProfileData(parsedData);
+        } catch (error) {
+          console.error('Failed to parse saved profile data:', error);
+        }
+      }
+    }
+  }, [user]);
+
   // Refresh profile when returning to this page
   useEffect(() => {
     const handleFocus = () => {
       if (user?.id && refetch) {
         refetch();
+      } else if (!user) {
+        // In demo mode, check for updated localStorage data
+        const savedProfileData = localStorage.getItem('demoProfileData');
+        if (savedProfileData) {
+          try {
+            const parsedData = JSON.parse(savedProfileData);
+            setLocalProfileData(parsedData);
+          } catch (error) {
+            console.error('Failed to parse saved profile data:', error);
+          }
+        }
       }
     };
 
