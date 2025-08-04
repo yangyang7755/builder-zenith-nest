@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -9,27 +10,56 @@ import { Separator } from './ui/separator';
 import { Switch } from './ui/switch';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import ImageUpload from './ImageUpload';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useToast } from '../hooks/use-toast';
-import { 
-  Save, 
-  Loader2, 
-  Eye, 
-  EyeOff, 
-  Edit, 
-  Plus, 
-  Trash2,
+import {
+  ArrowLeft,
   User,
+  Camera,
+  Eye,
+  EyeOff,
   Shield,
   Trophy,
+  Activity,
+  Plus,
+  Trash2,
+  Save,
+  Settings,
   MapPin,
+  Globe,
   Calendar,
   Briefcase,
-  Globe,
+  GraduationCap,
   Phone,
   Mail,
-  Camera
+  CheckCircle,
+  Star,
+  Mountain,
+  Bike,
+  Users,
 } from 'lucide-react';
+import BottomNavigation from './BottomNavigation';
+
+interface VisibilitySettings {
+  profile_image: boolean;
+  full_name: boolean;
+  bio: boolean;
+  email: boolean;
+  phone: boolean;
+  gender: boolean;
+  age: boolean;
+  date_of_birth: boolean;
+  nationality: boolean;
+  institution: boolean;
+  occupation: boolean;
+  location: boolean;
+  sports: boolean;
+  achievements: boolean;
+  activities: boolean;
+  reviews: boolean;
+  followers: boolean;
+  following: boolean;
+}
 
 interface ProfileData {
   // Basic Info
@@ -37,7 +67,7 @@ interface ProfileData {
   bio: string;
   profile_image: string | null;
   email: string;
-  phone?: string;
+  phone: string;
   
   // Personal Details
   gender?: string;
@@ -78,27 +108,6 @@ interface Achievement {
   verified: boolean;
 }
 
-interface VisibilitySettings {
-  profile_image: boolean;
-  full_name: boolean;
-  bio: boolean;
-  email: boolean;
-  phone: boolean;
-  gender: boolean;
-  age: boolean;
-  date_of_birth: boolean;
-  nationality: boolean;
-  institution: boolean;
-  occupation: boolean;
-  location: boolean;
-  sports: boolean;
-  achievements: boolean;
-  activities: boolean;
-  reviews: boolean;
-  followers: boolean;
-  following: boolean;
-}
-
 const defaultVisibility: VisibilitySettings = {
   profile_image: true,
   full_name: true,
@@ -121,7 +130,7 @@ const defaultVisibility: VisibilitySettings = {
 };
 
 interface ComprehensiveProfileEditProps {
-  profile: any;
+  profile?: any;
   onProfileUpdate?: (profile: any) => void;
   className?: string;
 }
@@ -131,17 +140,16 @@ export function ComprehensiveProfileEdit({
   onProfileUpdate, 
   className = '' 
 }: ComprehensiveProfileEditProps) {
-  const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('basic');
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState<ProfileData>({
-    full_name: profile?.full_name || '',
-    bio: profile?.bio || '',
-    profile_image: profile?.profile_image || null,
-    email: profile?.email || '',
-    phone: '',
+    full_name: profile?.full_name || 'Maddie Wei',
+    bio: profile?.bio || 'Passionate rock climber and cyclist. Always looking for new adventures and great people to share them with!',
+    profile_image: profile?.profile_image || "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fb4460a1279a84ad1b10626393196b1cf?format=webp&width=800",
+    email: profile?.email || 'maddie.wei@email.com',
+    phone: '+44 7700 900123',
     gender: 'Female',
     age: 28,
     date_of_birth: '1996-03-15',
@@ -189,33 +197,41 @@ export function ComprehensiveProfileEdit({
         verified: false
       }
     ],
-    visibility: defaultVisibility,
+    visibility: defaultVisibility
   });
 
   const updateField = (field: string, value: any) => {
-    setProfileData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setProfileData(prev => ({ ...prev, [field]: value }));
   };
 
   const updateVisibility = (field: keyof VisibilitySettings, visible: boolean) => {
     setProfileData(prev => ({
       ...prev,
-      visibility: {
-        ...prev.visibility,
-        [field]: visible
-      }
+      visibility: { ...prev.visibility, [field]: visible }
     }));
   };
 
-  const updateSport = (sportId: string, updates: Partial<SportProfile>) => {
-    setProfileData(prev => ({
-      ...prev,
-      sports: prev.sports.map(sport => 
-        sport.id === sportId ? { ...sport, ...updates } : sport
-      )
-    }));
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      onProfileUpdate?.(profileData);
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been successfully updated.",
+      });
+      navigate('/profile');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const addSport = () => {
@@ -224,6 +240,7 @@ export function ComprehensiveProfileEdit({
       sport: '',
       level: 'Beginner',
       experience: '',
+      maxGrade: '',
       certifications: [],
       specialties: [],
       preferences: []
@@ -234,10 +251,19 @@ export function ComprehensiveProfileEdit({
     }));
   };
 
-  const removeSport = (sportId: string) => {
+  const removeSport = (id: string) => {
     setProfileData(prev => ({
       ...prev,
-      sports: prev.sports.filter(sport => sport.id !== sportId)
+      sports: prev.sports.filter(sport => sport.id !== id)
+    }));
+  };
+
+  const updateSport = (id: string, updates: Partial<SportProfile>) => {
+    setProfileData(prev => ({
+      ...prev,
+      sports: prev.sports.map(sport => 
+        sport.id === id ? { ...sport, ...updates } : sport
+      )
     }));
   };
 
@@ -247,7 +273,7 @@ export function ComprehensiveProfileEdit({
       title: '',
       description: '',
       date: new Date().toISOString().split('T')[0],
-      category: 'General',
+      category: '',
       verified: false
     };
     setProfileData(prev => ({
@@ -256,533 +282,651 @@ export function ComprehensiveProfileEdit({
     }));
   };
 
-  const updateAchievement = (achievementId: string, updates: Partial<Achievement>) => {
+  const removeAchievement = (id: string) => {
+    setProfileData(prev => ({
+      ...prev,
+      achievements: prev.achievements.filter(achievement => achievement.id !== id)
+    }));
+  };
+
+  const updateAchievement = (id: string, updates: Partial<Achievement>) => {
     setProfileData(prev => ({
       ...prev,
       achievements: prev.achievements.map(achievement => 
-        achievement.id === achievementId ? { ...achievement, ...updates } : achievement
+        achievement.id === id ? { ...achievement, ...updates } : achievement
       )
     }));
   };
 
-  const removeAchievement = (achievementId: string) => {
-    setProfileData(prev => ({
-      ...prev,
-      achievements: prev.achievements.filter(achievement => achievement.id !== achievementId)
-    }));
-  };
-
-  const handleSave = async () => {
-    try {
-      setSaving(true);
-      
-      // In a real app, this would make an API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      onProfileUpdate?.(profileData);
-      setIsEditing(false);
-      
-      toast({
-        title: 'Profile Updated',
-        description: 'Your profile has been successfully updated.',
-      });
-    } catch (error) {
-      toast({
-        title: 'Update Failed',
-        description: 'Failed to update profile. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    // Reset to original data if needed
-  };
-
-  // Visibility Control Component
-  const VisibilityControl = ({ field, label }: { field: keyof VisibilitySettings; label: string }) => (
-    <div className="flex items-center justify-between">
-      <Label className="text-sm">{label}</Label>
+  const VisibilityControl = ({ field, label }: { field: keyof VisibilitySettings, label: string }) => (
+    <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg mt-2">
       <div className="flex items-center gap-2">
         {profileData.visibility[field] ? (
           <Eye className="h-4 w-4 text-green-600" />
         ) : (
           <EyeOff className="h-4 w-4 text-gray-400" />
         )}
-        <Switch
-          checked={profileData.visibility[field]}
-          onCheckedChange={(checked) => updateVisibility(field, checked)}
-        />
+        <span className="text-sm text-gray-600">{label}</span>
       </div>
+      <Switch
+        checked={profileData.visibility[field]}
+        onCheckedChange={(checked) => updateVisibility(field, checked)}
+      />
     </div>
   );
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Complete Profile Management
-            </CardTitle>
-            <CardDescription>
-              Edit your profile information and control what others can see
-            </CardDescription>
-          </div>
-          {!isEditing && (
-            <Button onClick={() => setIsEditing(true)} variant="outline">
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Profile
-            </Button>
+    <div className="min-h-screen bg-gray-50 font-cabin">
+      {/* Header */}
+      <div className="bg-white flex items-center justify-between px-6 py-4 border-b border-gray-200 sticky top-0 z-10">
+        <Link to="/profile">
+          <ArrowLeft className="w-6 h-6 text-gray-600" />
+        </Link>
+        <h1 className="text-xl font-bold text-gray-900">Edit Profile</h1>
+        <Button
+          onClick={handleSave}
+          disabled={isSaving}
+          size="sm"
+          className="bg-black text-white hover:bg-gray-800"
+        >
+          {isSaving ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Saving
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4 mr-2" />
+              Save
+            </>
           )}
-        </div>
-      </CardHeader>
+        </Button>
+      </div>
 
-      <CardContent>
-        {isEditing ? (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="basic">Basic Info</TabsTrigger>
-              <TabsTrigger value="personal">Personal</TabsTrigger>
-              <TabsTrigger value="sports">Sports</TabsTrigger>
-              <TabsTrigger value="privacy">Privacy</TabsTrigger>
+      {/* Content */}
+      <div className="max-w-4xl mx-auto">
+        <Tabs defaultValue="basic" className="w-full">
+          {/* Tab Navigation */}
+          <div className="bg-white border-b border-gray-200 sticky top-[73px] z-10">
+            <TabsList className="grid w-full grid-cols-4 h-12 bg-transparent p-0">
+              <TabsTrigger 
+                value="basic" 
+                className="data-[state=active]:bg-gray-50 data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none border-b-2 border-transparent"
+              >
+                <User className="h-4 w-4 mr-2" />
+                Basic
+              </TabsTrigger>
+              <TabsTrigger 
+                value="personal"
+                className="data-[state=active]:bg-gray-50 data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none border-b-2 border-transparent"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Personal
+              </TabsTrigger>
+              <TabsTrigger 
+                value="sports"
+                className="data-[state=active]:bg-gray-50 data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none border-b-2 border-transparent"
+              >
+                <Activity className="h-4 w-4 mr-2" />
+                Sports
+              </TabsTrigger>
+              <TabsTrigger 
+                value="privacy"
+                className="data-[state=active]:bg-gray-50 data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none border-b-2 border-transparent"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Privacy
+              </TabsTrigger>
             </TabsList>
+          </div>
 
+          {/* Tab Content */}
+          <div className="p-6">
             {/* Basic Information Tab */}
-            <TabsContent value="basic" className="space-y-6">
-              <div className="space-y-4">
-                <div>
-                  <Label>Profile Image</Label>
-                  <div className="mt-2">
-                    <ImageUpload
-                      currentImageUrl={profileData.profile_image}
-                      onImageChange={(url) => updateField('profile_image', url)}
-                      uploadType="profile"
-                      showPreview={true}
-                      disabled={false}
-                    />
+            <TabsContent value="basic" className="space-y-6 mt-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Basic Information
+                  </CardTitle>
+                  <CardDescription>
+                    Your essential profile information that helps others find and recognize you.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Profile Picture */}
+                  <div className="space-y-4">
+                    <Label className="text-base font-medium">Profile Picture</Label>
+                    <div className="flex items-center gap-4">
+                      <Avatar className="w-20 h-20">
+                        <AvatarImage src={profileData.profile_image || ''} />
+                        <AvatarFallback className="bg-gray-200 text-gray-600">
+                          {profileData.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-2">
+                        <Button variant="outline" size="sm">
+                          <Camera className="h-4 w-4 mr-2" />
+                          Change Photo
+                        </Button>
+                        <VisibilityControl field="profile_image" label="Show profile picture" />
+                      </div>
+                    </div>
                   </div>
-                  <VisibilityControl field="profile_image" label="Show profile image" />
-                </div>
 
-                <div>
-                  <Label htmlFor="full_name">Full Name</Label>
-                  <Input
-                    id="full_name"
-                    value={profileData.full_name}
-                    onChange={(e) => updateField('full_name', e.target.value)}
-                    placeholder="Enter your full name"
-                  />
-                  <VisibilityControl field="full_name" label="Show full name" />
-                </div>
+                  <Separator />
 
-                <div>
-                  <Label htmlFor="bio">Bio</Label>
-                  <Textarea
-                    id="bio"
-                    value={profileData.bio}
-                    onChange={(e) => updateField('bio', e.target.value)}
-                    placeholder="Tell us about yourself..."
-                    className="min-h-[100px]"
-                  />
-                  <VisibilityControl field="bio" label="Show bio" />
-                </div>
+                  {/* Full Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="full_name" className="text-base font-medium">Full Name</Label>
+                    <Input
+                      id="full_name"
+                      value={profileData.full_name}
+                      onChange={(e) => updateField('full_name', e.target.value)}
+                      placeholder="Your full name"
+                      className="text-base"
+                    />
+                    <VisibilityControl field="full_name" label="Show full name" />
+                  </div>
 
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profileData.email}
-                    onChange={(e) => updateField('email', e.target.value)}
-                    placeholder="your.email@example.com"
-                  />
-                  <VisibilityControl field="email" label="Show email" />
-                </div>
+                  {/* Bio */}
+                  <div className="space-y-2">
+                    <Label htmlFor="bio" className="text-base font-medium">Bio</Label>
+                    <Textarea
+                      id="bio"
+                      value={profileData.bio}
+                      onChange={(e) => updateField('bio', e.target.value)}
+                      placeholder="Tell others about yourself..."
+                      rows={4}
+                      className="text-base resize-none"
+                    />
+                    <VisibilityControl field="bio" label="Show bio" />
+                  </div>
 
-                <div>
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={profileData.phone}
-                    onChange={(e) => updateField('phone', e.target.value)}
-                    placeholder="+44 20 1234 5678"
-                  />
-                  <VisibilityControl field="phone" label="Show phone number" />
-                </div>
-              </div>
+                  {/* Contact Information */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <Mail className="h-5 w-5" />
+                      Contact Information
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="text-base font-medium">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={profileData.email}
+                          onChange={(e) => updateField('email', e.target.value)}
+                          placeholder="your.email@example.com"
+                          className="text-base"
+                        />
+                        <VisibilityControl field="email" label="Show email" />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="phone" className="text-base font-medium">Phone</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={profileData.phone}
+                          onChange={(e) => updateField('phone', e.target.value)}
+                          placeholder="+44 7700 900123"
+                          className="text-base"
+                        />
+                        <VisibilityControl field="phone" label="Show phone" />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* Personal Details Tab */}
-            <TabsContent value="personal" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="gender">Gender</Label>
-                  <Select value={profileData.gender} onValueChange={(value) => updateField('gender', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Female">Female</SelectItem>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Non-binary">Non-binary</SelectItem>
-                      <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <VisibilityControl field="gender" label="Show gender" />
-                </div>
+            <TabsContent value="personal" className="space-y-6 mt-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="h-5 w-5" />
+                    Personal Details
+                  </CardTitle>
+                  <CardDescription>
+                    Additional information about yourself to help others connect with you.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Demographics */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="gender" className="text-base font-medium">Gender</Label>
+                      <Select value={profileData.gender} onValueChange={(value) => updateField('gender', value)}>
+                        <SelectTrigger className="text-base">
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Female">Female</SelectItem>
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Non-binary">Non-binary</SelectItem>
+                          <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <VisibilityControl field="gender" label="Show gender" />
+                    </div>
 
-                <div>
-                  <Label htmlFor="age">Age</Label>
-                  <Input
-                    id="age"
-                    type="number"
-                    value={profileData.age || ''}
-                    onChange={(e) => updateField('age', e.target.value ? parseInt(e.target.value) || 0 : 0)}
-                    placeholder="Age"
-                  />
-                  <VisibilityControl field="age" label="Show age" />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="age" className="text-base font-medium">Age</Label>
+                      <Input
+                        id="age"
+                        type="number"
+                        value={profileData.age || ''}
+                        onChange={(e) => updateField('age', e.target.value ? parseInt(e.target.value) || 0 : 0)}
+                        placeholder="Age"
+                        className="text-base"
+                      />
+                      <VisibilityControl field="age" label="Show age" />
+                    </div>
 
-                <div>
-                  <Label htmlFor="date_of_birth">Date of Birth</Label>
-                  <Input
-                    id="date_of_birth"
-                    type="date"
-                    value={profileData.date_of_birth}
-                    onChange={(e) => updateField('date_of_birth', e.target.value)}
-                  />
-                  <VisibilityControl field="date_of_birth" label="Show date of birth" />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="date_of_birth" className="text-base font-medium">Date of Birth</Label>
+                      <Input
+                        id="date_of_birth"
+                        type="date"
+                        value={profileData.date_of_birth}
+                        onChange={(e) => updateField('date_of_birth', e.target.value)}
+                        className="text-base"
+                      />
+                      <VisibilityControl field="date_of_birth" label="Show date of birth" />
+                    </div>
+                  </div>
 
-                <div>
-                  <Label htmlFor="nationality">Nationality</Label>
-                  <Input
-                    id="nationality"
-                    value={profileData.nationality}
-                    onChange={(e) => updateField('nationality', e.target.value)}
-                    placeholder="British"
-                  />
-                  <VisibilityControl field="nationality" label="Show nationality" />
-                </div>
+                  <Separator />
 
-                <div>
-                  <Label htmlFor="institution">Institution</Label>
-                  <Input
-                    id="institution"
-                    value={profileData.institution}
-                    onChange={(e) => updateField('institution', e.target.value)}
-                    placeholder="University or School"
-                  />
-                  <VisibilityControl field="institution" label="Show institution" />
-                </div>
+                  {/* Location & Background */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <Globe className="h-5 w-5" />
+                      Location & Background
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="nationality" className="text-base font-medium">Nationality</Label>
+                        <Input
+                          id="nationality"
+                          value={profileData.nationality}
+                          onChange={(e) => updateField('nationality', e.target.value)}
+                          placeholder="British"
+                          className="text-base"
+                        />
+                        <VisibilityControl field="nationality" label="Show nationality" />
+                      </div>
 
-                <div>
-                  <Label htmlFor="occupation">Occupation</Label>
-                  <Input
-                    id="occupation"
-                    value={profileData.occupation}
-                    onChange={(e) => updateField('occupation', e.target.value)}
-                    placeholder="Your job title"
-                  />
-                  <VisibilityControl field="occupation" label="Show occupation" />
-                </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="location" className="text-base font-medium">Location</Label>
+                        <Input
+                          id="location"
+                          value={profileData.location}
+                          onChange={(e) => updateField('location', e.target.value)}
+                          placeholder="London, UK"
+                          className="text-base"
+                        />
+                        <VisibilityControl field="location" label="Show location" />
+                      </div>
 
-                <div className="md:col-span-2">
-                  <Label htmlFor="location">Location</Label>
-                  <Input
-                    id="location"
-                    value={profileData.location}
-                    onChange={(e) => updateField('location', e.target.value)}
-                    placeholder="City, Country"
-                  />
-                  <VisibilityControl field="location" label="Show location" />
-                </div>
-              </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="institution" className="text-base font-medium">Institution</Label>
+                        <Input
+                          id="institution"
+                          value={profileData.institution}
+                          onChange={(e) => updateField('institution', e.target.value)}
+                          placeholder="University or School"
+                          className="text-base"
+                        />
+                        <VisibilityControl field="institution" label="Show institution" />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="occupation" className="text-base font-medium">Occupation</Label>
+                        <Input
+                          id="occupation"
+                          value={profileData.occupation}
+                          onChange={(e) => updateField('occupation', e.target.value)}
+                          placeholder="Your job title"
+                          className="text-base"
+                        />
+                        <VisibilityControl field="occupation" label="Show occupation" />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* Sports & Activities Tab */}
-            <TabsContent value="sports" className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Sports & Activities</h3>
-                <Button onClick={addSport} size="sm">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Sport
-                </Button>
-              </div>
-              
-              <VisibilityControl field="sports" label="Show sports section" />
+            <TabsContent value="sports" className="space-y-6 mt-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="h-5 w-5" />
+                    Sports & Activities
+                  </CardTitle>
+                  <CardDescription>
+                    Showcase your sporting interests, skills, and achievements.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Sports Profiles */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold">Your Sports</h3>
+                      <Button onClick={addSport} variant="outline" size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Sport
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      {profileData.sports.map((sport) => (
+                        <Card key={sport.id} className="border border-gray-200">
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <Label className="text-sm font-medium">Sport</Label>
+                                  <Input
+                                    value={sport.sport}
+                                    onChange={(e) => updateSport(sport.id, { sport: e.target.value })}
+                                    placeholder="e.g., Rock Climbing"
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label className="text-sm font-medium">Level</Label>
+                                  <Select 
+                                    value={sport.level} 
+                                    onValueChange={(value) => updateSport(sport.id, { level: value })}
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="Beginner">Beginner</SelectItem>
+                                      <SelectItem value="Intermediate">Intermediate</SelectItem>
+                                      <SelectItem value="Advanced">Advanced</SelectItem>
+                                      <SelectItem value="Expert">Expert</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeSport(sport.id)}
+                                className="text-red-500 hover:text-red-700 ml-2"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium">Experience</Label>
+                                <Input
+                                  value={sport.experience}
+                                  onChange={(e) => updateSport(sport.id, { experience: e.target.value })}
+                                  placeholder="e.g., 5 years"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium">Max Grade/Level</Label>
+                                <Input
+                                  value={sport.maxGrade}
+                                  onChange={(e) => updateSport(sport.id, { maxGrade: e.target.value })}
+                                  placeholder="e.g., V6 / 6c+"
+                                />
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                    <VisibilityControl field="sports" label="Show sports section" />
+                  </div>
 
-              <div className="space-y-4">
-                {profileData.sports.map((sport) => (
-                  <Card key={sport.id}>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <Input
-                          value={sport.sport}
-                          onChange={(e) => updateSport(sport.id, { sport: e.target.value })}
-                          placeholder="Sport name"
-                          className="font-semibold"
-                        />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeSport(sport.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <Label>Level</Label>
-                          <Select value={sport.level} onValueChange={(value) => updateSport(sport.id, { level: value })}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Beginner">Beginner</SelectItem>
-                              <SelectItem value="Intermediate">Intermediate</SelectItem>
-                              <SelectItem value="Advanced">Advanced</SelectItem>
-                              <SelectItem value="Expert">Expert</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label>Experience</Label>
-                          <Input
-                            value={sport.experience}
-                            onChange={(e) => updateSport(sport.id, { experience: e.target.value })}
-                            placeholder="e.g., 5 years"
-                          />
-                        </div>
-                        {sport.sport.toLowerCase().includes('climb') && (
-                          <div>
-                            <Label>Max Grade</Label>
-                            <Input
-                              value={sport.maxGrade}
-                              onChange={(e) => updateSport(sport.id, { maxGrade: e.target.value })}
-                              placeholder="e.g., V6 / 6c+"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                  <Separator />
 
-              <Separator />
-
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">Achievements</h3>
-                  <Button onClick={addAchievement} size="sm">
-                    <Trophy className="h-4 w-4 mr-2" />
-                    Add Achievement
-                  </Button>
-                </div>
-                
-                <VisibilityControl field="achievements" label="Show achievements" />
-
-                <div className="space-y-3 mt-4">
-                  {profileData.achievements.map((achievement) => (
-                    <Card key={achievement.id}>
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <Input
-                            value={achievement.title}
-                            onChange={(e) => updateAchievement(achievement.id, { title: e.target.value })}
-                            placeholder="Achievement title"
-                            className="font-medium"
-                          />
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeAchievement(achievement.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <Textarea
-                          value={achievement.description}
-                          onChange={(e) => updateAchievement(achievement.id, { description: e.target.value })}
-                          placeholder="Description"
-                          className="mb-3"
-                        />
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <Label>Date</Label>
-                            <Input
-                              type="date"
-                              value={achievement.date}
-                              onChange={(e) => updateAchievement(achievement.id, { date: e.target.value })}
-                            />
-                          </div>
-                          <div>
-                            <Label>Category</Label>
-                            <Input
-                              value={achievement.category}
-                              onChange={(e) => updateAchievement(achievement.id, { category: e.target.value })}
-                              placeholder="e.g., Climbing"
-                            />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
+                  {/* Achievements */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold flex items-center gap-2">
+                        <Trophy className="h-5 w-5" />
+                        Achievements
+                      </h3>
+                      <Button onClick={addAchievement} variant="outline" size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Achievement
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      {profileData.achievements.map((achievement) => (
+                        <Card key={achievement.id} className="border border-gray-200">
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Input
+                                    value={achievement.title}
+                                    onChange={(e) => updateAchievement(achievement.id, { title: e.target.value })}
+                                    placeholder="Achievement title"
+                                    className="font-medium text-base"
+                                  />
+                                  {achievement.verified && (
+                                    <Badge variant="secondary" className="text-green-600 bg-green-50">
+                                      <CheckCircle className="h-3 w-3 mr-1" />
+                                      Verified
+                                    </Badge>
+                                  )}
+                                </div>
+                                <Textarea
+                                  value={achievement.description}
+                                  onChange={(e) => updateAchievement(achievement.id, { description: e.target.value })}
+                                  placeholder="Description of your achievement"
+                                  rows={2}
+                                  className="mb-3 resize-none"
+                                />
+                                <div className="grid grid-cols-2 gap-3">
+                                  <div className="space-y-1">
+                                    <Label className="text-sm">Date</Label>
+                                    <Input
+                                      type="date"
+                                      value={achievement.date}
+                                      onChange={(e) => updateAchievement(achievement.id, { date: e.target.value })}
+                                    />
+                                  </div>
+                                  <div className="space-y-1">
+                                    <Label className="text-sm">Category</Label>
+                                    <Input
+                                      value={achievement.category}
+                                      onChange={(e) => updateAchievement(achievement.id, { category: e.target.value })}
+                                      placeholder="e.g., Climbing"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeAchievement(achievement.id)}
+                                className="text-red-500 hover:text-red-700 ml-2"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                    <VisibilityControl field="achievements" label="Show achievements section" />
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* Privacy Settings Tab */}
-            <TabsContent value="privacy" className="space-y-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Shield className="h-5 w-5" />
-                <h3 className="text-lg font-semibold">Privacy & Visibility Settings</h3>
-              </div>
-              
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Profile Sections</CardTitle>
-                    <CardDescription>Control which sections of your profile are visible to others</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <VisibilityControl field="activities" label="Activities & Reviews" />
-                    <VisibilityControl field="followers" label="Followers Count" />
-                    <VisibilityControl field="following" label="Following Count" />
-                    <VisibilityControl field="reviews" label="Reviews & Ratings" />
-                  </CardContent>
-                </Card>
+            <TabsContent value="privacy" className="space-y-6 mt-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    Privacy & Visibility Settings
+                  </CardTitle>
+                  <CardDescription>
+                    Control what information is visible to other users on your profile.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Shield className="h-5 w-5 text-blue-600 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium text-blue-900">Privacy Control</h4>
+                        <p className="text-sm text-blue-700 mt-1">
+                          Toggle the visibility of each section below. Hidden sections won't be visible to other users visiting your profile.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Quick Privacy Settings</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label>Make everything public</Label>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const newVisibility = { ...profileData.visibility };
-                          Object.keys(newVisibility).forEach(key => {
-                            newVisibility[key as keyof VisibilitySettings] = true;
-                          });
-                          setProfileData(prev => ({ ...prev, visibility: newVisibility }));
-                        }}
-                      >
-                        Show All
-                      </Button>
+                  {/* Quick Actions */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        Object.keys(profileData.visibility).forEach(key => {
+                          updateVisibility(key as keyof VisibilitySettings, true);
+                        });
+                      }}
+                      className="w-full"
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      Show All
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        Object.keys(profileData.visibility).forEach(key => {
+                          updateVisibility(key as keyof VisibilitySettings, false);
+                        });
+                      }}
+                      className="w-full"
+                    >
+                      <EyeOff className="h-4 w-4 mr-2" />
+                      Hide All
+                    </Button>
+                  </div>
+
+                  <Separator />
+
+                  {/* Privacy Settings Groups */}
+                  <div className="space-y-6">
+                    {/* Basic Information */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-gray-900">Basic Information</h4>
+                      <div className="space-y-2">
+                        <VisibilityControl field="profile_image" label="Profile picture" />
+                        <VisibilityControl field="full_name" label="Full name" />
+                        <VisibilityControl field="bio" label="Bio" />
+                        <VisibilityControl field="email" label="Email address" />
+                        <VisibilityControl field="phone" label="Phone number" />
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <Label>Make everything private</Label>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const newVisibility = { ...profileData.visibility };
-                          Object.keys(newVisibility).forEach(key => {
-                            newVisibility[key as keyof VisibilitySettings] = false;
-                          });
-                          // Keep name and profile image visible for basic functionality
-                          newVisibility.full_name = true;
-                          newVisibility.profile_image = true;
-                          setProfileData(prev => ({ ...prev, visibility: newVisibility }));
-                        }}
-                      >
-                        Hide All
-                      </Button>
+
+                    {/* Personal Details */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-gray-900">Personal Details</h4>
+                      <div className="space-y-2">
+                        <VisibilityControl field="gender" label="Gender" />
+                        <VisibilityControl field="age" label="Age" />
+                        <VisibilityControl field="date_of_birth" label="Date of birth" />
+                        <VisibilityControl field="nationality" label="Nationality" />
+                        <VisibilityControl field="institution" label="Institution" />
+                        <VisibilityControl field="occupation" label="Occupation" />
+                        <VisibilityControl field="location" label="Location" />
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+
+                    {/* Activity & Social */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-gray-900">Activity & Social</h4>
+                      <div className="space-y-2">
+                        <VisibilityControl field="sports" label="Sports & activities" />
+                        <VisibilityControl field="achievements" label="Achievements" />
+                        <VisibilityControl field="activities" label="Activity history" />
+                        <VisibilityControl field="reviews" label="Reviews & ratings" />
+                        <VisibilityControl field="followers" label="Followers count" />
+                        <VisibilityControl field="following" label="Following count" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Privacy Summary */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="font-medium text-gray-900 mb-3">Privacy Summary</h4>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-green-600 font-medium">
+                          {Object.values(profileData.visibility).filter(Boolean).length} sections visible
+                        </span>
+                        <div className="mt-1 space-y-1">
+                          {Object.entries(profileData.visibility)
+                            .filter(([_, visible]) => visible)
+                            .slice(0, 5)
+                            .map(([field, _]) => (
+                              <div key={field} className="flex items-center gap-2">
+                                <Eye className="h-3 w-3 text-green-600" />
+                                <span className="capitalize text-gray-600">
+                                  {field.replace('_', ' ')}
+                                </span>
+                              </div>
+                            ))}
+                          {Object.values(profileData.visibility).filter(Boolean).length > 5 && (
+                            <div className="text-xs text-gray-500">
+                              +{Object.values(profileData.visibility).filter(Boolean).length - 5} more...
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 font-medium">
+                          {Object.values(profileData.visibility).filter(v => !v).length} sections hidden
+                        </span>
+                        <div className="mt-1 space-y-1">
+                          {Object.entries(profileData.visibility)
+                            .filter(([_, visible]) => !visible)
+                            .slice(0, 5)
+                            .map(([field, _]) => (
+                              <div key={field} className="flex items-center gap-2">
+                                <EyeOff className="h-3 w-3 text-gray-400" />
+                                <span className="capitalize text-gray-500">
+                                  {field.replace('_', ' ')}
+                                </span>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2 pt-4 border-t">
-              <Button
-                variant="outline"
-                onClick={handleCancel}
-                disabled={isSaving}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="flex-1"
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="mr-2 h-4 w-4" />
-                    Save Changes
-                  </>
-                )}
-              </Button>
-            </div>
-          </Tabs>
-        ) : (
-          /* View Mode */
-          <div className="space-y-4">
-            <div className="text-center">
-              <p className="text-gray-600">
-                Use the "Edit Profile" button to modify your profile information and privacy settings.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4 pt-4 text-sm">
-              <div className="space-y-2">
-                <h4 className="font-medium">Visible Sections:</h4>
-                <div className="space-y-1">
-                  {Object.entries(profileData.visibility)
-                    .filter(([_, visible]) => visible)
-                    .slice(0, 5)
-                    .map(([field, _]) => (
-                      <div key={field} className="flex items-center gap-2">
-                        <Eye className="h-3 w-3 text-green-600" />
-                        <span className="capitalize text-green-700">
-                          {field.replace('_', ' ')}
-                        </span>
-                      </div>
-                    ))}
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <h4 className="font-medium">Hidden Sections:</h4>
-                <div className="space-y-1">
-                  {Object.entries(profileData.visibility)
-                    .filter(([_, visible]) => !visible)
-                    .slice(0, 5)
-                    .map(([field, _]) => (
-                      <div key={field} className="flex items-center gap-2">
-                        <EyeOff className="h-3 w-3 text-gray-400" />
-                        <span className="capitalize text-gray-500">
-                          {field.replace('_', ' ')}
-                        </span>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </Tabs>
+      </div>
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
+    </div>
   );
 }
 
