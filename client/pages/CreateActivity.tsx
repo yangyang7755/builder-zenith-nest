@@ -39,7 +39,7 @@ export default function CreateActivity() {
       name: "Hiking",
       icon: TreePine,
       available: true,
-      route: "/create/hiking",
+      route: "/create/hiking-simple",
     },
     {
       id: "skiing",
