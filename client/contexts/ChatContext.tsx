@@ -77,6 +77,28 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     },
   ]);
 
+  // Listen for profile updates and sync chat messages
+  useEffect(() => {
+    const handleProfileUpdate = (event: CustomEvent) => {
+      const { userId, profile } = event.detail;
+
+      // Update chat messages from this user
+      setChatMessages(prev =>
+        prev.map(msg =>
+          msg.sender === userId || (msg.sender !== "You" && msg.sender === profile.full_name)
+            ? { ...msg, sender: profile.full_name }
+            : msg
+        )
+      );
+    };
+
+    window.addEventListener('profileUpdated', handleProfileUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('profileUpdated', handleProfileUpdate as EventListener);
+    };
+  }, []);
+
   const addJoinRequest = (
     requestData: Omit<JoinRequest, "id" | "timestamp" | "status"> & { activityId: string },
   ) => {
