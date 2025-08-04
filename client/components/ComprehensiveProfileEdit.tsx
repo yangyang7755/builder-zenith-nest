@@ -219,31 +219,16 @@ export function ComprehensiveProfileEdit({
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Check if user is authenticated or in demo mode
-      if (!user) {
-        // Demo mode - save to localStorage and simulate save
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        localStorage.setItem('demoProfileData', JSON.stringify(profileData));
-
-        // Also save visibility settings separately for the useProfileVisibility hook
-        const visibilityKey = 'profile_visibility_demo';
-        localStorage.setItem(visibilityKey, JSON.stringify(profileData.visibility));
-
-        onProfileUpdate?.(profileData);
-        toast({
-          title: "Profile Updated",
-          description: "Your profile has been successfully updated.",
-        });
-        navigate('/profile');
-        return;
-      }
-
-      // Prepare profile data for API
+      // Prepare comprehensive profile data for API
       const updateData = {
+        // Basic Info
         full_name: profileData.full_name,
         bio: profileData.bio,
         email: profileData.email,
         phone: profileData.phone,
+        profile_image: profileData.profile_image,
+
+        // Personal Details
         gender: profileData.gender,
         age: profileData.age,
         date_of_birth: profileData.date_of_birth,
@@ -251,22 +236,32 @@ export function ComprehensiveProfileEdit({
         institution: profileData.institution,
         occupation: profileData.occupation,
         location: profileData.location,
-        profile_image: profileData.profile_image,
-        // Add visibility settings
-        visibility_settings: profileData.visibility
+
+        // Visibility Settings
+        visibility_settings: profileData.visibility,
+
+        // Sports and Achievements
+        sports: profileData.sports,
+        achievements: profileData.achievements
       };
 
-      // Update profile via API
+      // Update profile via API - this will now save to database
       const result = await apiService.updateProfile(updateData);
 
       if (result.error) {
         throw new Error(result.error);
       }
 
+      // For demo mode (no user), also save to localStorage as backup
+      if (!user) {
+        localStorage.setItem('demoProfileData', JSON.stringify(profileData));
+        localStorage.setItem('profile_visibility_demo', JSON.stringify(profileData.visibility));
+      }
+
       onProfileUpdate?.(profileData);
       toast({
         title: "Profile Updated",
-        description: "Your profile has been successfully updated.",
+        description: "Your profile has been successfully saved to the database.",
       });
       navigate('/profile');
     } catch (error) {
