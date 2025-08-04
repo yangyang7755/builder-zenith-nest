@@ -72,6 +72,20 @@ export function createServer() {
   // Demo route
   app.get("/api/demo", handleDemo);
 
+  // Debug route to test server functionality
+  app.post("/api/debug/profile", (req, res) => {
+    console.log("=== DEBUG PROFILE UPDATE ===");
+    console.log("Request body:", JSON.stringify(req.body, null, 2));
+    console.log("Request headers:", req.headers);
+    console.log("Supabase admin exists:", !!supabaseAdmin);
+    res.json({
+      success: true,
+      message: "Debug endpoint working",
+      receivedData: req.body,
+      hasSupabase: !!supabaseAdmin
+    });
+  });
+
   // Activity routes
   app.get("/api/activities", handleGetActivities);
   app.post("/api/activities", handleCreateActivity);
