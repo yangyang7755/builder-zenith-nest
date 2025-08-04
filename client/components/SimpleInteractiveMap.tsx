@@ -62,6 +62,7 @@ export default function SimpleInteractiveMap({
   userLocation
 }: SimpleInteractiveMapProps) {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [mapView, setMapView] = useState<'embedded' | 'list'>('embedded');
   const [mapBounds, setMapBounds] = useState({
     north: initialCenter.lat + 0.05,
@@ -70,6 +71,65 @@ export default function SimpleInteractiveMap({
     west: initialCenter.lng - 0.05,
   });
   const mapContainerRef = useRef<HTMLDivElement>(null);
+
+  // Handle map click for location selection
+  const handleMapClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (mode !== 'select' || !onLocationSelect) return;
+
+    const rect = mapContainerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Convert pixel coordinates to lat/lng (rough approximation)
+    const latRange = mapBounds.north - mapBounds.south;
+    const lngRange = mapBounds.east - mapBounds.west;
+
+    const lat = mapBounds.north - (y / rect.height) * latRange;
+    const lng = mapBounds.west + (x / rect.width) * lngRange;
+
+    setSelectedLocation({ lat, lng });
+  };
+
+  // Convert coordinates to address (mock implementation)
+  const coordinatesToAddress = (coords: { lat: number; lng: number }): string => {
+    // In a real app, you'd use a reverse geocoding API
+    const knownLocations = [
+      { coords: { lat: 51.5074, lng: -0.1278 }, name: "Central London" },
+      { coords: { lat: 51.4545, lng: -0.2727 }, name: "Richmond Park" },
+      { coords: { lat: 51.5200, lng: -0.2375 }, name: "Westway Sports Centre" },
+      { coords: { lat: 51.5557, lng: -0.1657 }, name: "Hampstead Heath" },
+    ];
+
+    // Find closest known location
+    let closest = knownLocations[0];
+    let minDistance = Math.sqrt(
+      Math.pow(coords.lat - closest.coords.lat, 2) +
+      Math.pow(coords.lng - closest.coords.lng, 2)
+    );
+
+    knownLocations.forEach(location => {
+      const distance = Math.sqrt(
+        Math.pow(coords.lat - location.coords.lat, 2) +
+        Math.pow(coords.lng - location.coords.lng, 2)
+      );
+      if (distance < minDistance) {
+        minDistance = distance;
+        closest = location;
+      }
+    });
+
+    return closest.name;
+  };
+
+  // Confirm location selection
+  const confirmLocationSelection = () => {
+    if (selectedLocation && onLocationSelect) {
+      const address = coordinatesToAddress(selectedLocation);
+      onLocationSelect(selectedLocation, address);
+    }
+  };
 
   // Activity type colors and icons
   const getActivityMarkerStyle = (type: string) => {
