@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Map, { Marker, Popup, ViewState, MapRef } from 'react-map-gl';
+import Map, { Marker, Popup } from 'react-map-gl';
+import type { ViewState, MapRef } from 'react-map-gl';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
-import { 
-  X, 
-  MapPin, 
-  Navigation, 
-  Locate, 
-  Target, 
+import {
+  X,
+  MapPin,
+  Navigation,
+  Locate,
+  Target,
   Layers,
   Plus,
   Minus,
   RotateCcw
 } from 'lucide-react';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Activity interface
 interface Activity {
