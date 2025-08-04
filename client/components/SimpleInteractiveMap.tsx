@@ -341,9 +341,30 @@ export default function SimpleInteractiveMap({
               })()
             )}
 
-            {/* Activity Counter */}
-            <div className="absolute top-2 right-2 bg-black/75 text-white px-2 py-1 rounded text-xs font-medium z-10">
-              {activitiesWithCoords.length} activities
+            {/* Activity Counter and Legend */}
+            <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm border rounded-lg p-2 shadow-sm z-10">
+              <div className="text-xs font-medium mb-2">{activitiesWithCoords.length} activities</div>
+
+              {/* Activity Type Legend */}
+              <div className="space-y-1">
+                {Array.from(new Set(activitiesWithCoords.map(a => a.type))).map(type => {
+                  const style = getActivityMarkerStyle(type);
+                  const count = activitiesWithCoords.filter(a => a.type === type).length;
+
+                  return (
+                    <div key={type} className="flex items-center gap-1 text-xs">
+                      <div
+                        className="w-3 h-3 rounded-full flex items-center justify-center text-white"
+                        style={{ backgroundColor: style.color, fontSize: '8px' }}
+                      >
+                        {style.emoji}
+                      </div>
+                      <span className="capitalize">{type}</span>
+                      <span className="text-gray-500">({count})</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
