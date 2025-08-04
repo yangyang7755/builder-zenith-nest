@@ -224,6 +224,11 @@ export function ComprehensiveProfileEdit({
         // Demo mode - save to localStorage and simulate save
         await new Promise(resolve => setTimeout(resolve, 1000));
         localStorage.setItem('demoProfileData', JSON.stringify(profileData));
+
+        // Also save visibility settings separately for the useProfileVisibility hook
+        const visibilityKey = 'profile_visibility_demo';
+        localStorage.setItem(visibilityKey, JSON.stringify(profileData.visibility));
+
         onProfileUpdate?.(profileData);
         toast({
           title: "Profile Updated",
