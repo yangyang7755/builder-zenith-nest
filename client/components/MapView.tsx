@@ -32,6 +32,8 @@ export default function MapView({
   activities,
   onClose,
   onActivitySelect,
+  onLocationSelect,
+  mode = 'view',
 }: MapViewProps) {
   const [useAdvancedMap, setUseAdvancedMap] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
