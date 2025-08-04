@@ -1171,6 +1171,20 @@ function ClimbingExploreSection() {
 
 function ClimbingActivityCard({ activity }: { activity: any }) {
   const navigate = useNavigate();
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [isRequested, setIsRequested] = useState(false);
+  const { hasRequestedActivity } = useChat();
+
+  const activityId = `${activity.title}-${activity.organizer}`.replace(/\s+/g, "-").toLowerCase();
+
+  useEffect(() => {
+    setIsRequested(hasRequestedActivity(activityId));
+  }, [hasRequestedActivity, activityId]);
+
+  const handleRequestSent = () => {
+    setIsRequested(true);
+    setShowRequestModal(false);
+  };
 
   const handleCardClick = () => {
     // Navigate to appropriate climbing activity based on type
@@ -1374,7 +1388,7 @@ function CyclingExploreSection() {
     {
       title: "South Downs Way Bikepacking",
       date: "�� Fri-Sun, July 15-17",
-      location: "📍Winchester to Eastbourne",
+      location: "���Winchester to Eastbourne",
       organizer: "Adventure Cycling UK",
       distance: "160km over 3 days",
       pace: "Touring pace",
