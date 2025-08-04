@@ -74,7 +74,9 @@ const DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "S
 export default function CreateClub() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<ClubFormData>({
     name: "",
     description: "",
