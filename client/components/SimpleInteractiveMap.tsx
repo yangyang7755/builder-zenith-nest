@@ -128,7 +128,53 @@ export default function SimpleInteractiveMap({
   // Generate OpenStreetMap embed URL as fallback
   const generateOSMUrl = () => {
     const center = userLocation || initialCenter;
-    return `https://www.openstreetmap.org/export/embed.html?bbox=${center.lng-0.05},${center.lat-0.05},${center.lng+0.05},${center.lat+0.05}&layer=mapnik&marker=${center.lat},${center.lng}`;
+    // Calculate bounds that include all activities
+    const allCoords = activitiesWithCoords
+      .filter(a => a.coordinates)
+      .map(a => a.coordinates!);
+
+    if (allCoords.length > 0) {
+      const lats = allCoords.map(c => c.lat);
+      const lngs = allCoords.map(c => c.lng);
+      const padding = 0.01;
+
+      const bounds = {
+        north: Math.max(...lats) + padding,
+        south: Math.min(...lats) - padding,
+        east: Math.max(...lngs) + padding,
+        west: Math.min(...lngs) - padding
+      };
+
+      setMapBounds(bounds);
+
+      return `https://www.openstreetmap.org/export/embed.html?bbox=${bounds.west},${bounds.south},${bounds.east},${bounds.north}&layer=mapnik`;
+    }
+
+    const defaultBounds = {
+      north: center.lat + 0.05,
+      south: center.lat - 0.05,
+      east: center.lng + 0.05,
+      west: center.lng - 0.05
+    };
+
+    setMapBounds(defaultBounds);
+
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${defaultBounds.west},${defaultBounds.south},${defaultBounds.east},${defaultBounds.north}&layer=mapnik`;
+  };
+
+  // Convert lat/lng to pixel coordinates relative to the map container
+  const latLngToPixel = (lat: number, lng: number) => {
+    if (!mapContainerRef.current) return { x: 0, y: 0 };
+
+    const container = mapContainerRef.current;
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
+
+    // Calculate the position within the map bounds
+    const x = ((lng - mapBounds.west) / (mapBounds.east - mapBounds.west)) * containerWidth;
+    const y = ((mapBounds.north - lat) / (mapBounds.north - mapBounds.south)) * containerHeight;
+
+    return { x, y };
   };
 
   const handleActivityClick = (activity: Activity) => {
