@@ -11,6 +11,7 @@ import ActivityCard from "../components/ActivityCard";
 import RequestJoinModal from "../components/RequestJoinModal";
 import BottomNavigation from "../components/BottomNavigation";
 import { FloatingSettingsButton } from "../components/FloatingSettingsButton";
+import { usePullToRefresh, useDeviceInfo, useHaptic } from "../hooks/useMobile";
 
 // Mock coordinates for demo locations
 const LOCATION_COORDINATES: { [key: string]: { lat: number; lng: number } } = {
