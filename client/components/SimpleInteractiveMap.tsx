@@ -320,7 +320,11 @@ export default function SimpleInteractiveMap({
       {mapView === 'embedded' ? (
         <div className="relative flex-1 h-[calc(100vh-4rem)]">
           {/* Embedded Map */}
-          <div ref={mapContainerRef} className="w-full h-2/3 relative">
+          <div
+            ref={mapContainerRef}
+            className="w-full h-2/3 relative cursor-pointer"
+            onClick={handleMapClick}
+          >
             <iframe
               src={generateOSMUrl()}
               width="100%"
