@@ -553,7 +553,7 @@ export default function Index() {
             />
             <CarShareCard
               destination="Snowdonia"
-              date="�� 17 August 2025"
+              date="📅 17 August 2025"
               time="6:00 AM"
               driver="Sarah Chen"
               availableSeats={2}
@@ -1324,7 +1324,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.registration && (
               <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-cabin">
-                📝 {activity.registration}
+                ���� {activity.registration}
               </span>
             )}
           </div>
