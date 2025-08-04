@@ -181,6 +181,7 @@ const App = () => (
                           />
                           <Route path="/settings" element={<EnhancedSettings />} />
                           <Route path="/settings/basic" element={<Settings />} />
+                          <Route path="/admin" element={<AdminDashboard />} />
                           <Route path="/followers" element={<Followers />} />
                           <Route path="/following" element={<Following />} />
                           <Route
