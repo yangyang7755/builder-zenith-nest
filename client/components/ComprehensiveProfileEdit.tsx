@@ -269,8 +269,11 @@ export function ComprehensiveProfileEdit({
 
       let responseData;
       try {
-        responseData = await response.json();
+        const responseText = await response.text();
+        console.log('Raw response text:', responseText);
+        responseData = responseText ? JSON.parse(responseText) : {};
       } catch (parseError) {
+        console.error('Parse error details:', parseError);
         throw new Error(`Failed to parse response: ${parseError.message}`);
       }
 
