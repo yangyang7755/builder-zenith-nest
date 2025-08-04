@@ -25,6 +25,9 @@ import {
 export default function ClubManagement() {
   const navigate = useNavigate();
   const { clubId } = useParams<{ clubId: string }>();
+
+  // Check if this is accessed via the settings route
+  const isSettingsRoute = window.location.pathname.includes('/settings');
   const {
     getClubById,
     isClubManager,
