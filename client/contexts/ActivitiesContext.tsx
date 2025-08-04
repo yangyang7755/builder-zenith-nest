@@ -735,6 +735,10 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         searchActivities,
         refreshActivities,
 
+        // User activity tracking
+        getUserOrganizedActivities,
+        getUserParticipatedActivities,
+
         // Legacy methods for backward compatibility
         addActivity,
       }}
