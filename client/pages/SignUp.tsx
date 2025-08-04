@@ -28,6 +28,14 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
     full_name: "",
+    bio: "",
+    phone: "",
+    gender: "",
+    age: "",
+    nationality: "",
+    institution: "",
+    occupation: "",
+    location: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
