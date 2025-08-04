@@ -4,11 +4,13 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import {
   handleGetActivities,
+  handleGetActivity,
   handleCreateActivity,
   handleUpdateActivity,
   handleDeleteActivity,
   handleJoinActivity,
   handleLeaveActivity,
+  handleGetParticipants,
 } from "./routes/activities";
 import {
   handleGetClubs,
