@@ -11,6 +11,7 @@ import {
   handleJoinActivity,
   handleLeaveActivity,
   handleGetParticipants,
+  handleGetUserActivityHistory,
 } from "./routes/activities";
 import {
   handleGetClubs,
