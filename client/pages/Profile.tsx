@@ -160,10 +160,10 @@ export default function Profile() {
           </p>
         </div>
 
-        {/* Profile Edit Section - Only show for authenticated users */}
+        {/* Comprehensive Profile Edit Section - Only show for authenticated users */}
         {user && profile && (
           <div className="px-6 pb-6">
-            <ProfileEdit
+            <ComprehensiveProfileEdit
               profile={profile}
               onProfileUpdate={handleProfileUpdate}
             />
