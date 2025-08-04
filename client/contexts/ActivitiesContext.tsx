@@ -537,10 +537,26 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         activities,
         loading,
         error,
-        addActivity,
+        pagination,
+
+        // Core CRUD operations
+        getActivities,
+        getActivity,
+        createActivity,
+        updateActivity,
+        deleteActivity,
+
+        // Participation operations
+        joinActivity,
+        leaveActivity,
+        getActivityParticipants,
+
+        // Utility operations
         searchActivities,
         refreshActivities,
-        createActivity,
+
+        // Legacy methods for backward compatibility
+        addActivity,
       }}
     >
       {children}
