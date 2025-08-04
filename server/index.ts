@@ -109,5 +109,8 @@ export function createServer() {
   app.post("/api/messages", handleSendDirectMessage);
   app.post("/api/messages/mark-read", handleMarkMessagesRead);
 
+  // Upload routes
+  app.use("/api/uploads", uploadsRouter);
+
   return app;
 }
