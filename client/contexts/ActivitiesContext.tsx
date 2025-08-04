@@ -88,6 +88,10 @@ interface ActivitiesContextType {
 
   // Legacy methods for backward compatibility
   addActivity: (activity: any) => Promise<boolean>;
+
+  // User activity tracking
+  getUserOrganizedActivities: () => Activity[];
+  getUserParticipatedActivities: () => Activity[];
 }
 
 export interface ActivityFilters {
