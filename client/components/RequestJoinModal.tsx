@@ -27,15 +27,23 @@ export default function RequestJoinModal({
   if (!isOpen) return null;
 
   const handleSendRequest = () => {
+    // Check if already requested this activity
+    if (hasRequestedActivity(activityId)) {
+      alert("You have already requested to join this activity.");
+      onClose();
+      return;
+    }
+
     addJoinRequest({
       activityTitle: activityTitle,
       activityOrganizer: organizerName,
       requesterName: "You",
       message: requestMessage || "Hi! I'd like to join this activity.",
+      activityId: activityId,
     });
 
     setRequestMessage("");
-    onClose();
+    onRequestSent(); // This will update the button state
     alert("Request sent! You can check your message in the Chat page.");
   };
 
