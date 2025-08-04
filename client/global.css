@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mapbox GL CSS - imported conditionally */
+@import url('https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.css');
+
 @layer utilities {
   .line-clamp-2 {
     display: -webkit-box;
