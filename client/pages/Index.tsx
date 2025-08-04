@@ -727,7 +727,7 @@ function MixedActivitiesSection({
     {
       title: "Westway women's+ climbing morning",
       date: `📅 ${formatActivityDate("2025-01-26")}`,
-      location: "�� London, UK",
+      location: "📍 London, UK",
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
@@ -1324,7 +1324,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.registration && (
               <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-cabin">
-                ���� {activity.registration}
+                📝 {activity.registration}
               </span>
             )}
           </div>
@@ -1635,7 +1635,7 @@ function CyclingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.gear && (
               <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded font-cabin">
-                ��� {activity.gear}
+                ����� {activity.gear}
               </span>
             )}
             {activity.focus && (
