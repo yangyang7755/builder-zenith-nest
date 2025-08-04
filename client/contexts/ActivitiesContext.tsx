@@ -329,88 +329,206 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const addActivity = async (
-    activityData: Omit<Activity, "id" | "createdAt">
-  ): Promise<boolean> => {
+  const getActivity = async (activityId: string): Promise<Activity | null> => {
     try {
-      // Transform frontend data to backend format
-      const backendActivity = {
-        title: activityData.title,
-        type: activityData.type,
-        date: activityData.date,
-        time: activityData.time,
-        location: activityData.location,
-        meetup_location: activityData.meetupLocation,
-        max_participants: parseInt(activityData.maxParticipants) || null,
-        special_comments: activityData.specialComments,
-        difficulty: activityData.difficulty,
-        club_id: activityData.club || null,
-      };
+      const response = await apiService.getActivity(activityId);
 
-      const response = await apiService.createActivity(backendActivity);
-      
       if (response.error) {
-        throw new Error(response.error);
+        console.error("Failed to get activity:", response.error);
+        return null;
       }
 
-      // Add to local state
-      const newActivity: Activity = {
-        ...activityData,
-        id: response.data?.id || Date.now().toString(),
-        createdAt: new Date(),
-      };
-      
-      setActivities(prev => [newActivity, ...prev]);
-      return true;
+      if (response.data?.success && response.data.data) {
+        return transformActivity(response.data.data);
+      } else if (response.data) {
+        return transformActivity(response.data);
+      }
+
+      return null;
     } catch (err) {
-      console.error("Failed to create activity:", err);
-      
-      // Fallback: add to local state only
-      const newActivity: Activity = {
-        ...activityData,
-        id: Date.now().toString(),
-        createdAt: new Date(),
-      };
-      setActivities(prev => [newActivity, ...prev]);
-      return false;
+      console.error("Failed to get activity:", err);
+      return null;
     }
   };
 
-  const createActivity = async (activityData: any) => {
+  const createActivity = async (activityData: CreateActivityData) => {
     try {
       const response = await apiService.createActivity(activityData);
-      
+
       if (response.error) {
         return { success: false, error: response.error };
       }
 
-      // Refresh activities list
-      await loadActivities();
-      return { success: true };
+      const newActivity = response.data?.success ? response.data.data : response.data;
+      if (newActivity) {
+        const transformedActivity = transformActivity(newActivity);
+        setActivities(prev => [transformedActivity, ...prev]);
+      }
+
+      return {
+        success: true,
+        data: newActivity ? transformActivity(newActivity) : undefined
+      };
     } catch (err) {
       console.error("Failed to create activity:", err);
-      return { 
-        success: false, 
-        error: err instanceof Error ? err.message : "Failed to create activity" 
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : "Failed to create activity"
       };
     }
   };
 
-  const searchActivities = (query: string): Activity[] => {
-    if (!query.trim()) return activities;
-    
-    const lowercaseQuery = query.toLowerCase();
-    return activities.filter(
-      (activity) =>
-        activity.title.toLowerCase().includes(lowercaseQuery) ||
-        activity.location.toLowerCase().includes(lowercaseQuery) ||
-        activity.organizer.toLowerCase().includes(lowercaseQuery) ||
-        activity.type.toLowerCase().includes(lowercaseQuery)
-    );
+  const updateActivity = async (activityId: string, updates: UpdateActivityData) => {
+    try {
+      const response = await apiService.updateActivity(activityId, updates);
+
+      if (response.error) {
+        return { success: false, error: response.error };
+      }
+
+      // Update local state
+      setActivities(prev => prev.map(activity =>
+        activity.id === activityId
+          ? { ...activity, ...updates, updated_at: new Date().toISOString() }
+          : activity
+      ));
+
+      return { success: true };
+    } catch (err) {
+      console.error("Failed to update activity:", err);
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : "Failed to update activity"
+      };
+    }
+  };
+
+  const deleteActivity = async (activityId: string) => {
+    try {
+      const response = await apiService.deleteActivity(activityId);
+
+      if (response.error) {
+        return { success: false, error: response.error };
+      }
+
+      // Remove from local state
+      setActivities(prev => prev.filter(activity => activity.id !== activityId));
+
+      return { success: true };
+    } catch (err) {
+      console.error("Failed to delete activity:", err);
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : "Failed to delete activity"
+      };
+    }
+  };
+
+  const joinActivity = async (activityId: string) => {
+    try {
+      const response = await apiService.joinActivity(activityId);
+
+      if (response.error) {
+        return { success: false, error: response.error };
+      }
+
+      // Update local state to increment participant count
+      setActivities(prev => prev.map(activity =>
+        activity.id === activityId
+          ? { ...activity, current_participants: activity.current_participants + 1 }
+          : activity
+      ));
+
+      return { success: true };
+    } catch (err) {
+      console.error("Failed to join activity:", err);
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : "Failed to join activity"
+      };
+    }
+  };
+
+  const leaveActivity = async (activityId: string) => {
+    try {
+      const response = await apiService.leaveActivity(activityId);
+
+      if (response.error) {
+        return { success: false, error: response.error };
+      }
+
+      // Update local state to decrement participant count
+      setActivities(prev => prev.map(activity =>
+        activity.id === activityId
+          ? { ...activity, current_participants: Math.max(0, activity.current_participants - 1) }
+          : activity
+      ));
+
+      return { success: true };
+    } catch (err) {
+      console.error("Failed to leave activity:", err);
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : "Failed to leave activity"
+      };
+    }
+  };
+
+  const getActivityParticipants = async (activityId: string): Promise<ActivityParticipant[]> => {
+    try {
+      const response = await apiService.getActivityParticipants(activityId);
+
+      if (response.error) {
+        console.error("Failed to get activity participants:", response.error);
+        return [];
+      }
+
+      return response.data?.success ? response.data.data : (response.data || []);
+    } catch (err) {
+      console.error("Failed to get activity participants:", err);
+      return [];
+    }
+  };
+
+  const searchActivities = async (query: string, filters?: ActivityFilters) => {
+    const searchFilters = {
+      ...filters,
+      location: query // Use location search for now
+    };
+
+    await getActivities(searchFilters);
   };
 
   const refreshActivities = async () => {
-    await loadActivities();
+    await getActivities();
+  };
+
+  // Legacy method for backward compatibility
+  const addActivity = async (activityData: any): Promise<boolean> => {
+    try {
+      // Transform legacy format to new format
+      const newActivityData: CreateActivityData = {
+        title: activityData.title,
+        description: activityData.specialComments || activityData.description,
+        activity_type: activityData.type || activityData.activity_type,
+        date_time: activityData.date_time || `${activityData.date}T${activityData.time}:00Z`,
+        location: activityData.location,
+        max_participants: typeof activityData.maxParticipants === 'string'
+          ? parseInt(activityData.maxParticipants)
+          : activityData.max_participants || 10,
+        difficulty_level: activityData.difficulty?.toLowerCase() || "beginner",
+        club_id: activityData.club || activityData.club_id,
+        special_requirements: activityData.specialComments,
+        activity_image: activityData.imageSrc || activityData.activity_image,
+        route_link: activityData.routeLink || activityData.route_link,
+      };
+
+      const result = await createActivity(newActivityData);
+      return result.success;
+    } catch (err) {
+      console.error("Failed to add activity (legacy):", err);
+      return false;
+    }
   };
 
   return (
