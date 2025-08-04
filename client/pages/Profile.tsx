@@ -31,6 +31,9 @@ export default function Profile() {
   // Use the profile hook to get real data when user is logged in
   const { profile, followStats, loading, refetch } = useProfile(user?.id);
 
+  // Use visibility hook to control what's shown
+  const { isVisible } = useProfileVisibility(user?.id);
+
   // Use demo profile when not signed in or loading
   const displayProfile = (user && profile) ? {
     ...profile,
