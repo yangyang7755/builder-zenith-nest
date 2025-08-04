@@ -151,23 +151,84 @@ export default function CreateClub() {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
-      // Here you would typically submit to your backend API
-      console.log("Creating club with data:", formData);
-      
-      toast({
-        title: "Club Created Successfully! 🎉",
-        description: `${formData.name} has been created. You can now start inviting members!`,
-      });
-      
-      // Navigate to the new club's management page
-      navigate(`/club/manage/${formData.name.toLowerCase().replace(/\s+/g, '-')}`);
+      // Validate required fields
+      if (!formData.name.trim()) {
+        toast({
+          title: "Validation Error",
+          description: "Club name is required.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!formData.type) {
+        toast({
+          title: "Validation Error",
+          description: "Please select a club type.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!formData.location.trim()) {
+        toast({
+          title: "Validation Error",
+          description: "Club location is required.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Prepare club data for backend API
+      const clubData = {
+        name: formData.name.trim(),
+        description: formData.description.trim() || undefined,
+        type: formData.type as 'cycling' | 'climbing' | 'running' | 'hiking' | 'skiing' | 'surfing' | 'tennis' | 'general',
+        location: formData.location.trim(),
+        website: formData.website.trim() || undefined,
+        contact_email: formData.contactEmail.trim() || undefined,
+        profile_image: formData.profileImage || undefined,
+        created_by: user?.id,
+      };
+
+      // Create club using the comprehensive backend API
+      const result = await userService.createClub(clubData);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      if (result.data?.club) {
+        toast({
+          title: "Club Created Successfully! 🎉",
+          description: `${formData.name} has been created and saved to the database. You can now start inviting members!`,
+        });
+
+        // Navigate to the new club's management page
+        const clubId = result.data.club.id;
+        navigate(`/club/${clubId}/manage-enhanced`);
+      } else {
+        // Demo mode success
+        toast({
+          title: "Demo Club Created! 🎉",
+          description: `${formData.name} has been created in demo mode. You can now start inviting members!`,
+        });
+        navigate(`/club/manage/${formData.name.toLowerCase().replace(/\s+/g, '-')}`);
+      }
+
     } catch (error) {
+      console.error("Club creation error:", error);
       toast({
         title: "Error Creating Club",
-        description: "Please try again or contact support if the issue persists.",
+        description: error instanceof Error ? error.message : "Please try again or contact support if the issue persists.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
