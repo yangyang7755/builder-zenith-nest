@@ -150,7 +150,14 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   return (
     <ChatContext.Provider
-      value={{ joinRequests, chatMessages, addJoinRequest, addChatMessage }}
+      value={{
+        joinRequests,
+        chatMessages,
+        requestedActivities,
+        addJoinRequest,
+        addChatMessage,
+        hasRequestedActivity
+      }}
     >
       {children}
     </ChatContext.Provider>
