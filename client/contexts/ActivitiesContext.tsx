@@ -666,6 +666,23 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
     await getActivities();
   };
 
+  // User activity tracking functions
+  const getUserOrganizedActivities = (): Activity[] => {
+    if (!currentUserProfile) return [];
+    return activities.filter(activity =>
+      activity.organizer_id === currentUserProfile.id ||
+      activity.organizer?.id === currentUserProfile.id
+    );
+  };
+
+  const getUserParticipatedActivities = (): Activity[] => {
+    if (!currentUserProfile) return [];
+    return activities.filter(activity =>
+      activity.participants?.some(p => p.user_id === currentUserProfile.id) ||
+      (activity.organizer_id !== currentUserProfile.id && activity.current_participants > 0)
+    );
+  };
+
   // Legacy method for backward compatibility
   const addActivity = async (activityData: any): Promise<boolean> => {
     try {
