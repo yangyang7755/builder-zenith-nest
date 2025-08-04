@@ -40,6 +40,7 @@ import CoachHolly from "./pages/CoachHolly";
 import ProfileCoachHolly from "./pages/ProfileCoachHolly";
 import ProfileDanSmith from "./pages/ProfileDanSmith";
 import ProfileEdit from "./pages/ProfileEdit";
+import ComprehensiveProfileEdit from "./components/ComprehensiveProfileEdit";
 import Onboarding from "./pages/Onboarding";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
@@ -168,6 +169,10 @@ const App = () => (
                           <Route
                             path="/profile/edit"
                             element={<ProfileEdit />}
+                          />
+                          <Route
+                            path="/profile/edit-comprehensive"
+                            element={<ComprehensiveProfileEdit />}
                           />
                           <Route
                             path="/profile/demo"
