@@ -65,26 +65,6 @@ export default function MapView({
       },
       (error) => {
         setIsGettingLocation(false);
-        let message = "Failed to get location";
-
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            message = "Location access denied. Please allow location access.";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            message = "Location information is unavailable.";
-            break;
-          case error.TIMEOUT:
-            message = "Location request timed out.";
-            break;
-        }
-
-        toast({
-          title: "Location Error",
-          description: message,
-          variant: "destructive",
-        });
-
         // Use London as fallback
         setUserLocation({ lat: 51.5074, lng: -0.1278 });
       },
@@ -101,12 +81,10 @@ export default function MapView({
     getUserLocation();
   }, []);
 
-  // Decide which map component to use
-  const shouldUseInteractiveMap = useInteractiveMap && hasMapboxToken() && !mapError;
-
-  if (shouldUseInteractiveMap) {
+  // Use the simple interactive map by default
+  if (!useAdvancedMap) {
     return (
-      <InteractiveMap
+      <SimpleInteractiveMap
         activities={activities}
         onClose={onClose}
         onActivitySelect={onActivitySelect}
@@ -116,57 +94,12 @@ export default function MapView({
     );
   }
 
-  // Fallback to enhanced map view if interactive map fails
+  // Fallback to enhanced map view
   return (
-    <div className="fixed inset-0 bg-white z-50">
-      {/* Map type selector */}
-      <div className="absolute top-20 left-4 right-4 z-10">
-        <Card className="bg-white/90 backdrop-blur-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                {hasMapboxToken() ? (
-                  <Wifi className="w-4 h-4 text-green-500" />
-                ) : (
-                  <WifiOff className="w-4 h-4 text-red-500" />
-                )}
-                <span className="text-sm font-medium">
-                  {hasMapboxToken() ? 'Interactive Map Available' : 'Interactive Map Unavailable'}
-                </span>
-              </div>
-              
-              {hasMapboxToken() && (
-                <Button
-                  size="sm"
-                  variant={useInteractiveMap ? "default" : "outline"}
-                  onClick={() => setUseInteractiveMap(!useInteractiveMap)}
-                >
-                  {useInteractiveMap ? 'Use Simple Map' : 'Use Interactive Map'}
-                </Button>
-              )}
-            </div>
-
-            {!hasMapboxToken() && (
-              <div className="text-xs text-gray-600">
-                <p className="mb-2">
-                  To enable the interactive map with satellite view, street maps, and full navigation:
-                </p>
-                <ol className="list-decimal list-inside space-y-1">
-                  <li>Get a free Mapbox access token at mapbox.com</li>
-                  <li>Add it as VITE_MAPBOX_ACCESS_TOKEN in your environment</li>
-                  <li>Restart the development server</li>
-                </ol>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <EnhancedMapView
-        activities={activities}
-        onClose={onClose}
-        onActivitySelect={onActivitySelect}
-      />
-    </div>
+    <EnhancedMapView
+      activities={activities}
+      onClose={onClose}
+      onActivitySelect={onActivitySelect}
+    />
   );
 }
