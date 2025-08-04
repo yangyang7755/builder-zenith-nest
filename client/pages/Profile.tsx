@@ -169,6 +169,13 @@ export default function Profile() {
           </div>
         )}
 
+        {/* Settings Overview - Only show for authenticated users */}
+        {user && (
+          <div className="px-6 pb-6">
+            <SettingsOverview />
+          </div>
+        )}
+
         {/* Personal Details Section */}
         <div className="px-6 pb-6">
           <h3 className="text-lg font-bold text-black mb-4">Personal Details</h3>
