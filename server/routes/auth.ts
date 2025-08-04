@@ -129,6 +129,15 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
         bio: req.body.bio || "Demo user profile",
         profile_image: req.body.profile_image || null,
         university: req.body.institution || "Demo University",
+        institution: req.body.institution || "Demo University",
+        phone: req.body.phone || null,
+        gender: req.body.gender || null,
+        age: req.body.age || null,
+        date_of_birth: req.body.date_of_birth || null,
+        nationality: req.body.nationality || null,
+        occupation: req.body.occupation || null,
+        location: req.body.location || null,
+        visibility_settings: req.body.visibility_settings || {},
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
@@ -143,19 +152,96 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
 
     const validatedData = ProfileUpdateSchema.parse(req.body);
 
-    const { data: updatedProfile, error } = await supabaseAdmin
+    // Extract sports and achievements data
+    const { sports, achievements, ...profileData } = validatedData;
+
+    // Start a transaction to update profile, sports, and achievements
+    const { data: updatedProfile, error: profileError } = await supabaseAdmin
       .from("profiles")
-      .update(validatedData)
+      .update({
+        ...profileData,
+        // Map university to institution for consistency
+        institution: profileData.institution || profileData.university,
+      })
       .eq("id", user.id)
       .select("*")
       .single();
 
-    if (error) {
-      console.error("Database error:", error);
+    if (profileError) {
+      console.error("Profile update error:", profileError);
       return res.status(500).json({ error: "Failed to update profile" });
     }
 
-    res.json(updatedProfile);
+    // Update sports if provided
+    if (sports && Array.isArray(sports)) {
+      // Delete existing sports
+      await supabaseAdmin
+        .from("profile_sports")
+        .delete()
+        .eq("profile_id", user.id);
+
+      // Insert new sports
+      if (sports.length > 0) {
+        const sportsData = sports.map(sport => ({
+          profile_id: user.id,
+          sport: sport.sport,
+          level: sport.level,
+          experience: sport.experience || '',
+          max_grade: sport.maxGrade || '',
+          certifications: sport.certifications || [],
+          specialties: sport.specialties || [],
+          preferences: sport.preferences || [],
+        }));
+
+        const { error: sportsError } = await supabaseAdmin
+          .from("profile_sports")
+          .insert(sportsData);
+
+        if (sportsError) {
+          console.error("Sports update error:", sportsError);
+          // Don't fail the whole request, just log the error
+        }
+      }
+    }
+
+    // Update achievements if provided
+    if (achievements && Array.isArray(achievements)) {
+      // Delete existing achievements
+      await supabaseAdmin
+        .from("profile_achievements")
+        .delete()
+        .eq("profile_id", user.id);
+
+      // Insert new achievements
+      if (achievements.length > 0) {
+        const achievementsData = achievements.map(achievement => ({
+          profile_id: user.id,
+          title: achievement.title,
+          description: achievement.description || '',
+          date: achievement.date || null,
+          category: achievement.category || '',
+          verified: achievement.verified || false,
+        }));
+
+        const { error: achievementsError } = await supabaseAdmin
+          .from("profile_achievements")
+          .insert(achievementsData);
+
+        if (achievementsError) {
+          console.error("Achievements update error:", achievementsError);
+          // Don't fail the whole request, just log the error
+        }
+      }
+    }
+
+    // Return the updated profile with related data
+    const response = {
+      ...updatedProfile,
+      sports: sports || [],
+      achievements: achievements || [],
+    };
+
+    res.json(response);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res
