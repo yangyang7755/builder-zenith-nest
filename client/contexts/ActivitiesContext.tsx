@@ -216,6 +216,58 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Listen for profile updates and sync activity organizers/participants
+  useEffect(() => {
+    const handleOrganizerProfileUpdate = (event: CustomEvent) => {
+      const { userId, profile } = event.detail;
+
+      setActivities(prev =>
+        prev.map(activity =>
+          activity.organizer_id === userId || activity.organizer?.id === userId
+            ? {
+                ...activity,
+                organizer: {
+                  ...activity.organizer,
+                  full_name: profile.full_name,
+                  profile_image: profile.profile_image
+                }
+              }
+            : activity
+        )
+      );
+    };
+
+    const handleParticipantProfileUpdate = (event: CustomEvent) => {
+      const { userId, profile } = event.detail;
+
+      setActivities(prev =>
+        prev.map(activity => ({
+          ...activity,
+          participants: activity.participants?.map(participant =>
+            participant.user_id === userId
+              ? {
+                  ...participant,
+                  user: {
+                    ...participant.user,
+                    full_name: profile.full_name,
+                    profile_image: profile.profile_image
+                  }
+                }
+              : participant
+          )
+        }))
+      );
+    };
+
+    window.addEventListener('organizerProfileUpdated', handleOrganizerProfileUpdate as EventListener);
+    window.addEventListener('participantProfileUpdated', handleParticipantProfileUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('organizerProfileUpdated', handleOrganizerProfileUpdate as EventListener);
+      window.removeEventListener('participantProfileUpdated', handleParticipantProfileUpdate as EventListener);
+    };
+  }, []);
   const [pagination, setPagination] = useState({ total: 0, limit: 20, offset: 0 });
 
   // Load activities from backend on component mount
