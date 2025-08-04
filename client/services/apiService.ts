@@ -24,19 +24,22 @@ class ApiService {
         ...options,
       });
 
-      if (!response.ok) {
-        // Try to get error details from response body
-        let errorMessage = `HTTP error! status: ${response.status}`;
-        let errorDetails = null;
+      // Read response body once, whether success or error
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (parseError) {
+        console.error('Failed to parse response:', parseError);
+        return {
+          error: `HTTP error! status: ${response.status} (failed to parse response)`,
+          status: response.status
+        };
+      }
 
-        try {
-          const errorBody = await response.json();
-          console.error('Server error response:', errorBody);
-          errorMessage = errorBody.error || errorMessage;
-          errorDetails = errorBody.details || errorBody;
-        } catch (parseError) {
-          console.error('Failed to parse error response:', parseError);
-        }
+      if (!response.ok) {
+        console.error('Server error response:', responseData);
+        const errorMessage = responseData.error || `HTTP error! status: ${response.status}`;
+        const errorDetails = responseData.details || responseData;
 
         return {
           error: errorMessage,
@@ -45,8 +48,7 @@ class ApiService {
         };
       }
 
-      const data = await response.json();
-      return { data };
+      return { data: responseData };
     } catch (error) {
       console.error(`API request failed:`, error);
       return {
