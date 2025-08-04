@@ -7,7 +7,8 @@ import {
   CheckCircle,
   Star,
   MessageSquare,
-  MapPin
+  MapPin,
+  Settings
 } from "lucide-react";
 import { maddieWeiProfile } from "@/data/demoProfiles";
 import { useAuth } from "@/contexts/AuthContext";
