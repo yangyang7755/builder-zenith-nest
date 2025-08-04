@@ -173,7 +173,8 @@ const App = () => (
                             path="/profile/demo"
                             element={<ProfileDemo />}
                           />
-                          <Route path="/settings" element={<Settings />} />
+                          <Route path="/settings" element={<EnhancedSettings />} />
+                          <Route path="/settings/basic" element={<Settings />} />
                           <Route path="/followers" element={<Followers />} />
                           <Route path="/following" element={<Following />} />
                           <Route
