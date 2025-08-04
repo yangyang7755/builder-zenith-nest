@@ -76,8 +76,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   ]);
 
   const addJoinRequest = (
-    requestData: Omit<JoinRequest, "id" | "timestamp" | "status">,
+    requestData: Omit<JoinRequest, "id" | "timestamp" | "status"> & { activityId: string },
   ) => {
+    // Check if already requested this activity
+    if (requestedActivities.has(requestData.activityId)) {
+      return; // Don't add duplicate request
+    }
+
     const newRequest: JoinRequest = {
       ...requestData,
       id: Date.now().toString(),
@@ -86,11 +91,15 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     };
     setJoinRequests((prev) => [newRequest, ...prev]);
 
-    // Check if there's already a chat with this organizer
+    // Mark this activity as requested
+    setRequestedActivities((prev) => new Set([...prev, requestData.activityId]));
+
+    // Check if there's already a chat with this organizer for this specific activity
     const existingChatIndex = chatMessages.findIndex(
       (msg) =>
         msg.sender === requestData.activityOrganizer &&
-        msg.type === "join_request",
+        msg.type === "join_request" &&
+        msg.activityTitle === requestData.activityTitle,
     );
 
     if (existingChatIndex !== -1) {
@@ -101,14 +110,14 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           ...updated[existingChatIndex],
           content:
             requestData.message ||
-            `Requested to join "${requestData.activityTitle}"`,
+            `You requested to join "${requestData.activityTitle}"`,
           timestamp: new Date(),
           activityTitle: requestData.activityTitle,
         };
         return updated;
       });
     } else {
-      // Create new chat message for this organizer
+      // Create new chat message for this organizer and activity
       const chatMessage: ChatMessage = {
         id: Date.now().toString() + "_chat",
         type: "join_request",
@@ -122,6 +131,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       };
       setChatMessages((prev) => [chatMessage, ...prev]);
     }
+  };
+
+  const hasRequestedActivity = (activityId: string) => {
+    return requestedActivities.has(activityId);
   };
 
   const addChatMessage = (
