@@ -39,6 +39,53 @@ export function FollowProvider({ children }: { children: ReactNode }) {
   const [following, setFollowing] = useState<FollowRelationship[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Listen for profile updates and sync follower/following data
+  useEffect(() => {
+    const handleFollowerProfileUpdate = (event: CustomEvent) => {
+      const { userId, profile } = event.detail;
+
+      // Update followers list
+      setFollowers(prev =>
+        prev.map(relationship =>
+          relationship.follower_id === userId
+            ? {
+                ...relationship,
+                follower: {
+                  ...relationship.follower,
+                  full_name: profile.full_name,
+                  profile_image: profile.profile_image,
+                  bio: profile.bio
+                }
+              }
+            : relationship
+        )
+      );
+
+      // Update following list
+      setFollowing(prev =>
+        prev.map(relationship =>
+          relationship.following_id === userId
+            ? {
+                ...relationship,
+                following: {
+                  ...relationship.following,
+                  full_name: profile.full_name,
+                  profile_image: profile.profile_image,
+                  bio: profile.bio
+                }
+              }
+            : relationship
+        )
+      );
+    };
+
+    window.addEventListener('followerProfileUpdated', handleFollowerProfileUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('followerProfileUpdated', handleFollowerProfileUpdate as EventListener);
+    };
+  }, []);
+
   // Initialize with demo data for development
   useEffect(() => {
     initializeDemoData();
