@@ -15,6 +15,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import BottomNavigation from "../components/BottomNavigation";
 import { ProfileEdit } from "../components/ProfileEdit";
+import { ComprehensiveProfileEdit } from "../components/ComprehensiveProfileEdit";
 import { SettingsOverview } from "../components/SettingsOverview";
 
 export default function Profile() {
