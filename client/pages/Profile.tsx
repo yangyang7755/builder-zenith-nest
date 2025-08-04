@@ -70,8 +70,8 @@ export default function Profile() {
     return () => window.removeEventListener('focus', handleFocus);
   }, [user?.id, refetch]);
 
-  // Use visibility hook to control what's shown
-  const { isVisible } = useProfileVisibility(user?.id);
+  // Use visibility hook to control what's shown - use 'demo' as userId in demo mode
+  const { isVisible } = useProfileVisibility(user?.id || 'demo');
 
   // Use demo profile when not signed in or loading
   const baseDemoProfile = {
