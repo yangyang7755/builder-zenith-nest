@@ -44,6 +44,7 @@ import Onboarding from "./pages/Onboarding";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import EnhancedSettings from "./pages/EnhancedSettings";
 import Followers from "./pages/Followers";
 import Following from "./pages/Following";
 import ClubManagement from "./pages/ClubManagement";
