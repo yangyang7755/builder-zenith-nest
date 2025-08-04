@@ -62,6 +62,10 @@ export default function DatabaseManagement() {
             <DatabaseConfig />
           </TabsContent>
 
+          <TabsContent value="maps" className="space-y-6">
+            <MapboxConfig />
+          </TabsContent>
+
           <TabsContent value="schema" className="space-y-6">
             <Card>
               <CardHeader>
