@@ -230,7 +230,7 @@ export function ComprehensiveProfileEdit({
 
         // Personal Details
         gender: profileData.gender,
-        age: profileData.age,
+        age: profileData.age ? parseInt(profileData.age.toString()) : undefined,
         date_of_birth: profileData.date_of_birth,
         nationality: profileData.nationality,
         institution: profileData.institution,
