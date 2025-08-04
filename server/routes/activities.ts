@@ -645,43 +645,99 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
   }
 };
 
+// POST /api/activities/:id/join - Join an activity
 export const handleJoinActivity = async (req: Request, res: Response) => {
   try {
     const { id } = req.params; // activity id
-    const user = await getUserFromToken(req.headers.authorization || "");
+    const user = await getAuthenticatedUser(req);
 
     if (!user) {
-      return res.status(401).json({ error: "Authentication required" });
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required"
+      });
     }
 
     if (!supabaseAdmin) {
-      return res.status(500).json({ error: "Database not configured" });
+      return res.json({
+        success: true,
+        message: "Successfully joined activity (demo mode)"
+      });
     }
 
-    // Check if activity exists
+    // Check if activity exists and get current participants
     const { data: activity, error: activityError } = await supabaseAdmin
       .from("activities")
-      .select("*, activity_participants(user_id)")
+      .select(`
+        *,
+        current_participants:activity_participants!inner(count)
+      `)
       .eq("id", id)
+      .eq("status", "upcoming")
       .single();
 
     if (activityError || !activity) {
-      return res.status(404).json({ error: "Activity not found" });
+      return res.status(404).json({
+        success: false,
+        error: "Activity not found or not available for joining"
+      });
     }
 
-    // Check if user already joined
-    const alreadyJoined = activity.activity_participants.some(
-      (p: any) => p.user_id === user.id
-    );
+    // Check if user already joined (including those who left)
+    const { data: existingParticipation } = await supabaseAdmin
+      .from("activity_participants")
+      .select("*")
+      .eq("activity_id", id)
+      .eq("user_id", user.id)
+      .single();
 
-    if (alreadyJoined) {
-      return res.status(400).json({ error: "Already joined this activity" });
+    if (existingParticipation) {
+      if (existingParticipation.status === "joined") {
+        return res.status(400).json({
+          success: false,
+          error: "You are already a participant in this activity"
+        });
+      } else if (existingParticipation.status === "left") {
+        // User previously left, allow them to rejoin
+        const { error: rejoinError } = await supabaseAdmin
+          .from("activity_participants")
+          .update({
+            status: "joined",
+            joined_at: new Date().toISOString()
+          })
+          .eq("activity_id", id)
+          .eq("user_id", user.id);
+
+        if (rejoinError) {
+          console.error("Database error:", rejoinError);
+          return res.status(500).json({
+            success: false,
+            error: "Failed to rejoin activity"
+          });
+        }
+
+        return res.json({
+          success: true,
+          message: "Successfully rejoined activity"
+        });
+      }
     }
 
     // Check if activity is full
-    if (activity.max_participants &&
-        activity.activity_participants.length >= activity.max_participants) {
-      return res.status(400).json({ error: "Activity is full" });
+    if (activity.max_participants && activity.current_participants >= activity.max_participants) {
+      return res.status(400).json({
+        success: false,
+        error: "Activity is full"
+      });
+    }
+
+    // Check if activity date has passed
+    const activityDateTime = new Date(activity.date_time);
+    if (activityDateTime <= new Date()) {
+      return res.status(400).json({
+        success: false,
+        error: "Cannot join past activities"
+      });
     }
 
     // Add user to activity
@@ -690,17 +746,28 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
       .insert({
         activity_id: id,
         user_id: user.id,
+        status: "joined"
       });
 
     if (joinError) {
       console.error("Database error:", joinError);
-      return res.status(500).json({ error: "Failed to join activity" });
+      return res.status(500).json({
+        success: false,
+        error: "Failed to join activity"
+      });
     }
 
-    res.status(200).json({ message: "Successfully joined activity" });
+    res.json({
+      success: true,
+      message: "Successfully joined activity"
+    });
+
   } catch (error) {
-    console.error("Server error:", error);
-    res.status(500).json({ error: "Failed to join activity" });
+    console.error("Join activity error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to join activity"
+    });
   }
 };
 
