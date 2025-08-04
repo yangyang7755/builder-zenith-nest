@@ -1294,7 +1294,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
           <div className="flex flex-wrap gap-1 mt-2">
             {activity.fee && (
               <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-cabin">
-                ��� {activity.fee}
+                💰 {activity.fee}
               </span>
             )}
             {activity.equipment && (
@@ -1424,7 +1424,7 @@ function CyclingExploreSection() {
     {
       title: "South Downs Way Bikepacking",
       date: "📅 Fri-Sun, July 15-17",
-      location: "���Winchester to Eastbourne",
+      location: "📍Winchester to Eastbourne",
       organizer: "Adventure Cycling UK",
       distance: "160km over 3 days",
       pace: "Touring pace",
