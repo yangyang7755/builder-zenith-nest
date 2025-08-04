@@ -220,54 +220,110 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 
   // Load activities from backend on component mount
   useEffect(() => {
-    loadActivities();
+    getActivities();
   }, []);
 
-  const loadActivities = async () => {
+  // Transform backend activity to frontend format with backward compatibility
+  const transformActivity = (backendActivity: any): Activity => {
+    return {
+      // New schema fields
+      id: backendActivity.id,
+      title: backendActivity.title,
+      description: backendActivity.description,
+      activity_type: backendActivity.activity_type,
+      date_time: backendActivity.date_time,
+      location: backendActivity.location,
+      coordinates: backendActivity.coordinates,
+      max_participants: backendActivity.max_participants || 10,
+      current_participants: backendActivity.current_participants || 0,
+      difficulty_level: backendActivity.difficulty_level || "beginner",
+      activity_image: backendActivity.activity_image,
+      route_link: backendActivity.route_link,
+      special_requirements: backendActivity.special_requirements,
+      price_per_person: backendActivity.price_per_person || 0,
+      status: backendActivity.status || "upcoming",
+      organizer_id: backendActivity.organizer_id,
+      club_id: backendActivity.club_id,
+      activity_data: backendActivity.activity_data,
+      created_at: backendActivity.created_at,
+      updated_at: backendActivity.updated_at,
+      organizer: backendActivity.organizer,
+      club: backendActivity.club,
+      participants: backendActivity.participants,
+
+      // Legacy fields for backward compatibility
+      type: backendActivity.activity_type,
+      date: backendActivity.date_time ? new Date(backendActivity.date_time).toISOString().split('T')[0] : undefined,
+      time: backendActivity.date_time ? new Date(backendActivity.date_time).toTimeString().slice(0, 5) : undefined,
+      meetupLocation: backendActivity.location,
+      organizer: backendActivity.organizer?.full_name || "Unknown",
+      maxParticipants: backendActivity.max_participants?.toString() || "10",
+      specialComments: backendActivity.special_requirements || backendActivity.description || "",
+      imageSrc: backendActivity.activity_image,
+      visibility: "All",
+      createdAt: new Date(backendActivity.created_at),
+    };
+  };
+
+  const getActivities = async (filters?: ActivityFilters) => {
     try {
       setLoading(true);
       setError(null);
-      
-      console.log("Loading activities from backend...");
-      const response = await apiService.getActivities();
-      
+
+      console.log("Loading activities from backend...", filters);
+      const response = await apiService.getActivities(filters);
+
       if (response.error) {
         throw new Error(response.error);
       }
-      
-      if (response.data && response.data.length > 0) {
-        // Transform backend data to frontend format
-        const transformedActivities = response.data.map((activity: any) => ({
-          id: activity.id,
-          type: activity.type,
-          title: activity.title,
-          date: activity.date,
-          time: activity.time,
-          location: activity.location,
-          meetupLocation: activity.meetup_location || activity.location,
-          organizer: activity.organizer?.full_name || activity.organizer_id || "Unknown",
-          maxParticipants: activity.max_participants?.toString() || "10",
-          difficulty: activity.difficulty || "Beginner",
-          specialComments: activity.special_comments || "",
-          club: activity.club_id,
-          visibility: "All",
-          gender: "All genders",
-          createdAt: new Date(activity.created_at),
-          organizer_id: activity.organizer_id,
-        }));
-        
+
+      if (response.data?.success && response.data.data) {
+        const transformedActivities = response.data.data.map(transformActivity);
         console.log("Loaded activities from backend:", transformedActivities);
+        setActivities(transformedActivities);
+        setPagination(response.data.pagination || { total: 0, limit: 20, offset: 0 });
+      } else if (response.data && Array.isArray(response.data)) {
+        // Handle legacy response format
+        const transformedActivities = response.data.map(transformActivity);
         setActivities(transformedActivities);
       } else {
         // No backend data, use demo data
         console.log("No backend data found, using demo activities");
-        setActivities(demoActivities);
+        const transformedDemoActivities = demoActivities.map(activity => ({
+          ...activity,
+          activity_type: activity.type as any,
+          date_time: `${activity.date}T${activity.time}:00Z`,
+          max_participants: parseInt(activity.maxParticipants),
+          current_participants: Math.floor(Math.random() * parseInt(activity.maxParticipants)),
+          difficulty_level: (activity.difficulty?.toLowerCase() || "beginner") as any,
+          price_per_person: 0,
+          status: "upcoming" as any,
+          organizer_id: "demo-user-id",
+          created_at: activity.createdAt.toISOString(),
+          updated_at: activity.createdAt.toISOString(),
+        }));
+        setActivities(transformedDemoActivities);
       }
     } catch (err) {
       console.error("Failed to load activities from backend:", err);
       console.log("Using demo activities as fallback");
       setError("Failed to load activities from backend, using demo data");
-      setActivities(demoActivities);
+
+      // Transform demo activities to new format
+      const transformedDemoActivities = demoActivities.map(activity => ({
+        ...activity,
+        activity_type: activity.type as any,
+        date_time: `${activity.date}T${activity.time}:00Z`,
+        max_participants: parseInt(activity.maxParticipants),
+        current_participants: Math.floor(Math.random() * parseInt(activity.maxParticipants)),
+        difficulty_level: (activity.difficulty?.toLowerCase() || "beginner") as any,
+        price_per_person: 0,
+        status: "upcoming" as any,
+        organizer_id: "demo-user-id",
+        created_at: activity.createdAt.toISOString(),
+        updated_at: activity.createdAt.toISOString(),
+      }));
+      setActivities(transformedDemoActivities);
     } finally {
       setLoading(false);
     }
