@@ -150,11 +150,13 @@ router.post('/club-image', upload.single('image'), async (req, res) => {
     const { clubId } = uploadClubImageSchema.parse(req.body);
 
     if (!supabaseAdmin) {
-      // In demo mode, return a placeholder URL
-      const demoUrl = `/placeholder-club-${clubId}.jpg`;
-      return res.json({ 
-        success: true, 
-        data: { url: demoUrl },
+      // In demo mode, convert image to base64 data URL for immediate use
+      const base64 = req.file.buffer.toString('base64');
+      const dataUrl = `data:${req.file.mimetype};base64,${base64}`;
+
+      return res.json({
+        success: true,
+        data: { url: dataUrl },
         message: 'Club image uploaded successfully (demo mode)'
       });
     }
