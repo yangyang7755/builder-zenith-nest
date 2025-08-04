@@ -92,31 +92,37 @@ export default function Profile() {
               <h1 className="text-2xl font-bold text-black mb-2">{displayProfile.full_name}</h1>
               
               {/* Stats */}
-              <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
-                {loading ? (
-                  <div className="flex gap-4">
-                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-                    <span>•</span>
-                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => setShowFollowers(true)}
-                      className="hover:text-explore-green transition-colors"
-                    >
-                      {displayProfile.followers || 0} Followers
-                    </button>
-                    <span>•</span>
-                    <button
-                      onClick={() => setShowFollowing(true)}
-                      className="hover:text-explore-green transition-colors"
-                    >
-                      {displayProfile.following || 0} Following
-                    </button>
-                  </>
-                )}
-              </div>
+              {(isVisible('followers') || isVisible('following')) && (
+                <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
+                  {loading ? (
+                    <div className="flex gap-4">
+                      <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                      <span>•</span>
+                      <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  ) : (
+                    <>
+                      {isVisible('followers') && (
+                        <button
+                          onClick={() => setShowFollowers(true)}
+                          className="hover:text-explore-green transition-colors"
+                        >
+                          {displayProfile.followers || 0} Followers
+                        </button>
+                      )}
+                      {isVisible('followers') && isVisible('following') && <span>•</span>}
+                      {isVisible('following') && (
+                        <button
+                          onClick={() => setShowFollowing(true)}
+                          className="hover:text-explore-green transition-colors"
+                        >
+                          {displayProfile.following || 0} Following
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
 
               {/* Rating */}
               <button
