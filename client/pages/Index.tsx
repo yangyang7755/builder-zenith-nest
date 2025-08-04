@@ -1635,7 +1635,7 @@ function CyclingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.gear && (
               <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded font-cabin">
-                ⚙️ {activity.gear}
+                ⚙��� {activity.gear}
               </span>
             )}
             {activity.focus && (
@@ -1783,7 +1783,7 @@ function ActivityCard({
         <div className="flex items-center gap-2">
           <span className="text-orange-500 text-base">📅</span>
           <span className="text-sm text-black font-cabin">
-            {date.replace("��� ", "")}
+            {date.replace("📅 ", "")}
           </span>
         </div>
         <div className="flex items-center gap-2">
