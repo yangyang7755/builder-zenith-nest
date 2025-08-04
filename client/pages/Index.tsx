@@ -1439,7 +1439,7 @@ function CyclingExploreSection() {
   const training = [
     {
       title: "Hill Climbing Intervals",
-      date: "���� Thursday, 6:00 PM",
+      date: "📅 Thursday, 6:00 PM",
       location: "📍Leith Hill, Surrey",
       organizer: "Watts Cycling Club",
       distance: "35km",
