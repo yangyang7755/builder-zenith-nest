@@ -72,6 +72,8 @@ import { OnboardingProvider } from "./contexts/OnboardingContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import { ClubProvider } from "./contexts/ClubContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { FollowProvider } from "./contexts/FollowContext";
+import { ActivityCompletionProvider } from "./contexts/ActivityCompletionContext";
 import ToastContainer from "./components/ToastNotification";
 
 const queryClient = new QueryClient();
