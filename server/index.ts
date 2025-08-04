@@ -26,6 +26,12 @@ import {
   handleGetUserActivities,
 } from "./routes/auth";
 import {
+  handleUserRegistration,
+  handleGetUsers,
+  handleClubCreation,
+  handleGetUserClubs as handleGetUserClubsNew,
+} from "./routes/users";
+import {
   handleGetReviews,
   handleCreateReview,
   handleUpdateReview,
