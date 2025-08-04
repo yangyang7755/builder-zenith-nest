@@ -71,8 +71,13 @@ export default function Profile() {
   const isDemo = !user;
 
   const handleProfileUpdate = (updatedProfile: any) => {
-    // Refresh profile data after update
-    refetch?.();
+    if (user && refetch) {
+      // Authenticated mode - refresh from server
+      refetch();
+    } else {
+      // Demo mode - update local state
+      setLocalProfileData(updatedProfile);
+    }
   };
 
   const handleFollow = () => {
