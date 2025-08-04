@@ -13,6 +13,7 @@ import {
 import { maddieWeiProfile } from "@/data/demoProfiles";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
+import { useProfileVisibility } from "@/hooks/useProfileVisibility";
 import BottomNavigation from "../components/BottomNavigation";
 import { ProfileEdit } from "../components/ProfileEdit";
 import { ComprehensiveProfileEdit } from "../components/ComprehensiveProfileEdit";
