@@ -485,7 +485,7 @@ export function ComprehensiveProfileEdit({
                             type="file"
                             accept="image/*"
                             onChange={handlePhotoUpload}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            className="hidden"
                             id="photo-upload"
                             disabled={uploadingPhoto}
                           />
@@ -493,21 +493,19 @@ export function ComprehensiveProfileEdit({
                             variant="outline"
                             size="sm"
                             disabled={uploadingPhoto}
-                            asChild
+                            onClick={() => document.getElementById('photo-upload')?.click()}
                           >
-                            <label htmlFor="photo-upload" className="cursor-pointer">
-                              {uploadingPhoto ? (
-                                <>
-                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-                                  Uploading...
-                                </>
-                              ) : (
-                                <>
-                                  <Camera className="h-4 w-4 mr-2" />
-                                  Change Photo
-                                </>
-                              )}
-                            </label>
+                            {uploadingPhoto ? (
+                              <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <Camera className="h-4 w-4 mr-2" />
+                                Change Photo
+                              </>
+                            )}
                           </Button>
                         </div>
                         <VisibilityControl field="profile_image" label="Show profile picture" />
