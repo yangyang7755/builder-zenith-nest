@@ -215,35 +215,39 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
       });
     }
 
-    // Update sports if provided
+    // Update sports if provided (skip if tables don't exist)
     if (sports && Array.isArray(sports)) {
-      // Delete existing sports
-      await supabaseAdmin
-        .from("profile_sports")
-        .delete()
-        .eq("profile_id", user.id);
-
-      // Insert new sports
-      if (sports.length > 0) {
-        const sportsData = sports.map(sport => ({
-          profile_id: user.id,
-          sport: sport.sport,
-          level: sport.level,
-          experience: sport.experience || '',
-          max_grade: sport.maxGrade || '',
-          certifications: sport.certifications || [],
-          specialties: sport.specialties || [],
-          preferences: sport.preferences || [],
-        }));
-
-        const { error: sportsError } = await supabaseAdmin
+      try {
+        // Delete existing sports
+        await supabaseAdmin
           .from("profile_sports")
-          .insert(sportsData);
+          .delete()
+          .eq("profile_id", user.id);
 
-        if (sportsError) {
-          console.error("Sports update error:", sportsError);
-          // Don't fail the whole request, just log the error
+        // Insert new sports
+        if (sports.length > 0) {
+          const sportsData = sports.map(sport => ({
+            profile_id: user.id,
+            sport: sport.sport || '',
+            level: sport.level || 'Beginner',
+            experience: sport.experience || '',
+            max_grade: sport.maxGrade || '',
+            certifications: sport.certifications || [],
+            specialties: sport.specialties || [],
+            preferences: sport.preferences || [],
+          }));
+
+          const { error: sportsError } = await supabaseAdmin
+            .from("profile_sports")
+            .insert(sportsData);
+
+          if (sportsError) {
+            console.error("Sports update error:", sportsError);
+            // Don't fail the whole request, just log the error
+          }
         }
+      } catch (sportsError) {
+        console.error("Sports table may not exist, skipping sports update:", sportsError);
       }
     }
 
