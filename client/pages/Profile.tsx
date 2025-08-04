@@ -71,7 +71,7 @@ export default function Profile() {
   }, [user?.id, refetch]);
 
   // Use visibility hook to control what's shown - use 'demo' as userId in demo mode
-  const { isVisible } = useProfileVisibility(user?.id || 'demo');
+  const { isVisible, refresh: refreshVisibility } = useProfileVisibility(user?.id || 'demo');
 
   // Use demo profile when not signed in or loading
   const baseDemoProfile = {
@@ -293,7 +293,7 @@ export default function Profile() {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              🧗 Climbing
+              ���� Climbing
             </button>
             <button
               onClick={() => setActiveSportTab('cycling')}
