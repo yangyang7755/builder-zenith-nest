@@ -46,6 +46,7 @@ import {
   handleMarkMessagesRead,
   handleGetClubOnlineUsers,
 } from "./routes/chat";
+import uploadsRouter from "./routes/uploads";
 
 export function createServer() {
   const app = express();
