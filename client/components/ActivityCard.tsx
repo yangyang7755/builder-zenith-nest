@@ -266,6 +266,8 @@ export default function ActivityCard({
         activityTitle={title}
         organizerName={organizer}
         organizerImage={imageSrc}
+        activityId={activityId || `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase()}
+        onRequestSent={handleRequestSent}
       />
     </>
   );
