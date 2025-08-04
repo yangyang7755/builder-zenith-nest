@@ -47,7 +47,14 @@ export default function ActivityCard({
 
   const handleRequestClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
-    setShowRequestModal(true);
+    if (!isRequested) {
+      setShowRequestModal(true);
+    }
+  };
+
+  const handleRequestSent = () => {
+    setIsRequested(true);
+    setShowRequestModal(false);
   };
 
   const handleSaveClick = (e: React.MouseEvent) => {
