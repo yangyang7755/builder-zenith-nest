@@ -26,7 +26,6 @@ import { apiService } from "../services/apiService";
 
 export default function Profile() {
   const { user } = useAuth();
-  const [following, setFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('completed');
@@ -35,6 +34,14 @@ export default function Profile() {
   const [activityHistory, setActivityHistory] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const activitiesRef = useRef<HTMLDivElement>(null);
+
+  // Follow system hooks
+  const { followUser, unfollowUser, isFollowing, getFollowerCount, getFollowingCount, isLoading: followLoading } = useFollow();
+  const haptic = useHaptic();
+
+  // For demo purposes, use Maddie Wei's user ID
+  const currentUserId = "user_maddie_wei";
+  const isFollowingUser = isFollowing(currentUserId);
 
   // Use the profile hook to get real data when user is logged in
   const { profile, followStats, loading, refetch } = useProfile(user?.id);
