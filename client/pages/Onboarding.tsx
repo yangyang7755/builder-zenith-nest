@@ -141,8 +141,6 @@ export default function Onboarding() {
         }
       });
       updateProfile(skillUpdates);
-    } else if (currentStep === 10) {
-      updateProfile({ gear: tempData.gear });
     }
 
     if (currentStep === totalSteps) {
@@ -164,7 +162,6 @@ export default function Onboarding() {
       case 7: return tempData.profession.trim().length > 0;
       case 8: return true; // University is optional
       case 9: return true; // Skill levels are optional
-      case 10: return true; // Gear is optional
       default: return false;
     }
   };
@@ -472,47 +469,7 @@ export default function Onboarding() {
           </div>
         );
 
-      case 10:
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <Package className="w-16 h-16 text-explore-green mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-black font-cabin mb-2">
-                What gear do you have?
-              </h2>
-              <p className="text-gray-600 font-cabin">
-                Select equipment you own (optional - complete later)
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-              {availableGear.map((gear) => (
-                <button
-                  key={gear}
-                  onClick={() => {
-                    if (tempData.gear.includes(gear)) {
-                      setTempData(prev => ({
-                        ...prev,
-                        gear: prev.gear.filter(g => g !== gear)
-                      }));
-                    } else {
-                      setTempData(prev => ({
-                        ...prev,
-                        gear: [...prev.gear, gear]
-                      }));
-                    }
-                  }}
-                  className={`p-3 rounded-lg border-2 font-cabin font-medium transition-all text-left ${
-                    tempData.gear.includes(gear)
-                      ? "bg-explore-green text-white border-explore-green"
-                      : "bg-white text-gray-700 border-gray-300 hover:border-explore-green"
-                  }`}
-                >
-                  {gear}
-                </button>
-              ))}
-            </div>
-          </div>
-        );
+
 
       default:
         return null;
