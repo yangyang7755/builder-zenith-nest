@@ -60,6 +60,8 @@ import CreateRunningSimple from "./pages/CreateRunningSimple";
 import CreateSurfingSimple from "./pages/CreateSurfingSimple";
 import CreateTennisSimple from "./pages/CreateTennisSimple";
 import CreateSkiingSimple from "./pages/CreateSkiingSimple";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/AdminDashboard";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
