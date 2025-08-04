@@ -106,8 +106,10 @@ export default function DirectChat({
   };
 
   useEffect(() => {
-    loadMessages();
-  }, [otherUserId]);
+    if (otherUserId && user) {
+      loadMessages();
+    }
+  }, [otherUserId, user?.id]);
 
   // Listen for real-time messages
   useEffect(() => {
