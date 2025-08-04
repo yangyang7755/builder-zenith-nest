@@ -343,7 +343,7 @@ function ClubChatItem({
         />
         {/* Club indicator */}
         <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-explore-green rounded-full border border-white flex items-center justify-center">
-          <span className="text-xs text-white">🏛️</span>
+          <span className="text-xs text-white">��️</span>
         </div>
       </div>
 
@@ -355,7 +355,7 @@ function ClubChatItem({
               {club.name}
             </h3>
             <p className="text-gray-500 text-sm font-cabin truncate">
-              {club.lastMessage} �� {getTimeAgo(club.timestamp)}
+              {club.lastMessage} • {getTimeAgo(club.timestamp)}
             </p>
           </div>
 
