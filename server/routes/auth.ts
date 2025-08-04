@@ -68,14 +68,25 @@ export const handleGetProfile = async (req: Request, res: Response) => {
   try {
     // Check if Supabase is configured
     if (!supabaseAdmin) {
-      // Return demo profile for development
+      // Return comprehensive demo profile for development
       const demoProfile = {
         id: "demo-user-1",
         email: "demo@example.com",
         full_name: "Demo User",
         university: "Demo University",
+        institution: "Demo University",
         bio: "This is a demo profile for testing purposes.",
         profile_image: null,
+        phone: null,
+        gender: null,
+        age: null,
+        date_of_birth: null,
+        nationality: null,
+        occupation: null,
+        location: null,
+        visibility_settings: {},
+        sports: [],
+        achievements: [],
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
