@@ -56,6 +56,8 @@ export default function SimpleInteractiveMap({
   activities,
   onClose,
   onActivitySelect,
+  onLocationSelect,
+  mode = 'view',
   initialCenter = DEFAULT_CENTER,
   userLocation
 }: SimpleInteractiveMapProps) {
