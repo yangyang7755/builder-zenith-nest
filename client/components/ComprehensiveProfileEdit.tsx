@@ -356,20 +356,30 @@ export function ComprehensiveProfileEdit({
 
     setUploadingPhoto(true);
     try {
-      // Compress and upload image
-      const compressedFile = await uploadService.compressImage(file, 800, 0.8);
-      const result = await uploadService.uploadProfileImage(compressedFile, user?.id);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      if (result.data?.url) {
-        updateField('profile_image', result.data.url);
+      if (!user) {
+        // Demo mode - create a local URL for the image
+        const objectUrl = URL.createObjectURL(file);
+        updateField('profile_image', objectUrl);
         toast({
           title: "Photo Updated",
           description: "Your profile photo has been updated successfully.",
         });
+      } else {
+        // Real upload
+        const compressedFile = await uploadService.compressImage(file, 800, 0.8);
+        const result = await uploadService.uploadProfileImage(compressedFile, user.id);
+
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        if (result.data?.url) {
+          updateField('profile_image', result.data.url);
+          toast({
+            title: "Photo Updated",
+            description: "Your profile photo has been updated successfully.",
+          });
+        }
       }
     } catch (error) {
       console.error('Photo upload error:', error);
