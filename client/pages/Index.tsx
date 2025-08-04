@@ -679,6 +679,9 @@ export default function Index() {
         </div>
       )}
 
+      {/* Floating Settings Button */}
+      <FloatingSettingsButton show={!showMapView} />
+
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
@@ -1719,7 +1722,7 @@ function ActivityCard({
                   Distance
                 </div>
                 <div className="flex items-center justify-center gap-1">
-                  <span className="text-yellow-600">🚴</span>
+                  <span className="text-yellow-600">���</span>
                   <span className="text-sm font-medium text-black font-cabin">
                     {distance}
                   </span>
