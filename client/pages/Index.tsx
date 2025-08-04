@@ -88,6 +88,16 @@ export default function Index() {
     clubOnly: false,
   });
 
+  // Mobile functionality
+  const deviceInfo = useDeviceInfo();
+  const haptic = useHaptic();
+  const { elementRef: pullRefreshRef, isRefreshing } = usePullToRefresh(
+    async () => {
+      haptic.light();
+      await refreshActivities();
+    }
+  );
+
   const applyFilters = (newFilters: FilterOptions) => {
     setFilters(newFilters);
   };
