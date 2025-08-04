@@ -40,6 +40,14 @@ export default function ActivityCard({
   const navigate = useNavigate();
   const { saveActivity, unsaveActivity, isActivitySaved } =
     useSavedActivities();
+  const { hasRequestedActivity } = useChat();
+
+  const currentActivityId = activityId || `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase();
+
+  useEffect(() => {
+    // Check if this activity has already been requested
+    setIsRequested(hasRequestedActivity(currentActivityId));
+  }, [hasRequestedActivity, currentActivityId]);
 
   const handleCardClick = () => {
     // Show request modal instead of navigating to activity details
