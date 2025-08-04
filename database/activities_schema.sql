@@ -1,7 +1,138 @@
 -- Activities System Database Schema
 -- Run this after the basic profiles and clubs setup
 
--- Activities table
+-- First, handle migration from old schema if it exists
+DO $$
+BEGIN
+  -- Check if activities table exists with old schema (separate date/time columns)
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'activities' AND column_name = 'date'
+  ) THEN
+    -- Add new date_time column if it doesn't exist
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'date_time'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN date_time TIMESTAMP WITH TIME ZONE;
+    END IF;
+    
+    -- Migrate data from separate date/time columns to date_time
+    UPDATE activities 
+    SET date_time = (date + time)::TIMESTAMP WITH TIME ZONE
+    WHERE date_time IS NULL;
+    
+    -- Make date_time NOT NULL
+    ALTER TABLE activities ALTER COLUMN date_time SET NOT NULL;
+    
+    -- Drop old columns
+    ALTER TABLE activities DROP COLUMN IF EXISTS date;
+    ALTER TABLE activities DROP COLUMN IF EXISTS time;
+    
+    -- Update other columns to match new schema
+    ALTER TABLE activities DROP COLUMN IF EXISTS type;
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'activity_type'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN activity_type VARCHAR(50) NOT NULL DEFAULT 'general';
+    END IF;
+    
+    -- Add missing columns if they don't exist
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'coordinates'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN coordinates JSONB;
+    END IF;
+    
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'current_participants'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN current_participants INTEGER DEFAULT 0;
+    END IF;
+    
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'difficulty_level'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN difficulty_level VARCHAR(20) DEFAULT 'beginner';
+    END IF;
+    
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'activity_image'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN activity_image TEXT;
+    END IF;
+    
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'route_link'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN route_link TEXT;
+    END IF;
+    
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'special_requirements'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN special_requirements TEXT;
+    END IF;
+    
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'price_per_person'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN price_per_person DECIMAL(10,2) DEFAULT 0.00;
+    END IF;
+    
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'status'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN status VARCHAR(20) DEFAULT 'upcoming';
+    END IF;
+    
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'activity_data'
+    ) THEN
+      ALTER TABLE activities ADD COLUMN activity_data JSONB DEFAULT '{}';
+    END IF;
+    
+    -- Rename columns if necessary
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'meetup_location'
+    ) THEN
+      -- Copy meetup_location to location if location is empty
+      UPDATE activities SET location = meetup_location WHERE location IS NULL OR location = '';
+      ALTER TABLE activities DROP COLUMN meetup_location;
+    END IF;
+    
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'special_comments'
+    ) THEN
+      -- Copy special_comments to special_requirements if special_requirements is empty
+      UPDATE activities SET special_requirements = special_comments WHERE special_requirements IS NULL OR special_requirements = '';
+      ALTER TABLE activities DROP COLUMN special_comments;
+    END IF;
+    
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'activities' AND column_name = 'difficulty'
+    ) THEN
+      -- Copy difficulty to difficulty_level if difficulty_level is default
+      UPDATE activities SET difficulty_level = difficulty WHERE difficulty_level = 'beginner' AND difficulty IS NOT NULL;
+      ALTER TABLE activities DROP COLUMN difficulty;
+    END IF;
+  END IF;
+END $$;
+
+-- Create activities table if it doesn't exist
 CREATE TABLE IF NOT EXISTS activities (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(255) NOT NULL,
@@ -26,12 +157,33 @@ CREATE TABLE IF NOT EXISTS activities (
   
   -- Timestamps
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  
-  CONSTRAINT valid_status CHECK (status IN ('upcoming', 'ongoing', 'completed', 'cancelled')),
-  CONSTRAINT valid_difficulty CHECK (difficulty_level IN ('beginner', 'intermediate', 'advanced', 'all')),
-  CONSTRAINT future_date_time CHECK (date_time > created_at)
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Add constraints if they don't exist
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.check_constraints 
+    WHERE constraint_name = 'valid_status'
+  ) THEN
+    ALTER TABLE activities ADD CONSTRAINT valid_status CHECK (status IN ('upcoming', 'ongoing', 'completed', 'cancelled'));
+  END IF;
+  
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.check_constraints 
+    WHERE constraint_name = 'valid_difficulty'
+  ) THEN
+    ALTER TABLE activities ADD CONSTRAINT valid_difficulty CHECK (difficulty_level IN ('beginner', 'intermediate', 'advanced', 'all'));
+  END IF;
+  
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.check_constraints 
+    WHERE constraint_name = 'future_date_time'
+  ) THEN
+    ALTER TABLE activities ADD CONSTRAINT future_date_time CHECK (date_time > created_at);
+  END IF;
+END $$;
 
 -- Activity participants table
 CREATE TABLE IF NOT EXISTS activity_participants (
@@ -42,10 +194,19 @@ CREATE TABLE IF NOT EXISTS activity_participants (
   status VARCHAR(20) DEFAULT 'joined', -- 'joined', 'left', 'completed', 'cancelled'
   
   -- Unique constraint to prevent duplicate participation
-  UNIQUE(activity_id, user_id),
-  
-  CONSTRAINT valid_participant_status CHECK (status IN ('joined', 'left', 'completed', 'cancelled'))
+  UNIQUE(activity_id, user_id)
 );
+
+-- Add constraint if it doesn't exist
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.check_constraints 
+    WHERE constraint_name = 'valid_participant_status'
+  ) THEN
+    ALTER TABLE activity_participants ADD CONSTRAINT valid_participant_status CHECK (status IN ('joined', 'left', 'completed', 'cancelled'));
+  END IF;
+END $$;
 
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_activities_organizer ON activities(organizer_id);
@@ -62,6 +223,16 @@ CREATE INDEX IF NOT EXISTS idx_activity_participants_status ON activity_particip
 -- RLS (Row Level Security) policies
 ALTER TABLE activities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE activity_participants ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies if they exist to avoid conflicts
+DROP POLICY IF EXISTS "Activities are viewable by everyone" ON activities;
+DROP POLICY IF EXISTS "Users can create activities" ON activities;
+DROP POLICY IF EXISTS "Organizers can update their activities" ON activities;
+DROP POLICY IF EXISTS "Organizers can delete their activities" ON activities;
+DROP POLICY IF EXISTS "Activity participants are viewable by everyone" ON activity_participants;
+DROP POLICY IF EXISTS "Users can join activities" ON activity_participants;
+DROP POLICY IF EXISTS "Users can update their own participation" ON activity_participants;
+DROP POLICY IF EXISTS "Users can leave activities" ON activity_participants;
 
 -- Activities policies
 CREATE POLICY "Activities are viewable by everyone" ON activities FOR SELECT USING (true);
@@ -115,6 +286,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Drop existing trigger if it exists
+DROP TRIGGER IF EXISTS trigger_update_participant_count ON activity_participants;
+
 -- Trigger to automatically update participant count
 CREATE TRIGGER trigger_update_participant_count
   AFTER INSERT OR UPDATE OR DELETE ON activity_participants
@@ -129,6 +303,9 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Drop existing trigger if it exists
+DROP TRIGGER IF EXISTS trigger_update_activities_updated_at ON activities;
 
 -- Trigger to automatically update updated_at
 CREATE TRIGGER trigger_update_activities_updated_at
