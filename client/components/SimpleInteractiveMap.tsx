@@ -143,7 +143,7 @@ export default function SimpleInteractiveMap({
       football: { color: '#F97316', emoji: '⚽' },
       yoga: { color: '#EC4899', emoji: '🧘' },
     };
-    return styles[type.toLowerCase()] || { color: '#6B7280', emoji: '⚡' };
+    return styles[type.toLowerCase()] || { color: '#6B7280', emoji: '���' };
   };
 
   // Add coordinates to activities if not present
@@ -674,7 +674,7 @@ export default function SimpleInteractiveMap({
                         </Badge>
                         <Button
                           size="sm"
-                          onClick={() => onActivitySelect(activity)}
+                          onClick={() => onActivitySelect?.(activity)}
                         >
                           View Details
                         </Button>
