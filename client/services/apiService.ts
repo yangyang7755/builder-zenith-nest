@@ -12,7 +12,10 @@ class ApiService {
   private async request<T>(
     endpoint: string,
     options: RequestInit = {},
+    retryCount: number = 0
   ): Promise<ApiResponse<T>> {
+    const maxRetries = 2;
+
     try {
       const authHeader = await getAuthHeader();
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -33,14 +36,27 @@ class ApiService {
           responseData = {};
         } else {
           const responseText = await response.text();
-          if (responseText) {
-            responseData = JSON.parse(responseText);
+          if (responseText.trim()) {
+            try {
+              responseData = JSON.parse(responseText);
+            } catch (jsonError) {
+              console.warn('Failed to parse JSON, using text as fallback:', responseText);
+              responseData = { message: responseText };
+            }
           } else {
             responseData = {};
           }
         }
       } catch (parseError) {
         console.error('Failed to parse response:', parseError);
+
+        // Retry on parse errors if we haven't exceeded max retries
+        if (retryCount < maxRetries && parseError instanceof Error && parseError.message.includes('body stream already read')) {
+          console.log(`Retrying request (attempt ${retryCount + 1}/${maxRetries + 1})...`);
+          await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1))); // exponential backoff
+          return this.request(endpoint, options, retryCount + 1);
+        }
+
         return {
           error: `Failed to parse response: ${parseError instanceof Error ? parseError.message : parseError}`,
           status: response.status
@@ -62,6 +78,17 @@ class ApiService {
       return { data: responseData };
     } catch (error) {
       console.error(`API request failed:`, error);
+
+      // Retry on network errors if we haven't exceeded max retries
+      if (retryCount < maxRetries && error instanceof Error && (
+        error.message.includes('body stream already read') ||
+        error.message.includes('Failed to fetch')
+      )) {
+        console.log(`Retrying request (attempt ${retryCount + 1}/${maxRetries + 1})...`);
+        await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1))); // exponential backoff
+        return this.request(endpoint, options, retryCount + 1);
+      }
+
       return {
         error: error instanceof Error ? error.message : "Unknown error",
       };
