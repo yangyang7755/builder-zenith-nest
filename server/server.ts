@@ -7,9 +7,13 @@ const PORT = process.env.PORT || 3001;
 
 async function startServer() {
   try {
+    // Initialize database connection
+    console.log('🔄 Initializing database connection...');
+    await databaseManager.initializeDatabase();
+
     // Create Express app
     const app = createServer();
-    
+
     // Setup Socket.IO server with Express app
     const server = setupSocketServer(app);
     
