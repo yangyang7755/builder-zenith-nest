@@ -230,7 +230,8 @@ export default function Profile() {
         )}
 
         {/* Sports & Licensing Section */}
-        <div className="px-6 pb-6">
+        {isVisible('sports') && (
+          <div className="px-6 pb-6">
           <h3 className="text-lg font-bold text-black mb-4">Sports & Licensing</h3>
 
           {/* Sports Tab Navigation */}
@@ -381,6 +382,7 @@ export default function Profile() {
             )}
           </div>
         </div>
+        )}
 
         {/* Activities & Reviews Section */}
         <div ref={activitiesRef} className="px-6 pb-6">
