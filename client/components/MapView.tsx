@@ -92,6 +92,8 @@ export default function MapView({
         activities={activities}
         onClose={onClose}
         onActivitySelect={onActivitySelect}
+        onLocationSelect={onLocationSelect}
+        mode={mode}
         initialCenter={userLocation || { lat: 51.5074, lng: -0.1278 }}
         userLocation={userLocation}
       />
