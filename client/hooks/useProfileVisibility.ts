@@ -91,6 +91,12 @@ export function useProfileVisibility(userId?: string) {
     return Object.values(visibility).filter(v => !v).length;
   };
 
+  const refresh = () => {
+    if (userId) {
+      loadVisibilitySettings(userId);
+    }
+  };
+
   return {
     visibility,
     loading,
@@ -99,6 +105,7 @@ export function useProfileVisibility(userId?: string) {
     getVisibleCount,
     getHiddenCount,
     setVisibility,
+    refresh,
   };
 }
 
