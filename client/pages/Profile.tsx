@@ -192,32 +192,42 @@ export default function Profile() {
         )}
 
         {/* Personal Details Section */}
-        <div className="px-6 pb-6">
-          <h3 className="text-lg font-bold text-black mb-4">Personal Details</h3>
-          
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-gray-600">Gender:</span>
-              <div className="font-medium text-black">Female</div>
-            </div>
-            <div>
-              <span className="text-gray-600">Age:</span>
-              <div className="font-medium text-black">28 years old</div>
-            </div>
-            <div>
-              <span className="text-gray-600">Nationality:</span>
-              <div className="font-medium text-black">British</div>
-            </div>
-            <div>
-              <span className="text-gray-600">Experience:</span>
-              <div className="font-medium text-black">5 years</div>
-            </div>
-            <div className="col-span-2">
-              <span className="text-gray-600">Institution:</span>
-              <div className="font-medium text-black">London School of Economics</div>
+        {(isVisible('gender') || isVisible('age') || isVisible('nationality') || isVisible('institution')) && (
+          <div className="px-6 pb-6">
+            <h3 className="text-lg font-bold text-black mb-4">Personal Details</h3>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              {isVisible('gender') && (
+                <div>
+                  <span className="text-gray-600">Gender:</span>
+                  <div className="font-medium text-black">Female</div>
+                </div>
+              )}
+              {isVisible('age') && (
+                <div>
+                  <span className="text-gray-600">Age:</span>
+                  <div className="font-medium text-black">28 years old</div>
+                </div>
+              )}
+              {isVisible('nationality') && (
+                <div>
+                  <span className="text-gray-600">Nationality:</span>
+                  <div className="font-medium text-black">British</div>
+                </div>
+              )}
+              <div>
+                <span className="text-gray-600">Experience:</span>
+                <div className="font-medium text-black">5 years</div>
+              </div>
+              {isVisible('institution') && (
+                <div className="col-span-2">
+                  <span className="text-gray-600">Institution:</span>
+                  <div className="font-medium text-black">London School of Economics</div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
+        )}
 
         {/* Sports & Licensing Section */}
         <div className="px-6 pb-6">
