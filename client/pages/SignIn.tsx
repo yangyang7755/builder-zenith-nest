@@ -1,19 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../hooks/use-toast";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -31,15 +20,15 @@ export default function SignIn() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // Get the intended destination from location state
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || "/explore";
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
-    if (!formData.email) {
+    if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = "Please enter a valid email";
     }
 
     if (!formData.password) {
@@ -65,22 +54,19 @@ export default function SignIn() {
         if (error.message.includes("Invalid login credentials")) {
           toast({
             title: "Sign In Failed",
-            description:
-              "Invalid email or password. Please check your credentials and try again.",
+            description: "Invalid email or password. Please check your credentials.",
             variant: "destructive",
           });
         } else if (error.message.includes("Email not confirmed")) {
           toast({
             title: "Email Not Verified",
-            description:
-              "Please check your email and click the verification link before signing in.",
+            description: "Please check your email and verify your account first.",
             variant: "destructive",
           });
         } else {
           toast({
             title: "Sign In Failed",
-            description:
-              error.message || "Failed to sign in. Please try again.",
+            description: error.message || "Failed to sign in. Please try again.",
             variant: "destructive",
           });
         }
@@ -88,18 +74,15 @@ export default function SignIn() {
       }
 
       if (user) {
-        if (user.id.includes("demo-user")) {
-          toast({
-            title: "Demo Sign In Successful!",
-            description:
-              "Welcome to demo mode! All features are available with sample data.",
-          });
-        } else {
-          toast({
-            title: "Welcome back!",
-            description: "You have successfully signed in.",
-          });
-        }
+        const isDemo = user.id?.includes("demo-user");
+        
+        toast({
+          title: isDemo ? "Demo Sign In Successful! 🎉" : "Welcome back! 🎉",
+          description: isDemo
+            ? "Exploring demo mode with sample data."
+            : "You have successfully signed in.",
+        });
+        
         navigate(from, { replace: true });
       }
     } catch (error) {
@@ -115,155 +98,169 @@ export default function SignIn() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <div className="mx-auto w-16 h-16 mb-4">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9e47fe83fd834e79a57361f8a278d9a9?format=webp&width=800"
-              alt="Wildpals Logo"
-              className="w-full h-full object-contain"
-            />
+    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
+      {/* Status Bar */}
+      <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
+        <span>9:41</span>
+        <div className="flex items-center gap-1">
+          <div className="flex gap-0.5">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="w-1 h-3 bg-black rounded-sm"></div>
+            ))}
           </div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Welcome back
+          <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
+            <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Navigation Header */}
+      <div className="flex items-center justify-between p-6 pb-4">
+        <button onClick={() => navigate(-1)}>
+          <ArrowLeft className="w-6 h-6 text-black" />
+        </button>
+        <h1 className="text-xl font-bold text-black font-cabin">Sign In</h1>
+        <div className="w-6" />
+      </div>
+
+      {/* Content */}
+      <div className="px-6 pb-20">
+        {/* Welcome Text */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-explore-green font-cabin mb-2">
+            Welcome Back
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to your account to continue
+          <p className="text-gray-600 font-cabin">
+            Sign in to continue your adventure
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>
-              Enter your email and password to access your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="email">Email Address</Label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      value={formData.email}
-                      onChange={(e) =>
-                        handleInputChange("email", e.target.value)
-                      }
-                      placeholder="Enter your email"
-                      className="pl-10"
-                      disabled={loading}
-                    />
-                  </div>
-                  {errors.email && (
-                    <Alert className="mt-2">
-                      <AlertDescription className="text-red-600 text-sm">
-                        {errors.email}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="password">Password</Label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="password"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="current-password"
-                      value={formData.password}
-                      onChange={(e) =>
-                        handleInputChange("password", e.target.value)
-                      }
-                      placeholder="Enter your password"
-                      className="pl-10 pr-10"
-                      disabled={loading}
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
-                    </button>
-                  </div>
-                  {errors.password && (
-                    <Alert className="mt-2">
-                      <AlertDescription className="text-red-600 text-sm">
-                        {errors.password}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email */}
+          <div>
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
+              Email Address
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="w-5 h-5 text-gray-400" />
               </div>
-
-              <div className="flex items-center justify-between">
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600 hover:text-blue-500"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-              </div>
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Signing In..." : "Sign In"}
-              </Button>
-
-              <div className="text-center">
-                <p className="text-sm text-gray-600">
-                  Don't have an account?{" "}
-                  <Link
-                    to="/signup"
-                    className="font-medium text-blue-600 hover:text-blue-500"
-                  >
-                    Sign up here
-                  </Link>
-                </p>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Demo Account Info */}
-        <Card className="bg-green-50 border-green-200">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <p className="text-sm text-green-800 font-medium mb-2">
-                Demo Mode Active
-              </p>
-              <p className="text-xs text-green-600">
-                Sign in with any email and password! Demo authentication is
-                working with all backend features including profiles, clubs, and
-                activities.
-              </p>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                placeholder="Enter your email"
+                className={`w-full pl-12 pr-4 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+                autoComplete="email"
+              />
             </div>
-          </CardContent>
-        </Card>
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.email}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
+              Password
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Lock className="w-5 h-5 text-gray-400" />
+              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={(e) => handleInputChange("password", e.target.value)}
+                placeholder="Enter your password"
+                className={`w-full pl-12 pr-12 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5 text-gray-400" />
+                ) : (
+                  <Eye className="w-5 h-5 text-gray-400" />
+                )}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.password}</p>
+            )}
+          </div>
+
+          {/* Forgot Password Link */}
+          <div className="text-right">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-explore-green font-medium underline font-cabin"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-explore-green text-white py-4 px-6 rounded-lg font-cabin font-medium text-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Signing In..." : "Sign In"}
+          </button>
+
+          {/* Sign Up Link */}
+          <div className="text-center pt-4">
+            <p className="text-gray-600 font-cabin">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-explore-green font-bold underline font-cabin"
+              >
+                Create Account
+              </Link>
+            </p>
+          </div>
+        </form>
+
+        {/* Demo Info */}
+        <div className="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="text-center">
+            <p className="text-sm text-green-800 font-medium mb-1 font-cabin">
+              🚀 Demo Mode Active
+            </p>
+            <p className="text-xs text-green-600 font-cabin">
+              Try any email and password to explore the app with sample data!
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
