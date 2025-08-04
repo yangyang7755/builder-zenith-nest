@@ -23,7 +23,9 @@ interface Activity {
 interface MapViewProps {
   activities: Activity[];
   onClose: () => void;
-  onActivitySelect: (activity: Activity) => void;
+  onActivitySelect?: (activity: Activity) => void;
+  onLocationSelect?: (location: { lat: number; lng: number }, address: string) => void;
+  mode?: 'view' | 'select';
 }
 
 export default function MapView({
