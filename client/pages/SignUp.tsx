@@ -96,36 +96,42 @@ export default function SignUp() {
 
     setLoading(true);
     try {
-      const { user, error } = await signUp(formData.email, formData.password, {
+      // Use the comprehensive user registration service
+      const registrationData = {
+        email: formData.email,
+        password: formData.password,
         full_name: formData.full_name,
-      });
+        bio: formData.bio || undefined,
+        phone: formData.phone || undefined,
+        gender: formData.gender || undefined,
+        age: formData.age ? parseInt(formData.age) : undefined,
+        nationality: formData.nationality || undefined,
+        institution: formData.institution || undefined,
+        occupation: formData.occupation || undefined,
+        location: formData.location || undefined,
+      };
 
-      if (error) {
+      const result = await userService.registerUser(registrationData);
+
+      if (result.error) {
         toast({
-          title: "Sign Up Failed",
-          description:
-            error.message || "Failed to create account. Please try again.",
+          title: "Registration Failed",
+          description: result.error || "Failed to create account. Please try again.",
           variant: "destructive",
         });
         return;
       }
 
-      if (user) {
-        if (user.id.startsWith("demo-user-")) {
-          // Demo mode - no email verification needed
-          toast({
-            title: "Demo Account Created Successfully",
-            description:
-              "Demo account created! You can now sign in with these credentials.",
-          });
-        } else {
-          // Real Supabase mode
-          toast({
-            title: "Account Created Successfully",
-            description:
-              "Please check your email to verify your account before signing in.",
-          });
-        }
+      if (result.data) {
+        const isDemo = result.data.user?.id?.startsWith("demo-user-");
+
+        toast({
+          title: isDemo ? "Demo Account Created Successfully" : "Account Created Successfully",
+          description: isDemo
+            ? "Demo account created! You can now sign in with these credentials."
+            : "Your account has been created and saved to the database. You can now sign in.",
+        });
+
         navigate("/signin");
       }
     } catch (error) {
