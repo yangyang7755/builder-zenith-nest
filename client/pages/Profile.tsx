@@ -261,7 +261,7 @@ export default function Profile() {
                           onClick={() => setShowFollowing(true)}
                           className="hover:text-explore-green transition-colors"
                         >
-                          {displayProfile.following || 0} Following
+                          {getFollowingCount(currentUserId)} Following
                         </button>
                       )}
                     </>
