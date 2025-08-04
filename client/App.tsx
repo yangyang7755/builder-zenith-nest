@@ -131,6 +131,28 @@ const App = () => (
                             path="/create/tennis"
                             element={<CreateTennis />}
                           />
+
+                          {/* Simplified Activity Creation Templates */}
+                          <Route
+                            path="/create/hiking-simple"
+                            element={<CreateHikingSimple />}
+                          />
+                          <Route
+                            path="/create/running-simple"
+                            element={<CreateRunningSimple />}
+                          />
+                          <Route
+                            path="/create/surfing-simple"
+                            element={<CreateSurfingSimple />}
+                          />
+                          <Route
+                            path="/create/tennis-simple"
+                            element={<CreateTennisSimple />}
+                          />
+                          <Route
+                            path="/create/skiing-simple"
+                            element={<CreateSkiingSimple />}
+                          />
                           <Route
                             path="/create/club"
                             element={<CreateClub />}
