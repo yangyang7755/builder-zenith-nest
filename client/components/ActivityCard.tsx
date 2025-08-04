@@ -53,6 +53,7 @@ export default function ActivityCard({
   }, [hasRequestedActivity, currentActivityId]);
 
   const handleCardClick = () => {
+    haptic.light();
     // Show request modal instead of navigating to activity details
     setShowRequestModal(true);
   };
@@ -60,11 +61,13 @@ export default function ActivityCard({
   const handleRequestClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
     if (!isRequested) {
+      haptic.medium();
       setShowRequestModal(true);
     }
   };
 
   const handleRequestSent = () => {
+    haptic.success();
     setIsRequested(true);
     setShowRequestModal(false);
   };
