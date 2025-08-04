@@ -341,6 +341,7 @@ export default function SimpleInteractiveMap({
                 return (
                   <div
                     key={activity.id}
+                    id={`activity-${activity.id}`}
                     className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                       isSelected ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 hover:bg-gray-100'
                     }`}
