@@ -31,17 +31,10 @@ export default function MapView({
   onClose,
   onActivitySelect,
 }: MapViewProps) {
-  const [useInteractiveMap, setUseInteractiveMap] = useState(true);
+  const [useAdvancedMap, setUseAdvancedMap] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
-  const [mapError, setMapError] = useState<string | null>(null);
   const { toast } = useToast();
-
-  // Check if we have a valid Mapbox token
-  const hasMapboxToken = () => {
-    const token = process.env.VITE_MAPBOX_ACCESS_TOKEN;
-    return token && !token.includes('example') && token.length > 20;
-  };
 
   // Get user's current location
   const getUserLocation = async () => {
