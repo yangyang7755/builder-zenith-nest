@@ -96,13 +96,13 @@ export default function RequestJoinModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-3 border-2 border-gray-300 rounded-lg text-gray-600 font-cabin font-medium"
+            className="flex-1 native-button-secondary font-cabin"
           >
             Cancel
           </button>
           <button
             onClick={handleSendRequest}
-            className="flex-1 py-3 bg-explore-green text-white rounded-lg font-cabin font-medium"
+            className="flex-1 native-button font-cabin"
           >
             Send Request
           </button>
