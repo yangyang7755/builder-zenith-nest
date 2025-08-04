@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { createServer } from "./index";
 import { setupSocketServer } from "./socketServer";
+import { databaseManager } from "./lib/database";
 
 const PORT = process.env.PORT || 3001;
 
