@@ -229,7 +229,7 @@ export default function SimpleInteractiveMap({
       {mapView === 'embedded' ? (
         <div className="relative flex-1 h-[calc(100vh-4rem)]">
           {/* Embedded Map */}
-          <div className="w-full h-2/3">
+          <div ref={mapContainerRef} className="w-full h-2/3 relative">
             <iframe
               src={generateOSMUrl()}
               width="100%"
@@ -240,6 +240,84 @@ export default function SimpleInteractiveMap({
               referrerPolicy="no-referrer-when-downgrade"
               title="Activity locations map"
             />
+
+            {/* Activity Markers Overlay */}
+            {activitiesWithCoords.map((activity) => {
+              if (!activity.coordinates) return null;
+
+              const { x, y } = latLngToPixel(activity.coordinates.lat, activity.coordinates.lng);
+              const style = getActivityMarkerStyle(activity.type);
+              const isSelected = selectedActivity?.id === activity.id;
+
+              // Only show markers that are within the visible map area
+              if (x < 0 || y < 0 || x > (mapContainerRef.current?.offsetWidth || 0) || y > (mapContainerRef.current?.offsetHeight || 0)) {
+                return null;
+              }
+
+              return (
+                <div
+                  key={activity.id}
+                  className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200 hover:scale-110 z-10 ${
+                    isSelected ? 'scale-125 z-20' : ''
+                  }`}
+                  style={{
+                    left: `${x}px`,
+                    top: `${y}px`,
+                  }}
+                  onClick={() => handleActivityClick(activity)}
+                  title={activity.title}
+                >
+                  {/* Activity Marker */}
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-lg border-2 border-white ${
+                      isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+                    }`}
+                    style={{ backgroundColor: style.color }}
+                  >
+                    {style.emoji}
+                  </div>
+
+                  {/* Pulse animation for selected marker */}
+                  {isSelected && (
+                    <div
+                      className="absolute inset-0 rounded-full animate-ping opacity-75"
+                      style={{ backgroundColor: style.color }}
+                    />
+                  )}
+
+                  {/* Quick info tooltip on hover */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {activity.title}
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* User Location Marker */}
+            {userLocation && (
+              (() => {
+                const { x, y } = latLngToPixel(userLocation.lat, userLocation.lng);
+
+                // Only show if within bounds
+                if (x >= 0 && y >= 0 && x <= (mapContainerRef.current?.offsetWidth || 0) && y <= (mapContainerRef.current?.offsetHeight || 0)) {
+                  return (
+                    <div
+                      className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10"
+                      style={{
+                        left: `${x}px`,
+                        top: `${y}px`,
+                      }}
+                    >
+                      <div className="relative">
+                        <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg" />
+                        <div className="absolute inset-0 w-4 h-4 bg-blue-500 rounded-full opacity-25 animate-ping" />
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })()
+            )}
           </div>
 
           {/* Activities List */}
