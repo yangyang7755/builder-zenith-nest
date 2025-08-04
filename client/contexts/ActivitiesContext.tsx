@@ -498,13 +498,16 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
               id: currentUserProfile.id,
               full_name: currentUserProfile.full_name,
               profile_image: currentUserProfile.profile_image
-            } : undefined,
+            } : {
+              id: "demo-user-id",
+              full_name: "You",
+              profile_image: "/placeholder.svg"
+            },
             // Legacy fields for backward compatibility
             type: activityData.activity_type,
             date: activityData.date_time.split('T')[0],
             time: activityData.date_time.split('T')[1].substring(0, 5),
             meetupLocation: activityData.location,
-            organizer: currentUserProfile?.full_name || "You",
             organizerName: currentUserProfile?.full_name || "You",
             maxParticipants: activityData.max_participants.toString(),
             specialComments: activityData.special_requirements || "",
