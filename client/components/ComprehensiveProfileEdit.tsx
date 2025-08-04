@@ -256,17 +256,34 @@ export function ComprehensiveProfileEdit({
         Object.entries(updateData).filter(([_, value]) => value !== undefined)
       );
 
-      // Update profile via API
+      // Update profile via direct fetch to avoid stream issues
       console.log('Sending profile update data:', cleanUpdateData);
-      const result = await apiService.updateProfile(cleanUpdateData);
-      console.log('API response:', result);
 
-      if (result.error) {
-        console.error('API error details:', JSON.stringify(result, null, 2));
-        console.error('Error string:', result.error);
-        console.error('Full result object:', result);
-        throw new Error(result.error);
+      const response = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cleanUpdateData)
+      });
+
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (parseError) {
+        throw new Error(`Failed to parse response: ${parseError.message}`);
       }
+
+      console.log('Direct fetch response:', responseData);
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        const errorMessage = responseData.error || `HTTP error! status: ${response.status}`;
+        console.error('Server error:', responseData);
+        throw new Error(errorMessage);
+      }
+
+      console.log('Profile update successful:', responseData);
 
       // For demo mode (no user), also save to localStorage as backup
       if (!user) {
