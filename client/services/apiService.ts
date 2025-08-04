@@ -27,6 +27,28 @@ class ApiService {
       return this.pendingRequests.get(requestKey);
     }
 
+    // Create the request promise
+    const requestPromise = this.executeRequest<T>(endpoint, options, retryCount);
+
+    // Store the promise
+    this.pendingRequests.set(requestKey, requestPromise);
+
+    try {
+      const result = await requestPromise;
+      return result;
+    } finally {
+      // Clean up the pending request
+      this.pendingRequests.delete(requestKey);
+    }
+  }
+
+  private async executeRequest<T>(
+    endpoint: string,
+    options: RequestInit = {},
+    retryCount: number = 0
+  ): Promise<ApiResponse<T>> {
+    const maxRetries = 2;
+
     try {
       const authHeader = await getAuthHeader();
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
