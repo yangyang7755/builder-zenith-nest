@@ -125,34 +125,36 @@ export default function Profile() {
               )}
 
               {/* Rating */}
-              <button
-                onClick={() => activitiesRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                className="flex items-center gap-2 mb-3 hover:opacity-75 transition-opacity"
-              >
-                {loading ? (
-                  <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
-                ) : displayProfile.rating && displayProfile.rating > 0 ? (
-                  <>
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={`w-4 h-4 ${
-                            star <= Math.floor(displayProfile.rating || 0)
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm font-medium text-black">
-                      {displayProfile.rating.toFixed(1)} ({displayProfile.reviews || 0} reviews)
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-sm text-gray-500">No reviews yet</span>
-                )}
-              </button>
+              {isVisible('reviews') && (
+                <button
+                  onClick={() => activitiesRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex items-center gap-2 mb-3 hover:opacity-75 transition-opacity"
+                >
+                  {loading ? (
+                    <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+                  ) : displayProfile.rating && displayProfile.rating > 0 ? (
+                    <>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <= Math.floor(displayProfile.rating || 0)
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm font-medium text-black">
+                        {displayProfile.rating.toFixed(1)} ({displayProfile.reviews || 0} reviews)
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-sm text-gray-500">No reviews yet</span>
+                  )}
+                </button>
+              )}
             </div>
           </div>
 
