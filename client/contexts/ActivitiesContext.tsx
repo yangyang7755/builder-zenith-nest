@@ -260,12 +260,48 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       );
     };
 
+    const handleParticipantJoined = (event: CustomEvent) => {
+      const { activityId, participant, newCount } = event.detail;
+
+      setActivities(prev =>
+        prev.map(activity =>
+          activity.id === activityId
+            ? {
+                ...activity,
+                current_participants: newCount,
+                participants: [...(activity.participants || []), participant]
+              }
+            : activity
+        )
+      );
+    };
+
+    const handleParticipantLeft = (event: CustomEvent) => {
+      const { activityId, userId, newCount } = event.detail;
+
+      setActivities(prev =>
+        prev.map(activity =>
+          activity.id === activityId
+            ? {
+                ...activity,
+                current_participants: newCount,
+                participants: activity.participants?.filter(p => p.user_id !== userId) || []
+              }
+            : activity
+        )
+      );
+    };
+
     window.addEventListener('organizerProfileUpdated', handleOrganizerProfileUpdate as EventListener);
     window.addEventListener('participantProfileUpdated', handleParticipantProfileUpdate as EventListener);
+    window.addEventListener('participantJoined', handleParticipantJoined as EventListener);
+    window.addEventListener('participantLeft', handleParticipantLeft as EventListener);
 
     return () => {
       window.removeEventListener('organizerProfileUpdated', handleOrganizerProfileUpdate as EventListener);
       window.removeEventListener('participantProfileUpdated', handleParticipantProfileUpdate as EventListener);
+      window.removeEventListener('participantJoined', handleParticipantJoined as EventListener);
+      window.removeEventListener('participantLeft', handleParticipantLeft as EventListener);
     };
   }, []);
   const [pagination, setPagination] = useState({ total: 0, limit: 20, offset: 0 });
