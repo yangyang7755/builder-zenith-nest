@@ -1509,6 +1509,20 @@ function CyclingExploreSection() {
 
 function CyclingActivityCard({ activity }: { activity: any }) {
   const navigate = useNavigate();
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [isRequested, setIsRequested] = useState(false);
+  const { hasRequestedActivity } = useChat();
+
+  const activityId = `${activity.title}-${activity.organizer}`.replace(/\s+/g, "-").toLowerCase();
+
+  useEffect(() => {
+    setIsRequested(hasRequestedActivity(activityId));
+  }, [hasRequestedActivity, activityId]);
+
+  const handleRequestSent = () => {
+    setIsRequested(true);
+    setShowRequestModal(false);
+  };
 
   const handleCardClick = () => {
     // Navigate to appropriate cycling activity based on type
