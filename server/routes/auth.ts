@@ -141,32 +141,40 @@ export const handleGetProfile = async (req: Request, res: Response) => {
 
 export const handleUpdateProfile = async (req: Request, res: Response) => {
   try {
-    console.log('Profile update - checking Supabase configuration...');
+    console.log('=== PROFILE UPDATE REQUEST ===');
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    console.log('Request headers authorization:', req.headers.authorization);
     console.log('supabaseAdmin exists:', !!supabaseAdmin);
+
+    // TEMPORARY: Always return demo response to test basic flow
+    const demoProfile = {
+      id: "demo-user-id",
+      email: req.body.email || "demo@example.com",
+      full_name: req.body.full_name || "Demo User",
+      bio: req.body.bio || "Demo user profile",
+      profile_image: req.body.profile_image || null,
+      university: req.body.institution || "Demo University",
+      institution: req.body.institution || "Demo University",
+      phone: req.body.phone || null,
+      gender: req.body.gender || null,
+      age: req.body.age || null,
+      date_of_birth: req.body.date_of_birth || null,
+      nationality: req.body.nationality || null,
+      occupation: req.body.occupation || null,
+      location: req.body.location || null,
+      visibility_settings: req.body.visibility_settings || {},
+      sports: req.body.sports || [],
+      achievements: req.body.achievements || [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    console.log('Returning demo profile:', demoProfile);
+    return res.json(demoProfile);
 
     // Check if Supabase is configured
     if (!supabaseAdmin) {
       console.log('Running in demo mode - returning demo response');
-      // Return demo success response for development
-      const demoProfile = {
-        id: "demo-user-id",
-        email: req.body.email || "demo@example.com",
-        full_name: req.body.full_name || "Demo User",
-        bio: req.body.bio || "Demo user profile",
-        profile_image: req.body.profile_image || null,
-        university: req.body.institution || "Demo University",
-        institution: req.body.institution || "Demo University",
-        phone: req.body.phone || null,
-        gender: req.body.gender || null,
-        age: req.body.age || null,
-        date_of_birth: req.body.date_of_birth || null,
-        nationality: req.body.nationality || null,
-        occupation: req.body.occupation || null,
-        location: req.body.location || null,
-        visibility_settings: req.body.visibility_settings || {},
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
       return res.json(demoProfile);
     }
 
