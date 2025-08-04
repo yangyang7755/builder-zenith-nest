@@ -43,7 +43,7 @@ export interface Activity {
   date?: string;
   time?: string;
   meetupLocation?: string;
-  organizer?: string;
+  organizerName?: string;
   maxParticipants?: string;
   specialComments?: string;
   imageSrc?: string;
