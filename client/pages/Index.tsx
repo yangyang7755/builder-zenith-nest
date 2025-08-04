@@ -709,7 +709,7 @@ function MixedActivitiesSection({
     {
       title: "Westway women's+ climbing morning",
       date: `📅 ${formatActivityDate("2025-01-26")}`,
-      location: "📍 London, UK",
+      location: "�� London, UK",
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
       type: "climbing",
@@ -803,7 +803,7 @@ function MixedActivitiesSection({
                     activity.imageSrc ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
                   }
-                  organizer={activity.organizer}
+                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
                   type={activity.type}
                   distance={activity.distance}
                   pace={activity.pace}
@@ -837,7 +837,7 @@ function MixedActivitiesSection({
                     date={activity.date}
                     location={activity.location}
                     imageSrc={activity.imageSrc}
-                    organizer={activity.organizer}
+                    organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
                     type={activity.type}
                     distance={activity.distance}
                     pace={activity.pace}
@@ -865,7 +865,7 @@ function MixedActivitiesSection({
                     activity.imageSrc ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
                   }
-                  organizer={activity.organizer}
+                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
                   type={activity.type}
                   distance={activity.distance}
                   pace={activity.pace}
@@ -908,7 +908,7 @@ function MixedActivitiesSection({
                   date={activity.date}
                   location={activity.location}
                   imageSrc={activity.imageSrc}
-                  organizer={activity.organizer}
+                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
                   type={activity.type}
                   distance={activity.distance}
                   pace={activity.pace}
@@ -948,7 +948,7 @@ function MixedActivitiesSection({
                   date={activity.date}
                   location={activity.location}
                   imageSrc={activity.imageSrc}
-                  organizer={activity.organizer}
+                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
                   type={activity.type}
                   difficulty={activity.difficulty}
                   isFirstCard={activity.isFirstCard}
@@ -1373,7 +1373,7 @@ function CyclingExploreSection() {
   const bikepacking = [
     {
       title: "South Downs Way Bikepacking",
-      date: "📅 Fri-Sun, July 15-17",
+      date: "�� Fri-Sun, July 15-17",
       location: "📍Winchester to Eastbourne",
       organizer: "Adventure Cycling UK",
       distance: "160km over 3 days",
