@@ -55,7 +55,7 @@ export default function Profile() {
       if (savedProfileData) {
         try {
           const parsedData = JSON.parse(savedProfileData);
-          console.log('Force refresh - loading profile data:', parsedData);
+
           setLocalProfileData(parsedData);
         } catch (error) {
           console.error('Failed to parse saved profile data:', error);
