@@ -519,7 +519,9 @@ export default function Profile() {
           <div ref={activitiesRef} className="px-6 pb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-black">Activities & Reviews</h3>
-            <span className="text-sm text-gray-500">15 total</span>
+            <span className="text-sm text-gray-500">
+              {activityHistory.length} completed
+            </span>
           </div>
 
           {/* Tab Navigation */}
