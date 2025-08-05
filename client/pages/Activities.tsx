@@ -12,6 +12,9 @@ import BottomNavigation from "../components/BottomNavigation";
 
 export default function Activities() {
   const { savedActivities, unsaveActivity } = useSavedActivities();
+  const { activities, getUserParticipatedActivities, getUserOrganizedActivities } = useActivities();
+  const { getUserParticipatedActivities: getParticipationData } = useActivityParticipation();
+  const { currentUserProfile } = useUserProfile();
   const [selectedTab, setSelectedTab] = useState("Saved");
 
   // Sort activities by date (future vs past)
