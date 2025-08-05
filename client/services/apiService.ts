@@ -156,15 +156,17 @@ class ApiService {
       }
 
       if (!statusOk) {
-        console.error('Server error response:', JSON.stringify(responseData, null, 2));
-        const errorMessage = responseData?.error || responseData?.message || `HTTP error! status: ${status}`;
-
-        // Treat 503 Service Unavailable as backend unavailable
+        // Handle 503 Service Unavailable immediately without logging as error
         if (status === 503) {
+          console.log('Backend service unavailable (503), switching to demo mode');
           return {
             error: 'BACKEND_UNAVAILABLE'
           };
         }
+
+        // Log other server errors
+        console.error('Server error response:', JSON.stringify(responseData, null, 2));
+        const errorMessage = responseData?.error || responseData?.message || `HTTP error! status: ${status}`;
 
         return {
           error: errorMessage,
