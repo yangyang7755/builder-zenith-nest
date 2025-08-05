@@ -127,6 +127,17 @@ export default function Index() {
 
   const activitiesFromFollowedUsers = getActivitiesFromFollowedUsers();
 
+  // Helper function to check if organizer is followed
+  const isOrganizerFollowed = (activity: any) => {
+    const organizerId = activity.organizer_id || activity.organizer?.id;
+    const organizerName = activity.organizer?.full_name || activity.organizerName;
+
+    return following.some(rel =>
+      rel.following_id === organizerId ||
+      rel.following?.full_name === organizerName
+    );
+  };
+
   // Handle clubOnly query parameter
   useEffect(() => {
     const clubOnly = searchParams.get('clubOnly');
