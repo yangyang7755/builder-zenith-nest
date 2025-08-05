@@ -57,6 +57,8 @@ export default function Index() {
   const { activities, searchActivities, loading, error, refreshActivities, createActivity } = useActivities();
   const { showWelcomeMessage, dismissWelcomeMessage, userProfile } = useOnboarding();
   const { getUserClubs, isClubMember } = useClub();
+  const { savedActivities, isActivitySaved } = useSavedActivities();
+  const { getParticipationStatus, getUserParticipatedActivities } = useActivityParticipation();
   const [searchParams] = useSearchParams();
 
   const formatActivityDate = (dateStr: string) => {
