@@ -585,7 +585,9 @@ export default function CategoryActivities() {
                       <p className={`text-explore-green font-cabin font-medium ${
                         viewMode === "grid" ? "text-xs" : "text-sm"
                       } mb-2`}>
-                        {activity.organizer}
+                        {typeof activity.organizer === 'string'
+                          ? activity.organizer
+                          : activity.organizer?.full_name || activity.organizerName || "Unknown Organizer"}
                       </p>
 
                       {/* Description (list view only) */}
