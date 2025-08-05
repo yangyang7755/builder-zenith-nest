@@ -28,9 +28,13 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       const response = await apiService.getSavedActivities();
-      
-      if (response.error && response.error !== 'BACKEND_UNAVAILABLE') {
-        console.error("Failed to load saved activities:", response.error);
+
+      if (response.error) {
+        if (response.error === 'BACKEND_UNAVAILABLE') {
+          console.log("Backend unavailable, keeping existing saved activities state");
+        } else {
+          console.error("Failed to load saved activities:", response.error);
+        }
         return;
       }
 
