@@ -131,8 +131,13 @@ export function createServer() {
   app.get("/api/user/clubs", handleGetUserClubs);
   app.get("/api/user/activities", handleGetUserActivities);
 
-  // User Management routes
+  // User Authentication routes
   app.post("/api/users/register", handleUserRegistration);
+  app.post("/api/users/login", handleUserLogin);
+  app.get("/api/users/:userId/profile", handleGetUserProfile);
+  app.put("/api/users/:userId/profile", handleUpdateUserProfile);
+
+  // User Management routes
   app.get("/api/users", handleGetUsers);
   app.get("/api/users/:userId/clubs", handleGetUserClubsNew);
 
