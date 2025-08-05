@@ -159,6 +159,13 @@ class ApiService {
         console.error('Server error response:', JSON.stringify(responseData, null, 2));
         const errorMessage = responseData?.error || responseData?.message || `HTTP error! status: ${status}`;
 
+        // Treat 503 Service Unavailable as backend unavailable
+        if (status === 503) {
+          return {
+            error: 'BACKEND_UNAVAILABLE'
+          };
+        }
+
         return {
           error: errorMessage,
           data: responseData
