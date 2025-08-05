@@ -255,6 +255,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser(null);
         setProfile(null);
         setSession(null);
+
+        // Clear persisted data
+        localStorage.removeItem('userProfile');
+        localStorage.removeItem('userSession');
       }
       return { error: result.error };
     },
