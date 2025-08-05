@@ -749,7 +749,7 @@ export default function Index() {
               </p>
               <div className="bg-gray-50 rounded-lg p-3 mb-4">
                 <p className="text-sm text-gray-600 font-cabin">
-                  🔍 <strong>Discover</strong> activities that match your interests<br/>
+                  �� <strong>Discover</strong> activities that match your interests<br/>
                   🤝 <strong>Connect</strong> with like-minded people<br/>
                   🏆 <strong>Join</strong> clubs and events near you
                 </p>
@@ -957,6 +957,7 @@ function MixedActivitiesSection({
                   difficulty="Intermediate"
                   activityId={activity.id}
                   isOrganizerFollowed={isOrganizerFollowed(activity)}
+                  isFromUserClub={isFromUserClub(activity)}
                 />
               ))}
             </>
