@@ -146,7 +146,7 @@ export default function Index() {
 
   // Get activities from user's clubs
   const getActivitiesFromUserClubs = () => {
-    const userClubs = getUserClubs();
+    const userClubs = getUserMemberships();
     if (userClubs.length === 0) return [];
 
     const userClubIds = userClubs.map(membership => membership.club_id);
