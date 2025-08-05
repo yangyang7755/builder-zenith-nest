@@ -873,34 +873,19 @@ Thank you!
             icon={<HelpCircle className="w-5 h-5" />}
             title="Help & Support"
             subtitle="FAQ, contact support, tutorials"
-            onClick={() =>
-              toast({
-                title: "Support",
-                description: "Support center coming soon.",
-              })
-            }
+            onClick={contactSupport}
           />
           <SettingsItem
             icon={<Share2 className="w-5 h-5" />}
             title="Share App"
             subtitle="Invite friends to join the community"
-            onClick={() =>
-              toast({
-                title: "Share",
-                description: "Sharing feature coming soon.",
-              })
-            }
+            onClick={shareApp}
           />
           <SettingsItem
             icon={<Star className="w-5 h-5" />}
             title="Rate App"
             subtitle="Leave a review on the app store"
-            onClick={() =>
-              toast({
-                title: "Rate App",
-                description: "App rating coming soon.",
-              })
-            }
+            onClick={provideFeedback}
           />
           <SettingsItem
             icon={<SettingsIcon className="w-5 h-5" />}
