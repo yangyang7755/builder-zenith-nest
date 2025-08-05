@@ -41,8 +41,6 @@ class ApiService {
     options: RequestInit = {},
     retryCount: number = 0
   ): Promise<ApiResponse<T>> {
-    const maxRetries = 2;
-
     // Check if backend is available first (except for ping endpoint)
     if (endpoint !== '/ping') {
       const isBackendAvailable = await checkBackendAvailability();
@@ -52,28 +50,8 @@ class ApiService {
       }
     }
 
-    // Create a unique key for this request
-    const requestKey = `${options.method || 'GET'}-${endpoint}-${JSON.stringify(options.body || {})}`;
-
-    // Check if we already have a pending request for this
-    if (this.pendingRequests.has(requestKey)) {
-      console.log('Reusing pending request for:', requestKey);
-      return this.pendingRequests.get(requestKey);
-    }
-
-    // Create the request promise
-    const requestPromise = this.executeRequest<T>(endpoint, options, retryCount);
-
-    // Store the promise
-    this.pendingRequests.set(requestKey, requestPromise);
-
-    try {
-      const result = await requestPromise;
-      return result;
-    } finally {
-      // Clean up the pending request
-      this.pendingRequests.delete(requestKey);
-    }
+    // Execute request directly without caching to avoid body stream issues
+    return this.executeRequest<T>(endpoint, options, retryCount);
   }
 
   private async executeRequest<T>(
