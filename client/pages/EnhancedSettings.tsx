@@ -171,14 +171,30 @@ export default function EnhancedSettings() {
     setShowDeleteConfirm(true);
   };
 
-  const confirmDeleteAccount = () => {
-    // In a real app, this would call an API to delete the account
-    toast({
-      title: "Account Deletion",
-      description: "Account deletion process started. You'll receive a confirmation email.",
-      variant: "destructive",
-    });
-    setShowDeleteConfirm(false);
+  const confirmDeleteAccount = async () => {
+    try {
+      // Clear all local data
+      localStorage.clear();
+
+      // Sign out user
+      await signOut();
+
+      // In a real app, this would call an API to delete the account
+      toast({
+        title: "Account Deletion",
+        description: "Account deletion process started. You'll receive a confirmation email.",
+        variant: "destructive",
+      });
+
+      setShowDeleteConfirm(false);
+      navigate('/auth');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete account. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const exportData = () => {
