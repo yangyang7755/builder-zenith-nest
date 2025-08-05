@@ -108,6 +108,25 @@ export default function Index() {
     setFilters(newFilters);
   };
 
+  // Get activities from followed users
+  const getActivitiesFromFollowedUsers = () => {
+    if (following.length === 0) return [];
+
+    const followedUserIds = following.map(rel => rel.following_id);
+    const followedUserNames = following.map(rel => rel.following?.full_name).filter(Boolean);
+
+    return activities.filter(activity => {
+      // Check if organizer is a followed user by ID or name
+      const organizerId = activity.organizer_id || activity.organizer?.id;
+      const organizerName = activity.organizer?.full_name || activity.organizerName;
+
+      return followedUserIds.includes(organizerId) ||
+             followedUserNames.includes(organizerName);
+    });
+  };
+
+  const activitiesFromFollowedUsers = getActivitiesFromFollowedUsers();
+
   // Handle clubOnly query parameter
   useEffect(() => {
     const clubOnly = searchParams.get('clubOnly');
