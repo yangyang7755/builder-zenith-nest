@@ -304,19 +304,49 @@ export default function CategoryActivities() {
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4">
-        <div className="flex items-center">
-          <button onClick={() => navigate(-1)} className="mr-4">
-            <ArrowLeft className="w-6 h-6 text-black" />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-black font-cabin">
-              {category}
-            </h1>
-            <p className="text-sm text-gray-500 font-cabin">
-              {filteredActivities.length} activities found
-            </p>
+      <div className="px-6 py-4 bg-white border-b border-gray-100">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <button onClick={() => navigate(-1)} className="mr-4">
+              <ArrowLeft className="w-6 h-6 text-black" />
+            </button>
+            <div>
+              <h1 className="text-xl font-bold text-black font-cabin">
+                {category}
+              </h1>
+              <p className="text-sm text-gray-500 font-cabin">
+                {filteredActivities.length} activities found
+              </p>
+            </div>
           </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+              className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+            >
+              {viewMode === "grid" ? <List className="w-5 h-5" /> : <Grid3X3 className="w-5 h-5" />}
+            </button>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`p-2 rounded-lg transition-colors ${
+                showFilters ? "bg-explore-green text-white" : "bg-gray-100 hover:bg-gray-200"
+              }`}
+            >
+              <Sliders className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search activities, organizers, locations..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-explore-green focus:border-transparent font-cabin"
+          />
         </div>
       </div>
 
