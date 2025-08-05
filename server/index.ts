@@ -107,6 +107,12 @@ export function createServer() {
   app.get("/api/activities/:id/participants", handleGetParticipants);
   app.get("/api/activities/user/history", handleGetUserActivityHistory);
 
+  // Saved Activities routes
+  app.get("/api/saved-activities", handleGetSavedActivities);
+  app.post("/api/saved-activities", handleSaveActivity);
+  app.delete("/api/saved-activities/:activityId", handleUnsaveActivity);
+  app.get("/api/saved-activities/check/:activityId", handleCheckActivitySaved);
+
   // Club routes
   app.get("/api/clubs", handleGetClubs);
   app.post("/api/clubs", handleCreateClub);
