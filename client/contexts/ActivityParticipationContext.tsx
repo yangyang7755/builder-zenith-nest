@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useUserProfile } from "./UserProfileContext";
 import { useHaptic } from "../hooks/useMobile";
+import { apiService } from "../services/apiService";
 
 export interface ActivityParticipant {
   id: string;
