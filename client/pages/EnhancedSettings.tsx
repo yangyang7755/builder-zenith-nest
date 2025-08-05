@@ -865,6 +865,24 @@ Thank you!
               />
             }
           />
+          <SettingsItem
+            icon={<Trash2 className="w-5 h-5" />}
+            title="Clear Cache"
+            subtitle="Free up storage space by clearing app cache"
+            onClick={clearCache}
+          />
+          <SettingsItem
+            icon={<SettingsIcon className="w-5 h-5" />}
+            title="Reset to Default"
+            subtitle="Reset all settings to their default values"
+            onClick={resetToDefault}
+          />
+          <SettingsItem
+            icon={<Download className="w-5 h-5" />}
+            title="Request Data Archive"
+            subtitle="Get a complete copy of your data via email"
+            onClick={requestDataDownload}
+          />
         </SettingsSection>
 
         {/* Support & About */}
