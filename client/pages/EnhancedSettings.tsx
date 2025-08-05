@@ -103,12 +103,33 @@ export default function EnhancedSettings() {
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const updatePreference = (key: string, value: any) => {
-    setPreferences(prev => ({ ...prev, [key]: value }));
-    toast({
-      title: "Setting Updated",
-      description: "Your preference has been saved.",
-    });
+  const updatePreference = async (key: string, value: any) => {
+    const newPreferences = { ...preferences, [key]: value };
+    setPreferences(newPreferences);
+
+    // Save to localStorage for persistence
+    try {
+      localStorage.setItem('userPreferences', JSON.stringify(newPreferences));
+
+      // If user is logged in, save to backend profile
+      if (user) {
+        // Update the user's profile with new preferences
+        // This could be expanded to include preferences in the profile data
+        console.log('Saving preference to backend:', key, value);
+      }
+
+      toast({
+        title: "Setting Updated",
+        description: "Your preference has been saved.",
+      });
+    } catch (error) {
+      console.error('Failed to save preference:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save setting. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSignOut = async () => {
