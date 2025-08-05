@@ -62,33 +62,81 @@ export default function SignUp() {
 
     setLoading(true);
     try {
-      const { user, error } = await signUp(formData.email, formData.password, {
+      // First try backend registration
+      const { data: backendResult, error: backendError } = await apiService.registerUser({
+        email: formData.email,
+        password: formData.password,
         full_name: formData.full_name,
       });
 
-      if (error) {
-        toast({
-          title: "Sign Up Failed",
-          description: error.message || "Failed to create account. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
+      if (backendResult?.success) {
+        console.log('Backend registration successful:', backendResult);
 
-      if (user) {
-        const isDemo = user.id?.includes("demo-user");
-        
+        const isDemo = backendResult.user?.id?.includes("demo-user");
+
         toast({
           title: isDemo ? "Demo Account Created! 🎉" : "Account Created Successfully! 🎉",
           description: isDemo
             ? "Welcome to the demo! You can now explore all features."
-            : "Welcome! Complete your profile to get started.",
+            : "Welcome! Your account has been created and your profile is ready.",
         });
 
-        // Redirect to onboarding/profile setup
-        navigate("/onboarding");
+        // Redirect to login page for real users, or profile for demo users
+        if (isDemo) {
+          navigate("/profile");
+        } else {
+          navigate("/login", {
+            state: {
+              message: "Account created successfully! Please log in with your credentials.",
+              email: formData.email
+            }
+          });
+        }
+        return;
       }
+
+      // Fallback to Supabase auth if backend is unavailable
+      if (backendError === 'BACKEND_UNAVAILABLE') {
+        console.log('Backend unavailable, using Supabase auth fallback');
+
+        const { user, error } = await signUp(formData.email, formData.password, {
+          full_name: formData.full_name,
+        });
+
+        if (error) {
+          toast({
+            title: "Sign Up Failed",
+            description: error.message || "Failed to create account. Please try again.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (user) {
+          const isDemo = user.id?.includes("demo-user");
+
+          toast({
+            title: isDemo ? "Demo Account Created! 🎉" : "Account Created Successfully! 🎉",
+            description: isDemo
+              ? "Welcome to the demo! You can now explore all features."
+              : "Welcome! Complete your profile to get started.",
+          });
+
+          // Redirect to onboarding/profile setup
+          navigate("/onboarding");
+        }
+        return;
+      }
+
+      // Handle backend registration errors
+      toast({
+        title: "Sign Up Failed",
+        description: backendResult?.error || "Failed to create account. Please try again.",
+        variant: "destructive",
+      });
+
     } catch (error) {
+      console.error('Registration error:', error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
