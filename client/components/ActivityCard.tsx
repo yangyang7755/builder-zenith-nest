@@ -39,6 +39,7 @@ export default function ActivityCard({
   difficulty,
   activityId,
   isOrganizerFollowed = false,
+  isFromUserClub = false,
 }: ActivityCardProps) {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
