@@ -203,6 +203,11 @@ export default function ActivityCard({
             >
               {difficultyBadge.label}
             </span>
+            {isFromUserClub && (
+              <span className="text-xs px-2 py-1 rounded-full font-cabin font-medium bg-green-100 text-green-700">
+                🏛️ Club
+              </span>
+            )}
           </div>
         </div>
 
