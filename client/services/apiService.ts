@@ -84,6 +84,9 @@ class ApiService {
         ...options,
       });
 
+      // Add small delay to prevent concurrent response body conflicts
+      await new Promise(resolve => setTimeout(resolve, 1));
+
       // Read response as text first to avoid body stream issues
       let responseData;
 
