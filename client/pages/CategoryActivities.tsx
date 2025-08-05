@@ -23,8 +23,8 @@ export default function CategoryActivities() {
   const type = searchParams.get("type");
   const location = searchParams.get("location");
 
-  // Enhanced activity data with more diversity for demo
-  const enhancedActivities = [
+  // Enhanced activity data with more diversity for demo - memoized to prevent infinite re-renders
+  const enhancedActivities = useMemo(() => [
     ...activities,
     {
       id: "demo-morning-run-1",
@@ -125,7 +125,7 @@ export default function CategoryActivities() {
       meetupLocation: "Fistral Beach Surf School",
       image: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=400&h=300&fit=crop"
     }
-  ];
+  ], [activities]);
 
   useEffect(() => {
     let filtered = enhancedActivities;
