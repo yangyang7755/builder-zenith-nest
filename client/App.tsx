@@ -215,6 +215,7 @@ const App = () => (
                           <Route path="/club/uclmc" element={<ClubUCLMC />} />
                           <Route path="/saved" element={<Saved />} />
                           <Route path="/profile" element={<Profile />} />
+                          <Route path="/profile-enhanced" element={<ProfileEnhanced />} />
                           <Route
                             path="/profile/edit"
                             element={<ProfileEdit />}
