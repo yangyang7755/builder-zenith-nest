@@ -897,6 +897,7 @@ function MixedActivitiesSection({
                   difficulty="Intermediate"
                   activityId={activity.id}
                   isOrganizerFollowed={isOrganizerFollowed(activity)}
+                  isFromUserClub={isFromUserClub(activity)}
                 />
               ))
             )
