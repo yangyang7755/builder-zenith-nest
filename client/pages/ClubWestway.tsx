@@ -18,7 +18,8 @@ export default function ClubWestway() {
   const { getClubById, isClubMember, isClubManager, requestToJoinClub } =
     useClub();
   const club = getClubById("westway");
-  const isMember = isClubMember("westway");
+  const [isMemberState, setIsMember] = useState(true);
+  const isMember = isMemberState && isClubMember("westway");
   const isManager = isClubManager("westway");
 
   const [selectedTab, setSelectedTab] = useState("events");
