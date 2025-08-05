@@ -1,24 +1,24 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Feather';
-import { StyleSheet } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Icon from "react-native-vector-icons/Feather";
+import { StyleSheet } from "react-native";
 
 // Import screens (these would need to be created)
-import ExploreScreen from './screens/ExploreScreen';
-import ActivitiesScreen from './screens/ActivitiesScreen';
-import CreateScreen from './screens/CreateScreen';
-import ChatScreen from './screens/ChatScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import CategoryActivities from './components/CategoryActivities';
-import ActivityDetailScreen from './screens/ActivityDetailScreen';
-import SettingsScreen from './screens/SettingsScreen';
+import ExploreScreen from "./screens/ExploreScreen";
+import ActivitiesScreen from "./screens/ActivitiesScreen";
+import CreateScreen from "./screens/CreateScreen";
+import ChatScreen from "./screens/ChatScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import CategoryActivities from "./components/CategoryActivities";
+import ActivityDetailScreen from "./screens/ActivityDetailScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 
 // Import contexts (these would need to be converted)
-import { AuthProvider } from './contexts/AuthContext';
-import { ActivitiesProvider } from './contexts/ActivitiesContext';
-import { UserProfileProvider } from './contexts/UserProfileContext';
+import { AuthProvider } from "./contexts/AuthContext";
+import { ActivitiesProvider } from "./contexts/ActivitiesContext";
+import { UserProfileProvider } from "./contexts/UserProfileContext";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,29 +31,29 @@ function TabNavigator() {
           let iconName;
 
           switch (route.name) {
-            case 'Explore':
-              iconName = 'home';
+            case "Explore":
+              iconName = "home";
               break;
-            case 'Activities':
-              iconName = 'clock';
+            case "Activities":
+              iconName = "clock";
               break;
-            case 'Create':
-              iconName = 'plus';
+            case "Create":
+              iconName = "plus";
               break;
-            case 'Chat':
-              iconName = 'message-square';
+            case "Chat":
+              iconName = "message-square";
               break;
-            case 'Profile':
-              iconName = 'user';
+            case "Profile":
+              iconName = "user";
               break;
             default:
-              iconName = 'home';
+              iconName = "home";
           }
 
           return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#10B981',
-        tabBarInactiveTintColor: '#6B7280',
+        tabBarActiveTintColor: "#10B981",
+        tabBarInactiveTintColor: "#6B7280",
         tabBarStyle: styles.tabBar,
         headerShown: false,
       })}
@@ -72,7 +72,7 @@ function AppStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        animation: 'slide_from_right',
+        animation: "slide_from_right",
       }}
     >
       <Stack.Screen name="Main" component={TabNavigator} />
@@ -99,9 +99,9 @@ export default function App() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
+    borderTopColor: "#e5e7eb",
     paddingTop: 8,
     paddingBottom: 8,
     height: 70,

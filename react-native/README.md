@@ -5,6 +5,7 @@ This is the React Native version of the WildPals web application, providing a na
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - Expo CLI: `npm install -g @expo/cli`
 - iOS Simulator (Mac) or Android Studio (for Android development)
@@ -12,12 +13,14 @@ This is the React Native version of the WildPals web application, providing a na
 ### Installation
 
 1. **Initialize new Expo project:**
+
 ```bash
 npx create-expo-app WildPalsRN --template
 cd WildPalsRN
 ```
 
 2. **Install dependencies:**
+
 ```bash
 npm install @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs
 npm install react-native-screens react-native-safe-area-context react-native-vector-icons
@@ -27,6 +30,7 @@ npm install expo-linear-gradient expo-image expo-font
 ```
 
 3. **Copy converted files:**
+
    - Copy `App.tsx` to your project root
    - Copy `components/` folder
    - Copy `contexts/` folder
@@ -52,6 +56,7 @@ npm run android
 ## 📱 Conversion Progress
 
 ### ✅ Completed Components
+
 - **CategoryActivities**: Fully converted with native styling and interactions
 - **App Navigation**: React Navigation setup with tab and stack navigators
 - **ActivitiesContext**: Converted to use AsyncStorage for persistence
@@ -60,6 +65,7 @@ npm run android
 ### 🔄 In Progress / Needed Components
 
 #### Core Screens (Priority 1)
+
 - [ ] **ExploreScreen** - Main discovery page
 - [ ] **ActivitiesScreen** - User's activities (saved, joined, organized)
 - [ ] **CreateScreen** - Activity creation flow
@@ -67,12 +73,14 @@ npm run android
 - [ ] **ProfileScreen** - User profile and settings
 
 #### Detail Screens (Priority 2)
+
 - [ ] **ActivityDetailScreen** - Individual activity details
 - [ ] **SettingsScreen** - App settings and preferences
 - [ ] **AuthScreens** - Login/signup flow
 - [ ] **OnboardingScreen** - First-time user experience
 
 #### Supporting Components (Priority 3)
+
 - [ ] **ActivityCard** - Reusable activity display component
 - [ ] **UserAvatar** - User profile image component
 - [ ] **SearchBar** - Enhanced search functionality
@@ -82,9 +90,11 @@ npm run android
 ### 🔧 Context Conversions Needed
 
 #### Completed
+
 - ✅ **ActivitiesContext** - Core activity management
 
 #### Pending
+
 - [ ] **AuthContext** - User authentication with secure storage
 - [ ] **UserProfileContext** - User profile management
 - [ ] **ChatContext** - Real-time messaging
@@ -95,45 +105,48 @@ npm run android
 ## 🎨 Design System
 
 ### Color Palette
+
 ```javascript
 const colors = {
-  primary: '#10B981',      // Explore green
-  secondary: '#3B82F6',    // Blue
-  accent: '#F59E0B',       // Orange
-  purple: '#8B5CF6',       // Purple
-  success: '#10B981',      // Green
-  warning: '#F59E0B',      // Amber
-  error: '#EF4444',        // Red
+  primary: "#10B981", // Explore green
+  secondary: "#3B82F6", // Blue
+  accent: "#F59E0B", // Orange
+  purple: "#8B5CF6", // Purple
+  success: "#10B981", // Green
+  warning: "#F59E0B", // Amber
+  error: "#EF4444", // Red
   gray: {
-    50: '#F9FAFB',
-    100: '#F3F4F6',
-    200: '#E5E7EB',
-    300: '#D1D5DB',
-    400: '#9CA3AF',
-    500: '#6B7280',
-    600: '#4B5563',
-    700: '#374151',
-    800: '#1F2937',
-    900: '#111827',
+    50: "#F9FAFB",
+    100: "#F3F4F6",
+    200: "#E5E7EB",
+    300: "#D1D5DB",
+    400: "#9CA3AF",
+    500: "#6B7280",
+    600: "#4B5563",
+    700: "#374151",
+    800: "#1F2937",
+    900: "#111827",
   },
-  white: '#FFFFFF',
-  black: '#000000',
+  white: "#FFFFFF",
+  black: "#000000",
 };
 ```
 
 ### Typography
+
 ```javascript
 const typography = {
-  h1: { fontSize: 32, fontWeight: 'bold' },
-  h2: { fontSize: 24, fontWeight: 'bold' },
-  h3: { fontSize: 20, fontWeight: '600' },
-  body: { fontSize: 16, fontWeight: 'normal' },
-  caption: { fontSize: 14, fontWeight: 'normal' },
-  small: { fontSize: 12, fontWeight: 'normal' },
+  h1: { fontSize: 32, fontWeight: "bold" },
+  h2: { fontSize: 24, fontWeight: "bold" },
+  h3: { fontSize: 20, fontWeight: "600" },
+  body: { fontSize: 16, fontWeight: "normal" },
+  caption: { fontSize: 14, fontWeight: "normal" },
+  small: { fontSize: 12, fontWeight: "normal" },
 };
 ```
 
 ### Spacing
+
 ```javascript
 const spacing = {
   xs: 4,
@@ -148,22 +161,27 @@ const spacing = {
 ## 📋 Key Differences from Web Version
 
 ### Navigation
+
 - **Web**: React Router with URL-based navigation
 - **Mobile**: React Navigation with screen-based navigation
 
 ### Styling
+
 - **Web**: Tailwind CSS classes
 - **Mobile**: StyleSheet objects with flexbox
 
 ### Storage
+
 - **Web**: localStorage
 - **Mobile**: AsyncStorage
 
 ### Icons
+
 - **Web**: Lucide React icons
 - **Mobile**: React Native Vector Icons / Expo Icons
 
 ### Platform Features
+
 - **Mobile Specific**: Push notifications, camera access, device sensors
 - **Gestures**: Touch gestures, swipe actions, pull-to-refresh
 
@@ -181,11 +199,13 @@ const spacing = {
 ## 📱 Platform-Specific Considerations
 
 ### iOS
+
 - Follow iOS Human Interface Guidelines
 - Use proper safe area handling
 - Implement iOS-specific navigation patterns
 
 ### Android
+
 - Follow Material Design principles
 - Handle Android back button navigation
 - Use Android-specific UI patterns
