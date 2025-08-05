@@ -1,4 +1,5 @@
 -- Activity App Database Setup Script
+-- Complete Database Setup for Outdoor Community App
 -- Run this in your Supabase SQL Editor
 
 -- Enable necessary extensions
