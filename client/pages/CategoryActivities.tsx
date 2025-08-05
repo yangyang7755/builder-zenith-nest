@@ -128,59 +128,100 @@ export default function CategoryActivities() {
   ];
 
   useEffect(() => {
-    let filtered = activities;
+    let filtered = enhancedActivities;
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(activity =>
+        activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.organizer?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
     // Filter by category/type if specified
     if (type && type !== "all") {
-      filtered = filtered.filter(
-        (activity) => activity.type.toLowerCase() === type.toLowerCase(),
+      filtered = filtered.filter(activity =>
+        activity.type.toLowerCase() === type.toLowerCase()
       );
     }
 
-    // Filter by location proximity (mock implementation)
+    // Filter by difficulty
+    if (selectedDifficulty !== "all") {
+      filtered = filtered.filter(activity =>
+        activity.difficulty?.toLowerCase() === selectedDifficulty.toLowerCase()
+      );
+    }
+
+    // Filter by location
+    if (selectedLocation !== "all") {
+      filtered = filtered.filter(activity =>
+        activity.location.toLowerCase().includes(selectedLocation.toLowerCase())
+      );
+    }
+
+    // Filter by location proximity (from URL params)
     if (location) {
-      filtered = filtered.filter(
-        (activity) =>
-          activity.location.toLowerCase().includes(location.toLowerCase()) ||
-          activity.location.toLowerCase().includes("london"), // Default area
+      filtered = filtered.filter(activity =>
+        activity.location.toLowerCase().includes(location.toLowerCase()) ||
+        activity.location.toLowerCase().includes("london") // Default area
       );
     }
 
-    // Sort by date (upcoming first)
-    filtered = filtered.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
-
-    // Apply additional filters
+    // Apply time-based filters
     if (selectedFilter !== "all") {
+      const now = new Date();
+      const today = new Date().toISOString().split("T")[0];
+
       switch (selectedFilter) {
         case "today":
-          const today = new Date().toISOString().split("T")[0];
-          filtered = filtered.filter((activity) =>
-            activity.date.startsWith(today),
-          );
+          filtered = filtered.filter(activity => activity.date.startsWith(today));
           break;
         case "week":
           const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-          filtered = filtered.filter(
-            (activity) =>
-              new Date(activity.date) <= nextWeek &&
-              new Date(activity.date) >= new Date(),
+          filtered = filtered.filter(activity =>
+            new Date(activity.date) <= nextWeek &&
+            new Date(activity.date) >= now
           );
           break;
         case "month":
           const nextMonth = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-          filtered = filtered.filter(
-            (activity) =>
-              new Date(activity.date) <= nextMonth &&
-              new Date(activity.date) >= new Date(),
+          filtered = filtered.filter(activity =>
+            new Date(activity.date) <= nextMonth &&
+            new Date(activity.date) >= now
           );
           break;
       }
     }
 
+    // Apply sorting
+    switch (sortBy) {
+      case "date":
+        filtered = filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+      case "popularity":
+        filtered = filtered.sort((a, b) => (b.participants || 0) - (a.participants || 0));
+        break;
+      case "distance":
+        filtered = filtered.sort((a, b) => {
+          const aDistance = parseFloat(a.distance?.replace('km', '') || '0');
+          const bDistance = parseFloat(b.distance?.replace('km', '') || '0');
+          return aDistance - bDistance;
+        });
+        break;
+      case "difficulty":
+        const difficultyOrder = { "Beginner": 1, "Intermediate": 2, "Advanced": 3 };
+        filtered = filtered.sort((a, b) => {
+          const aDiff = difficultyOrder[a.difficulty as keyof typeof difficultyOrder] || 0;
+          const bDiff = difficultyOrder[b.difficulty as keyof typeof difficultyOrder] || 0;
+          return aDiff - bDiff;
+        });
+        break;
+    }
+
     setFilteredActivities(filtered);
-  }, [activities, type, location, selectedFilter]);
+  }, [enhancedActivities, type, location, selectedFilter, searchTerm, selectedDifficulty, selectedLocation, sortBy]);
 
   const filterOptions = [
     { value: "all", label: "All Time" },
