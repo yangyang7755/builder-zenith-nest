@@ -228,13 +228,26 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
 
       // Trigger activity context update
       const event = new CustomEvent('participantLeft', {
-        detail: { 
-          activityId, 
+        detail: {
+          activityId,
           userId: currentUserProfile.id,
           newCount: Math.max(0, (participations.get(activityId)?.length || 1) - 1)
         }
       });
       window.dispatchEvent(event);
+
+      // Trigger chat notification event
+      const chatEvent = new CustomEvent('updateActivityChat', {
+        detail: {
+          activityId,
+          activityTitle,
+          participantId: currentUserProfile.id,
+          participantName: currentUserProfile.full_name,
+          message: `I've decided to leave "${activityTitle}". Thanks for organizing!`,
+          action: 'left'
+        }
+      });
+      window.dispatchEvent(chatEvent);
 
       showParticipationNotification(`You left "${activityTitle}"`, "info");
       
