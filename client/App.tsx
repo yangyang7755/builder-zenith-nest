@@ -148,6 +148,10 @@ const App = () => (
                                       element={<Activities />}
                                     />
                                     <Route
+                                      path="/category-activities"
+                                      element={<CategoryActivities />}
+                                    />
+                                    <Route
                                       path="/create"
                                       element={<CreateActivity />}
                                     />
