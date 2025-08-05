@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Eye, EyeOff, Mail, User, Lock } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useToast } from "../hooks/use-toast";
+import { apiService } from "../services/apiService";
 
 export default function SignUp() {
   const navigate = useNavigate();
