@@ -22,6 +22,7 @@ interface ActivityCardProps {
   difficulty?: string;
   activityId?: string;
   isOrganizerFollowed?: boolean;
+  isFromUserClub?: boolean;
 }
 
 export default function ActivityCard({
