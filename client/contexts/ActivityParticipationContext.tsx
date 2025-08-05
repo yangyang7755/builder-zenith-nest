@@ -165,13 +165,26 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
 
       // Trigger activity context update
       const event = new CustomEvent('participantJoined', {
-        detail: { 
-          activityId, 
+        detail: {
+          activityId,
           participant: newParticipant,
           newCount: (participations.get(activityId)?.length || 0) + 1
         }
       });
       window.dispatchEvent(event);
+
+      // Trigger chat creation event for organizer communication
+      const chatEvent = new CustomEvent('createActivityChat', {
+        detail: {
+          activityId,
+          activityTitle,
+          organizerId,
+          participantId: currentUserProfile.id,
+          participantName: currentUserProfile.full_name,
+          message: `Hi! I just joined "${activityTitle}". Looking forward to the activity!`
+        }
+      });
+      window.dispatchEvent(chatEvent);
 
       showParticipationNotification(`You joined "${activityTitle}"!`, "success");
       
