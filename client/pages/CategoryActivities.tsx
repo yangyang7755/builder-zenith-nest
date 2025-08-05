@@ -516,11 +516,148 @@ export default function CategoryActivities() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-4">
-            {filteredActivities.map((activity) => (
-              <ActivityCard key={activity.id} activity={activity} />
-            ))}
-          </div>
+          <>
+            {/* Results Summary */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm text-gray-600">
+                Showing {filteredActivities.length} activities
+              </div>
+              <div className="text-sm text-gray-500">
+                Sorted by {sortOptions.find(s => s.value === sortBy)?.label}
+              </div>
+            </div>
+
+            {/* Activities Grid/List */}
+            <div className={viewMode === "grid" ? "grid grid-cols-2 gap-4" : "space-y-4"}>
+              {filteredActivities.map((activity) => (
+                <div
+                  key={activity.id}
+                  onClick={() => navigate(`/activity/${activity.id}`)}
+                  className={`cursor-pointer transition-all hover:shadow-lg ${
+                    viewMode === "grid"
+                      ? "bg-white rounded-lg border border-gray-200 p-4"
+                      : "bg-white rounded-lg border border-gray-200 p-4 hover:border-explore-green"
+                  }`}
+                >
+                  {/* Activity Image */}
+                  {viewMode === "grid" && activity.image && (
+                    <div className="w-full h-32 bg-gray-200 rounded-lg mb-3 overflow-hidden">
+                      <img
+                        src={activity.image}
+                        alt={activity.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {/* Activity Content */}
+                  <div className={viewMode === "grid" ? "" : "flex gap-4"}>
+                    {viewMode === "list" && activity.image && (
+                      <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+                        <img
+                          src={activity.image}
+                          alt={activity.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex-1">
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className={`font-bold text-black font-cabin ${
+                          viewMode === "grid" ? "text-sm" : "text-lg"
+                        } line-clamp-2`}>
+                          {activity.title}
+                        </h3>
+                        {activity.difficulty && (
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            activity.difficulty === "Beginner" ? "bg-green-100 text-green-700" :
+                            activity.difficulty === "Intermediate" ? "bg-yellow-100 text-yellow-700" :
+                            "bg-red-100 text-red-700"
+                          }`}>
+                            {activity.difficulty}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Organizer */}
+                      <p className={`text-explore-green font-cabin font-medium ${
+                        viewMode === "grid" ? "text-xs" : "text-sm"
+                      } mb-2`}>
+                        {activity.organizer}
+                      </p>
+
+                      {/* Description (list view only) */}
+                      {viewMode === "list" && activity.description && (
+                        <p className="text-sm text-gray-600 font-cabin mb-2 line-clamp-2">
+                          {activity.description}
+                        </p>
+                      )}
+
+                      {/* Meta Info */}
+                      <div className={`space-y-1 ${viewMode === "grid" ? "text-xs" : "text-sm"}`}>
+                        <div className="flex items-center gap-1 text-gray-600">
+                          <Calendar className="w-3 h-3" />
+                          <span className="font-cabin">
+                            {new Date(activity.date).toLocaleDateString()} at {activity.time}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-600">
+                          <MapPin className="w-3 h-3" />
+                          <span className="font-cabin line-clamp-1">{activity.location}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-600">
+                          <Users className="w-3 h-3" />
+                          <span className="font-cabin">
+                            {activity.participants || 0}/{activity.maxParticipants || 20} joined
+                          </span>
+                        </div>
+                        {activity.distance && (
+                          <div className="flex items-center gap-1 text-gray-600">
+                            <Clock className="w-3 h-3" />
+                            <span className="font-cabin">{activity.distance}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Action Button */}
+                      {viewMode === "list" && (
+                        <div className="mt-3 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {activity.participants && activity.maxParticipants && (
+                              <div className="w-16 bg-gray-200 rounded-full h-2">
+                                <div
+                                  className="bg-explore-green h-2 rounded-full"
+                                  style={{
+                                    width: `${Math.min((activity.participants / activity.maxParticipants) * 100, 100)}%`
+                                  }}
+                                />
+                              </div>
+                            )}
+                            <span className="text-xs text-gray-500">
+                              {activity.maxParticipants && activity.participants
+                                ? Math.max(0, activity.maxParticipants - activity.participants)
+                                : "~"} spots left
+                            </span>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Join logic here
+                            }}
+                            className="px-3 py-1 bg-explore-green text-white text-xs rounded-full hover:bg-green-600 transition-colors"
+                          >
+                            Join
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
