@@ -285,6 +285,10 @@ const App = () => (
                                       element={<Settings />}
                                     />
                                     <Route
+                                      path="/settings/change-password"
+                                      element={<ChangePassword />}
+                                    />
+                                    <Route
                                       path="/admin"
                                       element={<AdminDashboard />}
                                     />
