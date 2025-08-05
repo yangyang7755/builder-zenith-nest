@@ -72,23 +72,37 @@ class ApiService {
         ...options,
       });
 
-      // Read response body once, whether success or error
+      // Read response body safely
       let responseData;
       try {
-        const responseText = await response.text();
+        // Use .json() if content-type suggests JSON, otherwise use .text()
+        const contentType = response.headers.get('content-type');
 
-        if (responseText.trim()) {
-          try {
-            responseData = JSON.parse(responseText);
-          } catch (jsonError) {
-            console.warn('Failed to parse JSON response:', responseText.substring(0, 100));
-            responseData = { message: responseText };
-          }
+        if (contentType && contentType.includes('application/json')) {
+          responseData = await response.json();
         } else {
-          responseData = {};
+          const responseText = await response.text();
+          if (responseText.trim()) {
+            try {
+              responseData = JSON.parse(responseText);
+            } catch (jsonError) {
+              console.warn('Failed to parse JSON response:', responseText.substring(0, 100));
+              responseData = { message: responseText };
+            }
+          } else {
+            responseData = {};
+          }
         }
       } catch (readError) {
         console.error('Failed to read response:', readError);
+
+        // Retry on read errors if we haven't exceeded max retries
+        if (retryCount < maxRetries) {
+          console.log(`Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`);
+          await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1)));
+          return this.executeRequest(endpoint, options, retryCount + 1);
+        }
+
         return {
           error: `Failed to read response: ${readError instanceof Error ? readError.message : String(readError)}`
         };
