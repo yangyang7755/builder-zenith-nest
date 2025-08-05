@@ -48,6 +48,12 @@ import {
   handleGetFollowStats,
 } from "./routes/followers";
 import {
+  handleGetSavedActivities,
+  handleSaveActivity,
+  handleUnsaveActivity,
+  handleCheckActivitySaved,
+} from "./routes/saved_activities";
+import {
   handleGetClubMessages,
   handleGetDirectMessages,
   handleSendClubMessage,
