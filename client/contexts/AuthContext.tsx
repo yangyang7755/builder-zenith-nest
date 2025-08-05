@@ -59,6 +59,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (response.ok) {
         const profileData = await response.json();
         setProfile(profileData);
+
+        // Persist profile to localStorage
+        localStorage.setItem('userProfile', JSON.stringify(profileData));
+        localStorage.setItem('userSession', JSON.stringify({
+          userId,
+          authToken,
+          timestamp: Date.now()
+        }));
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
