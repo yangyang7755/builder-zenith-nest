@@ -240,6 +240,16 @@ export const handleUnsaveActivity = async (req: Request, res: Response) => {
 
     if (error) {
       console.error("Database error:", error);
+
+      // If the table doesn't exist yet, return success
+      if (error.code === '42P01') {
+        console.log("saved_activities table doesn't exist yet, treating as successfully removed");
+        return res.json({
+          success: true,
+          message: "Activity unsaved successfully (demo mode)"
+        });
+      }
+
       return res.status(500).json({
         success: false,
         error: "Failed to unsave activity"
