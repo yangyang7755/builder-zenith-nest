@@ -491,6 +491,10 @@ export default function Index() {
             searchQuery={searchQuery}
             activities={activities}
             formatActivityDate={formatActivityDate}
+            activitiesFromFollowedUsers={activitiesFromFollowedUsers}
+            activitiesFromUserClubs={activitiesFromUserClubs}
+            isOrganizerFollowed={isOrganizerFollowed}
+            isFromUserClub={isFromUserClub}
           />
         )}
 
