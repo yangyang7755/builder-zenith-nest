@@ -33,40 +33,18 @@ export default function Activities() {
     return activityDateString < today;
   });
 
-  // Sample joined activities (activities the user has joined)
-  const joinedActivities = [
-    {
-      id: "joined-1",
-      title: "Westway Women's+ Climbing Morning",
-      date: "2025-01-26",
-      time: "10:00",
-      location: "Westway Climbing Centre",
-      organizer: "Coach Holly Peristiani",
-      type: "climbing",
-      status: "confirmed",
-      maxParticipants: "12",
-      specialComments: "",
-      meetupLocation: "Westway Climbing Centre",
-      gender: "Female only",
-      visibility: "All",
-      createdAt: new Date(),
-    },
-    {
-      id: "joined-2",
-      title: "Sunday Morning Social Ride",
-      date: "2025-02-02",
-      time: "08:00",
-      location: "Richmond Park",
-      organizer: "Richmond Cycling Club",
-      type: "cycling",
-      status: "confirmed",
-      maxParticipants: "15",
-      specialComments: "",
-      meetupLocation: "Richmond Park Main Gate",
-      gender: "All genders",
-      visibility: "All",
-      createdAt: new Date(),
-    },
+  // Get activities user has joined using participation context
+  const participatedActivities = getUserParticipatedActivities();
+
+  // Get activities user has organized
+  const organizedActivities = getUserOrganizedActivities();
+
+  // Combine participated and organized activities, removing duplicates
+  const allJoinedActivities = [
+    ...participatedActivities,
+    ...organizedActivities.filter(org =>
+      !participatedActivities.some(part => part.id === org.id)
+    )
   ];
 
   const navigate = useNavigate();
