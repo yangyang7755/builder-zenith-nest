@@ -132,12 +132,16 @@ export default function CategoryActivities() {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(activity =>
-        activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.organizer?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.description?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter(activity => {
+        const organizerName = typeof activity.organizer === 'string'
+          ? activity.organizer
+          : activity.organizer?.full_name || activity.organizerName || '';
+
+        return activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          organizerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          activity.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          activity.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      });
     }
 
     // Filter by category/type if specified
