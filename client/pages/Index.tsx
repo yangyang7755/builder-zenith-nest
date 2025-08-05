@@ -831,11 +831,7 @@ function MixedActivitiesSection({
                   pace={activity.pace}
                   elevation={activity.elevation}
                   difficulty="Intermediate"
-                  activityId={
-                    activity.type === "cycling"
-                      ? "sunday-morning-ride"
-                      : "westway-womens-climb"
-                  }
+                  activityId={activity.id}
                 />
               ))
             )
@@ -1619,7 +1615,7 @@ function CyclingActivityCard({ activity }: { activity: any }) {
           </div>
           <div className="text-center">
             <div className="text-gray-500">Pace</div>
-            <div className="font-medium text-black">⚡ {activity.pace}</div>
+            <div className="font-medium text-black">��� {activity.pace}</div>
           </div>
           <div className="text-center">
             <div className="text-gray-500">Elevation</div>
