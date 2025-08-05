@@ -84,40 +84,39 @@ class ApiService {
         ...options,
       });
 
-      // Read response body safely
+      // Clone response to avoid body stream issues
+      const responseClone = response.clone();
       let responseData;
-      try {
-        // Use .json() if content-type suggests JSON, otherwise use .text()
-        const contentType = response.headers.get('content-type');
 
-        if (contentType && contentType.includes('application/json')) {
-          responseData = await response.json();
-        } else {
+      try {
+        // Try JSON first, if that fails try text
+        responseData = await responseClone.json();
+      } catch (jsonError) {
+        try {
           const responseText = await response.text();
           if (responseText.trim()) {
             try {
               responseData = JSON.parse(responseText);
-            } catch (jsonError) {
-              console.warn('Failed to parse JSON response:', responseText.substring(0, 100));
+            } catch {
               responseData = { message: responseText };
             }
           } else {
             responseData = {};
           }
-        }
-      } catch (readError) {
-        console.error('Failed to read response:', readError);
+        } catch (textError) {
+          console.error('Failed to read response:', textError);
 
-        // Retry on read errors if we haven't exceeded max retries
-        if (retryCount < maxRetries) {
-          console.log(`Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`);
-          await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1)));
-          return this.executeRequest(endpoint, options, retryCount + 1);
-        }
+          // Retry on read errors if we haven't exceeded max retries
+          if (retryCount < maxRetries) {
+            console.log(`Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`);
+            await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1)));
+            return this.executeRequest(endpoint, options, retryCount + 1);
+          }
 
-        return {
-          error: `Failed to read response: ${readError instanceof Error ? readError.message : String(readError)}`
-        };
+          return {
+            error: `Failed to read response: ${textError instanceof Error ? textError.message : String(textError)}`
+          };
+        }
       }
 
       if (!response.ok) {
