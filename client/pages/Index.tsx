@@ -1116,7 +1116,7 @@ function MixedActivitiesSection({
               <div key={activity.id} className="relative">
                 <div className="absolute top-2 right-2 z-10">
                   <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                    ��️ Club
+                    🏛️ Club
                   </div>
                 </div>
                 <ActivityCard
@@ -1629,7 +1629,7 @@ function CyclingExploreSection() {
       title: "Sunday Morning Social Ride",
       date: "📅 Sunday, 8:00 AM",
       location: "📍Richmond Park, London",
-      organizer: "Richmond Cycling Club",
+      organizer: "Richmond Running Club",
       distance: "25km",
       pace: "20 kph",
       elevation: "150m",
