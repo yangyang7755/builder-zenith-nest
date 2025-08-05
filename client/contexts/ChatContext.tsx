@@ -229,6 +229,18 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
     setChatMessages(prev => [responseMessage, ...prev]);
 
+    // If accepted, trigger actual activity participation
+    if (response === "accepted") {
+      const participationEvent = new CustomEvent('chatRequestAccepted', {
+        detail: {
+          activityTitle: request.activityTitle,
+          requesterId: request.requesterName, // This would be the user ID in a real system
+          organizerId: request.activityOrganizer
+        }
+      });
+      window.dispatchEvent(participationEvent);
+    }
+
     // Show notification
     showChatNotification(
       response === "accepted"
