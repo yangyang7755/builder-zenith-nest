@@ -295,6 +295,184 @@ export default function EnhancedSettings() {
     }
   };
 
+  // Additional important settings functions
+  const clearCache = async () => {
+    try {
+      // Clear browser cache
+      if ("caches" in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+      }
+
+      // Clear localStorage except preferences
+      const preferences = localStorage.getItem("userPreferences");
+      localStorage.clear();
+      if (preferences) {
+        localStorage.setItem("userPreferences", preferences);
+      }
+
+      toast({
+        title: "Cache Cleared",
+        description: "App cache has been cleared successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to clear cache. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const resetToDefault = async () => {
+    try {
+      // Reset all preferences to default
+      const defaultPrefs = {
+        darkMode: false,
+        highContrast: false,
+        fontSize: "medium",
+        language: "en",
+        pushNotifications: true,
+        emailNotifications: true,
+        smsNotifications: false,
+        activityReminders: true,
+        messageAlerts: true,
+        reviewNotifications: true,
+        marketingEmails: false,
+        weeklyDigest: true,
+        profileVisibility: "public",
+        showLocation: true,
+        showActivity: true,
+        allowMessageRequests: true,
+        dataSharing: false,
+        analyticsOptOut: false,
+        defaultActivityRadius: 25,
+        autoJoinActivities: false,
+        showDifficulty: true,
+        preferredUnits: "metric",
+        defaultMapView: "hybrid",
+        allowFollowers: true,
+        shareAchievements: true,
+        showOnlineStatus: true,
+        autoAcceptFriends: false,
+        offlineMode: false,
+        autoDownloadMaps: false,
+        backgroundSync: true,
+        energySaving: false,
+        hapticFeedback: true,
+        soundEffects: true,
+      };
+
+      setPreferences(defaultPrefs);
+      localStorage.setItem("userPreferences", JSON.stringify(defaultPrefs));
+
+      toast({
+        title: "Settings Reset",
+        description: "All settings have been reset to default values.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to reset settings. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const requestDataDownload = async () => {
+    try {
+      // Simulate API call for complete data download
+      toast({
+        title: "Data Download Requested",
+        description: "You'll receive an email with your complete data archive within 24 hours.",
+      });
+
+      // In a real app, this would trigger a backend process
+      console.log("Data download requested for user:", user?.email);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to request data download. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const changePassword = () => {
+    // Navigate to password change page or show modal
+    navigate("/settings/change-password");
+  };
+
+  const manageTwoFactor = () => {
+    // Navigate to 2FA settings
+    navigate("/settings/two-factor");
+  };
+
+  const manageConnectedApps = () => {
+    // Navigate to connected apps management
+    navigate("/settings/connected-apps");
+  };
+
+  const contactSupport = () => {
+    // Open support chat or email
+    const subject = encodeURIComponent("Support Request - WildPals App");
+    const body = encodeURIComponent(`
+Hi WildPals Support Team,
+
+I need assistance with:
+
+[Please describe your issue here]
+
+User ID: ${user?.id || 'Not logged in'}
+App Version: 1.0.0
+Device: ${navigator.userAgent}
+
+Thank you!
+    `);
+
+    window.open(`mailto:support@wildpals.com?subject=${subject}&body=${body}`);
+  };
+
+  const shareApp = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "WildPals - Find Your Adventure",
+          text: "Join me on WildPals and discover amazing outdoor activities!",
+          url: "https://wildpals.com/download",
+        });
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText("https://wildpals.com/download");
+        toast({
+          title: "Link Copied",
+          description: "Download link copied to clipboard!",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Share Failed",
+        description: "Failed to share the app. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const provideFeedback = () => {
+    // Open feedback form
+    window.open("https://forms.gle/wildpals-feedback", "_blank");
+  };
+
+  const viewPrivacyPolicy = () => {
+    navigate("/privacy");
+  };
+
+  const viewTermsOfService = () => {
+    navigate("/terms");
+  };
+
   // Settings Section Component
   const SettingsSection = ({
     title,
