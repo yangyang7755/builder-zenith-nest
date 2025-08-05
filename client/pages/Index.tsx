@@ -1008,6 +1008,52 @@ function MixedActivitiesSection({
         </div>
       )}
 
+      {/* Activities from User's Clubs Section */}
+      {!isSearching && activitiesFromUserClubs.length > 0 && (
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-black font-poppins">
+              From your clubs ({activitiesFromUserClubs.length})
+            </h2>
+            <Link
+              to="/activities"
+              className="text-sm text-black underline font-poppins"
+            >
+              See all
+            </Link>
+          </div>
+          <div className="space-y-4">
+            {activitiesFromUserClubs.slice(0, 3).map((activity) => (
+              <div key={activity.id} className="relative">
+                <div className="absolute top-2 right-2 z-10">
+                  <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                    🏛️ Club
+                  </div>
+                </div>
+                <ActivityCard
+                  title={activity.title}
+                  date={`📅 ${formatActivityDate(activity.date)}`}
+                  location={`📍 ${activity.location}`}
+                  imageSrc={
+                    activity.imageSrc ||
+                    activity.club?.profile_image ||
+                    "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+                  }
+                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
+                  type={activity.type || activity.activity_type}
+                  distance={activity.distance}
+                  pace={activity.pace}
+                  elevation={activity.elevation}
+                  difficulty={activity.difficulty_level || activity.difficulty || "Intermediate"}
+                  activityId={activity.id}
+                  isOrganizerFollowed={isOrganizerFollowed(activity)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Cycling Activities Section */}
       {!isSearching && filters.activityType.includes("Cycling") && (
         <div className="mb-8">
