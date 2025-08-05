@@ -923,6 +923,7 @@ function MixedActivitiesSection({
                   elevation={activity.elevation}
                   difficulty="Intermediate"
                   activityId={activity.id}
+                  isOrganizerFollowed={isOrganizerFollowed(activity)}
                 />
               ))}
             </>
