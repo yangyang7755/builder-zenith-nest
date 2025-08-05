@@ -7,6 +7,7 @@ import { useClub } from "../contexts/ClubContext";
 import { useChat } from "../contexts/ChatContext";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { useActivityParticipation } from "../contexts/ActivityParticipationContext";
+import { useFollow } from "../contexts/FollowContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
 import ActivityCard from "../components/ActivityCard";
