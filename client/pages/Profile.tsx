@@ -729,13 +729,13 @@ export default function Profile() {
             <Link to="/club/richmond-runners" className="block">
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors touchable native-button-press">
                 <img
-                  src={getClubProfileImage("Richmond Cycling Club")}
-                  alt="Richmond Cycling Club"
+                  src={getClubProfileImage("Richmond Running Club")}
+                  alt="Richmond Running Club"
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div className="flex-1">
-                  <h4 className="font-medium text-black">{getClubDisplayName("Richmond Cycling Club")}</h4>
-                  <p className="text-sm text-gray-600">{getClubMemberCount("Richmond Cycling Club")} members</p>
+                  <h4 className="font-medium text-black">{getClubDisplayName("Richmond Running Club")}</h4>
+                  <p className="text-sm text-gray-600">{getClubMemberCount("Richmond Running Club")} members</p>
                 </div>
               </div>
             </Link>
