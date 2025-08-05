@@ -218,8 +218,13 @@ export default function ActivityCard({
             }}
           />
           <div className="flex-1 min-w-0">
-            <div className="text-sm text-gray-600 font-cabin">
+            <div className="text-sm text-gray-600 font-cabin flex items-center gap-1">
               By {organizer}
+              {isOrganizerFollowed && (
+                <span className="text-xs text-blue-600 font-medium">
+                  👥
+                </span>
+              )}
             </div>
           </div>
         </div>
