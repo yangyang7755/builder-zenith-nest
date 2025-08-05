@@ -26,11 +26,13 @@ const checkBackendAvailability = async (): Promise<boolean> => {
         method: 'GET',
         signal: AbortSignal.timeout(2000) // 2 second timeout
       });
-      backendAvailable = response.ok;
-      console.log(`Backend availability check: ${backendAvailable ? 'Available' : 'Unavailable'}`);
+
+      // Treat 503 (Service Unavailable) and other server errors as backend unavailable
+      backendAvailable = response.ok && response.status !== 503;
+      console.log(`Backend availability check: ${backendAvailable ? 'Available' : 'Unavailable'} (Status: ${response.status})`);
       return backendAvailable;
     } catch (error) {
-      console.log('Backend not available, using demo mode');
+      console.log('Backend not available (network error), using demo mode:', error.message);
       backendAvailable = false;
       return false;
     } finally {
