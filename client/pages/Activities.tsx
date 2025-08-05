@@ -82,55 +82,72 @@ export default function Activities() {
     }
   };
 
-  const ActivityCard = ({ activity }: { activity: any }) => (
-    <div
-      onClick={() => handleActivityClick(activity)}
-      className="bg-white rounded-lg border border-gray-200 p-4 mb-4 cursor-pointer hover:shadow-md transition-shadow"
-    >
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex-1">
-          <h3 className="font-bold text-lg text-black font-cabin mb-1">
-            {activity.title}
-          </h3>
-          <p className="text-sm text-gray-600 font-cabin">
-            By {activity.organizer}
-          </p>
-        </div>
-        <div className="text-2xl ml-2">{getActivityIcon(activity.type)}</div>
-      </div>
+  const ActivityCard = ({ activity }: { activity: Activity }) => {
+    // Extract organizer name from new Activity interface
+    const organizerName = activity.organizer?.full_name || activity.organizerName || "Unknown";
 
-      <div className="space-y-2 mb-3">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Clock className="w-4 h-4" />
-          <span className="font-cabin">
-            {new Date(activity.date).toLocaleDateString("en-GB", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-            })}{" "}
-            at {activity.time}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <MapPin className="w-4 h-4" />
-          <span className="font-cabin">{activity.location}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Users className="w-4 h-4" />
-          <span className="font-cabin">Max {activity.maxParticipants} people</span>
-        </div>
-      </div>
+    // Extract date and time from date_time or legacy fields
+    const activityDate = activity.date_time
+      ? new Date(activity.date_time)
+      : activity.date
+        ? new Date(activity.date + 'T' + (activity.time || '00:00') + ':00')
+        : new Date();
 
-      {activity.status && (
-        <div className="flex items-center gap-2 mt-3">
-          <CheckCircle className="w-4 h-4 text-green-500" />
-          <span className="text-sm font-medium text-green-600 font-cabin capitalize">
-            {activity.status}
-          </span>
+    const activityType = activity.activity_type || activity.type || "general";
+    const maxParticipants = activity.max_participants || parseInt(activity.maxParticipants || "0");
+
+    return (
+      <div
+        onClick={() => handleActivityClick(activity)}
+        className="bg-white rounded-lg border border-gray-200 p-4 mb-4 cursor-pointer hover:shadow-md transition-shadow"
+      >
+        <div className="flex justify-between items-start mb-3">
+          <div className="flex-1">
+            <h3 className="font-bold text-lg text-black font-cabin mb-1">
+              {activity.title}
+            </h3>
+            <p className="text-sm text-gray-600 font-cabin">
+              By {organizerName}
+            </p>
+          </div>
+          <div className="text-2xl ml-2">{getActivityIcon(activityType)}</div>
         </div>
-      )}
-    </div>
-  );
+
+        <div className="space-y-2 mb-3">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Clock className="w-4 h-4" />
+            <span className="font-cabin">
+              {activityDate.toLocaleDateString("en-GB", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+              })}{" "}
+              at {activityDate.toTimeString().slice(0, 5)}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <MapPin className="w-4 h-4" />
+            <span className="font-cabin">{activity.location}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Users className="w-4 h-4" />
+            <span className="font-cabin">
+              {activity.current_participants || 0}/{maxParticipants} people
+            </span>
+          </div>
+        </div>
+
+        {activity.status && (
+          <div className="flex items-center gap-2 mt-3">
+            <CheckCircle className="w-4 h-4 text-green-500" />
+            <span className="text-sm font-medium text-green-600 font-cabin capitalize">
+              {activity.status}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="react-native-container bg-white font-cabin relative native-scroll">
