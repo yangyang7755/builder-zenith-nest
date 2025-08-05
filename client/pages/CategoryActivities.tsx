@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, MapPin, Users, Clock, Filter, Search, Sliders, Calendar, Star, TrendingUp, Grid3X3, List } from "lucide-react";
 import { useActivities } from "../contexts/ActivitiesContext";
