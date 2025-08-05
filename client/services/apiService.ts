@@ -489,6 +489,41 @@ class ApiService {
     return this.request<{ is_saved: boolean }>(`/saved-activities/check/${activityId}`);
   }
 
+  // User Authentication methods
+  async registerUser(userData: {
+    email: string;
+    password: string;
+    full_name: string;
+    university?: string;
+    bio?: string;
+  }) {
+    return this.request<any>("/users/register", {
+      method: "POST",
+      body: JSON.stringify(userData),
+    });
+  }
+
+  async loginUser(credentials: {
+    email: string;
+    password: string;
+  }) {
+    return this.request<any>("/users/login", {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    });
+  }
+
+  async getUserProfile(userId: string) {
+    return this.request<any>(`/users/${userId}/profile`);
+  }
+
+  async updateUserProfile(userId: string, updates: any) {
+    return this.request<any>(`/users/${userId}/profile`, {
+      method: "PUT",
+      body: JSON.stringify(updates),
+    });
+  }
+
   // Health check
   async ping() {
     return this.request<{ message: string }>("/ping");
