@@ -23,16 +23,21 @@ const checkBackendAvailability = async (): Promise<boolean> => {
     try {
       // Try a simple ping to check if backend is available
       const response = await fetch(`${API_BASE_URL}/ping`, {
-        method: 'GET',
-        signal: AbortSignal.timeout(2000) // 2 second timeout
+        method: "GET",
+        signal: AbortSignal.timeout(2000), // 2 second timeout
       });
 
       // Treat 503 (Service Unavailable) and other server errors as backend unavailable
       backendAvailable = response.ok && response.status !== 503;
-      console.log(`Backend availability check: ${backendAvailable ? 'Available' : 'Unavailable'} (Status: ${response.status})`);
+      console.log(
+        `Backend availability check: ${backendAvailable ? "Available" : "Unavailable"} (Status: ${response.status})`,
+      );
       return backendAvailable;
     } catch (error) {
-      console.log('Backend not available (network error), using demo mode:', error.message);
+      console.log(
+        "Backend not available (network error), using demo mode:",
+        error.message,
+      );
       backendAvailable = false;
       return false;
     } finally {
@@ -49,18 +54,17 @@ interface ApiResponse<T> {
 }
 
 class ApiService {
-
   private async request<T>(
     endpoint: string,
     options: RequestInit = {},
-    retryCount: number = 0
+    retryCount: number = 0,
   ): Promise<ApiResponse<T>> {
     // Check if backend is available first (except for ping endpoint)
-    if (endpoint !== '/ping') {
+    if (endpoint !== "/ping") {
       const isBackendAvailable = await checkBackendAvailability();
       if (!isBackendAvailable) {
-        console.log('Backend unavailable, returning demo mode indicator');
-        return { error: 'BACKEND_UNAVAILABLE' };
+        console.log("Backend unavailable, returning demo mode indicator");
+        return { error: "BACKEND_UNAVAILABLE" };
       }
     }
 
@@ -71,7 +75,7 @@ class ApiService {
   private async executeRequest<T>(
     endpoint: string,
     options: RequestInit = {},
-    retryCount: number = 0
+    retryCount: number = 0,
   ): Promise<ApiResponse<T>> {
     const maxRetries = 2;
 
@@ -112,7 +116,7 @@ class ApiService {
             responseData = {
               success: false,
               error: `HTTP ${status}`,
-              message: `Request failed with status ${status}`
+              message: `Request failed with status ${status}`,
             };
           }
         } else {
@@ -127,50 +131,73 @@ class ApiService {
                 responseData = { message: responseText };
               }
             } else {
-              responseData = statusOk ? { success: true } : { success: false, error: `HTTP ${status}` };
+              responseData = statusOk
+                ? { success: true }
+                : { success: false, error: `HTTP ${status}` };
             }
           } catch (textError) {
             // If we can't read the text, fall back to status-based response
-            console.warn('Could not read response text, using status-based response:', textError.message);
-            responseData = statusOk ? { success: true } : { success: false, error: `HTTP ${status}` };
+            console.warn(
+              "Could not read response text, using status-based response:",
+              textError.message,
+            );
+            responseData = statusOk
+              ? { success: true }
+              : { success: false, error: `HTTP ${status}` };
           }
         }
       } catch (readError) {
-        console.error('Failed to read response:', readError);
+        console.error("Failed to read response:", readError);
 
         // If we can't read at all, check if we should retry
-        if (retryCount < maxRetries && (
-          readError.message.includes('body stream already read') ||
-          readError.message.includes('Response body is already used') ||
-          readError.message.includes('clone')
-        )) {
-          console.log(`Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`);
-          await new Promise(resolve => setTimeout(resolve, 300 * (retryCount + 1)));
+        if (
+          retryCount < maxRetries &&
+          (readError.message.includes("body stream already read") ||
+            readError.message.includes("Response body is already used") ||
+            readError.message.includes("clone"))
+        ) {
+          console.log(
+            `Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`,
+          );
+          await new Promise((resolve) =>
+            setTimeout(resolve, 300 * (retryCount + 1)),
+          );
           return this.executeRequest(endpoint, options, retryCount + 1);
         }
 
         // Final fallback: return a response based on HTTP status
-        responseData = statusOk ?
-          { success: true } :
-          { success: false, error: `Failed to read response: ${readError instanceof Error ? readError.message : String(readError)}` };
+        responseData = statusOk
+          ? { success: true }
+          : {
+              success: false,
+              error: `Failed to read response: ${readError instanceof Error ? readError.message : String(readError)}`,
+            };
       }
 
       if (!statusOk) {
         // Handle 503 Service Unavailable immediately without logging as error
         if (status === 503) {
-          console.log('Backend service unavailable (503), switching to demo mode');
+          console.log(
+            "Backend service unavailable (503), switching to demo mode",
+          );
           return {
-            error: 'BACKEND_UNAVAILABLE'
+            error: "BACKEND_UNAVAILABLE",
           };
         }
 
         // Log other server errors
-        console.error('Server error response:', JSON.stringify(responseData, null, 2));
-        const errorMessage = responseData?.error || responseData?.message || `HTTP error! status: ${status}`;
+        console.error(
+          "Server error response:",
+          JSON.stringify(responseData, null, 2),
+        );
+        const errorMessage =
+          responseData?.error ||
+          responseData?.message ||
+          `HTTP error! status: ${status}`;
 
         return {
           error: errorMessage,
-          data: responseData
+          data: responseData,
         };
       }
 
@@ -179,12 +206,18 @@ class ApiService {
       console.error(`API request failed:`, error);
 
       // Retry on network errors if we haven't exceeded max retries
-      if (retryCount < maxRetries && error instanceof Error && (
-        error.message.includes('body stream already read') ||
-        error.message.includes('Failed to fetch')
-      )) {
-        console.log(`Retrying request (attempt ${retryCount + 1}/${maxRetries + 1})...`);
-        await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1))); // exponential backoff
+      if (
+        retryCount < maxRetries &&
+        error instanceof Error &&
+        (error.message.includes("body stream already read") ||
+          error.message.includes("Failed to fetch"))
+      ) {
+        console.log(
+          `Retrying request (attempt ${retryCount + 1}/${maxRetries + 1})...`,
+        );
+        await new Promise((resolve) =>
+          setTimeout(resolve, 100 * (retryCount + 1)),
+        ); // exponential backoff
         return this.executeRequest(endpoint, options, retryCount + 1);
       }
 
@@ -290,8 +323,6 @@ class ApiService {
     return this.request<any[]>("/user/clubs");
   }
 
-
-
   async createClub(clubData: any) {
     return this.request<any>("/clubs", {
       method: "POST",
@@ -339,7 +370,9 @@ class ApiService {
   }
 
   async getFollowStats(userId: string) {
-    return this.request<{ followers: number; following: number }>(`/users/${userId}/follow-stats`);
+    return this.request<{ followers: number; following: number }>(
+      `/users/${userId}/follow-stats`,
+    );
   }
 
   async followUser(userId: string) {
@@ -356,12 +389,18 @@ class ApiService {
   }
 
   // Chat methods
-  async getClubMessages(clubId: string, limit: number = 50, offset: number = 0) {
+  async getClubMessages(
+    clubId: string,
+    limit: number = 50,
+    offset: number = 0,
+  ) {
     const params = new URLSearchParams();
     params.append("limit", limit.toString());
     params.append("offset", offset.toString());
 
-    return this.request<any[]>(`/clubs/${clubId}/messages?${params.toString()}`);
+    return this.request<any[]>(
+      `/clubs/${clubId}/messages?${params.toString()}`,
+    );
   }
 
   async sendClubMessage(clubId: string, message: string) {
@@ -375,7 +414,11 @@ class ApiService {
     return this.request<any[]>(`/clubs/${clubId}/online-users`);
   }
 
-  async getDirectMessages(otherUserId: string, limit: number = 50, offset: number = 0) {
+  async getDirectMessages(
+    otherUserId: string,
+    limit: number = 50,
+    offset: number = 0,
+  ) {
     const params = new URLSearchParams();
     params.append("limit", limit.toString());
     params.append("offset", offset.toString());
@@ -396,8 +439,6 @@ class ApiService {
       body: JSON.stringify({ sender_id: senderId }),
     });
   }
-
-
 
   // Activity participation methods
   async joinActivity(activityId: string) {
@@ -433,7 +474,9 @@ class ApiService {
     }
 
     const queryString = params.toString();
-    return this.request<any>(`/activities/user/history${queryString ? `?${queryString}` : ""}`);
+    return this.request<any>(
+      `/activities/user/history${queryString ? `?${queryString}` : ""}`,
+    );
   }
 
   // Convenience methods for common use cases
@@ -453,15 +496,18 @@ class ApiService {
     return this.getActivities(filters);
   }
 
-  async searchActivities(searchTerm: string, filters?: {
-    activity_type?: string;
-    difficulty_level?: string;
-    date_from?: string;
-    date_to?: string;
-  }) {
+  async searchActivities(
+    searchTerm: string,
+    filters?: {
+      activity_type?: string;
+      difficulty_level?: string;
+      date_from?: string;
+      date_to?: string;
+    },
+  ) {
     const searchFilters = {
       location: searchTerm, // Search by location for now
-      ...filters
+      ...filters,
     };
 
     return this.getActivities(searchFilters);
@@ -486,7 +532,9 @@ class ApiService {
   }
 
   async checkActivitySaved(activityId: string) {
-    return this.request<{ is_saved: boolean }>(`/saved-activities/check/${activityId}`);
+    return this.request<{ is_saved: boolean }>(
+      `/saved-activities/check/${activityId}`,
+    );
   }
 
   // User Authentication methods
@@ -503,10 +551,7 @@ class ApiService {
     });
   }
 
-  async loginUser(credentials: {
-    email: string;
-    password: string;
-  }) {
+  async loginUser(credentials: { email: string; password: string }) {
     return this.request<any>("/users/login", {
       method: "POST",
       body: JSON.stringify(credentials),

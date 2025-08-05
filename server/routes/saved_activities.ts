@@ -11,7 +11,7 @@ async function getAuthenticatedUser(req: Request) {
     if (process.env.NODE_ENV !== "production") {
       return {
         id: "demo-user-id",
-        email: "demo@example.com"
+        email: "demo@example.com",
       };
     }
     return null;
@@ -22,7 +22,7 @@ async function getAuthenticatedUser(req: Request) {
     // Fallback to demo user in development
     return {
       id: "demo-user-id",
-      email: "demo@example.com"
+      email: "demo@example.com",
     };
   }
 
@@ -36,21 +36,22 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
     if (!supabaseAdmin) {
       return res.status(503).json({
         success: false,
-        error: "Database not available"
+        error: "Database not available",
       });
     }
 
     // Get saved activities with activity details
     const { data: savedActivities, error } = await supabaseAdmin
-      .from('saved_activities')
-      .select(`
+      .from("saved_activities")
+      .select(
+        `
         id,
         saved_at,
         activity:activities (
@@ -84,38 +85,40 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
             profile_image
           )
         )
-      `)
-      .eq('user_id', user.id)
-      .order('saved_at', { ascending: false });
+      `,
+      )
+      .eq("user_id", user.id)
+      .order("saved_at", { ascending: false });
 
     if (error) {
       console.error("Database error:", error);
 
       // If the table doesn't exist yet, return empty array instead of error
-      if (error.code === '42P01') {
-        console.log("saved_activities table doesn't exist yet, returning empty array");
+      if (error.code === "42P01") {
+        console.log(
+          "saved_activities table doesn't exist yet, returning empty array",
+        );
         return res.json({
           success: true,
-          data: []
+          data: [],
         });
       }
 
       return res.status(500).json({
         success: false,
-        error: "Failed to fetch saved activities"
+        error: "Failed to fetch saved activities",
       });
     }
 
     res.json({
       success: true,
-      data: savedActivities || []
+      data: savedActivities || [],
     });
-
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch saved activities"
+      error: "Failed to fetch saved activities",
     });
   }
 };
@@ -127,7 +130,7 @@ export const handleSaveActivity = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
@@ -135,40 +138,43 @@ export const handleSaveActivity = async (req: Request, res: Response) => {
     if (!activity_id) {
       return res.status(400).json({
         success: false,
-        error: "Activity ID is required"
+        error: "Activity ID is required",
       });
     }
 
     if (!supabaseAdmin) {
       return res.status(503).json({
         success: false,
-        error: "Database not available"
+        error: "Database not available",
       });
     }
 
     // Check if activity exists
     const { data: activityExists } = await supabaseAdmin
-      .from('activities')
-      .select('id')
-      .eq('id', activity_id)
+      .from("activities")
+      .select("id")
+      .eq("id", activity_id)
       .single();
 
     if (!activityExists) {
       return res.status(404).json({
         success: false,
-        error: "Activity not found"
+        error: "Activity not found",
       });
     }
 
     // Save the activity (upsert to handle duplicates)
     const { data: savedActivity, error } = await supabaseAdmin
-      .from('saved_activities')
-      .upsert({
-        user_id: user.id,
-        activity_id: activity_id
-      }, {
-        onConflict: 'user_id,activity_id'
-      })
+      .from("saved_activities")
+      .upsert(
+        {
+          user_id: user.id,
+          activity_id: activity_id,
+        },
+        {
+          onConflict: "user_id,activity_id",
+        },
+      )
       .select()
       .single();
 
@@ -176,31 +182,36 @@ export const handleSaveActivity = async (req: Request, res: Response) => {
       console.error("Database error:", error);
 
       // If the table doesn't exist yet, return success but log that table needs to be created
-      if (error.code === '42P01') {
-        console.log("saved_activities table doesn't exist yet, activity not saved to database");
+      if (error.code === "42P01") {
+        console.log(
+          "saved_activities table doesn't exist yet, activity not saved to database",
+        );
         return res.json({
           success: true,
-          data: { id: 'demo-saved-id', user_id: user.id, activity_id: activity_id },
-          message: "Table not created yet, activity saved in demo mode"
+          data: {
+            id: "demo-saved-id",
+            user_id: user.id,
+            activity_id: activity_id,
+          },
+          message: "Table not created yet, activity saved in demo mode",
         });
       }
 
       return res.status(500).json({
         success: false,
-        error: "Failed to save activity"
+        error: "Failed to save activity",
       });
     }
 
     res.json({
       success: true,
-      data: savedActivity
+      data: savedActivity,
     });
-
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to save activity"
+      error: "Failed to save activity",
     });
   }
 };
@@ -212,7 +223,7 @@ export const handleUnsaveActivity = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
@@ -220,52 +231,53 @@ export const handleUnsaveActivity = async (req: Request, res: Response) => {
     if (!activityId) {
       return res.status(400).json({
         success: false,
-        error: "Activity ID is required"
+        error: "Activity ID is required",
       });
     }
 
     if (!supabaseAdmin) {
       return res.status(503).json({
         success: false,
-        error: "Database not available"
+        error: "Database not available",
       });
     }
 
     // Remove the saved activity
     const { error } = await supabaseAdmin
-      .from('saved_activities')
+      .from("saved_activities")
       .delete()
-      .eq('user_id', user.id)
-      .eq('activity_id', activityId);
+      .eq("user_id", user.id)
+      .eq("activity_id", activityId);
 
     if (error) {
       console.error("Database error:", error);
 
       // If the table doesn't exist yet, return success
-      if (error.code === '42P01') {
-        console.log("saved_activities table doesn't exist yet, treating as successfully removed");
+      if (error.code === "42P01") {
+        console.log(
+          "saved_activities table doesn't exist yet, treating as successfully removed",
+        );
         return res.json({
           success: true,
-          message: "Activity unsaved successfully (demo mode)"
+          message: "Activity unsaved successfully (demo mode)",
         });
       }
 
       return res.status(500).json({
         success: false,
-        error: "Failed to unsave activity"
+        error: "Failed to unsave activity",
       });
     }
 
     res.json({
       success: true,
-      message: "Activity unsaved successfully"
+      message: "Activity unsaved successfully",
     });
-
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to unsave activity"
+      error: "Failed to unsave activity",
     });
   }
 };
@@ -277,7 +289,7 @@ export const handleCheckActivitySaved = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
@@ -285,64 +297,66 @@ export const handleCheckActivitySaved = async (req: Request, res: Response) => {
     if (!activityId) {
       return res.status(400).json({
         success: false,
-        error: "Activity ID is required"
+        error: "Activity ID is required",
       });
     }
 
     if (!supabaseAdmin) {
       return res.status(503).json({
         success: false,
-        error: "Database not available"
+        error: "Database not available",
       });
     }
 
     // Check if activity is saved
     const { data: savedActivity, error } = await supabaseAdmin
-      .from('saved_activities')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('activity_id', activityId)
+      .from("saved_activities")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("activity_id", activityId)
       .single();
 
     // Handle database errors
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned, which is expected
+    if (error && error.code !== "PGRST116") {
+      // PGRST116 = no rows returned, which is expected
       console.error("Database error:", error);
 
       // If the table doesn't exist yet, return false
-      if (error.code === '42P01') {
-        console.log("saved_activities table doesn't exist yet, returning false");
+      if (error.code === "42P01") {
+        console.log(
+          "saved_activities table doesn't exist yet, returning false",
+        );
         return res.json({
           success: true,
-          data: { is_saved: false }
+          data: { is_saved: false },
         });
       }
 
       return res.status(500).json({
         success: false,
-        error: "Failed to check saved status"
+        error: "Failed to check saved status",
       });
     }
 
     res.json({
       success: true,
       data: {
-        is_saved: !!savedActivity
-      }
+        is_saved: !!savedActivity,
+      },
     });
-
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to check saved status"
+      error: "Failed to check saved status",
     });
   }
 };
 
 // Route definitions
-router.get('/', handleGetSavedActivities);
-router.post('/', handleSaveActivity);
-router.delete('/:activityId', handleUnsaveActivity);
-router.get('/check/:activityId', handleCheckActivitySaved);
+router.get("/", handleGetSavedActivities);
+router.post("/", handleSaveActivity);
+router.delete("/:activityId", handleUnsaveActivity);
+router.get("/check/:activityId", handleCheckActivitySaved);
 
 export default router;

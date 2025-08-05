@@ -61,12 +61,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setProfile(profileData);
 
         // Persist profile to localStorage
-        localStorage.setItem('userProfile', JSON.stringify(profileData));
-        localStorage.setItem('userSession', JSON.stringify({
-          userId,
-          authToken,
-          timestamp: Date.now()
-        }));
+        localStorage.setItem("userProfile", JSON.stringify(profileData));
+        localStorage.setItem(
+          "userSession",
+          JSON.stringify({
+            userId,
+            authToken,
+            timestamp: Date.now(),
+          }),
+        );
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -92,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setProfile(updatedProfile);
 
         // Persist updated profile to localStorage
-        localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+        localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -112,29 +115,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Load persisted user data from localStorage
     const loadPersistedData = () => {
       try {
-        const savedProfile = localStorage.getItem('userProfile');
-        const savedSession = localStorage.getItem('userSession');
+        const savedProfile = localStorage.getItem("userProfile");
+        const savedSession = localStorage.getItem("userSession");
 
         if (savedProfile && savedSession) {
           const profile = JSON.parse(savedProfile);
           const sessionData = JSON.parse(savedSession);
 
           // Check if session is not too old (e.g., less than 24 hours)
-          const isSessionValid = Date.now() - sessionData.timestamp < 24 * 60 * 60 * 1000;
+          const isSessionValid =
+            Date.now() - sessionData.timestamp < 24 * 60 * 60 * 1000;
 
           if (isSessionValid && mounted) {
             setProfile(profile);
-            console.log('Loaded persisted user profile:', profile.full_name);
+            console.log("Loaded persisted user profile:", profile.full_name);
           } else {
             // Clear expired session data
-            localStorage.removeItem('userProfile');
-            localStorage.removeItem('userSession');
+            localStorage.removeItem("userProfile");
+            localStorage.removeItem("userSession");
           }
         }
       } catch (error) {
-        console.error('Error loading persisted user data:', error);
-        localStorage.removeItem('userProfile');
-        localStorage.removeItem('userSession');
+        console.error("Error loading persisted user data:", error);
+        localStorage.removeItem("userProfile");
+        localStorage.removeItem("userSession");
       }
     };
 
@@ -257,8 +261,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSession(null);
 
         // Clear persisted data
-        localStorage.removeItem('userProfile');
-        localStorage.removeItem('userSession');
+        localStorage.removeItem("userProfile");
+        localStorage.removeItem("userSession");
       }
       return { error: result.error };
     },

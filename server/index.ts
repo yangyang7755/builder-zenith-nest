@@ -95,7 +95,7 @@ export function createServer() {
       success: true,
       message: "Debug endpoint working",
       receivedData: req.body,
-      hasSupabase: !!supabaseAdmin
+      hasSupabase: !!supabaseAdmin,
     });
   });
 

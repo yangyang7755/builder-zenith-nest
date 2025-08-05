@@ -5,6 +5,7 @@ This document outlines the comprehensive user authentication and profile managem
 ## 🎯 System Overview
 
 The authentication system provides:
+
 - **Backend Registration**: User accounts are created and stored in the database
 - **Profile Auto-Creation**: Every registered user automatically gets a profile
 - **Persistent Sessions**: User data persists across app reloads
@@ -16,6 +17,7 @@ The authentication system provides:
 ### 1. Backend Infrastructure
 
 #### Database Schema (`database/profile_creation_trigger.sql`)
+
 - **Profiles Table**: Extended with comprehensive user fields
 - **Auto-Creation Trigger**: Automatically creates profile when user registers
 - **RLS Policies**: Secure access control for user data
@@ -30,6 +32,7 @@ The authentication system provides:
 ```
 
 #### Backend Routes (`server/routes/users.ts`)
+
 - **POST /api/users/register**: Complete user registration with profile creation
 - **POST /api/users/login**: Authentication with profile data return
 - **GET /api/users/:userId/profile**: Fetch user profile
@@ -38,6 +41,7 @@ The authentication system provides:
 ### 2. Frontend Implementation
 
 #### Enhanced API Service (`client/services/apiService.ts`)
+
 ```typescript
 // New authentication methods:
 - registerUser(userData): Register new user with profile
@@ -47,11 +51,13 @@ The authentication system provides:
 ```
 
 #### Enhanced Authentication Context (`client/contexts/AuthContext.tsx`)
+
 - **Persistent Storage**: User data saved to localStorage
 - **Session Management**: Automatic session validation
 - **Profile Synchronization**: Real-time profile updates
 
 #### New Pages & Components
+
 - **SignUp** (Enhanced): Uses backend registration API
 - **LoginEnhanced**: Complete authentication with backend
 - **ProfileEnhanced**: Personalized profile with user data
@@ -59,6 +65,7 @@ The authentication system provides:
 ## 🚀 User Registration Flow
 
 ### 1. User Creates Account
+
 ```typescript
 // User fills out registration form
 const userData = {
@@ -75,6 +82,7 @@ const userData = {
 ```
 
 ### 2. Database Trigger Execution
+
 ```sql
 -- Automatic execution when user is created:
 INSERT INTO profiles (id, email, full_name, ...)
@@ -82,12 +90,13 @@ VALUES (NEW.id, NEW.email, metadata.full_name, ...);
 ```
 
 ### 3. Response to Frontend
+
 ```json
 {
   "success": true,
   "user": { "id": "uuid", "email": "user@example.com" },
-  "profile": { 
-    "id": "uuid", 
+  "profile": {
+    "id": "uuid",
     "full_name": "John Doe",
     "email": "user@example.com",
     "university": "Example University"
@@ -98,6 +107,7 @@ VALUES (NEW.id, NEW.email, metadata.full_name, ...);
 ## 🔐 User Login Flow
 
 ### 1. Authentication
+
 ```typescript
 // User provides credentials
 const credentials = {
@@ -112,6 +122,7 @@ const credentials = {
 ```
 
 ### 2. Profile Loading
+
 ```typescript
 // Frontend automatically:
 1. Stores user data in localStorage
@@ -120,6 +131,7 @@ const credentials = {
 ```
 
 ### 3. Persistent Sessions
+
 ```typescript
 // On app reload:
 1. Checks localStorage for saved profile
@@ -130,6 +142,7 @@ const credentials = {
 ## 👤 Personal Profile Features
 
 ### Enhanced Profile Page (`/profile-enhanced`)
+
 - **User Information**: Name, email, university, bio
 - **Activity Counts**: Created activities, saved activities, clubs
 - **Personal Data**: Shows only the logged-in user's data
@@ -137,6 +150,7 @@ const credentials = {
 - **Authentication Required**: Prompts login if not authenticated
 
 ### Profile Data Structure
+
 ```typescript
 interface EnhancedProfile {
   id: string;
@@ -164,6 +178,7 @@ interface EnhancedProfile {
 ## 🔄 Data Persistence Strategy
 
 ### LocalStorage Management
+
 ```typescript
 // Stored data:
 - userProfile: Complete profile information
@@ -175,6 +190,7 @@ interface EnhancedProfile {
 ```
 
 ### Backend Synchronization
+
 - **Real-time Updates**: Profile changes sync immediately
 - **Fallback Handling**: Works offline with cached data
 - **Conflict Resolution**: Backend data takes precedence
@@ -182,18 +198,21 @@ interface EnhancedProfile {
 ## 🛡 Security Features
 
 ### Row Level Security (RLS)
+
 ```sql
 -- Users can only access their own data:
-CREATE POLICY "Users can view own profile" 
+CREATE POLICY "Users can view own profile"
 ON profiles FOR SELECT USING (auth.uid() = id);
 ```
 
 ### Authentication Validation
+
 - **Token Verification**: All API calls validate JWT tokens
 - **Session Management**: Automatic token refresh
 - **Secure Updates**: Only authenticated users can modify their data
 
 ### Data Protection
+
 - **Input Validation**: All user inputs are sanitized
 - **SQL Injection Prevention**: Parameterized queries
 - **XSS Protection**: Safe data rendering
@@ -201,6 +220,7 @@ ON profiles FOR SELECT USING (auth.uid() = id);
 ## 📱 Demo Mode Support
 
 When backend is unavailable:
+
 - **Registration**: Creates demo user accounts
 - **Login**: Simulates authentication
 - **Profiles**: Uses mock data
@@ -209,13 +229,14 @@ When backend is unavailable:
 ## 🧪 Testing the System
 
 ### 1. Test Registration
+
 ```bash
 # Navigate to signup page
 /signup
 
 # Fill form and submit
 - Full Name: "Test User"
-- Email: "test@example.com"  
+- Email: "test@example.com"
 - Password: "password123"
 
 # Verify:
@@ -225,6 +246,7 @@ When backend is unavailable:
 ```
 
 ### 2. Test Login
+
 ```bash
 # Navigate to enhanced login
 /login-enhanced
@@ -240,6 +262,7 @@ When backend is unavailable:
 ```
 
 ### 3. Test Profile Access
+
 ```bash
 # Navigate to enhanced profile
 /profile-enhanced
@@ -254,14 +277,18 @@ When backend is unavailable:
 ## 🔗 Integration Points
 
 ### Existing Components
+
 The new system integrates with:
+
 - **ActivitiesContext**: Shows user's own activities
 - **SavedActivitiesContext**: Displays saved activities
 - **ClubContext**: Lists user's club memberships
 - **BottomNavigation**: Profile link leads to personal profile
 
 ### API Endpoints
+
 All existing endpoints continue to work:
+
 - `/api/profile`: Legacy profile endpoint
 - `/api/activities`: Activity management
 - `/api/clubs`: Club management
@@ -270,6 +297,7 @@ All existing endpoints continue to work:
 ## 🚦 Route Configuration
 
 ### Authentication Routes
+
 ```typescript
 // Available routes:
 /signup              -> User registration
@@ -279,6 +307,7 @@ All existing endpoints continue to work:
 ```
 
 ### Redirects & Navigation
+
 ```typescript
 // After registration: /login (with success message)
 // After login: /explore (main app)
@@ -289,42 +318,42 @@ All existing endpoints continue to work:
 ## 📝 Usage Examples
 
 ### Checking User Authentication
+
 ```typescript
 import { useAuth } from '@/contexts/AuthContext';
 
 function MyComponent() {
   const { user, profile, loading } = useAuth();
-  
+
   if (loading) return <LoadingSpinner />;
   if (!user) return <SignInPrompt />;
-  
+
   return <UserProfile profile={profile} />;
 }
 ```
 
 ### Updating User Profile
+
 ```typescript
-import { apiService } from '@/services/apiService';
+import { apiService } from "@/services/apiService";
 
 const updateProfile = async (updates) => {
-  const { data, error } = await apiService.updateUserProfile(
-    user.id, 
-    updates
-  );
-  
+  const { data, error } = await apiService.updateUserProfile(user.id, updates);
+
   if (data?.success) {
     // Profile updated successfully
-    toast.success('Profile updated!');
+    toast.success("Profile updated!");
   }
 };
 ```
 
 ### Accessing User Data
+
 ```typescript
 // Get user's activities
 const { data: activities } = await apiService.getUserActivities(user.id);
 
-// Get saved activities  
+// Get saved activities
 const { data: saved } = await apiService.getSavedActivities();
 
 // Get user's clubs
@@ -334,12 +363,14 @@ const { data: clubs } = await apiService.getUserClubs();
 ## 🎉 Benefits
 
 ### For Users
+
 - **Persistent Accounts**: Data never lost on reload
 - **Personal Profiles**: Own data and activity history
 - **Seamless Experience**: Automatic login persistence
 - **Data Ownership**: Complete control over profile
 
 ### For Developers
+
 - **Robust Authentication**: Complete user management
 - **Scalable Architecture**: Backend-first approach
 - **Fallback Support**: Works in all environments
@@ -348,6 +379,7 @@ const { data: clubs } = await apiService.getUserClubs();
 ## 🔧 Configuration
 
 ### Environment Variables
+
 ```bash
 # Required for production:
 SUPABASE_URL=your_supabase_url
@@ -357,6 +389,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
 ### Database Setup
+
 ```bash
 # Run the following SQL files in order:
 1. database/complete_setup.sql

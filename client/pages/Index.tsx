@@ -1,4 +1,11 @@
-import { Search, Menu, MapPin, ChevronDown, X, PartyPopper } from "lucide-react";
+import {
+  Search,
+  Menu,
+  MapPin,
+  ChevronDown,
+  X,
+  PartyPopper,
+} from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useActivities } from "../contexts/ActivitiesContext";
@@ -19,18 +26,22 @@ import { usePullToRefresh, useDeviceInfo, useHaptic } from "../hooks/useMobile";
 
 // Mock coordinates for demo locations
 const LOCATION_COORDINATES: { [key: string]: { lat: number; lng: number } } = {
-  "westway climbing centre": { lat: 51.5200, lng: -0.2375 },
+  "westway climbing centre": { lat: 51.52, lng: -0.2375 },
   "richmond park": { lat: 51.4545, lng: -0.2727 },
   "stanage edge": { lat: 53.3403, lng: -1.6286 },
-  "oxford": { lat: 51.7520, lng: -1.2577 },
-  "london": { lat: 51.5074, lng: -0.1278 },
+  oxford: { lat: 51.752, lng: -1.2577 },
+  london: { lat: 51.5074, lng: -0.1278 },
   "peak district": { lat: 53.3403, lng: -1.6286 },
   "hampstead heath": { lat: 51.5557, lng: -0.1657 },
-  "regents park": { lat: 51.5268, lng: -0.1554 }
+  "regents park": { lat: 51.5268, lng: -0.1554 },
 };
 
 // Calculate distance between two points using Haversine formula
-function calculateDistance(lat1: number, lng1: number, locationName: string): number {
+function calculateDistance(
+  lat1: number,
+  lng1: number,
+  locationName: string,
+): number {
   const locationKey = locationName.toLowerCase();
   const coords = LOCATION_COORDINATES[locationKey];
 
@@ -43,29 +54,40 @@ function calculateDistance(lat1: number, lng1: number, locationName: string): nu
   const lng2 = coords.lng;
 
   const R = 6371; // Earth's radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
   const a =
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLng/2) * Math.sin(dLng/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
 
   return distance;
 }
 
 export default function Index() {
-  const { activities, searchActivities, loading, error, refreshActivities, createActivity } = useActivities();
-  const { showWelcomeMessage, dismissWelcomeMessage, userProfile } = useOnboarding();
+  const {
+    activities,
+    searchActivities,
+    loading,
+    error,
+    refreshActivities,
+    createActivity,
+  } = useActivities();
+  const { showWelcomeMessage, dismissWelcomeMessage, userProfile } =
+    useOnboarding();
   const { getUserClubs, isClubMember } = useClub();
   const { savedActivities, isActivitySaved } = useSavedActivities();
-  const { getParticipationStatus, getUserParticipatedActivities } = useActivityParticipation();
+  const { getParticipationStatus, getUserParticipatedActivities } =
+    useActivityParticipation();
   const { following, isFollowing } = useFollow();
   const {
     getUserClubs: getUserMemberships,
     isClubMember: isMemberOfClub,
-    getClubMembers
+    getClubMembers,
   } = useClubMembership();
   const [searchParams] = useSearchParams();
 
@@ -107,7 +129,7 @@ export default function Index() {
     async () => {
       haptic.light();
       await refreshActivities();
-    }
+    },
   );
 
   const applyFilters = (newFilters: FilterOptions) => {
@@ -118,16 +140,21 @@ export default function Index() {
   const getActivitiesFromFollowedUsers = () => {
     if (following.length === 0) return [];
 
-    const followedUserIds = following.map(rel => rel.following_id);
-    const followedUserNames = following.map(rel => rel.following?.full_name).filter(Boolean);
+    const followedUserIds = following.map((rel) => rel.following_id);
+    const followedUserNames = following
+      .map((rel) => rel.following?.full_name)
+      .filter(Boolean);
 
-    return activities.filter(activity => {
+    return activities.filter((activity) => {
       // Check if organizer is a followed user by ID or name
       const organizerId = activity.organizer_id || activity.organizer?.id;
-      const organizerName = activity.organizer?.full_name || activity.organizerName;
+      const organizerName =
+        activity.organizer?.full_name || activity.organizerName;
 
-      return followedUserIds.includes(organizerId) ||
-             followedUserNames.includes(organizerName);
+      return (
+        followedUserIds.includes(organizerId) ||
+        followedUserNames.includes(organizerName)
+      );
     });
   };
 
@@ -136,11 +163,13 @@ export default function Index() {
   // Helper function to check if organizer is followed
   const isOrganizerFollowed = (activity: any) => {
     const organizerId = activity.organizer_id || activity.organizer?.id;
-    const organizerName = activity.organizer?.full_name || activity.organizerName;
+    const organizerName =
+      activity.organizer?.full_name || activity.organizerName;
 
-    return following.some(rel =>
-      rel.following_id === organizerId ||
-      rel.following?.full_name === organizerName
+    return following.some(
+      (rel) =>
+        rel.following_id === organizerId ||
+        rel.following?.full_name === organizerName,
     );
   };
 
@@ -149,16 +178,18 @@ export default function Index() {
     const userClubs = getUserMemberships();
     if (userClubs.length === 0) return [];
 
-    const userClubIds = userClubs.map(membership => membership.club_id);
-    const userClubNames = userClubs.map(membership => membership.club_name);
+    const userClubIds = userClubs.map((membership) => membership.club_id);
+    const userClubNames = userClubs.map((membership) => membership.club_name);
 
-    return activities.filter(activity => {
+    return activities.filter((activity) => {
       // Check if activity is associated with a club the user is a member of
       const activityClubId = activity.club_id;
       const activityClubName = activity.club?.name;
 
-      return userClubIds.includes(activityClubId) ||
-             userClubNames.includes(activityClubName);
+      return (
+        userClubIds.includes(activityClubId) ||
+        userClubNames.includes(activityClubName)
+      );
     });
   };
 
@@ -167,18 +198,20 @@ export default function Index() {
   // Helper function to check if activity is from user's club
   const isFromUserClub = (activity: any) => {
     const userClubs = getUserMemberships();
-    const userClubIds = userClubs.map(membership => membership.club_id);
-    const userClubNames = userClubs.map(membership => membership.club_name);
+    const userClubIds = userClubs.map((membership) => membership.club_id);
+    const userClubNames = userClubs.map((membership) => membership.club_name);
 
-    return userClubIds.includes(activity.club_id) ||
-           userClubNames.includes(activity.club?.name);
+    return (
+      userClubIds.includes(activity.club_id) ||
+      userClubNames.includes(activity.club?.name)
+    );
   };
 
   // Handle clubOnly query parameter
   useEffect(() => {
-    const clubOnly = searchParams.get('clubOnly');
-    if (clubOnly === 'true') {
-      setFilters(prev => ({ ...prev, clubOnly: true }));
+    const clubOnly = searchParams.get("clubOnly");
+    if (clubOnly === "true") {
+      setFilters((prev) => ({ ...prev, clubOnly: true }));
     }
   }, [searchParams]);
 
@@ -284,7 +317,11 @@ export default function Index() {
     }
 
     // Filter by location distance (if current location is set)
-    if (filters.location && filters.location.includes("Current Location") && filters.locationRange) {
+    if (
+      filters.location &&
+      filters.location.includes("Current Location") &&
+      filters.locationRange
+    ) {
       // Extract coordinates from current location string
       const coordMatch = filters.location.match(/\(([-\d.]+),\s*([-\d.]+)\)/);
       if (coordMatch) {
@@ -292,7 +329,11 @@ export default function Index() {
         const userLng = parseFloat(coordMatch[2]);
 
         filtered = filtered.filter((activity) => {
-          const distance = calculateDistance(userLat, userLng, activity.location);
+          const distance = calculateDistance(
+            userLat,
+            userLng,
+            activity.location,
+          );
           return distance <= filters.locationRange;
         });
       }
@@ -311,20 +352,22 @@ export default function Index() {
     if (filters.gender.length > 0) {
       if (filters.gender.includes("Female only")) {
         // When "Female only" is selected, show only female-only activities
-        filtered = filtered.filter((activity) =>
-          activity.gender === "Female only"
+        filtered = filtered.filter(
+          (activity) => activity.gender === "Female only",
         );
       } else {
         // When "Female only" is NOT selected, show all non-female-only activities
-        filtered = filtered.filter((activity) =>
-          activity.gender !== "Female only" || filters.gender.includes(activity.gender || "All genders")
+        filtered = filtered.filter(
+          (activity) =>
+            activity.gender !== "Female only" ||
+            filters.gender.includes(activity.gender || "All genders"),
         );
       }
     }
 
     // Filter by club only
     if (filters.clubOnly) {
-      const userClubIds = getUserClubs().map(club => club.id);
+      const userClubIds = getUserClubs().map((club) => club.id);
       filtered = filtered.filter((activity) => {
         // Show activities that are either:
         // 1. Created by members of clubs the user belongs to
@@ -363,7 +406,8 @@ export default function Index() {
       location: "Test Location",
       meetup_location: "Test Meetup Point",
       max_participants: 10,
-      special_comments: "This is a test activity created through the backend API",
+      special_comments:
+        "This is a test activity created through the backend API",
       difficulty: "Beginner",
     };
 
@@ -377,7 +421,10 @@ export default function Index() {
   };
 
   return (
-    <div ref={pullRefreshRef} className="react-native-container bg-white font-cabin relative native-scroll">
+    <div
+      ref={pullRefreshRef}
+      className="react-native-container bg-white font-cabin relative native-scroll"
+    >
       {/* Status Bar */}
       <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
         <span>9:41</span>
@@ -752,13 +799,17 @@ export default function Index() {
                 Welcome to Explore!
               </h2>
               <p className="text-gray-700 font-cabin mb-4">
-                Thanks for completing onboarding{userProfile.name && `, ${userProfile.name}`}!
-                Now you can explore the different clubs and activities.
+                Thanks for completing onboarding
+                {userProfile.name && `, ${userProfile.name}`}! Now you can
+                explore the different clubs and activities.
               </p>
               <div className="bg-gray-50 rounded-lg p-3 mb-4">
                 <p className="text-sm text-gray-600 font-cabin">
-                  �� <strong>Discover</strong> activities that match your interests<br/>
-                  🤝 <strong>Connect</strong> with like-minded people<br/>
+                  �� <strong>Discover</strong> activities that match your
+                  interests
+                  <br />
+                  🤝 <strong>Connect</strong> with like-minded people
+                  <br />
                   🏆 <strong>Join</strong> clubs and events near you
                 </p>
               </div>
@@ -905,7 +956,11 @@ function MixedActivitiesSection({
                     activity.imageSrc ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
                   }
-                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
+                  organizer={
+                    activity.organizer?.full_name ||
+                    activity.organizerName ||
+                    "Community"
+                  }
                   type={activity.type}
                   distance={activity.distance}
                   pace={activity.pace}
@@ -937,7 +992,11 @@ function MixedActivitiesSection({
                     date={activity.date}
                     location={activity.location}
                     imageSrc={activity.imageSrc}
-                    organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
+                    organizer={
+                      activity.organizer?.full_name ||
+                      activity.organizerName ||
+                      "Community"
+                    }
                     type={activity.type}
                     distance={activity.distance}
                     pace={activity.pace}
@@ -965,7 +1024,11 @@ function MixedActivitiesSection({
                     activity.imageSrc ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
                   }
-                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
+                  organizer={
+                    activity.organizer?.full_name ||
+                    activity.organizerName ||
+                    "Community"
+                  }
                   type={activity.type}
                   distance={activity.distance}
                   pace={activity.pace}
@@ -1012,12 +1075,20 @@ function MixedActivitiesSection({
                     activity.organizer?.profile_image ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
                   }
-                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
+                  organizer={
+                    activity.organizer?.full_name ||
+                    activity.organizerName ||
+                    "Community"
+                  }
                   type={activity.type || activity.activity_type}
                   distance={activity.distance}
                   pace={activity.pace}
                   elevation={activity.elevation}
-                  difficulty={activity.difficulty_level || activity.difficulty || "Intermediate"}
+                  difficulty={
+                    activity.difficulty_level ||
+                    activity.difficulty ||
+                    "Intermediate"
+                  }
                   activityId={activity.id}
                 />
               </div>
@@ -1057,12 +1128,20 @@ function MixedActivitiesSection({
                     activity.club?.profile_image ||
                     "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
                   }
-                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
+                  organizer={
+                    activity.organizer?.full_name ||
+                    activity.organizerName ||
+                    "Community"
+                  }
                   type={activity.type || activity.activity_type}
                   distance={activity.distance}
                   pace={activity.pace}
                   elevation={activity.elevation}
-                  difficulty={activity.difficulty_level || activity.difficulty || "Intermediate"}
+                  difficulty={
+                    activity.difficulty_level ||
+                    activity.difficulty ||
+                    "Intermediate"
+                  }
                   activityId={activity.id}
                   isOrganizerFollowed={isOrganizerFollowed(activity)}
                 />
@@ -1097,7 +1176,11 @@ function MixedActivitiesSection({
                   date={activity.date}
                   location={activity.location}
                   imageSrc={activity.imageSrc}
-                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
+                  organizer={
+                    activity.organizer?.full_name ||
+                    activity.organizerName ||
+                    "Community"
+                  }
                   type={activity.type}
                   distance={activity.distance}
                   pace={activity.pace}
@@ -1137,7 +1220,11 @@ function MixedActivitiesSection({
                   date={activity.date}
                   location={activity.location}
                   imageSrc={activity.imageSrc}
-                  organizer={activity.organizer?.full_name || activity.organizerName || "Community"}
+                  organizer={
+                    activity.organizer?.full_name ||
+                    activity.organizerName ||
+                    "Community"
+                  }
                   type={activity.type}
                   difficulty={activity.difficulty}
                   isFirstCard={activity.isFirstCard}
@@ -1364,7 +1451,9 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
   const [isRequested, setIsRequested] = useState(false);
   const { hasRequestedActivity } = useChat();
 
-  const activityId = `${activity.title}-${activity.organizer}`.replace(/\s+/g, "-").toLowerCase();
+  const activityId = `${activity.title}-${activity.organizer}`
+    .replace(/\s+/g, "-")
+    .toLowerCase();
 
   useEffect(() => {
     setIsRequested(hasRequestedActivity(activityId));
@@ -1702,7 +1791,9 @@ function CyclingActivityCard({ activity }: { activity: any }) {
   const [isRequested, setIsRequested] = useState(false);
   const { hasRequestedActivity } = useChat();
 
-  const activityId = `${activity.title}-${activity.organizer}`.replace(/\s+/g, "-").toLowerCase();
+  const activityId = `${activity.title}-${activity.organizer}`
+    .replace(/\s+/g, "-")
+    .toLowerCase();
 
   useEffect(() => {
     setIsRequested(hasRequestedActivity(activityId));
@@ -2166,8 +2257,6 @@ function ClubLogo({
     </div>
   );
 }
-
-
 
 function CarShareCard({
   destination,

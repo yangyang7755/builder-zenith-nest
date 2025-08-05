@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { useUserProfile } from "./UserProfileContext";
 import { useHaptic } from "../hooks/useMobile";
 import { apiService } from "../services/apiService";
@@ -26,19 +32,37 @@ export interface ActivityParticipationStats {
 interface ActivityParticipationContextType {
   participations: Map<string, ActivityParticipant[]>; // activity_id -> participants
   userParticipations: string[]; // activity_ids user has joined
-  joinActivity: (activityId: string, activityTitle: string, organizerId: string) => Promise<boolean>;
-  leaveActivity: (activityId: string, activityTitle: string) => Promise<boolean>;
+  joinActivity: (
+    activityId: string,
+    activityTitle: string,
+    organizerId: string,
+  ) => Promise<boolean>;
+  leaveActivity: (
+    activityId: string,
+    activityTitle: string,
+  ) => Promise<boolean>;
   getParticipants: (activityId: string) => ActivityParticipant[];
-  getParticipationStats: (activityId: string, maxParticipants?: number) => ActivityParticipationStats;
+  getParticipationStats: (
+    activityId: string,
+    maxParticipants?: number,
+  ) => ActivityParticipationStats;
   isUserParticipating: (activityId: string) => boolean;
   canJoinActivity: (activityId: string, maxParticipants?: number) => boolean;
   refreshParticipation: () => Promise<void>;
 }
 
-const ActivityParticipationContext = createContext<ActivityParticipationContextType | undefined>(undefined);
+const ActivityParticipationContext = createContext<
+  ActivityParticipationContextType | undefined
+>(undefined);
 
-export function ActivityParticipationProvider({ children }: { children: ReactNode }) {
-  const [participations, setParticipations] = useState<Map<string, ActivityParticipant[]>>(new Map());
+export function ActivityParticipationProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const [participations, setParticipations] = useState<
+    Map<string, ActivityParticipant[]>
+  >(new Map());
   const [userParticipations, setUserParticipations] = useState<string[]>([]);
   const { currentUserProfile } = useUserProfile();
   const haptic = useHaptic();
@@ -53,7 +77,10 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
       const { activityTitle, requesterId, organizerId } = event.detail;
 
       // Convert activity title to activity ID (in a real app, this would be passed explicitly)
-      const activityId = activityTitle.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      const activityId = activityTitle
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
 
       // Auto-join the user to the activity
       if (currentUserProfile && requesterId === currentUserProfile.full_name) {
@@ -61,17 +88,23 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
       }
     };
 
-    window.addEventListener('chatRequestAccepted', handleChatRequestAccepted as EventListener);
+    window.addEventListener(
+      "chatRequestAccepted",
+      handleChatRequestAccepted as EventListener,
+    );
 
     return () => {
-      window.removeEventListener('chatRequestAccepted', handleChatRequestAccepted as EventListener);
+      window.removeEventListener(
+        "chatRequestAccepted",
+        handleChatRequestAccepted as EventListener,
+      );
     };
   }, [currentUserProfile]);
 
   const initializeDemoParticipations = () => {
     // Demo participation data
     const demoParticipations = new Map<string, ActivityParticipant[]>();
-    
+
     // Westway Women's+ Climbing Morning
     demoParticipations.set("westway-womens-climb", [
       {
@@ -83,11 +116,12 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
         user: {
           id: "user_current",
           full_name: "Maddie Wei",
-          profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face"
-        }
+          profile_image:
+            "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face",
+        },
       },
       {
-        id: "part_2", 
+        id: "part_2",
         activity_id: "westway-womens-climb",
         user_id: "user_sarah_jones",
         joined_at: new Date("2024-01-21"),
@@ -95,21 +129,23 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
         user: {
           id: "user_sarah_jones",
           full_name: "Sarah Jones",
-          profile_image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face"
-        }
+          profile_image:
+            "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",
+        },
       },
       {
         id: "part_3",
-        activity_id: "westway-womens-climb", 
+        activity_id: "westway-womens-climb",
         user_id: "user_emma_wilson",
         joined_at: new Date("2024-01-22"),
         status: "joined",
         user: {
           id: "user_emma_wilson",
           full_name: "Emma Wilson",
-          profile_image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=40&h=40&fit=crop&crop=face"
-        }
-      }
+          profile_image:
+            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=40&h=40&fit=crop&crop=face",
+        },
+      },
     ]);
 
     // Sunday Morning Social Ride
@@ -122,9 +158,10 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
         status: "joined",
         user: {
           id: "user_alex_chen",
-          full_name: "Alex Chen", 
-          profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-        }
+          full_name: "Alex Chen",
+          profile_image:
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+        },
       },
       {
         id: "part_5",
@@ -135,9 +172,10 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
         user: {
           id: "user_dan_smith",
           full_name: "Dan Smith",
-          profile_image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
-        }
-      }
+          profile_image:
+            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+        },
+      },
     ]);
 
     setParticipations(demoParticipations);
@@ -147,7 +185,7 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
   const joinActivity = async (
     activityId: string,
     activityTitle: string,
-    organizerId: string
+    organizerId: string,
   ): Promise<boolean> => {
     if (!currentUserProfile) return false;
 
@@ -156,14 +194,17 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
 
       // Check if already participating
       if (isUserParticipating(activityId)) {
-        showParticipationNotification("You're already participating in this activity!", "warning");
+        showParticipationNotification(
+          "You're already participating in this activity!",
+          "warning",
+        );
         return false;
       }
 
       // Try to join via API first
       const response = await apiService.joinActivity(activityId);
 
-      if (response.error && response.error !== 'BACKEND_UNAVAILABLE') {
+      if (response.error && response.error !== "BACKEND_UNAVAILABLE") {
         showParticipationNotification("Failed to join activity", "error");
         return false;
       }
@@ -178,12 +219,12 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
         user: {
           id: currentUserProfile.id,
           full_name: currentUserProfile.full_name,
-          profile_image: currentUserProfile.profile_image
-        }
+          profile_image: currentUserProfile.profile_image,
+        },
       };
 
       // Update local participations
-      setParticipations(prev => {
+      setParticipations((prev) => {
         const newMap = new Map(prev);
         const existing = newMap.get(activityId) || [];
         newMap.set(activityId, [...existing, newParticipant]);
@@ -191,32 +232,35 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
       });
 
       // Update user participations
-      setUserParticipations(prev => [...prev, activityId]);
+      setUserParticipations((prev) => [...prev, activityId]);
 
       // Trigger activity context update
-      const event = new CustomEvent('participantJoined', {
+      const event = new CustomEvent("participantJoined", {
         detail: {
           activityId,
           participant: newParticipant,
-          newCount: (participations.get(activityId)?.length || 0) + 1
-        }
+          newCount: (participations.get(activityId)?.length || 0) + 1,
+        },
       });
       window.dispatchEvent(event);
 
       // Trigger chat creation event for organizer communication
-      const chatEvent = new CustomEvent('createActivityChat', {
+      const chatEvent = new CustomEvent("createActivityChat", {
         detail: {
           activityId,
           activityTitle,
           organizerId,
           participantId: currentUserProfile.id,
           participantName: currentUserProfile.full_name,
-          message: `Hi! I just joined "${activityTitle}". Looking forward to the activity!`
-        }
+          message: `Hi! I just joined "${activityTitle}". Looking forward to the activity!`,
+        },
       });
       window.dispatchEvent(chatEvent);
 
-      showParticipationNotification(`You joined "${activityTitle}"!`, "success");
+      showParticipationNotification(
+        `You joined "${activityTitle}"!`,
+        "success",
+      );
 
       return true;
     } catch (error) {
@@ -227,8 +271,8 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
   };
 
   const leaveActivity = async (
-    activityId: string, 
-    activityTitle: string
+    activityId: string,
+    activityTitle: string,
   ): Promise<boolean> => {
     if (!currentUserProfile) return false;
 
@@ -237,50 +281,58 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
 
       // Check if participating
       if (!isUserParticipating(activityId)) {
-        showParticipationNotification("You're not participating in this activity!", "warning");
+        showParticipationNotification(
+          "You're not participating in this activity!",
+          "warning",
+        );
         return false;
       }
 
       // Try to leave via API first
       const response = await apiService.leaveActivity(activityId);
 
-      if (response.error && response.error !== 'BACKEND_UNAVAILABLE') {
+      if (response.error && response.error !== "BACKEND_UNAVAILABLE") {
         showParticipationNotification("Failed to leave activity", "error");
         return false;
       }
 
       // Update local participations
-      setParticipations(prev => {
+      setParticipations((prev) => {
         const newMap = new Map(prev);
         const existing = newMap.get(activityId) || [];
-        const filtered = existing.filter(p => p.user_id !== currentUserProfile.id);
+        const filtered = existing.filter(
+          (p) => p.user_id !== currentUserProfile.id,
+        );
         newMap.set(activityId, filtered);
         return newMap;
       });
 
       // Update user participations
-      setUserParticipations(prev => prev.filter(id => id !== activityId));
+      setUserParticipations((prev) => prev.filter((id) => id !== activityId));
 
       // Trigger activity context update
-      const event = new CustomEvent('participantLeft', {
+      const event = new CustomEvent("participantLeft", {
         detail: {
           activityId,
           userId: currentUserProfile.id,
-          newCount: Math.max(0, (participations.get(activityId)?.length || 1) - 1)
-        }
+          newCount: Math.max(
+            0,
+            (participations.get(activityId)?.length || 1) - 1,
+          ),
+        },
       });
       window.dispatchEvent(event);
 
       // Trigger chat notification event
-      const chatEvent = new CustomEvent('updateActivityChat', {
+      const chatEvent = new CustomEvent("updateActivityChat", {
         detail: {
           activityId,
           activityTitle,
           participantId: currentUserProfile.id,
           participantName: currentUserProfile.full_name,
           message: `I've decided to leave "${activityTitle}". Thanks for organizing!`,
-          action: 'left'
-        }
+          action: "left",
+        },
       });
       window.dispatchEvent(chatEvent);
 
@@ -295,16 +347,18 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
   };
 
   const getParticipants = (activityId: string): ActivityParticipant[] => {
-    return participations.get(activityId)?.filter(p => p.status === "joined") || [];
+    return (
+      participations.get(activityId)?.filter((p) => p.status === "joined") || []
+    );
   };
 
   const getParticipationStats = (
-    activityId: string, 
-    maxParticipants: number = 10
+    activityId: string,
+    maxParticipants: number = 10,
   ): ActivityParticipationStats => {
     const participants = getParticipants(activityId);
     const current_participants = participants.length;
-    
+
     return {
       current_participants,
       max_participants: maxParticipants,
@@ -317,7 +371,10 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
     return userParticipations.includes(activityId);
   };
 
-  const canJoinActivity = (activityId: string, maxParticipants: number = 10): boolean => {
+  const canJoinActivity = (
+    activityId: string,
+    maxParticipants: number = 10,
+  ): boolean => {
     const stats = getParticipationStats(activityId, maxParticipants);
     return !stats.is_full && !isUserParticipating(activityId);
   };
@@ -350,36 +407,41 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
 export function useActivityParticipation() {
   const context = useContext(ActivityParticipationContext);
   if (context === undefined) {
-    throw new Error("useActivityParticipation must be used within an ActivityParticipationProvider");
+    throw new Error(
+      "useActivityParticipation must be used within an ActivityParticipationProvider",
+    );
   }
   return context;
 }
 
 // Helper function for participation notifications
 function showParticipationNotification(
-  message: string, 
-  type: "success" | "error" | "warning" | "info" = "info"
+  message: string,
+  type: "success" | "error" | "warning" | "info" = "info",
 ) {
-  const toast = document.createElement('div');
-  const colorClass = 
-    type === "success" ? "bg-green-600" :
-    type === "error" ? "bg-red-600" :
-    type === "warning" ? "bg-yellow-600" :
-    "bg-blue-600";
-    
+  const toast = document.createElement("div");
+  const colorClass =
+    type === "success"
+      ? "bg-green-600"
+      : type === "error"
+        ? "bg-red-600"
+        : type === "warning"
+          ? "bg-yellow-600"
+          : "bg-blue-600";
+
   toast.className = `fixed top-16 left-1/2 transform -translate-x-1/2 z-[1001] ${colorClass} text-white px-4 py-2 rounded-lg font-medium max-w-sm mx-4 text-center`;
   toast.textContent = message;
-  
+
   document.body.appendChild(toast);
-  
+
   // Animate in
   setTimeout(() => {
-    toast.style.opacity = '0.9';
+    toast.style.opacity = "0.9";
   }, 100);
-  
+
   // Remove after 3 seconds
   setTimeout(() => {
-    toast.style.opacity = '0';
+    toast.style.opacity = "0";
     setTimeout(() => {
       if (document.body.contains(toast)) {
         document.body.removeChild(toast);

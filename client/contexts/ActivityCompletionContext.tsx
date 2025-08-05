@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { useActivities } from "./ActivitiesContext";
 import { showNativeAlert } from "../utils/mobileUtils";
 
@@ -29,18 +35,33 @@ interface ActivityCompletionContextType {
   reviews: ActivityReview[];
   checkForCompletedActivities: () => void;
   markActivityCompleted: (activityId: string) => Promise<void>;
-  submitReview: (review: Omit<ActivityReview, "id" | "created_at">) => Promise<void>;
+  submitReview: (
+    review: Omit<ActivityReview, "id" | "created_at">,
+  ) => Promise<void>;
   hasReviewedActivity: (activityId: string) => boolean;
   getActivityReviews: (activityId: string) => ActivityReview[];
-  showCompletionPrompt: (activityId: string, activityTitle: string, organizerId: string, organizerName: string) => void;
+  showCompletionPrompt: (
+    activityId: string,
+    activityTitle: string,
+    organizerId: string,
+    organizerName: string,
+  ) => void;
 }
 
-const ActivityCompletionContext = createContext<ActivityCompletionContextType | undefined>(undefined);
+const ActivityCompletionContext = createContext<
+  ActivityCompletionContextType | undefined
+>(undefined);
 
-export function ActivityCompletionProvider({ children }: { children: ReactNode }) {
+export function ActivityCompletionProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [completions, setCompletions] = useState<ActivityCompletion[]>([]);
   const [reviews, setReviews] = useState<ActivityReview[]>([]);
-  const [checkedActivities, setCheckedActivities] = useState<Set<string>>(new Set());
+  const [checkedActivities, setCheckedActivities] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Safely get activities with fallback
   let activities: any[] = [];
@@ -48,7 +69,9 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
     const activitiesContext = useActivities();
     activities = activitiesContext.activities || [];
   } catch (error) {
-    console.warn('ActivitiesContext not available yet, using empty activities list');
+    console.warn(
+      "ActivitiesContext not available yet, using empty activities list",
+    );
     activities = [];
   }
 
@@ -66,8 +89,8 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
 
   const checkForCompletedActivities = () => {
     const now = new Date();
-    
-    activities.forEach(activity => {
+
+    activities.forEach((activity) => {
       // Skip if already checked
       if (checkedActivities.has(activity.id)) {
         return;
@@ -80,15 +103,17 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
 
       if (now >= dayAfterActivity) {
         // Mark as checked to avoid repeated prompts
-        setCheckedActivities(prev => new Set([...prev, activity.id]));
-        
+        setCheckedActivities((prev) => new Set([...prev, activity.id]));
+
         // Show completion prompt
         setTimeout(() => {
           showCompletionPrompt(
             activity.id,
             activity.title,
             activity.organizer_id || "unknown",
-            activity.organizer?.full_name || activity.organizerName || "Unknown Organizer"
+            activity.organizer?.full_name ||
+              activity.organizerName ||
+              "Unknown Organizer",
           );
         }, 1000); // Delay to avoid multiple prompts at once
       }
@@ -96,10 +121,10 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
   };
 
   const showCompletionPrompt = (
-    activityId: string, 
-    activityTitle: string, 
-    organizerId: string, 
-    organizerName: string
+    activityId: string,
+    activityTitle: string,
+    organizerId: string,
+    organizerName: string,
   ) => {
     showNativeAlert(
       "Activity Completed?",
@@ -111,7 +136,7 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
           onPress: () => {
             // Mark as not completed
             markActivityNotCompleted(activityId);
-          }
+          },
         },
         {
           text: "Yes",
@@ -120,12 +145,17 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
             markActivityCompleted(activityId).then(() => {
               // Prompt for review
               setTimeout(() => {
-                showReviewPrompt(activityId, activityTitle, organizerId, organizerName);
+                showReviewPrompt(
+                  activityId,
+                  activityTitle,
+                  organizerId,
+                  organizerName,
+                );
               }, 500);
             });
-          }
-        }
-      ]
+          },
+        },
+      ],
     );
   };
 
@@ -133,7 +163,7 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
     activityId: string,
     activityTitle: string,
     organizerId: string,
-    organizerName: string
+    organizerName: string,
   ) => {
     // Check if already reviewed
     if (hasReviewedActivity(activityId)) {
@@ -146,16 +176,21 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
       [
         {
           text: "Skip",
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "Review",
           style: "default",
           onPress: () => {
-            showReviewModal(activityId, activityTitle, organizerId, organizerName);
-          }
-        }
-      ]
+            showReviewModal(
+              activityId,
+              activityTitle,
+              organizerId,
+              organizerName,
+            );
+          },
+        },
+      ],
     );
   };
 
@@ -163,15 +198,15 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
     activityId: string,
     activityTitle: string,
     organizerId: string,
-    organizerName: string
+    organizerName: string,
   ) => {
     // Create review modal
-    const modal = document.createElement('div');
-    modal.className = 'native-modal open';
-    
-    const content = document.createElement('div');
-    content.className = 'native-modal-content';
-    
+    const modal = document.createElement("div");
+    modal.className = "native-modal open";
+
+    const content = document.createElement("div");
+    content.className = "native-modal-content";
+
     content.innerHTML = `
       <div class="mb-4">
         <h3 class="text-xl font-bold text-explore-green mb-2">Review ${organizerName}</h3>
@@ -181,9 +216,12 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
       <div class="mb-4">
         <label class="block text-sm font-medium mb-2">Rating</label>
         <div class="flex gap-2 mb-4" id="rating-stars">
-          ${[1, 2, 3, 4, 5].map(i => 
-            `<button class="star-btn text-2xl text-gray-300 hover:text-yellow-400" data-rating="${i}">⭐</button>`
-          ).join('')}
+          ${[1, 2, 3, 4, 5]
+            .map(
+              (i) =>
+                `<button class="star-btn text-2xl text-gray-300 hover:text-yellow-400" data-rating="${i}">⭐</button>`,
+            )
+            .join("")}
         </div>
       </div>
       
@@ -197,38 +235,40 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
         <button id="submit-review" class="flex-1 native-button">Submit Review</button>
       </div>
     `;
-    
+
     modal.appendChild(content);
     document.body.appendChild(modal);
-    
+
     let selectedRating = 0;
-    
+
     // Handle star selection
-    const stars = content.querySelectorAll('.star-btn');
+    const stars = content.querySelectorAll(".star-btn");
     stars.forEach((star, index) => {
-      star.addEventListener('click', () => {
+      star.addEventListener("click", () => {
         selectedRating = index + 1;
         stars.forEach((s, i) => {
-          s.classList.toggle('text-yellow-400', i < selectedRating);
-          s.classList.toggle('text-gray-300', i >= selectedRating);
+          s.classList.toggle("text-yellow-400", i < selectedRating);
+          s.classList.toggle("text-gray-300", i >= selectedRating);
         });
       });
     });
-    
+
     // Handle cancel
-    content.querySelector('#cancel-review')?.addEventListener('click', () => {
+    content.querySelector("#cancel-review")?.addEventListener("click", () => {
       document.body.removeChild(modal);
     });
-    
+
     // Handle submit
-    content.querySelector('#submit-review')?.addEventListener('click', () => {
+    content.querySelector("#submit-review")?.addEventListener("click", () => {
       if (selectedRating === 0) {
-        alert('Please select a rating');
+        alert("Please select a rating");
         return;
       }
-      
-      const comment = (content.querySelector('#review-comment') as HTMLTextAreaElement)?.value || '';
-      
+
+      const comment =
+        (content.querySelector("#review-comment") as HTMLTextAreaElement)
+          ?.value || "";
+
       submitReview({
         activity_id: activityId,
         reviewer_id: "user_current",
@@ -236,9 +276,9 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
         rating: selectedRating,
         comment,
         activity_title: activityTitle,
-        organizer_name: organizerName
+        organizer_name: organizerName,
       });
-      
+
       document.body.removeChild(modal);
     });
   };
@@ -251,11 +291,11 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
       completed: true,
       completion_date: new Date(),
       review_submitted: false,
-      created_at: new Date()
+      created_at: new Date(),
     };
 
-    setCompletions(prev => [...prev, completion]);
-    
+    setCompletions((prev) => [...prev, completion]);
+
     // In a real app, this would save to database
     // await apiService.markActivityCompleted(activityId);
   };
@@ -266,46 +306,50 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
       activity_id: activityId,
       user_id: "user_current",
       completed: false,
-      created_at: new Date()
+      created_at: new Date(),
     };
 
-    setCompletions(prev => [...prev, completion]);
+    setCompletions((prev) => [...prev, completion]);
   };
 
-  const submitReview = async (reviewData: Omit<ActivityReview, "id" | "created_at">): Promise<void> => {
+  const submitReview = async (
+    reviewData: Omit<ActivityReview, "id" | "created_at">,
+  ): Promise<void> => {
     const review: ActivityReview = {
       ...reviewData,
       id: `review_${Date.now()}`,
-      created_at: new Date()
+      created_at: new Date(),
     };
 
-    setReviews(prev => [...prev, review]);
-    
+    setReviews((prev) => [...prev, review]);
+
     // Update completion to mark review as submitted
-    setCompletions(prev => 
-      prev.map(c => 
-        c.activity_id === reviewData.activity_id 
+    setCompletions((prev) =>
+      prev.map((c) =>
+        c.activity_id === reviewData.activity_id
           ? { ...c, review_submitted: true }
-          : c
-      )
+          : c,
+      ),
     );
-    
+
     // Show success message
     showNativeAlert(
       "Review Submitted",
-      `Thank you for reviewing ${reviewData.organizer_name}!`
+      `Thank you for reviewing ${reviewData.organizer_name}!`,
     );
-    
+
     // In a real app, this would save to database
     // await apiService.submitActivityReview(review);
   };
 
   const hasReviewedActivity = (activityId: string): boolean => {
-    return reviews.some(r => r.activity_id === activityId && r.reviewer_id === "user_current");
+    return reviews.some(
+      (r) => r.activity_id === activityId && r.reviewer_id === "user_current",
+    );
   };
 
   const getActivityReviews = (activityId: string): ActivityReview[] => {
-    return reviews.filter(r => r.activity_id === activityId);
+    return reviews.filter((r) => r.activity_id === activityId);
   };
 
   return (
@@ -329,7 +373,9 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
 export function useActivityCompletion() {
   const context = useContext(ActivityCompletionContext);
   if (context === undefined) {
-    throw new Error("useActivityCompletion must be used within an ActivityCompletionProvider");
+    throw new Error(
+      "useActivityCompletion must be used within an ActivityCompletionProvider",
+    );
   }
   return context;
 }

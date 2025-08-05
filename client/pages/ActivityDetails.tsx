@@ -329,7 +329,7 @@ export default function ActivityDetails() {
     leaveActivity,
     isUserParticipating,
     getParticipationStats,
-    canJoinActivity
+    canJoinActivity,
   } = useActivityParticipation();
   const { currentUserProfile } = useUserProfile();
   const [agreedToRequirements, setAgreedToRequirements] = useState(false);
@@ -341,7 +341,7 @@ export default function ActivityDetails() {
   const { activities } = useActivities();
 
   // Get activity data from context first, then fallback to static data
-  const contextActivity = activities.find(a => a.id === activityId);
+  const contextActivity = activities.find((a) => a.id === activityId);
   const staticActivity = activityId
     ? activitiesData[activityId as keyof typeof activitiesData]
     : null;
@@ -351,9 +351,15 @@ export default function ActivityDetails() {
 
   // Get participation status for the current activity
   const currentActivityId = activityId || activity?.id;
-  const isParticipating = currentActivityId ? isUserParticipating(currentActivityId) : false;
-  const participationStats = currentActivityId ? getParticipationStats(currentActivityId) : null;
-  const canJoin = currentActivityId ? canJoinActivity(currentActivityId) : false;
+  const isParticipating = currentActivityId
+    ? isUserParticipating(currentActivityId)
+    : false;
+  const participationStats = currentActivityId
+    ? getParticipationStats(currentActivityId)
+    : null;
+  const canJoin = currentActivityId
+    ? canJoinActivity(currentActivityId)
+    : false;
 
   useEffect(() => {
     if (!activity) {
@@ -395,7 +401,10 @@ export default function ActivityDetails() {
   const handleSendRequest = () => {
     addJoinRequest({
       activityTitle: activity.title,
-      activityOrganizer: typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Unknown Organizer',
+      activityOrganizer:
+        typeof activity.organizer === "string"
+          ? activity.organizer
+          : activity.organizer?.name || "Unknown Organizer",
       requesterName: "You",
       message: requestMessage || "Hi! I'd like to join this activity.",
     });
@@ -461,7 +470,7 @@ export default function ActivityDetails() {
 
   const handleReviewSubmitted = () => {
     // Refresh activity data if needed
-    console.log('Review submitted for activity:', activity.id);
+    console.log("Review submitted for activity:", activity.id);
   };
 
   const handleSaveActivity = () => {
@@ -475,10 +484,16 @@ export default function ActivityDetails() {
       date: "2025-08-06", // Use appropriate date from the schedule
       time: "10:00", // Extract time from schedule
       location: activity.location,
-      organizer: typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Unknown Organizer',
+      organizer:
+        typeof activity.organizer === "string"
+          ? activity.organizer
+          : activity.organizer?.name || "Unknown Organizer",
       difficulty: activity.difficulty,
-      maxParticipants: activity.capacity?.toString() || 'N/A',
-      imageSrc: typeof activity.organizer === 'string' ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" : activity.organizer?.image,
+      maxParticipants: activity.capacity?.toString() || "N/A",
+      imageSrc:
+        typeof activity.organizer === "string"
+          ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+          : activity.organizer?.image,
       specialComments: "",
       gender: "All genders",
       visibility: "All",
@@ -568,7 +583,10 @@ export default function ActivityDetails() {
         <div
           className="flex items-center gap-3 mb-6 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
           onClick={() => {
-            const organizerName = typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name;
+            const organizerName =
+              typeof activity.organizer === "string"
+                ? activity.organizer
+                : activity.organizer?.name;
             if (organizerName === "Coach Holly Peristiani") {
               navigate("/profile/coach-holly");
             }
@@ -576,18 +594,27 @@ export default function ActivityDetails() {
         >
           <img
             src={
-              typeof activity.organizer === 'string'
+              typeof activity.organizer === "string"
                 ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" // Default avatar
-                : activity.organizer?.image || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+                : activity.organizer?.image ||
+                  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
             }
-            alt={typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Organizer'}
+            alt={
+              typeof activity.organizer === "string"
+                ? activity.organizer
+                : activity.organizer?.name || "Organizer"
+            }
             className="w-12 h-12 rounded-full border border-black object-cover"
           />
           <div>
             <h2 className="text-lg font-bold text-black font-cabin">
-              {typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Unknown Organizer'}
+              {typeof activity.organizer === "string"
+                ? activity.organizer
+                : activity.organizer?.name || "Unknown Organizer"}
             </h2>
-            {(typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name) === "Coach Holly Peristiani" && (
+            {(typeof activity.organizer === "string"
+              ? activity.organizer
+              : activity.organizer?.name) === "Coach Holly Peristiani" && (
               <p className="text-xs text-gray-500 font-cabin">
                 Click to view profile
               </p>
@@ -627,8 +654,11 @@ export default function ActivityDetails() {
               <h3 className="text-xl font-bold text-black font-cabin">Time</h3>
             </div>
             <p className="text-sm text-black font-cabin ml-8">
-              {contextActivity ? `${contextActivity.date}, ${contextActivity.time}` :
-               activity.id === "westway-womens-climb" ? "Every Wednesday, 10:00-12:00 AM" : activity.schedule}
+              {contextActivity
+                ? `${contextActivity.date}, ${contextActivity.time}`
+                : activity.id === "westway-womens-climb"
+                  ? "Every Wednesday, 10:00-12:00 AM"
+                  : activity.schedule}
             </p>
           </div>
 
@@ -641,14 +671,24 @@ export default function ActivityDetails() {
               </h4>
             </div>
             <p className="text-sm text-black font-cabin ml-6">
-              {participationStats?.participantCount || activity.currentParticipants || '0'}/{contextActivity?.max_participants || contextActivity?.maxParticipants || activity.capacity || 'N/A'} joined
+              {participationStats?.participantCount ||
+                activity.currentParticipants ||
+                "0"}
+              /
+              {contextActivity?.max_participants ||
+                contextActivity?.maxParticipants ||
+                activity.capacity ||
+                "N/A"}{" "}
+              joined
             </p>
           </div>
 
           {/* Activity-specific details */}
           {(activity.type === "cycling" || activity.type === "running") && (
             <>
-              {(activity.distance || (contextActivity?.distance && contextActivity?.distanceUnit)) && (
+              {(activity.distance ||
+                (contextActivity?.distance &&
+                  contextActivity?.distanceUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <Target className="w-4 h-4 text-green-500" />
@@ -657,11 +697,14 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {contextActivity ? `${contextActivity.distance} ${contextActivity.distanceUnit}` : activity.distance}
+                    {contextActivity
+                      ? `${contextActivity.distance} ${contextActivity.distanceUnit}`
+                      : activity.distance}
                   </p>
                 </div>
               )}
-              {(activity.pace || (contextActivity?.pace && contextActivity?.paceUnit)) && (
+              {(activity.pace ||
+                (contextActivity?.pace && contextActivity?.paceUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-yellow-500">⚡</span>
@@ -670,11 +713,15 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {contextActivity ? `${contextActivity.pace} ${contextActivity.paceUnit}` : activity.pace}
+                    {contextActivity
+                      ? `${contextActivity.pace} ${contextActivity.paceUnit}`
+                      : activity.pace}
                   </p>
                 </div>
               )}
-              {(activity.elevation || (contextActivity?.elevation && contextActivity?.elevationUnit)) && (
+              {(activity.elevation ||
+                (contextActivity?.elevation &&
+                  contextActivity?.elevationUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-green-600">⛰️</span>
@@ -683,7 +730,9 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {contextActivity ? `${contextActivity.elevation} ${contextActivity.elevationUnit}` : activity.elevation}
+                    {contextActivity
+                      ? `${contextActivity.elevation} ${contextActivity.elevationUnit}`
+                      : activity.elevation}
                   </p>
                 </div>
               )}
@@ -762,7 +811,8 @@ export default function ActivityDetails() {
         {(activity.fee ||
           activity.accommodation ||
           activity.transport ||
-          (contextActivity?.cafeStop || activity.cafeStop) ||
+          contextActivity?.cafeStop ||
+          activity.cafeStop ||
           activity.route ||
           activity.trainingFocus ||
           activity.terrain ||
@@ -915,7 +965,9 @@ export default function ActivityDetails() {
         {/* Tags */}
         {activity.tags && activity.tags.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-black font-cabin mb-3">Tags</h3>
+            <h3 className="text-xl font-bold text-black font-cabin mb-3">
+              Tags
+            </h3>
             <div className="flex flex-wrap gap-2">
               {activity.tags.map((tag, index) => (
                 <span
@@ -968,7 +1020,9 @@ export default function ActivityDetails() {
                   {activity.requirements.warning && (
                     <div className="flex items-start gap-2 bg-yellow-500 bg-opacity-20 p-2 rounded">
                       <span className="text-yellow-300 font-bold">⚠</span>
-                      <div className="text-sm">{activity.requirements.warning}</div>
+                      <div className="text-sm">
+                        {activity.requirements.warning}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1010,9 +1064,9 @@ export default function ActivityDetails() {
             className={`w-full py-3 rounded-lg text-lg font-cabin font-medium transition-colors ${
               isParticipating
                 ? "bg-red-500 text-white hover:bg-red-600"
-                : (agreedToRequirements
+                : agreedToRequirements
                   ? "bg-explore-green text-white hover:bg-explore-green-light"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed")
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
             {isParticipating ? "Leave Activity" : "Join Activity"}
@@ -1038,7 +1092,11 @@ export default function ActivityDetails() {
 
             <div className="mb-4">
               <p className="text-sm text-gray-600 font-cabin mb-3">
-                Send a message to {typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'organizer'} (optional):
+                Send a message to{" "}
+                {typeof activity.organizer === "string"
+                  ? activity.organizer
+                  : activity.organizer?.name || "organizer"}{" "}
+                (optional):
               </p>
               <textarea
                 value={requestMessage}
@@ -1074,7 +1132,10 @@ export default function ActivityDetails() {
           id: activity.id,
           title: activity.title,
           organizer_id: "demo-organizer-id", // In real app, this would come from activity data
-          organizer_name: typeof activity.organizer === 'string' ? activity.organizer : activity.organizer?.name || 'Organizer',
+          organizer_name:
+            typeof activity.organizer === "string"
+              ? activity.organizer
+              : activity.organizer?.name || "Organizer",
         }}
         onReviewSubmitted={handleReviewSubmitted}
       />

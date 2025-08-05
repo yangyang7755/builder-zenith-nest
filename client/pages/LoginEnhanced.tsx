@@ -10,7 +10,7 @@ export default function LoginEnhanced() {
   const location = useLocation();
   const { signIn } = useAuth();
   const { toast } = useToast();
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +24,7 @@ export default function LoginEnhanced() {
         title: "Success! 🎉",
         description: location.state.message,
       });
-      
+
       // Pre-fill email if provided
       if (location.state?.email) {
         setEmail(location.state.email);
@@ -51,7 +51,7 @@ export default function LoginEnhanced() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -59,21 +59,22 @@ export default function LoginEnhanced() {
     setLoading(true);
     try {
       // First try backend login
-      const { data: backendResult, error: backendError } = await apiService.loginUser({
-        email,
-        password,
-      });
+      const { data: backendResult, error: backendError } =
+        await apiService.loginUser({
+          email,
+          password,
+        });
 
       if (backendResult?.success) {
-        console.log('Backend login successful:', backendResult);
-        
+        console.log("Backend login successful:", backendResult);
+
         const isDemo = backendResult.user?.id?.includes("demo-user");
-        
+
         toast({
           title: isDemo ? "Demo Login Successful! 🎉" : "Welcome Back! 🎉",
           description: isDemo
             ? "You're now logged into the demo account."
-            : `Welcome back, ${backendResult.profile?.full_name || 'User'}!`,
+            : `Welcome back, ${backendResult.profile?.full_name || "User"}!`,
         });
 
         // Navigate to profile or explore page
@@ -82,15 +83,16 @@ export default function LoginEnhanced() {
       }
 
       // Fallback to Supabase auth if backend is unavailable
-      if (backendError === 'BACKEND_UNAVAILABLE') {
-        console.log('Backend unavailable, using Supabase auth fallback');
-        
+      if (backendError === "BACKEND_UNAVAILABLE") {
+        console.log("Backend unavailable, using Supabase auth fallback");
+
         const { user, error } = await signIn(email, password);
 
         if (error) {
           toast({
             title: "Login Failed",
-            description: error.message || "Invalid email or password. Please try again.",
+            description:
+              error.message || "Invalid email or password. Please try again.",
             variant: "destructive",
           });
           return;
@@ -98,7 +100,7 @@ export default function LoginEnhanced() {
 
         if (user) {
           const isDemo = user.id?.includes("demo-user");
-          
+
           toast({
             title: isDemo ? "Demo Login Successful! 🎉" : "Welcome Back! 🎉",
             description: isDemo
@@ -114,12 +116,13 @@ export default function LoginEnhanced() {
       // Handle backend login errors
       toast({
         title: "Login Failed",
-        description: backendResult?.error || "Invalid email or password. Please try again.",
+        description:
+          backendResult?.error ||
+          "Invalid email or password. Please try again.",
         variant: "destructive",
       });
-
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
@@ -171,11 +174,13 @@ export default function LoginEnhanced() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`w-full border-2 ${errors.email ? 'border-red-500' : 'border-explore-green'} rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green`}
+              className={`w-full border-2 ${errors.email ? "border-red-500" : "border-explore-green"} rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green`}
               disabled={loading}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1 font-cabin">{errors.email}</p>
+              <p className="text-red-500 text-sm mt-1 font-cabin">
+                {errors.email}
+              </p>
             )}
           </div>
 
@@ -186,7 +191,7 @@ export default function LoginEnhanced() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`w-full border-2 ${errors.password ? 'border-red-500' : 'border-explore-green'} rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green pr-16`}
+              className={`w-full border-2 ${errors.password ? "border-red-500" : "border-explore-green"} rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green pr-16`}
               disabled={loading}
             />
             <button
@@ -195,10 +200,16 @@ export default function LoginEnhanced() {
               className="absolute right-4 top-1/2 transform -translate-y-1/2 text-explore-green hover:text-explore-green/80 transition-colors"
               disabled={loading}
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
             </button>
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1 font-cabin">{errors.password}</p>
+              <p className="text-red-500 text-sm mt-1 font-cabin">
+                {errors.password}
+              </p>
             )}
           </div>
 
@@ -213,7 +224,7 @@ export default function LoginEnhanced() {
 
           {/* Forgot Password */}
           <div className="text-center pt-4">
-            <button 
+            <button
               type="button"
               className="text-black font-cabin text-base hover:text-explore-green transition-colors"
             >
@@ -227,7 +238,7 @@ export default function LoginEnhanced() {
           </div>
 
           {/* Continue with Apple */}
-          <button 
+          <button
             type="button"
             className="w-full border-2 border-explore-green bg-white text-explore-green py-3 px-6 rounded-lg font-cabin text-base hover:bg-explore-green/5 transition-colors"
             disabled={loading}

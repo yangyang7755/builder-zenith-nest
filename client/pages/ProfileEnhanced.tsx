@@ -13,7 +13,7 @@ import {
   Mail,
   Calendar,
   Award,
-  Activity
+  Activity,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -27,13 +27,15 @@ export default function ProfileEnhanced() {
   const { user, profile: authProfile, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  
+
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activities, setActivities] = useState<any[]>([]);
   const [savedActivities, setSavedActivities] = useState<any[]>([]);
   const [clubs, setClubs] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'activities' | 'saved' | 'clubs'>('activities');
+  const [activeTab, setActiveTab] = useState<"activities" | "saved" | "clubs">(
+    "activities",
+  );
 
   // Load user profile and related data
   useEffect(() => {
@@ -50,14 +52,18 @@ export default function ProfileEnhanced() {
         if (authProfile) {
           setProfile(authProfile);
         } else {
-          const { data: profileResult } = await apiService.getUserProfile(user.id);
+          const { data: profileResult } = await apiService.getUserProfile(
+            user.id,
+          );
           if (profileResult?.success) {
             setProfile(profileResult.profile);
           }
         }
 
         // Load user activities
-        const { data: activitiesResult } = await apiService.getUserActivities(user.id);
+        const { data: activitiesResult } = await apiService.getUserActivities(
+          user.id,
+        );
         if (activitiesResult && !activitiesResult.error) {
           setActivities(activitiesResult || []);
         }
@@ -73,9 +79,8 @@ export default function ProfileEnhanced() {
         if (clubsResult && !clubsResult.error) {
           setClubs(clubsResult || []);
         }
-
       } catch (error) {
-        console.error('Error loading profile data:', error);
+        console.error("Error loading profile data:", error);
         toast({
           title: "Error",
           description: "Failed to load profile data",
@@ -96,7 +101,7 @@ export default function ProfileEnhanced() {
   const getInitials = (name: string) => {
     return name
       .split(" ")
-      .map(word => word[0])
+      .map((word) => word[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -117,7 +122,7 @@ export default function ProfileEnhanced() {
               </div>
             </div>
           </div>
-          
+
           {/* Content Skeleton */}
           <div className="p-6 space-y-4">
             <Skeleton className="h-4 w-full" />
@@ -134,8 +139,12 @@ export default function ProfileEnhanced() {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center p-6">
           <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Not Signed In</h2>
-          <p className="text-gray-600 mb-4">Please sign in to view your profile</p>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            Not Signed In
+          </h2>
+          <p className="text-gray-600 mb-4">
+            Please sign in to view your profile
+          </p>
           <Link
             to="/login"
             className="bg-explore-green text-white px-6 py-2 rounded-lg hover:bg-explore-green/90 transition-colors"
@@ -148,8 +157,8 @@ export default function ProfileEnhanced() {
   }
 
   const displayProfile = profile || authProfile || {};
-  const userName = displayProfile.full_name || user.email || 'User';
-  const userEmail = displayProfile.email || user.email || '';
+  const userName = displayProfile.full_name || user.email || "User";
+  const userEmail = displayProfile.email || user.email || "";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -182,14 +191,16 @@ export default function ProfileEnhanced() {
                 {getInitials(userName)}
               </AvatarFallback>
             </Avatar>
-            
+
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-gray-900 mb-1">{userName}</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-1">
+                {userName}
+              </h2>
               <div className="flex items-center gap-2 text-gray-600 mb-2">
                 <Mail className="w-4 h-4" />
                 <span className="text-sm">{userEmail}</span>
               </div>
-              
+
               {displayProfile.university && (
                 <div className="flex items-center gap-2 text-gray-600 mb-2">
                   <MapPin className="w-4 h-4" />
@@ -199,15 +210,21 @@ export default function ProfileEnhanced() {
 
               <div className="flex gap-4 text-sm">
                 <div className="text-center">
-                  <div className="font-semibold text-gray-900">{activities.length}</div>
+                  <div className="font-semibold text-gray-900">
+                    {activities.length}
+                  </div>
                   <div className="text-gray-600">Activities</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-gray-900">{clubs.length}</div>
+                  <div className="font-semibold text-gray-900">
+                    {clubs.length}
+                  </div>
                   <div className="text-gray-600">Clubs</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-gray-900">{savedActivities.length}</div>
+                  <div className="font-semibold text-gray-900">
+                    {savedActivities.length}
+                  </div>
                   <div className="text-gray-600">Saved</div>
                 </div>
               </div>
@@ -216,7 +233,9 @@ export default function ProfileEnhanced() {
 
           {displayProfile.bio && (
             <div className="mb-4">
-              <p className="text-gray-700 text-sm leading-relaxed">{displayProfile.bio}</p>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                {displayProfile.bio}
+              </p>
             </div>
           )}
 
@@ -238,11 +257,11 @@ export default function ProfileEnhanced() {
         <div className="bg-white border-b">
           <div className="flex">
             <button
-              onClick={() => setActiveTab('activities')}
+              onClick={() => setActiveTab("activities")}
               className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-                activeTab === 'activities'
-                  ? 'text-explore-green border-b-2 border-explore-green'
-                  : 'text-gray-600 hover:text-gray-900'
+                activeTab === "activities"
+                  ? "text-explore-green border-b-2 border-explore-green"
+                  : "text-gray-600 hover:text-gray-900"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -251,11 +270,11 @@ export default function ProfileEnhanced() {
               </div>
             </button>
             <button
-              onClick={() => setActiveTab('saved')}
+              onClick={() => setActiveTab("saved")}
               className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-                activeTab === 'saved'
-                  ? 'text-explore-green border-b-2 border-explore-green'
-                  : 'text-gray-600 hover:text-gray-900'
+                activeTab === "saved"
+                  ? "text-explore-green border-b-2 border-explore-green"
+                  : "text-gray-600 hover:text-gray-900"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -264,11 +283,11 @@ export default function ProfileEnhanced() {
               </div>
             </button>
             <button
-              onClick={() => setActiveTab('clubs')}
+              onClick={() => setActiveTab("clubs")}
               className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-                activeTab === 'clubs'
-                  ? 'text-explore-green border-b-2 border-explore-green'
-                  : 'text-gray-600 hover:text-gray-900'
+                activeTab === "clubs"
+                  ? "text-explore-green border-b-2 border-explore-green"
+                  : "text-gray-600 hover:text-gray-900"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -281,7 +300,7 @@ export default function ProfileEnhanced() {
 
         {/* Tab Content */}
         <div className="p-4 pb-20">
-          {activeTab === 'activities' && (
+          {activeTab === "activities" && (
             <div>
               {activities.length > 0 ? (
                 <div className="space-y-3">
@@ -291,7 +310,9 @@ export default function ProfileEnhanced() {
                       className="bg-white rounded-lg border p-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-semibold text-gray-900">{activity.title}</h3>
+                        <h3 className="font-semibold text-gray-900">
+                          {activity.title}
+                        </h3>
                         <Badge variant="outline" className="text-xs">
                           {activity.type}
                         </Badge>
@@ -299,7 +320,9 @@ export default function ProfileEnhanced() {
                       <div className="text-sm text-gray-600 space-y-1">
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4" />
-                          <span>{activity.date} at {activity.time}</span>
+                          <span>
+                            {activity.date} at {activity.time}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <MapPin className="w-4 h-4" />
@@ -312,8 +335,12 @@ export default function ProfileEnhanced() {
               ) : (
                 <div className="text-center py-12">
                   <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No Activities Yet</h3>
-                  <p className="text-gray-600 mb-4">Start by creating your first activity!</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    No Activities Yet
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Start by creating your first activity!
+                  </p>
                   <Link
                     to="/create"
                     className="bg-explore-green text-white px-6 py-2 rounded-lg hover:bg-explore-green/90 transition-colors"
@@ -325,7 +352,7 @@ export default function ProfileEnhanced() {
             </div>
           )}
 
-          {activeTab === 'saved' && (
+          {activeTab === "saved" && (
             <div>
               {savedActivities.length > 0 ? (
                 <div className="space-y-3">
@@ -335,7 +362,9 @@ export default function ProfileEnhanced() {
                       className="bg-white rounded-lg border p-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-semibold text-gray-900">{activity.title}</h3>
+                        <h3 className="font-semibold text-gray-900">
+                          {activity.title}
+                        </h3>
                         <Badge variant="outline" className="text-xs">
                           {activity.type}
                         </Badge>
@@ -343,7 +372,9 @@ export default function ProfileEnhanced() {
                       <div className="text-sm text-gray-600 space-y-1">
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4" />
-                          <span>{activity.date} at {activity.time}</span>
+                          <span>
+                            {activity.date} at {activity.time}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <MapPin className="w-4 h-4" />
@@ -356,8 +387,12 @@ export default function ProfileEnhanced() {
               ) : (
                 <div className="text-center py-12">
                   <Star className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No Saved Activities</h3>
-                  <p className="text-gray-600 mb-4">Save activities you're interested in!</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    No Saved Activities
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Save activities you're interested in!
+                  </p>
                   <Link
                     to="/explore"
                     className="bg-explore-green text-white px-6 py-2 rounded-lg hover:bg-explore-green/90 transition-colors"
@@ -369,7 +404,7 @@ export default function ProfileEnhanced() {
             </div>
           )}
 
-          {activeTab === 'clubs' && (
+          {activeTab === "clubs" && (
             <div>
               {clubs.length > 0 ? (
                 <div className="space-y-3">
@@ -380,16 +415,23 @@ export default function ProfileEnhanced() {
                     >
                       <div className="flex items-start gap-3">
                         <Avatar className="w-12 h-12">
-                          <AvatarImage src={club.profile_image} alt={club.name} />
+                          <AvatarImage
+                            src={club.profile_image}
+                            alt={club.name}
+                          />
                           <AvatarFallback className="bg-explore-green text-white">
                             {getInitials(club.name)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900">{club.name}</h3>
-                          <p className="text-sm text-gray-600">{club.location}</p>
+                          <h3 className="font-semibold text-gray-900">
+                            {club.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {club.location}
+                          </p>
                           <Badge variant="outline" className="text-xs mt-1">
-                            {club.userRole || 'Member'}
+                            {club.userRole || "Member"}
                           </Badge>
                         </div>
                       </div>
@@ -399,8 +441,12 @@ export default function ProfileEnhanced() {
               ) : (
                 <div className="text-center py-12">
                   <Award className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No Clubs Yet</h3>
-                  <p className="text-gray-600 mb-4">Join clubs to connect with like-minded people!</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    No Clubs Yet
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Join clubs to connect with like-minded people!
+                  </p>
                   <Link
                     to="/explore"
                     className="bg-explore-green text-white px-6 py-2 rounded-lg hover:bg-explore-green/90 transition-colors"

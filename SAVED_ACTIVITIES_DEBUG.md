@@ -3,12 +3,15 @@
 ## Common Issues and Solutions
 
 ### 1. "Response body already consumed" Error
+
 **Fixed**: Simplified response handling in apiService to read body only once
 
 ### 2. "Server error response: [object Object]" Error
+
 **Fixed**: Added proper JSON stringification in error logging
 
 ### 3. Missing saved_activities Table
+
 **Issue**: Database table doesn't exist yet
 **Solution**: Run the migration script
 
@@ -26,18 +29,20 @@ If you get database errors, the `saved_activities` table likely doesn't exist. R
 The saved activities routes now include fallbacks for missing tables:
 
 - `GET /api/saved-activities` - Returns empty array if table missing
-- `POST /api/saved-activities` - Returns demo response if table missing  
+- `POST /api/saved-activities` - Returns demo response if table missing
 - `DELETE /api/saved-activities/:id` - Returns success if table missing
 - `GET /api/saved-activities/check/:id` - Returns false if table missing
 
 ## Testing the Fix
 
 1. **Check if table exists**:
+
    ```sql
    SELECT * FROM saved_activities LIMIT 1;
    ```
 
 2. **Create table if missing**:
+
    ```sql
    -- Run migrate_saved_activities.sql
    ```
@@ -51,16 +56,19 @@ The saved activities routes now include fallbacks for missing tables:
 ## Error Handling Improvements
 
 ### ApiService
+
 - ✅ Simplified response body reading
-- ✅ Better error object stringification  
+- ✅ Better error object stringification
 - ✅ Removed complex cloning logic
 
 ### SavedActivitiesContext
+
 - ✅ Handle backend unavailable gracefully
 - ✅ Support empty arrays from backend
 - ✅ Better error logging
 
 ### Backend Routes
+
 - ✅ Graceful handling of missing tables
 - ✅ Proper error codes for different scenarios
 - ✅ Demo mode fallbacks

@@ -52,12 +52,13 @@ export default function ActivityCard({
     leaveActivity,
     isUserParticipating,
     getParticipationStats,
-    canJoinActivity
+    canJoinActivity,
   } = useActivityParticipation();
   const { createTouchableProps } = useTouchFeedback();
   const haptic = useHaptic();
 
-  const currentActivityId = activityId || `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase();
+  const currentActivityId =
+    activityId || `${title}-${organizer}`.replace(/\s+/g, "-").toLowerCase();
   const isParticipating = isUserParticipating(currentActivityId);
   const participationStats = getParticipationStats(currentActivityId);
   const canJoin = canJoinActivity(currentActivityId);
@@ -228,9 +229,7 @@ export default function ActivityCard({
             <div className="text-sm text-gray-600 font-cabin flex items-center gap-1">
               By {organizer}
               {isOrganizerFollowed && (
-                <span className="text-xs text-blue-600 font-medium">
-                  👥
-                </span>
+                <span className="text-xs text-blue-600 font-medium">👥</span>
               )}
             </div>
           </div>
@@ -299,8 +298,13 @@ export default function ActivityCard({
         <div className="w-full">
           {/* Participant count */}
           <div className="flex justify-between items-center mb-2 text-xs text-gray-600">
-            <span>{participationStats.current_participants}/{participationStats.max_participants} participants</span>
-            {participationStats.is_full && <span className="text-red-600 font-medium">Full</span>}
+            <span>
+              {participationStats.current_participants}/
+              {participationStats.max_participants} participants
+            </span>
+            {participationStats.is_full && (
+              <span className="text-red-600 font-medium">Full</span>
+            )}
           </div>
 
           <button
@@ -310,19 +314,19 @@ export default function ActivityCard({
               isRequested && !isParticipating
                 ? "native-button:disabled"
                 : isParticipating
-                ? "native-button-destructive"
-                : participationStats.is_full
-                ? "native-button-secondary"
-                : ""
+                  ? "native-button-destructive"
+                  : participationStats.is_full
+                    ? "native-button-secondary"
+                    : ""
             }`}
           >
             {isRequested && !isParticipating
               ? "Pending"
               : isParticipating
-              ? "Leave Activity"
-              : participationStats.is_full
-              ? "Request to Join"
-              : "Join Activity"}
+                ? "Leave Activity"
+                : participationStats.is_full
+                  ? "Request to Join"
+                  : "Join Activity"}
           </button>
         </div>
       </div>

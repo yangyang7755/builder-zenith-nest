@@ -64,19 +64,22 @@ export default function SignUp() {
     setLoading(true);
     try {
       // First try backend registration
-      const { data: backendResult, error: backendError } = await apiService.registerUser({
-        email: formData.email,
-        password: formData.password,
-        full_name: formData.full_name,
-      });
+      const { data: backendResult, error: backendError } =
+        await apiService.registerUser({
+          email: formData.email,
+          password: formData.password,
+          full_name: formData.full_name,
+        });
 
       if (backendResult?.success) {
-        console.log('Backend registration successful:', backendResult);
+        console.log("Backend registration successful:", backendResult);
 
         const isDemo = backendResult.user?.id?.includes("demo-user");
 
         toast({
-          title: isDemo ? "Demo Account Created! 🎉" : "Account Created Successfully! 🎉",
+          title: isDemo
+            ? "Demo Account Created! 🎉"
+            : "Account Created Successfully! 🎉",
           description: isDemo
             ? "Welcome to the demo! You can now explore all features."
             : "Welcome! Your account has been created and your profile is ready.",
@@ -88,26 +91,32 @@ export default function SignUp() {
         } else {
           navigate("/login", {
             state: {
-              message: "Account created successfully! Please log in with your credentials.",
-              email: formData.email
-            }
+              message:
+                "Account created successfully! Please log in with your credentials.",
+              email: formData.email,
+            },
           });
         }
         return;
       }
 
       // Fallback to Supabase auth if backend is unavailable
-      if (backendError === 'BACKEND_UNAVAILABLE') {
-        console.log('Backend unavailable, using Supabase auth fallback');
+      if (backendError === "BACKEND_UNAVAILABLE") {
+        console.log("Backend unavailable, using Supabase auth fallback");
 
-        const { user, error } = await signUp(formData.email, formData.password, {
-          full_name: formData.full_name,
-        });
+        const { user, error } = await signUp(
+          formData.email,
+          formData.password,
+          {
+            full_name: formData.full_name,
+          },
+        );
 
         if (error) {
           toast({
             title: "Sign Up Failed",
-            description: error.message || "Failed to create account. Please try again.",
+            description:
+              error.message || "Failed to create account. Please try again.",
             variant: "destructive",
           });
           return;
@@ -117,7 +126,9 @@ export default function SignUp() {
           const isDemo = user.id?.includes("demo-user");
 
           toast({
-            title: isDemo ? "Demo Account Created! 🎉" : "Account Created Successfully! 🎉",
+            title: isDemo
+              ? "Demo Account Created! 🎉"
+              : "Account Created Successfully! 🎉",
             description: isDemo
               ? "Welcome to the demo! You can now explore all features."
               : "Welcome! Complete your profile to get started.",
@@ -132,12 +143,12 @@ export default function SignUp() {
       // Handle backend registration errors
       toast({
         title: "Sign Up Failed",
-        description: backendResult?.error || "Failed to create account. Please try again.",
+        description:
+          backendResult?.error || "Failed to create account. Please try again.",
         variant: "destructive",
       });
-
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
@@ -188,7 +199,9 @@ export default function SignUp() {
         <button onClick={() => navigate(-1)}>
           <ArrowLeft className="w-6 h-6 text-black" />
         </button>
-        <h1 className="text-xl font-bold text-black font-cabin">Create Account</h1>
+        <h1 className="text-xl font-bold text-black font-cabin">
+          Create Account
+        </h1>
         <div className="w-6" />
       </div>
 
@@ -227,7 +240,9 @@ export default function SignUp() {
               />
             </div>
             {errors.full_name && (
-              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.full_name}</p>
+              <p className="text-red-500 text-sm mt-2 font-cabin">
+                {errors.full_name}
+              </p>
             )}
           </div>
 
@@ -252,7 +267,9 @@ export default function SignUp() {
               />
             </div>
             {errors.email && (
-              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.email}</p>
+              <p className="text-red-500 text-sm mt-2 font-cabin">
+                {errors.email}
+              </p>
             )}
           </div>
 
@@ -288,7 +305,9 @@ export default function SignUp() {
               </button>
             </div>
             {errors.password && (
-              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.password}</p>
+              <p className="text-red-500 text-sm mt-2 font-cabin">
+                {errors.password}
+              </p>
             )}
           </div>
 
@@ -304,7 +323,9 @@ export default function SignUp() {
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 value={formData.confirmPassword}
-                onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("confirmPassword", e.target.value)
+                }
                 placeholder="Confirm your password"
                 className={`w-full pl-12 pr-12 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
                   errors.confirmPassword ? "border-red-500" : "border-gray-300"
@@ -324,7 +345,9 @@ export default function SignUp() {
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-2 font-cabin">{errors.confirmPassword}</p>
+              <p className="text-red-500 text-sm mt-2 font-cabin">
+                {errors.confirmPassword}
+              </p>
             )}
           </div>
 
@@ -332,11 +355,17 @@ export default function SignUp() {
           <div className="text-center py-4">
             <p className="text-sm text-gray-600 font-cabin">
               By creating an account, you agree to our{" "}
-              <Link to="/terms" className="text-explore-green font-medium underline">
+              <Link
+                to="/terms"
+                className="text-explore-green font-medium underline"
+              >
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link to="/privacy" className="text-explore-green font-medium underline">
+              <Link
+                to="/privacy"
+                className="text-explore-green font-medium underline"
+              >
                 Privacy Policy
               </Link>
             </p>

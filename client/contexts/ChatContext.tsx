@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 export interface JoinRequest {
   id: string;
@@ -25,11 +31,17 @@ interface ChatContextType {
   chatMessages: ChatMessage[];
   requestedActivities: Set<string>;
   addJoinRequest: (
-    request: Omit<JoinRequest, "id" | "timestamp" | "status"> & { activityId: string },
+    request: Omit<JoinRequest, "id" | "timestamp" | "status"> & {
+      activityId: string;
+    },
   ) => void;
   addChatMessage: (message: Omit<ChatMessage, "id" | "timestamp">) => void;
   hasRequestedActivity: (activityId: string) => boolean;
-  respondToRequest: (requestId: string, response: "accepted" | "declined", message?: string) => void;
+  respondToRequest: (
+    requestId: string,
+    response: "accepted" | "declined",
+    message?: string,
+  ) => void;
   getConversationWith: (organizerName: string) => ChatMessage[];
 }
 
@@ -37,7 +49,9 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
-  const [requestedActivities, setRequestedActivities] = useState<Set<string>>(new Set());
+  const [requestedActivities, setRequestedActivities] = useState<Set<string>>(
+    new Set(),
+  );
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     // Default messages for demonstration
     {
@@ -83,17 +97,24 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       const { userId, profile } = event.detail;
 
       // Update chat messages from this user
-      setChatMessages(prev =>
-        prev.map(msg =>
-          msg.sender === userId || (msg.sender !== "You" && msg.sender === profile.full_name)
+      setChatMessages((prev) =>
+        prev.map((msg) =>
+          msg.sender === userId ||
+          (msg.sender !== "You" && msg.sender === profile.full_name)
             ? { ...msg, sender: profile.full_name }
-            : msg
-        )
+            : msg,
+        ),
       );
     };
 
     const handleCreateActivityChat = (event: CustomEvent) => {
-      const { activityId, activityTitle, organizerId, participantName, message } = event.detail;
+      const {
+        activityId,
+        activityTitle,
+        organizerId,
+        participantName,
+        message,
+      } = event.detail;
 
       // Create automatic chat message when someone joins an activity
       const chatMessage: ChatMessage = {
@@ -103,23 +124,24 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         content: message,
         timestamp: new Date(),
         activityTitle,
-        activityOrganizer: organizerId
+        activityOrganizer: organizerId,
       };
 
-      setChatMessages(prev => [chatMessage, ...prev]);
+      setChatMessages((prev) => [chatMessage, ...prev]);
 
       // Show notification
-      const notificationEvent = new CustomEvent('showNotification', {
+      const notificationEvent = new CustomEvent("showNotification", {
         detail: {
           message: `${participantName} joined ${activityTitle}`,
-          type: 'info'
-        }
+          type: "info",
+        },
       });
       window.dispatchEvent(notificationEvent);
     };
 
     const handleUpdateActivityChat = (event: CustomEvent) => {
-      const { activityId, activityTitle, participantName, message, action } = event.detail;
+      const { activityId, activityTitle, participantName, message, action } =
+        event.detail;
 
       // Create chat message for activity updates (like leaving)
       const chatMessage: ChatMessage = {
@@ -128,25 +150,45 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         sender: participantName,
         content: message,
         timestamp: new Date(),
-        activityTitle
+        activityTitle,
       };
 
-      setChatMessages(prev => [chatMessage, ...prev]);
+      setChatMessages((prev) => [chatMessage, ...prev]);
     };
 
-    window.addEventListener('profileUpdated', handleProfileUpdate as EventListener);
-    window.addEventListener('createActivityChat', handleCreateActivityChat as EventListener);
-    window.addEventListener('updateActivityChat', handleUpdateActivityChat as EventListener);
+    window.addEventListener(
+      "profileUpdated",
+      handleProfileUpdate as EventListener,
+    );
+    window.addEventListener(
+      "createActivityChat",
+      handleCreateActivityChat as EventListener,
+    );
+    window.addEventListener(
+      "updateActivityChat",
+      handleUpdateActivityChat as EventListener,
+    );
 
     return () => {
-      window.removeEventListener('profileUpdated', handleProfileUpdate as EventListener);
-      window.removeEventListener('createActivityChat', handleCreateActivityChat as EventListener);
-      window.removeEventListener('updateActivityChat', handleUpdateActivityChat as EventListener);
+      window.removeEventListener(
+        "profileUpdated",
+        handleProfileUpdate as EventListener,
+      );
+      window.removeEventListener(
+        "createActivityChat",
+        handleCreateActivityChat as EventListener,
+      );
+      window.removeEventListener(
+        "updateActivityChat",
+        handleUpdateActivityChat as EventListener,
+      );
     };
   }, []);
 
   const addJoinRequest = (
-    requestData: Omit<JoinRequest, "id" | "timestamp" | "status"> & { activityId: string },
+    requestData: Omit<JoinRequest, "id" | "timestamp" | "status"> & {
+      activityId: string;
+    },
   ) => {
     // Check if already requested this activity
     if (requestedActivities.has(requestData.activityId)) {
@@ -162,7 +204,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     setJoinRequests((prev) => [newRequest, ...prev]);
 
     // Mark this activity as requested
-    setRequestedActivities((prev) => new Set([...prev, requestData.activityId]));
+    setRequestedActivities(
+      (prev) => new Set([...prev, requestData.activityId]),
+    );
 
     // Create live chat message between user and organizer
     const liveChatMessage: ChatMessage = {
@@ -193,25 +237,29 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }, 2000); // 2 second delay for realistic feel
 
     // Show confirmation that message was sent to live chat
-    showChatNotification(`Your request has been sent to ${requestData.activityOrganizer} in your direct messages.`);
+    showChatNotification(
+      `Your request has been sent to ${requestData.activityOrganizer} in your direct messages.`,
+    );
   };
 
   const hasRequestedActivity = (activityId: string) => {
     return requestedActivities.has(activityId);
   };
 
-  const respondToRequest = (requestId: string, response: "accepted" | "declined", message?: string) => {
+  const respondToRequest = (
+    requestId: string,
+    response: "accepted" | "declined",
+    message?: string,
+  ) => {
     // Update the request status
-    setJoinRequests(prev =>
-      prev.map(req =>
-        req.id === requestId
-          ? { ...req, status: response }
-          : req
-      )
+    setJoinRequests((prev) =>
+      prev.map((req) =>
+        req.id === requestId ? { ...req, status: response } : req,
+      ),
     );
 
     // Find the request to get details
-    const request = joinRequests.find(req => req.id === requestId);
+    const request = joinRequests.find((req) => req.id === requestId);
     if (!request) return;
 
     // Add organizer's response to chat
@@ -219,24 +267,25 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       id: Date.now().toString() + "_response",
       type: "general",
       sender: request.activityOrganizer,
-      content: response === "accepted"
-        ? `Great news! Your request to join "${request.activityTitle}" has been accepted! 🎉 ${message || "See you there!"}`
-        : `Sorry, your request to join "${request.activityTitle}" has been declined. ${message || "Better luck next time!"}`,
+      content:
+        response === "accepted"
+          ? `Great news! Your request to join "${request.activityTitle}" has been accepted! 🎉 ${message || "See you there!"}`
+          : `Sorry, your request to join "${request.activityTitle}" has been declined. ${message || "Better luck next time!"}`,
       timestamp: new Date(),
       activityTitle: request.activityTitle,
       activityOrganizer: request.activityOrganizer,
     };
 
-    setChatMessages(prev => [responseMessage, ...prev]);
+    setChatMessages((prev) => [responseMessage, ...prev]);
 
     // If accepted, trigger actual activity participation
     if (response === "accepted") {
-      const participationEvent = new CustomEvent('chatRequestAccepted', {
+      const participationEvent = new CustomEvent("chatRequestAccepted", {
         detail: {
           activityTitle: request.activityTitle,
           requesterId: request.requesterName, // This would be the user ID in a real system
-          organizerId: request.activityOrganizer
-        }
+          organizerId: request.activityOrganizer,
+        },
       });
       window.dispatchEvent(participationEvent);
     }
@@ -245,15 +294,21 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     showChatNotification(
       response === "accepted"
         ? `Your request to join "${request.activityTitle}" was accepted!`
-        : `Your request to join "${request.activityTitle}" was declined.`
+        : `Your request to join "${request.activityTitle}" was declined.`,
     );
   };
 
   const getConversationWith = (organizerName: string): ChatMessage[] => {
-    return chatMessages.filter(msg =>
-      msg.sender === organizerName ||
-      (msg.sender === "You" && msg.activityOrganizer === organizerName)
-    ).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return chatMessages
+      .filter(
+        (msg) =>
+          msg.sender === organizerName ||
+          (msg.sender === "You" && msg.activityOrganizer === organizerName),
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+      );
   };
 
   const addChatMessage = (
@@ -277,7 +332,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         addChatMessage,
         hasRequestedActivity,
         respondToRequest,
-        getConversationWith
+        getConversationWith,
       }}
     >
       {children}
@@ -295,20 +350,21 @@ export function useChat() {
 
 // Helper function for chat notifications
 function showChatNotification(message: string) {
-  const toast = document.createElement('div');
-  toast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 z-[1001] bg-blue-600 text-white px-4 py-2 rounded-lg font-medium max-w-sm mx-4 text-center';
+  const toast = document.createElement("div");
+  toast.className =
+    "fixed top-16 left-1/2 transform -translate-x-1/2 z-[1001] bg-blue-600 text-white px-4 py-2 rounded-lg font-medium max-w-sm mx-4 text-center";
   toast.textContent = message;
 
   document.body.appendChild(toast);
 
   // Animate in
   setTimeout(() => {
-    toast.style.opacity = '0.9';
+    toast.style.opacity = "0.9";
   }, 100);
 
   // Remove after 4 seconds
   setTimeout(() => {
-    toast.style.opacity = '0';
+    toast.style.opacity = "0";
     setTimeout(() => {
       if (document.body.contains(toast)) {
         document.body.removeChild(toast);

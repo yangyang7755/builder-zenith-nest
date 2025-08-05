@@ -44,7 +44,13 @@ import { useToast } from "../hooks/use-toast";
 import BottomNavigation from "../components/BottomNavigation";
 import { Button } from "../components/ui/button";
 import { Switch } from "../components/ui/switch";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Separator } from "../components/ui/separator";
 import { Badge } from "../components/ui/badge";
 
@@ -58,9 +64,9 @@ export default function EnhancedSettings() {
     // Theme & Display
     darkMode: false,
     highContrast: false,
-    fontSize: 'medium',
-    language: 'en',
-    
+    fontSize: "medium",
+    language: "en",
+
     // Notifications
     pushNotifications: true,
     emailNotifications: true,
@@ -70,28 +76,28 @@ export default function EnhancedSettings() {
     reviewNotifications: true,
     marketingEmails: false,
     weeklyDigest: true,
-    
+
     // Privacy & Security
-    profileVisibility: 'public',
+    profileVisibility: "public",
     showLocation: true,
     showActivity: true,
     allowMessageRequests: true,
     dataSharing: false,
     analyticsOptOut: false,
-    
+
     // Activity Preferences
     defaultActivityRadius: 25,
     autoJoinActivities: false,
     showDifficulty: true,
-    preferredUnits: 'metric',
-    defaultMapView: 'hybrid',
-    
+    preferredUnits: "metric",
+    defaultMapView: "hybrid",
+
     // Social Features
     allowFollowers: true,
     shareAchievements: true,
     showOnlineStatus: true,
     autoAcceptFriends: false,
-    
+
     // App Behavior
     offlineMode: false,
     autoDownloadMaps: false,
@@ -107,14 +113,18 @@ export default function EnhancedSettings() {
   useEffect(() => {
     const loadSavedPreferences = () => {
       try {
-        const savedPreferences = localStorage.getItem('userPreferences');
+        const savedPreferences = localStorage.getItem("userPreferences");
         if (savedPreferences) {
           const parsed = JSON.parse(savedPreferences);
-          setPreferences(prev => ({ ...prev, ...parsed }));
-          console.log('Loaded saved preferences:', Object.keys(parsed).length, 'settings');
+          setPreferences((prev) => ({ ...prev, ...parsed }));
+          console.log(
+            "Loaded saved preferences:",
+            Object.keys(parsed).length,
+            "settings",
+          );
         }
       } catch (error) {
-        console.error('Failed to load preferences:', error);
+        console.error("Failed to load preferences:", error);
       }
     };
 
@@ -127,13 +137,13 @@ export default function EnhancedSettings() {
 
     // Save to localStorage for persistence
     try {
-      localStorage.setItem('userPreferences', JSON.stringify(newPreferences));
+      localStorage.setItem("userPreferences", JSON.stringify(newPreferences));
 
       // If user is logged in, save to backend profile
       if (user) {
         // Update the user's profile with new preferences
         // This could be expanded to include preferences in the profile data
-        console.log('Saving preference to backend:', key, value);
+        console.log("Saving preference to backend:", key, value);
       }
 
       toast({
@@ -141,7 +151,7 @@ export default function EnhancedSettings() {
         description: "Your preference has been saved.",
       });
     } catch (error) {
-      console.error('Failed to save preference:', error);
+      console.error("Failed to save preference:", error);
       toast({
         title: "Error",
         description: "Failed to save setting. Please try again.",
@@ -153,7 +163,7 @@ export default function EnhancedSettings() {
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/auth');
+      navigate("/auth");
       toast({
         title: "Signed Out",
         description: "You've been successfully signed out.",
@@ -182,12 +192,13 @@ export default function EnhancedSettings() {
       // In a real app, this would call an API to delete the account
       toast({
         title: "Account Deletion",
-        description: "Account deletion process started. You'll receive a confirmation email.",
+        description:
+          "Account deletion process started. You'll receive a confirmation email.",
         variant: "destructive",
       });
 
       setShowDeleteConfirm(false);
-      navigate('/auth');
+      navigate("/auth");
     } catch (error) {
       toast({
         title: "Error",
@@ -202,20 +213,20 @@ export default function EnhancedSettings() {
       // Collect user data for export
       const userData = {
         preferences,
-        profile: JSON.parse(localStorage.getItem('userProfile') || '{}'),
+        profile: JSON.parse(localStorage.getItem("userProfile") || "{}"),
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: "1.0.0",
       };
 
       // Create downloadable file
       const dataStr = JSON.stringify(userData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
       const url = URL.createObjectURL(dataBlob);
 
       // Create download link
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.download = `wildpals-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      link.download = `wildpals-data-export-${new Date().toISOString().split("T")[0]}.json`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -236,9 +247,9 @@ export default function EnhancedSettings() {
 
   const importData = () => {
     try {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.json';
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".json";
 
       input.onchange = (e) => {
         const file = (e.target as HTMLInputElement).files?.[0];
@@ -251,7 +262,10 @@ export default function EnhancedSettings() {
               // Validate data structure
               if (importedData.preferences) {
                 setPreferences(importedData.preferences);
-                localStorage.setItem('userPreferences', JSON.stringify(importedData.preferences));
+                localStorage.setItem(
+                  "userPreferences",
+                  JSON.stringify(importedData.preferences),
+                );
               }
 
               toast({
@@ -261,7 +275,8 @@ export default function EnhancedSettings() {
             } catch (error) {
               toast({
                 title: "Import Failed",
-                description: "Invalid file format. Please select a valid export file.",
+                description:
+                  "Invalid file format. Please select a valid export file.",
                 variant: "destructive",
               });
             }
@@ -281,53 +296,65 @@ export default function EnhancedSettings() {
   };
 
   // Settings Section Component
-  const SettingsSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  const SettingsSection = ({
+    title,
+    children,
+  }: {
+    title: string;
+    children: React.ReactNode;
+  }) => (
     <Card className="mb-6">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {children}
-      </CardContent>
+      <CardContent className="space-y-4">{children}</CardContent>
     </Card>
   );
 
   // Settings Item Component
-  const SettingsItem = ({ 
-    icon, 
-    title, 
-    subtitle, 
-    rightContent, 
-    onClick, 
+  const SettingsItem = ({
+    icon,
+    title,
+    subtitle,
+    rightContent,
+    onClick,
     badge,
-    danger = false 
-  }: { 
-    icon: React.ReactNode; 
-    title: string; 
-    subtitle?: string; 
-    rightContent?: React.ReactNode; 
+    danger = false,
+  }: {
+    icon: React.ReactNode;
+    title: string;
+    subtitle?: string;
+    rightContent?: React.ReactNode;
     onClick?: () => void;
     badge?: string;
     danger?: boolean;
   }) => (
-    <div 
+    <div
       className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
-        danger ? 'hover:bg-red-50' : 'hover:bg-gray-50'
-      } ${onClick ? 'cursor-pointer' : 'cursor-default'}`}
+        danger ? "hover:bg-red-50" : "hover:bg-gray-50"
+      } ${onClick ? "cursor-pointer" : "cursor-default"}`}
       onClick={onClick}
     >
       <div className="flex items-center gap-3">
-        <div className={`p-2 rounded-lg ${danger ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'}`}>
+        <div
+          className={`p-2 rounded-lg ${danger ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600"}`}
+        >
           {icon}
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h3 className={`font-medium ${danger ? 'text-red-600' : 'text-gray-900'}`}>{title}</h3>
-            {badge && <Badge variant="secondary" className="text-xs">{badge}</Badge>}
+            <h3
+              className={`font-medium ${danger ? "text-red-600" : "text-gray-900"}`}
+            >
+              {title}
+            </h3>
+            {badge && (
+              <Badge variant="secondary" className="text-xs">
+                {badge}
+              </Badge>
+            )}
           </div>
-          {subtitle && (
-            <p className="text-sm text-gray-500">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -362,13 +389,23 @@ export default function EnhancedSettings() {
             icon={<Mail className="w-5 h-5" />}
             title="Email Address"
             subtitle={user?.email || "Not set"}
-            onClick={() => toast({ title: "Email Settings", description: "Email change coming soon." })}
+            onClick={() =>
+              toast({
+                title: "Email Settings",
+                description: "Email change coming soon.",
+              })
+            }
           />
           <SettingsItem
             icon={<Lock className="w-5 h-5" />}
             title="Change Password"
             subtitle="Update your account password"
-            onClick={() => toast({ title: "Password Change", description: "Password change coming soon." })}
+            onClick={() =>
+              toast({
+                title: "Password Change",
+                description: "Password change coming soon.",
+              })
+            }
           />
           <SettingsItem
             icon={<MapPin className="w-5 h-5" />}
@@ -377,7 +414,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.showLocation}
-                onCheckedChange={(checked) => updatePreference('showLocation', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("showLocation", checked)
+                }
               />
             }
           />
@@ -389,17 +428,29 @@ export default function EnhancedSettings() {
             icon={<Shield className="w-5 h-5" />}
             title="Account Security"
             subtitle="Two-factor authentication, login history"
-            onClick={() => toast({ title: "Security", description: "Security settings coming soon." })}
+            onClick={() =>
+              toast({
+                title: "Security",
+                description: "Security settings coming soon.",
+              })
+            }
             badge="Secure"
           />
           <SettingsItem
             icon={<Eye className="w-5 h-5" />}
             title="Profile Visibility"
-            subtitle={preferences.profileVisibility === 'public' ? 'Public' : 'Private'}
+            subtitle={
+              preferences.profileVisibility === "public" ? "Public" : "Private"
+            }
             rightContent={
               <Switch
-                checked={preferences.profileVisibility === 'public'}
-                onCheckedChange={(checked) => updatePreference('profileVisibility', checked ? 'public' : 'private')}
+                checked={preferences.profileVisibility === "public"}
+                onCheckedChange={(checked) =>
+                  updatePreference(
+                    "profileVisibility",
+                    checked ? "public" : "private",
+                  )
+                }
               />
             }
           />
@@ -410,7 +461,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.allowFollowers}
-                onCheckedChange={(checked) => updatePreference('allowFollowers', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("allowFollowers", checked)
+                }
               />
             }
           />
@@ -421,7 +474,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.showActivity}
-                onCheckedChange={(checked) => updatePreference('showActivity', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("showActivity", checked)
+                }
               />
             }
           />
@@ -432,7 +487,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.dataSharing}
-                onCheckedChange={(checked) => updatePreference('dataSharing', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("dataSharing", checked)
+                }
               />
             }
           />
@@ -447,7 +504,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.pushNotifications}
-                onCheckedChange={(checked) => updatePreference('pushNotifications', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("pushNotifications", checked)
+                }
               />
             }
           />
@@ -458,7 +517,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.emailNotifications}
-                onCheckedChange={(checked) => updatePreference('emailNotifications', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("emailNotifications", checked)
+                }
               />
             }
           />
@@ -469,7 +530,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.messageAlerts}
-                onCheckedChange={(checked) => updatePreference('messageAlerts', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("messageAlerts", checked)
+                }
               />
             }
           />
@@ -480,7 +543,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.activityReminders}
-                onCheckedChange={(checked) => updatePreference('activityReminders', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("activityReminders", checked)
+                }
               />
             }
           />
@@ -491,7 +556,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.reviewNotifications}
-                onCheckedChange={(checked) => updatePreference('reviewNotifications', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("reviewNotifications", checked)
+                }
               />
             }
           />
@@ -500,13 +567,21 @@ export default function EnhancedSettings() {
         {/* App Preferences */}
         <SettingsSection title="App Preferences">
           <SettingsItem
-            icon={preferences.darkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+            icon={
+              preferences.darkMode ? (
+                <Moon className="w-5 h-5" />
+              ) : (
+                <Sun className="w-5 h-5" />
+              )
+            }
             title="Dark Mode"
             subtitle="Use dark theme for better low-light viewing"
             rightContent={
               <Switch
                 checked={preferences.darkMode}
-                onCheckedChange={(checked) => updatePreference('darkMode', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("darkMode", checked)
+                }
               />
             }
           />
@@ -514,19 +589,38 @@ export default function EnhancedSettings() {
             icon={<Languages className="w-5 h-5" />}
             title="Language"
             subtitle="English (US)"
-            onClick={() => toast({ title: "Language", description: "Language selection coming soon." })}
+            onClick={() =>
+              toast({
+                title: "Language",
+                description: "Language selection coming soon.",
+              })
+            }
           />
           <SettingsItem
             icon={<Globe className="w-5 h-5" />}
             title="Units"
-            subtitle={preferences.preferredUnits === 'metric' ? 'Metric (km, kg)' : 'Imperial (mi, lbs)'}
-            onClick={() => updatePreference('preferredUnits', preferences.preferredUnits === 'metric' ? 'imperial' : 'metric')}
+            subtitle={
+              preferences.preferredUnits === "metric"
+                ? "Metric (km, kg)"
+                : "Imperial (mi, lbs)"
+            }
+            onClick={() =>
+              updatePreference(
+                "preferredUnits",
+                preferences.preferredUnits === "metric" ? "imperial" : "metric",
+              )
+            }
           />
           <SettingsItem
             icon={<Target className="w-5 h-5" />}
             title="Default Search Radius"
             subtitle={`${preferences.defaultActivityRadius} km`}
-            onClick={() => toast({ title: "Search Radius", description: "Radius settings coming soon." })}
+            onClick={() =>
+              toast({
+                title: "Search Radius",
+                description: "Radius settings coming soon.",
+              })
+            }
           />
           <SettingsItem
             icon={<Smartphone className="w-5 h-5" />}
@@ -535,7 +629,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.hapticFeedback}
-                onCheckedChange={(checked) => updatePreference('hapticFeedback', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("hapticFeedback", checked)
+                }
               />
             }
           />
@@ -546,7 +642,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.soundEffects}
-                onCheckedChange={(checked) => updatePreference('soundEffects', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("soundEffects", checked)
+                }
               />
             }
           />
@@ -580,7 +678,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.offlineMode}
-                onCheckedChange={(checked) => updatePreference('offlineMode', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("offlineMode", checked)
+                }
               />
             }
           />
@@ -591,7 +691,9 @@ export default function EnhancedSettings() {
             rightContent={
               <Switch
                 checked={preferences.backgroundSync}
-                onCheckedChange={(checked) => updatePreference('backgroundSync', checked)}
+                onCheckedChange={(checked) =>
+                  updatePreference("backgroundSync", checked)
+                }
               />
             }
           />
@@ -603,19 +705,34 @@ export default function EnhancedSettings() {
             icon={<HelpCircle className="w-5 h-5" />}
             title="Help & Support"
             subtitle="FAQ, contact support, tutorials"
-            onClick={() => toast({ title: "Support", description: "Support center coming soon." })}
+            onClick={() =>
+              toast({
+                title: "Support",
+                description: "Support center coming soon.",
+              })
+            }
           />
           <SettingsItem
             icon={<Share2 className="w-5 h-5" />}
             title="Share App"
             subtitle="Invite friends to join the community"
-            onClick={() => toast({ title: "Share", description: "Sharing feature coming soon." })}
+            onClick={() =>
+              toast({
+                title: "Share",
+                description: "Sharing feature coming soon.",
+              })
+            }
           />
           <SettingsItem
             icon={<Star className="w-5 h-5" />}
             title="Rate App"
             subtitle="Leave a review on the app store"
-            onClick={() => toast({ title: "Rate App", description: "App rating coming soon." })}
+            onClick={() =>
+              toast({
+                title: "Rate App",
+                description: "App rating coming soon.",
+              })
+            }
           />
           <SettingsItem
             icon={<SettingsIcon className="w-5 h-5" />}
@@ -650,7 +767,8 @@ export default function EnhancedSettings() {
             <CardHeader>
               <CardTitle className="text-red-600">Delete Account</CardTitle>
               <CardDescription>
-                This action cannot be undone. This will permanently delete your account and remove all your data.
+                This action cannot be undone. This will permanently delete your
+                account and remove all your data.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

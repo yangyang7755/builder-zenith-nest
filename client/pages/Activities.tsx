@@ -12,8 +12,13 @@ import BottomNavigation from "../components/BottomNavigation";
 
 export default function Activities() {
   const { savedActivities, unsaveActivity } = useSavedActivities();
-  const { activities, getUserParticipatedActivities, getUserOrganizedActivities } = useActivities();
-  const { getUserParticipatedActivities: getParticipationData } = useActivityParticipation();
+  const {
+    activities,
+    getUserParticipatedActivities,
+    getUserOrganizedActivities,
+  } = useActivities();
+  const { getUserParticipatedActivities: getParticipationData } =
+    useActivityParticipation();
   const { currentUserProfile } = useUserProfile();
   const [selectedTab, setSelectedTab] = useState("Saved");
 
@@ -42,9 +47,9 @@ export default function Activities() {
   // Combine participated and organized activities, removing duplicates
   const allJoinedActivities = [
     ...participatedActivities,
-    ...organizedActivities.filter(org =>
-      !participatedActivities.some(part => part.id === org.id)
-    )
+    ...organizedActivities.filter(
+      (org) => !participatedActivities.some((part) => part.id === org.id),
+    ),
   ];
 
   const navigate = useNavigate();
@@ -84,17 +89,19 @@ export default function Activities() {
 
   const ActivityCard = ({ activity }: { activity: Activity }) => {
     // Extract organizer name from new Activity interface
-    const organizerName = activity.organizer?.full_name || activity.organizerName || "Unknown";
+    const organizerName =
+      activity.organizer?.full_name || activity.organizerName || "Unknown";
 
     // Extract date and time from date_time or legacy fields
     const activityDate = activity.date_time
       ? new Date(activity.date_time)
       : activity.date
-        ? new Date(activity.date + 'T' + (activity.time || '00:00') + ':00')
+        ? new Date(activity.date + "T" + (activity.time || "00:00") + ":00")
         : new Date();
 
     const activityType = activity.activity_type || activity.type || "general";
-    const maxParticipants = activity.max_participants || parseInt(activity.maxParticipants || "0");
+    const maxParticipants =
+      activity.max_participants || parseInt(activity.maxParticipants || "0");
 
     return (
       <div
@@ -256,7 +263,10 @@ export default function Activities() {
                   Your Organized Activities ({organizedActivities.length})
                 </h2>
                 {organizedActivities.map((activity, index) => (
-                  <ActivityCard key={`organized-${activity.id}-${index}`} activity={activity} />
+                  <ActivityCard
+                    key={`organized-${activity.id}-${index}`}
+                    activity={activity}
+                  />
                 ))}
               </div>
             )}
@@ -267,7 +277,10 @@ export default function Activities() {
             </h2>
             {participatedActivities.length > 0 ? (
               participatedActivities.map((activity, index) => (
-                <ActivityCard key={`participated-${activity.id}-${index}`} activity={activity} />
+                <ActivityCard
+                  key={`participated-${activity.id}-${index}`}
+                  activity={activity}
+                />
               ))
             ) : (
               <div className="text-center py-8">
