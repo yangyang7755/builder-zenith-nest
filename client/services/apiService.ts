@@ -122,12 +122,10 @@ class ApiService {
       if (!response.ok) {
         console.error('Server error response:', JSON.stringify(responseData, null, 2));
         const errorMessage = responseData?.error || responseData?.message || `HTTP error! status: ${response.status}`;
-        const errorDetails = responseData?.details || responseData;
 
         return {
           error: errorMessage,
-          details: errorDetails,
-          status: response.status
+          data: responseData
         };
       }
 
