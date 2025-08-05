@@ -29,23 +29,39 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       const response = await apiService.getSavedActivities();
       
-      if (response.error) {
+      if (response.error && response.error !== 'BACKEND_UNAVAILABLE') {
         console.error("Failed to load saved activities:", response.error);
         return;
       }
 
-      if (response.data?.success && response.data.data) {
-        // Transform backend data to Activity format
-        const activities = response.data.data.map((saved: any) => ({
-          ...saved.activity,
-          // Ensure legacy fields for backward compatibility
-          date: saved.activity.date_time ? new Date(saved.activity.date_time).toISOString().split('T')[0] : '',
-          time: saved.activity.date_time ? new Date(saved.activity.date_time).toTimeString().slice(0, 5) : '',
-          type: saved.activity.activity_type,
-          organizerName: saved.activity.organizer?.full_name || "Unknown",
-          maxParticipants: saved.activity.max_participants?.toString() || "0"
-        }));
-        setSavedActivities(activities);
+      // Handle successful response or backend unavailable (use demo mode)
+      if (response.data?.success) {
+        const savedData = response.data.data || [];
+
+        if (savedData.length > 0) {
+          // Transform backend data to Activity format
+          const activities = savedData.map((saved: any) => {
+            // Handle both nested activity data and direct activity data
+            const activityData = saved.activity || saved;
+
+            return {
+              ...activityData,
+              // Ensure legacy fields for backward compatibility
+              date: activityData.date_time ? new Date(activityData.date_time).toISOString().split('T')[0] : '',
+              time: activityData.date_time ? new Date(activityData.date_time).toTimeString().slice(0, 5) : '',
+              type: activityData.activity_type,
+              organizerName: activityData.organizer?.full_name || "Unknown",
+              maxParticipants: activityData.max_participants?.toString() || "0"
+            };
+          });
+          setSavedActivities(activities);
+        } else {
+          // Empty array or no saved activities
+          setSavedActivities([]);
+        }
+      } else if (response.error === 'BACKEND_UNAVAILABLE') {
+        // Backend unavailable, keep existing demo/local state
+        console.log("Backend unavailable, keeping local saved activities state");
       }
     } catch (error) {
       console.error("Error loading saved activities:", error);
