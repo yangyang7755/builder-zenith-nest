@@ -198,17 +198,86 @@ export default function EnhancedSettings() {
   };
 
   const exportData = () => {
-    toast({
-      title: "Data Export",
-      description: "Your data export has been started. You'll receive an email when ready.",
-    });
+    try {
+      // Collect user data for export
+      const userData = {
+        preferences,
+        profile: JSON.parse(localStorage.getItem('userProfile') || '{}'),
+        timestamp: new Date().toISOString(),
+        version: '1.0.0'
+      };
+
+      // Create downloadable file
+      const dataStr = JSON.stringify(userData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+
+      // Create download link
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `wildpals-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Data Export Complete",
+        description: "Your data has been downloaded successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Failed to export data. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const importData = () => {
-    toast({
-      title: "Data Import",
-      description: "Data import feature coming soon.",
-    });
+    try {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+
+      input.onchange = (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              const importedData = JSON.parse(e.target?.result as string);
+
+              // Validate data structure
+              if (importedData.preferences) {
+                setPreferences(importedData.preferences);
+                localStorage.setItem('userPreferences', JSON.stringify(importedData.preferences));
+              }
+
+              toast({
+                title: "Data Import Complete",
+                description: "Your settings have been imported successfully.",
+              });
+            } catch (error) {
+              toast({
+                title: "Import Failed",
+                description: "Invalid file format. Please select a valid export file.",
+                variant: "destructive",
+              });
+            }
+          };
+          reader.readAsText(file);
+        }
+      };
+
+      input.click();
+    } catch (error) {
+      toast({
+        title: "Import Failed",
+        description: "Failed to import data. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Settings Section Component
