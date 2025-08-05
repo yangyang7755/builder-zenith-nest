@@ -324,6 +324,14 @@ export default function ActivityDetails() {
   const { addJoinRequest } = useChat();
   const { saveActivity, unsaveActivity, isActivitySaved } =
     useSavedActivities();
+  const {
+    joinActivity,
+    leaveActivity,
+    isUserParticipating,
+    getParticipationStats,
+    canJoinActivity
+  } = useActivityParticipation();
+  const { currentUserProfile } = useUserProfile();
   const [agreedToRequirements, setAgreedToRequirements] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
