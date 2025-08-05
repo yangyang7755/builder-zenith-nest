@@ -41,7 +41,16 @@ export function ActivityCompletionProvider({ children }: { children: ReactNode }
   const [completions, setCompletions] = useState<ActivityCompletion[]>([]);
   const [reviews, setReviews] = useState<ActivityReview[]>([]);
   const [checkedActivities, setCheckedActivities] = useState<Set<string>>(new Set());
-  const { activities } = useActivities();
+
+  // Safely get activities with fallback
+  let activities: any[] = [];
+  try {
+    const activitiesContext = useActivities();
+    activities = activitiesContext.activities || [];
+  } catch (error) {
+    console.warn('ActivitiesContext not available yet, using empty activities list');
+    activities = [];
+  }
 
   // Check for completed activities every minute
   useEffect(() => {
