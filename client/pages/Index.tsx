@@ -923,7 +923,7 @@ function MixedActivitiesSection({
           </h2>
           {!isSearching && (
             <Link
-              to="/activities"
+              to="/category-activities?category=Recent%20activities%20nearby&location=london"
               className="text-sm text-black underline font-poppins"
             >
               See all
@@ -1700,7 +1700,7 @@ function CyclingExploreSection() {
     {
       title: "Hill Climbing Intervals",
       date: "📅 Thursday, 6:00 PM",
-      location: "📍Leith Hill, Surrey",
+      location: "���Leith Hill, Surrey",
       organizer: "Watts Cycling Club",
       distance: "35km",
       pace: "Interval training",
