@@ -144,8 +144,8 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
   };
 
   const joinActivity = async (
-    activityId: string, 
-    activityTitle: string, 
+    activityId: string,
+    activityTitle: string,
     organizerId: string
   ): Promise<boolean> => {
     if (!currentUserProfile) return false;
@@ -159,7 +159,15 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
         return false;
       }
 
-      // Create new participation
+      // Try to join via API first
+      const response = await apiService.joinActivity(activityId);
+
+      if (response.error && response.error !== 'BACKEND_UNAVAILABLE') {
+        showParticipationNotification("Failed to join activity", "error");
+        return false;
+      }
+
+      // Create new participation for local state
       const newParticipant: ActivityParticipant = {
         id: `part_${Date.now()}`,
         activity_id: activityId,
@@ -173,7 +181,7 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
         }
       };
 
-      // Update participations
+      // Update local participations
       setParticipations(prev => {
         const newMap = new Map(prev);
         const existing = newMap.get(activityId) || [];
@@ -208,10 +216,7 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
       window.dispatchEvent(chatEvent);
 
       showParticipationNotification(`You joined "${activityTitle}"!`, "success");
-      
-      // In a real app, this would call the API
-      // await apiService.joinActivity(activityId);
-      
+
       return true;
     } catch (error) {
       console.error("Error joining activity:", error);
