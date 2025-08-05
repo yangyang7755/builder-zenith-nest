@@ -46,6 +46,27 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
     initializeDemoParticipations();
   }, []);
 
+  // Listen for chat request acceptance events
+  useEffect(() => {
+    const handleChatRequestAccepted = (event: CustomEvent) => {
+      const { activityTitle, requesterId, organizerId } = event.detail;
+
+      // Convert activity title to activity ID (in a real app, this would be passed explicitly)
+      const activityId = activityTitle.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+      // Auto-join the user to the activity
+      if (currentUserProfile && requesterId === currentUserProfile.full_name) {
+        joinActivity(activityId, activityTitle, organizerId);
+      }
+    };
+
+    window.addEventListener('chatRequestAccepted', handleChatRequestAccepted as EventListener);
+
+    return () => {
+      window.removeEventListener('chatRequestAccepted', handleChatRequestAccepted as EventListener);
+    };
+  }, [currentUserProfile]);
+
   const initializeDemoParticipations = () => {
     // Demo participation data
     const demoParticipations = new Map<string, ActivityParticipant[]>();
