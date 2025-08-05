@@ -90,6 +90,16 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
 
     if (error) {
       console.error("Database error:", error);
+
+      // If the table doesn't exist yet, return empty array instead of error
+      if (error.code === '42P01') {
+        console.log("saved_activities table doesn't exist yet, returning empty array");
+        return res.json({
+          success: true,
+          data: []
+        });
+      }
+
       return res.status(500).json({
         success: false,
         error: "Failed to fetch saved activities"
