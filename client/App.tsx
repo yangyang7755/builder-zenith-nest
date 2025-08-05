@@ -111,6 +111,10 @@ const App = () => (
                             path="/enhanced-login"
                             element={<EnhancedLogin />}
                           />
+                          <Route
+                            path="/login-enhanced"
+                            element={<LoginEnhanced />}
+                          />
                           <Route path="/signup" element={<SignUp />} />
                           <Route path="/signin" element={<SignIn />} />
                           <Route path="/terms" element={<Terms />} />
