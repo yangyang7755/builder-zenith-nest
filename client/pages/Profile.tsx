@@ -593,7 +593,7 @@ export default function Profile() {
                     <div className="text-2xl">🚴</div>
                     <div className="flex-1">
                       <h4 className="font-medium text-black">Sunday Morning Social Ride</h4>
-                      <p className="text-sm text-gray-600">Richmond Cycling Club • Feb 2, 2025</p>
+                      <p className="text-sm text-gray-600">Richmond Running Club • Feb 2, 2025</p>
                       <div className="flex items-center gap-1 mt-1">
                         {[1, 2, 3, 4].map((star) => (
                           <Star
