@@ -84,14 +84,14 @@ class ApiService {
         ...options,
       });
 
-      // Add small delay to prevent concurrent response body conflicts
-      await new Promise(resolve => setTimeout(resolve, 1));
-
-      // Read response as text first to avoid body stream issues
+      // Use arrayBuffer approach to avoid body stream conflicts
       let responseData;
+      let responseText = '';
 
       try {
-        const responseText = await response.text();
+        // Read as arrayBuffer first, then convert to text
+        const arrayBuffer = await response.arrayBuffer();
+        responseText = new TextDecoder().decode(arrayBuffer);
 
         if (responseText.trim()) {
           try {
