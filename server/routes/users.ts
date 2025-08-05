@@ -1,332 +1,395 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { supabaseAdmin } from "../lib/supabase";
-import bcrypt from "bcrypt";
 
-// Validation schemas
 const UserRegistrationSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  full_name: z.string().min(1, "Full name is required"),
+  full_name: z.string().min(2, "Name must be at least 2 characters"),
   university: z.string().optional(),
   bio: z.string().optional(),
-  phone: z.string().optional(),
-  gender: z.string().optional(),
-  age: z.number().min(13).max(120).optional(),
-  nationality: z.string().optional(),
-  institution: z.string().optional(),
-  occupation: z.string().optional(),
-  location: z.string().optional(),
 });
 
-const ClubCreationSchema = z.object({
-  name: z.string().min(1, "Club name is required"),
-  description: z.string().optional(),
-  type: z.enum(['cycling', 'climbing', 'running', 'hiking', 'skiing', 'surfing', 'tennis', 'general']),
-  location: z.string().min(1, "Location is required"),
-  website: z.string().url().optional(),
-  contact_email: z.string().email().optional(),
-  profile_image: z.string().optional(),
+const UserLoginSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(1, "Password is required"),
 });
 
-// User Registration Handler
 export const handleUserRegistration = async (req: Request, res: Response) => {
   try {
+    console.log('=== USER REGISTRATION REQUEST ===');
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+
     // Check if Supabase is configured
     if (!supabaseAdmin) {
-      // Demo mode - return success without actual registration
+      console.log('Supabase not configured, returning demo response');
+      
+      // Return demo success for development
       const demoUser = {
         id: `demo-user-${Date.now()}`,
         email: req.body.email,
         full_name: req.body.full_name,
+        university: req.body.university || null,
+        bio: req.body.bio || null,
+        profile_image: null,
         created_at: new Date().toISOString(),
-        message: "Demo registration successful"
+        updated_at: new Date().toISOString(),
       };
-      return res.status(201).json({ user: demoUser, message: "Demo user registered successfully" });
+
+      return res.status(201).json({
+        success: true,
+        message: "Demo account created successfully",
+        user: demoUser,
+        profile: demoUser
+      });
     }
 
+    // Validate request data
     const validatedData = UserRegistrationSchema.parse(req.body);
-    
-    // Create auth user using Supabase Admin API
-    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+    console.log('Validated data:', validatedData);
+
+    // Create user in Supabase Auth
+    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email: validatedData.email,
       password: validatedData.password,
-      email_confirm: true, // Auto-confirm email in admin creation
+      email_confirm: true, // Auto-confirm email in development
       user_metadata: {
         full_name: validatedData.full_name,
       }
     });
 
     if (authError) {
-      console.error("Auth user creation error:", authError);
-      return res.status(400).json({ 
-        error: "Failed to create user account", 
-        details: authError.message 
+      console.error('Auth creation error:', authError);
+      return res.status(400).json({
+        success: false,
+        error: authError.message,
+        details: authError
       });
     }
 
-    if (!authUser.user) {
-      return res.status(400).json({ error: "Failed to create user account" });
+    if (!authData.user) {
+      return res.status(400).json({
+        success: false,
+        error: "Failed to create user account"
+      });
     }
 
-    // Create profile record
+    console.log('User created successfully:', authData.user.id);
+
+    // Create profile in profiles table
     const profileData = {
-      id: authUser.user.id,
+      id: authData.user.id,
       email: validatedData.email,
       full_name: validatedData.full_name,
-      university: validatedData.university,
-      institution: validatedData.institution || validatedData.university,
-      bio: validatedData.bio,
-      phone: validatedData.phone,
-      gender: validatedData.gender,
-      age: validatedData.age,
-      nationality: validatedData.nationality,
-      occupation: validatedData.occupation,
-      location: validatedData.location,
-      visibility_settings: {
-        profile_image: true,
-        full_name: true,
-        bio: true,
-        email: false,
-        phone: false,
-        gender: true,
-        age: true,
-        date_of_birth: false,
-        nationality: true,
-        institution: true,
-        occupation: true,
-        location: true,
-        sports: true,
-        achievements: true,
-        activities: true,
-        reviews: true,
-        followers: true,
-        following: true,
-      }
+      university: validatedData.university || null,
+      bio: validatedData.bio || null,
+      profile_image: null,
     };
 
     const { data: profile, error: profileError } = await supabaseAdmin
-      .from("profiles")
+      .from('profiles')
       .insert(profileData)
-      .select("*")
+      .select('*')
       .single();
 
     if (profileError) {
-      console.error("Profile creation error:", profileError);
+      console.error('Profile creation error:', profileError);
       
-      // Clean up auth user if profile creation fails
-      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
-      
-      return res.status(500).json({ 
+      // Try to clean up the auth user if profile creation failed
+      try {
+        await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
+      } catch (cleanupError) {
+        console.error('Failed to cleanup auth user after profile error:', cleanupError);
+      }
+
+      return res.status(500).json({
+        success: false,
         error: "Failed to create user profile",
-        details: profileError.message 
+        details: profileError
       });
     }
 
-    // Return success response (exclude sensitive data)
-    const { ...userResponse } = profile;
+    console.log('Profile created successfully:', profile);
+
+    // Return success response
     res.status(201).json({
-      user: userResponse,
-      message: "User registered successfully"
+      success: true,
+      message: "Account created successfully",
+      user: {
+        id: authData.user.id,
+        email: authData.user.email,
+        created_at: authData.user.created_at,
+      },
+      profile: profile
     });
 
   } catch (error) {
+    console.error('Registration error:', error);
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
+        success: false,
         error: "Invalid registration data",
         details: error.errors
       });
     }
-    
-    console.error("Registration error:", error);
-    res.status(500).json({ error: "Internal server error during registration" });
+
+    res.status(500).json({
+      success: false,
+      error: "Internal server error during registration",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
   }
 };
 
-// Get all users (admin function)
-export const handleGetUsers = async (req: Request, res: Response) => {
+export const handleUserLogin = async (req: Request, res: Response) => {
   try {
+    console.log('=== USER LOGIN REQUEST ===');
+    console.log('Request body email:', req.body.email);
+
+    // Check if Supabase is configured
     if (!supabaseAdmin) {
-      // Demo mode - return sample users
-      const demoUsers = [
-        {
-          id: "demo-user-1",
-          email: "demo1@example.com",
-          full_name: "Demo User 1",
-          location: "London, UK",
-          created_at: new Date().toISOString(),
-        },
-        {
-          id: "demo-user-2", 
-          email: "demo2@example.com",
-          full_name: "Demo User 2",
-          location: "Oxford, UK",
-          created_at: new Date().toISOString(),
-        }
-      ];
-      return res.json({ users: demoUsers, count: demoUsers.length });
-    }
-
-    const { data: users, error, count } = await supabaseAdmin
-      .from("profiles")
-      .select("id, email, full_name, university, institution, location, created_at", { count: 'exact' })
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Users fetch error:", error);
-      return res.status(500).json({ error: "Failed to fetch users" });
-    }
-
-    res.json({ users: users || [], count: count || 0 });
-  } catch (error) {
-    console.error("Get users error:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-// Club Creation Handler
-export const handleClubCreation = async (req: Request, res: Response) => {
-  try {
-    if (!supabaseAdmin) {
-      // Demo mode - return success without actual creation
-      const demoClub = {
-        id: `demo-club-${Date.now()}`,
-        name: req.body.name,
-        type: req.body.type,
-        location: req.body.location,
-        created_by: "demo-user-id",
+      console.log('Supabase not configured, returning demo response');
+      
+      // Return demo success for development
+      const demoUser = {
+        id: "demo-user-signed-in",
+        email: req.body.email,
+        full_name: "Demo User",
+        university: "Demo University",
+        bio: "Demo user profile",
+        profile_image: null,
         created_at: new Date().toISOString(),
-        message: "Demo club created successfully"
+        updated_at: new Date().toISOString(),
       };
-      return res.status(201).json({ club: demoClub, message: "Demo club created successfully" });
-    }
 
-    // Validate request body
-    const validatedData = ClubCreationSchema.parse(req.body);
-    
-    // Get user from authorization header (you'll need to implement getUserFromToken)
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ error: "Authorization required" });
-    }
-
-    // For now, extract user ID from token (implement proper token validation)
-    // This would typically use JWT verification
-    const userId = req.body.created_by || "demo-user-id";
-
-    // Generate club ID from name (you might want a different strategy)
-    const clubId = validatedData.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-
-    const clubData = {
-      id: clubId,
-      name: validatedData.name,
-      description: validatedData.description,
-      type: validatedData.type,
-      location: validatedData.location,
-      website: validatedData.website,
-      contact_email: validatedData.contact_email,
-      profile_image: validatedData.profile_image,
-      created_by: userId,
-      member_count: 1, // Creator is the first member
-    };
-
-    // Create club
-    const { data: club, error: clubError } = await supabaseAdmin
-      .from("clubs")
-      .insert(clubData)
-      .select("*")
-      .single();
-
-    if (clubError) {
-      console.error("Club creation error:", clubError);
-      return res.status(500).json({ 
-        error: "Failed to create club",
-        details: clubError.message 
+      return res.json({
+        success: true,
+        message: "Demo login successful",
+        user: demoUser,
+        profile: demoUser,
+        session: {
+          access_token: "demo-token",
+          user: demoUser
+        }
       });
     }
 
-    // Add creator as club manager
-    const membershipData = {
-      club_id: clubId,
-      user_id: userId,
-      role: "manager",
-      status: "approved",
-      approved_at: new Date().toISOString(),
-    };
+    // Validate request data
+    const validatedData = UserLoginSchema.parse(req.body);
+    console.log('Login attempt for:', validatedData.email);
 
-    const { error: membershipError } = await supabaseAdmin
-      .from("club_memberships")
-      .insert(membershipData);
+    // Authenticate user
+    const { data: authData, error: authError } = await supabaseAdmin.auth.signInWithPassword({
+      email: validatedData.email,
+      password: validatedData.password,
+    });
 
-    if (membershipError) {
-      console.error("Club membership creation error:", membershipError);
-      // Don't fail the whole request, just log the error
+    if (authError) {
+      console.error('Login error:', authError);
+      return res.status(401).json({
+        success: false,
+        error: authError.message
+      });
     }
 
-    res.status(201).json({
-      club,
-      message: "Club created successfully"
+    if (!authData.user) {
+      return res.status(401).json({
+        success: false,
+        error: "Invalid login credentials"
+      });
+    }
+
+    console.log('Login successful for user:', authData.user.id);
+
+    // Fetch user profile
+    const { data: profile, error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .select('*')
+      .eq('id', authData.user.id)
+      .single();
+
+    if (profileError) {
+      console.error('Profile fetch error:', profileError);
+      return res.status(500).json({
+        success: false,
+        error: "Failed to fetch user profile"
+      });
+    }
+
+    // Return success response with user and profile data
+    res.json({
+      success: true,
+      message: "Login successful",
+      user: {
+        id: authData.user.id,
+        email: authData.user.email,
+        created_at: authData.user.created_at,
+      },
+      profile: profile,
+      session: authData.session
     });
 
   } catch (error) {
+    console.error('Login error:', error);
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
-        error: "Invalid club data",
+        success: false,
+        error: "Invalid login data",
         details: error.errors
       });
     }
-    
-    console.error("Club creation error:", error);
-    res.status(500).json({ error: "Internal server error during club creation" });
+
+    res.status(500).json({
+      success: false,
+      error: "Internal server error during login",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
   }
 };
 
-// Get user's clubs
-export const handleGetUserClubs = async (req: Request, res: Response) => {
+export const handleGetUserProfile = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId;
+    console.log('=== GET USER PROFILE REQUEST ===');
     
+    // Extract user ID from auth token or params
+    const userId = req.params.userId || req.user?.id;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID is required"
+      });
+    }
+
+    console.log('Fetching profile for user:', userId);
+
+    // Check if Supabase is configured
     if (!supabaseAdmin) {
-      // Demo mode
-      const demoClubs = [
-        {
-          id: "demo-club-1",
-          name: "Demo Cycling Club",
-          type: "cycling",
-          location: "London",
-          role: "manager"
-        }
-      ];
-      return res.json({ clubs: demoClubs });
+      const demoProfile = {
+        id: userId,
+        email: "demo@example.com",
+        full_name: "Demo User",
+        university: "Demo University",
+        bio: "Demo user profile",
+        profile_image: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      return res.json({
+        success: true,
+        profile: demoProfile
+      });
     }
 
-    const { data: memberships, error } = await supabaseAdmin
-      .from("club_memberships")
-      .select(`
-        role,
-        status,
-        club:clubs(*)
-      `)
-      .eq("user_id", userId)
-      .eq("status", "approved");
+    // Fetch user profile from database
+    const { data: profile, error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
 
-    if (error) {
-      console.error("User clubs fetch error:", error);
-      return res.status(500).json({ error: "Failed to fetch user clubs" });
+    if (profileError) {
+      console.error('Profile fetch error:', profileError);
+      return res.status(404).json({
+        success: false,
+        error: "Profile not found"
+      });
     }
 
-    const clubs = memberships?.map(membership => ({
-      ...membership.club,
-      userRole: membership.role
-    })) || [];
+    res.json({
+      success: true,
+      profile: profile
+    });
 
-    res.json({ clubs });
   } catch (error) {
-    console.error("Get user clubs error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Get profile error:', error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch profile",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
+};
+
+export const handleUpdateUserProfile = async (req: Request, res: Response) => {
+  try {
+    console.log('=== UPDATE USER PROFILE REQUEST ===');
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    
+    const userId = req.params.userId || req.user?.id;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID is required"
+      });
+    }
+
+    console.log('Updating profile for user:', userId);
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      const updatedProfile = {
+        id: userId,
+        email: req.body.email || "demo@example.com",
+        full_name: req.body.full_name || "Demo User",
+        university: req.body.university || "Demo University",
+        bio: req.body.bio || "Demo user profile",
+        profile_image: req.body.profile_image || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      return res.json({
+        success: true,
+        message: "Demo profile updated",
+        profile: updatedProfile
+      });
+    }
+
+    // Filter valid profile fields
+    const allowedFields = ['full_name', 'university', 'bio', 'profile_image'];
+    const updateData = Object.fromEntries(
+      Object.entries(req.body).filter(([key]) => allowedFields.includes(key))
+    );
+
+    // Add updated timestamp
+    updateData.updated_at = new Date().toISOString();
+
+    console.log('Update data:', updateData);
+
+    // Update profile in database
+    const { data: updatedProfile, error: updateError } = await supabaseAdmin
+      .from('profiles')
+      .update(updateData)
+      .eq('id', userId)
+      .select('*')
+      .single();
+
+    if (updateError) {
+      console.error('Profile update error:', updateError);
+      return res.status(500).json({
+        success: false,
+        error: "Failed to update profile",
+        details: updateError
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      profile: updatedProfile
+    });
+
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to update profile",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
   }
 };
