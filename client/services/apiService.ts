@@ -134,9 +134,9 @@ class ApiService {
         };
       }
 
-      if (!response.ok) {
+      if (!statusOk) {
         console.error('Server error response:', JSON.stringify(responseData, null, 2));
-        const errorMessage = responseData?.error || responseData?.message || `HTTP error! status: ${response.status}`;
+        const errorMessage = responseData?.error || responseData?.message || `HTTP error! status: ${status}`;
 
         return {
           error: errorMessage,
