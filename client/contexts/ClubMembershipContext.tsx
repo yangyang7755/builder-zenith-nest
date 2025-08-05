@@ -49,7 +49,16 @@ const ClubMembershipContext = createContext<ClubMembershipContextType | undefine
 export function ClubMembershipProvider({ children }: { children: ReactNode }) {
   const [userMemberships, setUserMemberships] = useState<ClubMembership[]>([]);
   const [clubMembers, setClubMembers] = useState<Map<string, ClubMembership[]>>(new Map());
-  const { currentUserProfile } = useUserProfile();
+
+  // Safe access to UserProfile context
+  let currentUserProfile = null;
+  try {
+    const userProfileContext = useUserProfile();
+    currentUserProfile = userProfileContext.currentUserProfile;
+  } catch (error) {
+    console.warn("UserProfile context not available yet:", error);
+  }
+
   const haptic = useHaptic();
 
   useEffect(() => {
