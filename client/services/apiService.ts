@@ -455,6 +455,28 @@ class ApiService {
     return this.getActivities(searchFilters);
   }
 
+  // Saved Activities methods
+  async getSavedActivities() {
+    return this.request<any>("/saved-activities");
+  }
+
+  async saveActivity(activityId: string) {
+    return this.request<any>("/saved-activities", {
+      method: "POST",
+      body: JSON.stringify({ activity_id: activityId }),
+    });
+  }
+
+  async unsaveActivity(activityId: string) {
+    return this.request<void>(`/saved-activities/${activityId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async checkActivitySaved(activityId: string) {
+    return this.request<{ is_saved: boolean }>(`/saved-activities/check/${activityId}`);
+  }
+
   // Health check
   async ping() {
     return this.request<{ message: string }>("/ping");
