@@ -37,6 +37,7 @@ export default function ActivityCard({
   elevation,
   difficulty,
   activityId,
+  isOrganizerFollowed = false,
 }: ActivityCardProps) {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
