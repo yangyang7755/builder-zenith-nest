@@ -5,6 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 // Check if backend is available
 let backendAvailable: boolean | null = null;
+let backendCheckPromise: Promise<boolean> | null = null;
 
 const checkBackendAvailability = async (): Promise<boolean> => {
   // Return cached result if already checked
@@ -12,20 +13,32 @@ const checkBackendAvailability = async (): Promise<boolean> => {
     return backendAvailable;
   }
 
-  try {
-    // Try a simple ping to check if backend is available
-    const response = await fetch(`${API_BASE_URL}/ping`, {
-      method: 'GET',
-      signal: AbortSignal.timeout(2000) // 2 second timeout
-    });
-    backendAvailable = response.ok;
-    console.log(`Backend availability check: ${backendAvailable ? 'Available' : 'Unavailable'}`);
-    return backendAvailable;
-  } catch (error) {
-    console.log('Backend not available, using demo mode');
-    backendAvailable = false;
-    return false;
+  // If there's already a check in progress, wait for it
+  if (backendCheckPromise) {
+    return backendCheckPromise;
   }
+
+  // Start the check
+  backendCheckPromise = (async () => {
+    try {
+      // Try a simple ping to check if backend is available
+      const response = await fetch(`${API_BASE_URL}/ping`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(2000) // 2 second timeout
+      });
+      backendAvailable = response.ok;
+      console.log(`Backend availability check: ${backendAvailable ? 'Available' : 'Unavailable'}`);
+      return backendAvailable;
+    } catch (error) {
+      console.log('Backend not available, using demo mode');
+      backendAvailable = false;
+      return false;
+    } finally {
+      backendCheckPromise = null;
+    }
+  })();
+
+  return backendCheckPromise;
 };
 
 interface ApiResponse<T> {
