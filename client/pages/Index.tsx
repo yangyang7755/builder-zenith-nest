@@ -5,6 +5,8 @@ import { useActivities } from "../contexts/ActivitiesContext";
 import { useOnboarding } from "../contexts/OnboardingContext";
 import { useClub } from "../contexts/ClubContext";
 import { useChat } from "../contexts/ChatContext";
+import { useSavedActivities } from "../contexts/SavedActivitiesContext";
+import { useActivityParticipation } from "../contexts/ActivityParticipationContext";
 import FilterSystem, { FilterOptions } from "../components/FilterSystem";
 import MapView from "../components/MapView";
 import ActivityCard from "../components/ActivityCard";
