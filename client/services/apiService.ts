@@ -34,7 +34,6 @@ interface ApiResponse<T> {
 }
 
 class ApiService {
-  private pendingRequests = new Map<string, Promise<any>>();
 
   private async request<T>(
     endpoint: string,
