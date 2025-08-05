@@ -11,10 +11,121 @@ export default function CategoryActivities() {
   const { activities } = useActivities();
   const [filteredActivities, setFilteredActivities] = useState(activities);
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [sortBy, setSortBy] = useState<"date" | "popularity" | "distance" | "difficulty">("date");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("all");
+  const [selectedLocation, setSelectedLocation] = useState("all");
+  const [showQuickStats, setShowQuickStats] = useState(true);
 
   const category = searchParams.get("category") || "Recent activities nearby";
   const type = searchParams.get("type");
   const location = searchParams.get("location");
+
+  // Enhanced activity data with more diversity for demo
+  const enhancedActivities = [
+    ...activities,
+    {
+      id: "demo-morning-run-1",
+      title: "Richmond Park 5K Morning Run",
+      type: "running",
+      date: "2024-12-27",
+      time: "07:00",
+      location: "Richmond Park, London",
+      organizer: "Richmond Running Club",
+      description: "Join us for an energizing morning run through the beautiful Richmond Park. Perfect for all fitness levels!",
+      participants: 12,
+      maxParticipants: 20,
+      difficulty: "Beginner",
+      distance: "5km",
+      activityType: "Running",
+      meetupLocation: "Richmond Park Main Gate",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop"
+    },
+    {
+      id: "demo-climbing-2",
+      title: "Advanced Sport Climbing Workshop",
+      type: "climbing",
+      date: "2024-12-28",
+      time: "14:00",
+      location: "VauxWall Climbing Centre",
+      organizer: "VauxWall Climbing",
+      description: "Learn advanced techniques with certified instructors. Multi-pitch climbing and anchor building.",
+      participants: 8,
+      maxParticipants: 12,
+      difficulty: "Advanced",
+      activityType: "Climbing",
+      meetupLocation: "VauxWall Reception",
+      image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop"
+    },
+    {
+      id: "demo-cycling-3",
+      title: "Thames Path Leisure Ride",
+      type: "cycling",
+      date: "2024-12-29",
+      time: "10:00",
+      location: "Thames Path, London",
+      organizer: "Thames Cyclists",
+      description: "Scenic riverside cycling with photography stops. Family-friendly pace through historic London.",
+      participants: 15,
+      maxParticipants: 25,
+      difficulty: "Beginner",
+      distance: "20km",
+      activityType: "Cycling",
+      meetupLocation: "London Bridge Station",
+      image: "https://images.unsplash.com/photo-1517654443271-11c621d19e60?w=400&h=300&fit=crop"
+    },
+    {
+      id: "demo-hiking-4",
+      title: "Box Hill Summit Challenge",
+      type: "hiking",
+      date: "2024-12-30",
+      time: "09:00",
+      location: "Box Hill, Surrey",
+      organizer: "Surrey Hikers",
+      description: "Challenging hike to Box Hill summit with stunning views. Includes lunch stop at the top.",
+      participants: 18,
+      maxParticipants: 30,
+      difficulty: "Intermediate",
+      distance: "12km",
+      activityType: "Hiking",
+      meetupLocation: "Box Hill Car Park",
+      image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=400&h=300&fit=crop"
+    },
+    {
+      id: "demo-tennis-5",
+      title: "Doubles Tournament Prep",
+      type: "tennis",
+      date: "2024-12-31",
+      time: "16:00",
+      location: "Queen's Club, London",
+      organizer: "London Tennis Academy",
+      description: "Practice doubles strategies and techniques. Coaching included with professional instructor.",
+      participants: 6,
+      maxParticipants: 8,
+      difficulty: "Intermediate",
+      activityType: "Tennis",
+      meetupLocation: "Queen's Club Reception",
+      image: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=400&h=300&fit=crop"
+    },
+    {
+      id: "demo-surfing-6",
+      title: "Beginner Surf Lesson",
+      type: "surfing",
+      date: "2025-01-02",
+      time: "11:00",
+      location: "Fistral Beach, Cornwall",
+      organizer: "Cornwall Surf School",
+      description: "Learn to surf with qualified instructors. All equipment provided including wetsuits.",
+      participants: 4,
+      maxParticipants: 10,
+      difficulty: "Beginner",
+      activityType: "Surfing",
+      meetupLocation: "Fistral Beach Surf School",
+      image: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=400&h=300&fit=crop"
+    }
+  ];
 
   useEffect(() => {
     let filtered = activities;
