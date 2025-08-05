@@ -60,6 +60,7 @@ export default function Index() {
   const { getUserClubs, isClubMember } = useClub();
   const { savedActivities, isActivitySaved } = useSavedActivities();
   const { getParticipationStatus, getUserParticipatedActivities } = useActivityParticipation();
+  const { following, isFollowing } = useFollow();
   const [searchParams] = useSearchParams();
 
   const formatActivityDate = (dateStr: string) => {
