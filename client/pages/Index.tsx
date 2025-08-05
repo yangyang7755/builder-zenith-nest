@@ -166,7 +166,7 @@ export default function Index() {
 
   // Helper function to check if activity is from user's club
   const isFromUserClub = (activity: any) => {
-    const userClubs = getUserClubs();
+    const userClubs = getUserMemberships();
     const userClubIds = userClubs.map(membership => membership.club_id);
     const userClubNames = userClubs.map(membership => membership.club_name);
 
