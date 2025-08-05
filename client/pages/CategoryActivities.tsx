@@ -350,47 +350,150 @@ export default function CategoryActivities() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="px-6 mb-6">
-        <div className="flex items-center gap-3 mb-4">
-          <Filter className="w-4 h-4 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">Filter by:</span>
+      {/* Quick Stats */}
+      {showQuickStats && (
+        <div className="px-6 py-4 bg-gradient-to-r from-explore-green/5 to-blue-50 border-b border-gray-100">
+          <div className="grid grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-explore-green">{stats.total}</div>
+              <div className="text-xs text-gray-600 font-cabin">Total</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">{stats.thisWeek}</div>
+              <div className="text-xs text-gray-600 font-cabin">This Week</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">{stats.spots}</div>
+              <div className="text-xs text-gray-600 font-cabin">Spots Left</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{Math.round(stats.avgDifficulty)}%</div>
+              <div className="text-xs text-gray-600 font-cabin">Have Info</div>
+            </div>
+          </div>
         </div>
+      )}
 
-        {/* Time Filter */}
-        <div className="flex gap-2 mb-3 overflow-x-auto">
-          {filterOptions.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => setSelectedFilter(option.value)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
-                selectedFilter === option.value
-                  ? "bg-explore-green text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
+      {/* Sorting */}
+      <div className="px-6 py-4 bg-gray-50 border-b border-gray-100">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-sm font-medium text-gray-700">Sort by:</span>
         </div>
-
-        {/* Type Filter */}
         <div className="flex gap-2 overflow-x-auto">
-          {activityTypes.map((activityType) => (
-            <Link
-              key={activityType.value}
-              to={`/category-activities?category=${encodeURIComponent(category)}&type=${activityType.value}`}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
-                (type || "all") === activityType.value
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              {activityType.label}
-            </Link>
-          ))}
+          {sortOptions.map((option) => {
+            const IconComponent = option.icon;
+            return (
+              <button
+                key={option.value}
+                onClick={() => setSortBy(option.value as any)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                  sortBy === option.value
+                    ? "bg-explore-green text-white shadow-md"
+                    : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                }`}
+              >
+                <IconComponent className="w-4 h-4" />
+                {option.label}
+              </button>
+            );
+          })}
         </div>
       </div>
+
+      {/* Advanced Filters */}
+      {showFilters && (
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-100 space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">Advanced Filters</span>
+            <button
+              onClick={() => setShowQuickStats(!showQuickStats)}
+              className="text-sm text-explore-green hover:text-green-600"
+            >
+              {showQuickStats ? "Hide Stats" : "Show Stats"}
+            </button>
+          </div>
+
+          {/* Time Filter */}
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">Time Range</label>
+            <div className="flex gap-2 overflow-x-auto">
+              {filterOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedFilter(option.value)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
+                    selectedFilter === option.value
+                      ? "bg-explore-green text-white"
+                      : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Activity Type Filter */}
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">Activity Type</label>
+            <div className="flex gap-2 overflow-x-auto">
+              {activityTypes.map((activityType) => (
+                <Link
+                  key={activityType.value}
+                  to={`/category-activities?category=${encodeURIComponent(category)}&type=${activityType.value}`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
+                    (type || "all") === activityType.value
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                  }`}
+                >
+                  {activityType.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Difficulty Filter */}
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">Difficulty Level</label>
+            <div className="flex gap-2 overflow-x-auto">
+              {difficultyOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedDifficulty(option.value)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
+                    selectedDifficulty === option.value
+                      ? "bg-purple-500 text-white"
+                      : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Location Filter */}
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">Location</label>
+            <div className="flex gap-2 overflow-x-auto">
+              {locationOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedLocation(option.value)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
+                    selectedLocation === option.value
+                      ? "bg-orange-500 text-white"
+                      : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Activities List */}
       <div className="px-6 pb-20">
