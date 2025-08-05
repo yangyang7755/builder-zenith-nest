@@ -75,33 +75,49 @@ class ApiService {
 
     try {
       const authHeader = await getAuthHeader();
+
+      // Create a completely fresh fetch request each time to avoid any shared state
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
           "Content-Type": "application/json",
           ...(authHeader && { Authorization: authHeader }),
           ...options.headers,
         },
+        signal: controller.signal,
         ...options,
       });
 
-      // Use arrayBuffer approach to avoid body stream conflicts
+      clearTimeout(timeoutId);
+
+      // Immediately check if response is ok and handle errors before trying to read body
+      const status = response.status;
+      const statusOk = response.ok;
+
       let responseData;
-      let responseText = '';
 
       try {
-        // Read as arrayBuffer first, then convert to text
-        const arrayBuffer = await response.arrayBuffer();
-        responseText = new TextDecoder().decode(arrayBuffer);
-
-        if (responseText.trim()) {
-          try {
-            responseData = JSON.parse(responseText);
-          } catch (jsonError) {
-            // If it's not valid JSON, treat as plain text
-            responseData = { message: responseText };
-          }
-        } else {
+        // Try to read the response body only once using the most reliable method
+        if (response.body === null) {
           responseData = {};
+        } else {
+          // Use Response.clone() properly to ensure we have an independent copy
+          const responseClone = response.clone();
+
+          // Try text first on the clone
+          const responseText = await responseClone.text();
+
+          if (responseText.trim()) {
+            try {
+              responseData = JSON.parse(responseText);
+            } catch (jsonError) {
+              responseData = { message: responseText };
+            }
+          } else {
+            responseData = {};
+          }
         }
       } catch (readError) {
         console.error('Failed to read response:', readError);
@@ -109,7 +125,7 @@ class ApiService {
         // Retry on read errors if we haven't exceeded max retries
         if (retryCount < maxRetries) {
           console.log(`Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`);
-          await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1)));
+          await new Promise(resolve => setTimeout(resolve, 200 * (retryCount + 1)));
           return this.executeRequest(endpoint, options, retryCount + 1);
         }
 
