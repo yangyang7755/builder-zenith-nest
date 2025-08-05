@@ -4,14 +4,20 @@ import { ArrowLeft, Eye, EyeOff, Lock } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useToast } from "../hooks/use-toast";
 import { Button } from "../components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import BottomNavigation from "../components/BottomNavigation";
 
 export default function ChangePassword() {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -25,11 +31,11 @@ export default function ChangePassword() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
-    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+  const togglePasswordVisibility = (field: "current" | "new" | "confirm") => {
+    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
   const validateForm = () => {
@@ -74,15 +80,15 @@ export default function ChangePassword() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
+
     try {
       // Simulate API call to change password
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // In a real app, this would call the backend API
       console.log("Password change request:", {
         userId: user?.id,
@@ -105,7 +111,6 @@ export default function ChangePassword() {
       setTimeout(() => {
         navigate("/settings");
       }, 1000);
-
     } catch (error) {
       toast({
         title: "Error",
@@ -117,12 +122,12 @@ export default function ChangePassword() {
     }
   };
 
-  const InputField = ({ 
-    label, 
-    field, 
-    placeholder, 
-    showPassword, 
-    onToggleVisibility 
+  const InputField = ({
+    label,
+    field,
+    placeholder,
+    showPassword,
+    onToggleVisibility,
   }: {
     label: string;
     field: keyof typeof formData;
@@ -146,7 +151,11 @@ export default function ChangePassword() {
           onClick={onToggleVisibility}
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
         >
-          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          {showPassword ? (
+            <EyeOff className="w-5 h-5" />
+          ) : (
+            <Eye className="w-5 h-5" />
+          )}
         </button>
       </div>
     </div>
@@ -164,7 +173,16 @@ export default function ChangePassword() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -175,7 +193,9 @@ export default function ChangePassword() {
         <Link to="/settings">
           <ArrowLeft className="w-6 h-6 text-black" />
         </Link>
-        <h1 className="text-xl font-bold text-black font-cabin">Change Password</h1>
+        <h1 className="text-xl font-bold text-black font-cabin">
+          Change Password
+        </h1>
         <div className="w-6"></div>
       </div>
 
@@ -202,7 +222,7 @@ export default function ChangePassword() {
                 field="currentPassword"
                 placeholder="Enter your current password"
                 showPassword={showPasswords.current}
-                onToggleVisibility={() => togglePasswordVisibility('current')}
+                onToggleVisibility={() => togglePasswordVisibility("current")}
               />
 
               <InputField
@@ -210,7 +230,7 @@ export default function ChangePassword() {
                 field="newPassword"
                 placeholder="Enter your new password"
                 showPassword={showPasswords.new}
-                onToggleVisibility={() => togglePasswordVisibility('new')}
+                onToggleVisibility={() => togglePasswordVisibility("new")}
               />
 
               <InputField
@@ -218,44 +238,54 @@ export default function ChangePassword() {
                 field="confirmPassword"
                 placeholder="Confirm your new password"
                 showPassword={showPasswords.confirm}
-                onToggleVisibility={() => togglePasswordVisibility('confirm')}
+                onToggleVisibility={() => togglePasswordVisibility("confirm")}
               />
 
               {/* Password Requirements */}
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="text-sm font-medium text-blue-900 mb-2">Password Requirements:</h4>
+                <h4 className="text-sm font-medium text-blue-900 mb-2">
+                  Password Requirements:
+                </h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${formData.newPassword.length >= 8 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <div
+                      className={`w-2 h-2 rounded-full ${formData.newPassword.length >= 8 ? "bg-green-500" : "bg-gray-300"}`}
+                    ></div>
                     At least 8 characters long
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${/[A-Z]/.test(formData.newPassword) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <div
+                      className={`w-2 h-2 rounded-full ${/[A-Z]/.test(formData.newPassword) ? "bg-green-500" : "bg-gray-300"}`}
+                    ></div>
                     At least one uppercase letter
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${/[0-9]/.test(formData.newPassword) ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <div
+                      className={`w-2 h-2 rounded-full ${/[0-9]/.test(formData.newPassword) ? "bg-green-500" : "bg-gray-300"}`}
+                    ></div>
                     At least one number
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${formData.newPassword !== formData.currentPassword && formData.newPassword.length > 0 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <div
+                      className={`w-2 h-2 rounded-full ${formData.newPassword !== formData.currentPassword && formData.newPassword.length > 0 ? "bg-green-500" : "bg-gray-300"}`}
+                    ></div>
                     Different from current password
                   </li>
                 </ul>
               </div>
 
               <div className="space-y-3">
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-explore-green hover:bg-green-600"
                   disabled={isLoading}
                 >
                   {isLoading ? "Updating Password..." : "Update Password"}
                 </Button>
-                
-                <Button 
-                  type="button" 
-                  variant="outline" 
+
+                <Button
+                  type="button"
+                  variant="outline"
                   className="w-full"
                   onClick={() => navigate("/settings")}
                   disabled={isLoading}

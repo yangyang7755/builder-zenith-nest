@@ -21,41 +21,48 @@ export default function CategoryActivities() {
 
     // Filter by category/type if specified
     if (type && type !== "all") {
-      filtered = filtered.filter(activity => 
-        activity.type.toLowerCase() === type.toLowerCase()
+      filtered = filtered.filter(
+        (activity) => activity.type.toLowerCase() === type.toLowerCase(),
       );
     }
 
     // Filter by location proximity (mock implementation)
     if (location) {
-      filtered = filtered.filter(activity =>
-        activity.location.toLowerCase().includes(location.toLowerCase()) ||
-        activity.location.toLowerCase().includes("london") // Default area
+      filtered = filtered.filter(
+        (activity) =>
+          activity.location.toLowerCase().includes(location.toLowerCase()) ||
+          activity.location.toLowerCase().includes("london"), // Default area
       );
     }
 
     // Sort by date (upcoming first)
-    filtered = filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    filtered = filtered.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    );
 
     // Apply additional filters
     if (selectedFilter !== "all") {
       switch (selectedFilter) {
         case "today":
           const today = new Date().toISOString().split("T")[0];
-          filtered = filtered.filter(activity => activity.date.startsWith(today));
+          filtered = filtered.filter((activity) =>
+            activity.date.startsWith(today),
+          );
           break;
         case "week":
           const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-          filtered = filtered.filter(activity => 
-            new Date(activity.date) <= nextWeek && 
-            new Date(activity.date) >= new Date()
+          filtered = filtered.filter(
+            (activity) =>
+              new Date(activity.date) <= nextWeek &&
+              new Date(activity.date) >= new Date(),
           );
           break;
         case "month":
           const nextMonth = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-          filtered = filtered.filter(activity => 
-            new Date(activity.date) <= nextMonth && 
-            new Date(activity.date) >= new Date()
+          filtered = filtered.filter(
+            (activity) =>
+              new Date(activity.date) <= nextMonth &&
+              new Date(activity.date) >= new Date(),
           );
           break;
       }
@@ -94,7 +101,16 @@ export default function CategoryActivities() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -107,7 +123,9 @@ export default function CategoryActivities() {
             <ArrowLeft className="w-6 h-6 text-black" />
           </button>
           <div>
-            <h1 className="text-xl font-bold text-black font-cabin">{category}</h1>
+            <h1 className="text-xl font-bold text-black font-cabin">
+              {category}
+            </h1>
             <p className="text-sm text-gray-500 font-cabin">
               {filteredActivities.length} activities found
             </p>
@@ -121,7 +139,7 @@ export default function CategoryActivities() {
           <Filter className="w-4 h-4 text-gray-500" />
           <span className="text-sm font-medium text-gray-700">Filter by:</span>
         </div>
-        
+
         {/* Time Filter */}
         <div className="flex gap-2 mb-3 overflow-x-auto">
           {filterOptions.map((option) => (
@@ -164,12 +182,14 @@ export default function CategoryActivities() {
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <MapPin className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No activities found</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              No activities found
+            </h3>
             <p className="text-gray-500 mb-4">
               Try adjusting your filters or check back later for new activities.
             </p>
-            <Link 
-              to="/create" 
+            <Link
+              to="/create"
               className="inline-flex items-center gap-2 bg-explore-green text-white px-6 py-2 rounded-lg font-medium hover:bg-green-600 transition-colors"
             >
               Create Activity

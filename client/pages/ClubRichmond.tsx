@@ -136,8 +136,8 @@ export default function ClubRichmond() {
             Richmond Running Club is London's premier running community,
             offering everything from casual social runs to competitive training
             sessions. Our beautiful routes through Richmond Park and surrounding
-            areas provide the perfect setting for runners of all levels to improve
-            their fitness and meet like-minded people.
+            areas provide the perfect setting for runners of all levels to
+            improve their fitness and meet like-minded people.
           </p>
         </div>
 

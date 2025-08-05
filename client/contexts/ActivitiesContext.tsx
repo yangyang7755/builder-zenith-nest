@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { apiService } from "../services/apiService";
 import { useUserProfile } from "./UserProfileContext";
 
@@ -6,7 +12,15 @@ export interface Activity {
   id: string;
   title: string;
   description?: string;
-  activity_type: "cycling" | "climbing" | "running" | "hiking" | "skiing" | "surfing" | "tennis" | "general";
+  activity_type:
+    | "cycling"
+    | "climbing"
+    | "running"
+    | "hiking"
+    | "skiing"
+    | "surfing"
+    | "tennis"
+    | "general";
   date_time: string; // ISO 8601 format
   location: string;
   coordinates?: { lat: number; lng: number };
@@ -74,14 +88,27 @@ interface ActivitiesContextType {
   // Core CRUD operations
   getActivities: (filters?: ActivityFilters) => Promise<void>;
   getActivity: (activityId: string) => Promise<Activity | null>;
-  createActivity: (activityData: CreateActivityData) => Promise<{ success: boolean; error?: string; data?: Activity }>;
-  updateActivity: (activityId: string, updates: UpdateActivityData) => Promise<{ success: boolean; error?: string }>;
-  deleteActivity: (activityId: string) => Promise<{ success: boolean; error?: string }>;
+  createActivity: (
+    activityData: CreateActivityData,
+  ) => Promise<{ success: boolean; error?: string; data?: Activity }>;
+  updateActivity: (
+    activityId: string,
+    updates: UpdateActivityData,
+  ) => Promise<{ success: boolean; error?: string }>;
+  deleteActivity: (
+    activityId: string,
+  ) => Promise<{ success: boolean; error?: string }>;
 
   // Participation operations
-  joinActivity: (activityId: string) => Promise<{ success: boolean; error?: string }>;
-  leaveActivity: (activityId: string) => Promise<{ success: boolean; error?: string }>;
-  getActivityParticipants: (activityId: string) => Promise<ActivityParticipant[]>;
+  joinActivity: (
+    activityId: string,
+  ) => Promise<{ success: boolean; error?: string }>;
+  leaveActivity: (
+    activityId: string,
+  ) => Promise<{ success: boolean; error?: string }>;
+  getActivityParticipants: (
+    activityId: string,
+  ) => Promise<ActivityParticipant[]>;
 
   // Utility operations
   searchActivities: (query: string, filters?: ActivityFilters) => Promise<void>;
@@ -228,89 +255,119 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
     const handleOrganizerProfileUpdate = (event: CustomEvent) => {
       const { userId, profile } = event.detail;
 
-      setActivities(prev =>
-        prev.map(activity =>
+      setActivities((prev) =>
+        prev.map((activity) =>
           activity.organizer_id === userId || activity.organizer?.id === userId
             ? {
                 ...activity,
                 organizer: {
                   ...activity.organizer,
                   full_name: profile.full_name,
-                  profile_image: profile.profile_image
-                }
+                  profile_image: profile.profile_image,
+                },
               }
-            : activity
-        )
+            : activity,
+        ),
       );
     };
 
     const handleParticipantProfileUpdate = (event: CustomEvent) => {
       const { userId, profile } = event.detail;
 
-      setActivities(prev =>
-        prev.map(activity => ({
+      setActivities((prev) =>
+        prev.map((activity) => ({
           ...activity,
-          participants: activity.participants?.map(participant =>
+          participants: activity.participants?.map((participant) =>
             participant.user_id === userId
               ? {
                   ...participant,
                   user: {
                     ...participant.user,
                     full_name: profile.full_name,
-                    profile_image: profile.profile_image
-                  }
+                    profile_image: profile.profile_image,
+                  },
                 }
-              : participant
-          )
-        }))
+              : participant,
+          ),
+        })),
       );
     };
 
     const handleParticipantJoined = (event: CustomEvent) => {
       const { activityId, participant, newCount } = event.detail;
 
-      setActivities(prev =>
-        prev.map(activity =>
+      setActivities((prev) =>
+        prev.map((activity) =>
           activity.id === activityId
             ? {
                 ...activity,
                 current_participants: newCount,
-                participants: [...(activity.participants || []), participant]
+                participants: [...(activity.participants || []), participant],
               }
-            : activity
-        )
+            : activity,
+        ),
       );
     };
 
     const handleParticipantLeft = (event: CustomEvent) => {
       const { activityId, userId, newCount } = event.detail;
 
-      setActivities(prev =>
-        prev.map(activity =>
+      setActivities((prev) =>
+        prev.map((activity) =>
           activity.id === activityId
             ? {
                 ...activity,
                 current_participants: newCount,
-                participants: activity.participants?.filter(p => p.user_id !== userId) || []
+                participants:
+                  activity.participants?.filter((p) => p.user_id !== userId) ||
+                  [],
               }
-            : activity
-        )
+            : activity,
+        ),
       );
     };
 
-    window.addEventListener('organizerProfileUpdated', handleOrganizerProfileUpdate as EventListener);
-    window.addEventListener('participantProfileUpdated', handleParticipantProfileUpdate as EventListener);
-    window.addEventListener('participantJoined', handleParticipantJoined as EventListener);
-    window.addEventListener('participantLeft', handleParticipantLeft as EventListener);
+    window.addEventListener(
+      "organizerProfileUpdated",
+      handleOrganizerProfileUpdate as EventListener,
+    );
+    window.addEventListener(
+      "participantProfileUpdated",
+      handleParticipantProfileUpdate as EventListener,
+    );
+    window.addEventListener(
+      "participantJoined",
+      handleParticipantJoined as EventListener,
+    );
+    window.addEventListener(
+      "participantLeft",
+      handleParticipantLeft as EventListener,
+    );
 
     return () => {
-      window.removeEventListener('organizerProfileUpdated', handleOrganizerProfileUpdate as EventListener);
-      window.removeEventListener('participantProfileUpdated', handleParticipantProfileUpdate as EventListener);
-      window.removeEventListener('participantJoined', handleParticipantJoined as EventListener);
-      window.removeEventListener('participantLeft', handleParticipantLeft as EventListener);
+      window.removeEventListener(
+        "organizerProfileUpdated",
+        handleOrganizerProfileUpdate as EventListener,
+      );
+      window.removeEventListener(
+        "participantProfileUpdated",
+        handleParticipantProfileUpdate as EventListener,
+      );
+      window.removeEventListener(
+        "participantJoined",
+        handleParticipantJoined as EventListener,
+      );
+      window.removeEventListener(
+        "participantLeft",
+        handleParticipantLeft as EventListener,
+      );
     };
   }, []);
-  const [pagination, setPagination] = useState({ total: 0, limit: 20, offset: 0 });
+  const [pagination, setPagination] = useState({
+    total: 0,
+    limit: 20,
+    offset: 0,
+  });
 
   // Load activities from backend on component mount
   useEffect(() => {
@@ -347,12 +404,19 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 
       // Legacy fields for backward compatibility
       type: backendActivity.activity_type,
-      date: backendActivity.date_time ? new Date(backendActivity.date_time).toISOString().split('T')[0] : undefined,
-      time: backendActivity.date_time ? new Date(backendActivity.date_time).toTimeString().slice(0, 5) : undefined,
+      date: backendActivity.date_time
+        ? new Date(backendActivity.date_time).toISOString().split("T")[0]
+        : undefined,
+      time: backendActivity.date_time
+        ? new Date(backendActivity.date_time).toTimeString().slice(0, 5)
+        : undefined,
       meetupLocation: backendActivity.location,
       organizerName: backendActivity.organizer?.full_name || "Unknown",
       maxParticipants: backendActivity.max_participants?.toString() || "10",
-      specialComments: backendActivity.special_requirements || backendActivity.description || "",
+      specialComments:
+        backendActivity.special_requirements ||
+        backendActivity.description ||
+        "",
       imageSrc: backendActivity.activity_image,
       visibility: "All",
       createdAt: new Date(backendActivity.created_at),
@@ -369,15 +433,18 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 
       if (response.error) {
         // Check if backend is unavailable - this is not an error, just use demo mode
-        if (response.error === 'BACKEND_UNAVAILABLE') {
+        if (response.error === "BACKEND_UNAVAILABLE") {
           console.log("Backend unavailable, seamlessly using demo data");
-          const transformedDemoActivities = demoActivities.map(activity => ({
+          const transformedDemoActivities = demoActivities.map((activity) => ({
             ...activity,
             activity_type: activity.type as any,
             date_time: `${activity.date}T${activity.time}:00Z`,
             max_participants: parseInt(activity.maxParticipants),
-            current_participants: Math.floor(Math.random() * parseInt(activity.maxParticipants)),
-            difficulty_level: (activity.difficulty?.toLowerCase() || "beginner") as any,
+            current_participants: Math.floor(
+              Math.random() * parseInt(activity.maxParticipants),
+            ),
+            difficulty_level: (activity.difficulty?.toLowerCase() ||
+              "beginner") as any,
             price_per_person: 0,
             status: "upcoming" as any,
             organizer_id: "demo-user-id",
@@ -395,7 +462,9 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         const transformedActivities = response.data.data.map(transformActivity);
         console.log("Loaded activities from backend:", transformedActivities);
         setActivities(transformedActivities);
-        setPagination(response.data.pagination || { total: 0, limit: 20, offset: 0 });
+        setPagination(
+          response.data.pagination || { total: 0, limit: 20, offset: 0 },
+        );
       } else if (response.data && Array.isArray(response.data)) {
         // Handle legacy response format
         const transformedActivities = response.data.map(transformActivity);
@@ -403,13 +472,16 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       } else {
         // No backend data, use demo data
         console.log("No backend data found, using demo activities");
-        const transformedDemoActivities = demoActivities.map(activity => ({
+        const transformedDemoActivities = demoActivities.map((activity) => ({
           ...activity,
           activity_type: activity.type as any,
           date_time: `${activity.date}T${activity.time}:00Z`,
           max_participants: parseInt(activity.maxParticipants),
-          current_participants: Math.floor(Math.random() * parseInt(activity.maxParticipants)),
-          difficulty_level: (activity.difficulty?.toLowerCase() || "beginner") as any,
+          current_participants: Math.floor(
+            Math.random() * parseInt(activity.maxParticipants),
+          ),
+          difficulty_level: (activity.difficulty?.toLowerCase() ||
+            "beginner") as any,
           price_per_person: 0,
           status: "upcoming" as any,
           organizer_id: "demo-user-id",
@@ -424,13 +496,16 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       setError("Failed to load activities from backend, using demo data");
 
       // Transform demo activities to new format
-      const transformedDemoActivities = demoActivities.map(activity => ({
+      const transformedDemoActivities = demoActivities.map((activity) => ({
         ...activity,
         activity_type: activity.type as any,
         date_time: `${activity.date}T${activity.time}:00Z`,
         max_participants: parseInt(activity.maxParticipants),
-        current_participants: Math.floor(Math.random() * parseInt(activity.maxParticipants)),
-        difficulty_level: (activity.difficulty?.toLowerCase() || "beginner") as any,
+        current_participants: Math.floor(
+          Math.random() * parseInt(activity.maxParticipants),
+        ),
+        difficulty_level: (activity.difficulty?.toLowerCase() ||
+          "beginner") as any,
         price_per_person: 0,
         status: "upcoming" as any,
         organizer_id: "demo-user-id",
@@ -471,7 +546,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 
       if (response.error) {
         // Handle backend unavailability - create demo activity
-        if (response.error === 'BACKEND_UNAVAILABLE') {
+        if (response.error === "BACKEND_UNAVAILABLE") {
           console.log("Backend unavailable, creating demo activity");
           const demoActivity: Activity = {
             id: `demo-activity-${Date.now()}`,
@@ -494,19 +569,21 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
             activity_data: activityData.activity_data,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
-            organizer: currentUserProfile ? {
-              id: currentUserProfile.id,
-              full_name: currentUserProfile.full_name,
-              profile_image: currentUserProfile.profile_image
-            } : {
-              id: "demo-user-id",
-              full_name: "You",
-              profile_image: "/placeholder.svg"
-            },
+            organizer: currentUserProfile
+              ? {
+                  id: currentUserProfile.id,
+                  full_name: currentUserProfile.full_name,
+                  profile_image: currentUserProfile.profile_image,
+                }
+              : {
+                  id: "demo-user-id",
+                  full_name: "You",
+                  profile_image: "/placeholder.svg",
+                },
             // Legacy fields for backward compatibility
             type: activityData.activity_type,
-            date: activityData.date_time.split('T')[0],
-            time: activityData.date_time.split('T')[1].substring(0, 5),
+            date: activityData.date_time.split("T")[0],
+            time: activityData.date_time.split("T")[1].substring(0, 5),
             meetupLocation: activityData.location,
             organizerName: currentUserProfile?.full_name || "You",
             maxParticipants: activityData.max_participants.toString(),
@@ -516,32 +593,37 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
             createdAt: new Date(),
           };
 
-          setActivities(prev => [demoActivity, ...prev]);
+          setActivities((prev) => [demoActivity, ...prev]);
           return { success: true, data: demoActivity };
         }
         return { success: false, error: response.error };
       }
 
-      const newActivity = response.data?.success ? response.data.data : response.data;
+      const newActivity = response.data?.success
+        ? response.data.data
+        : response.data;
       if (newActivity) {
         const transformedActivity = transformActivity(newActivity);
-        setActivities(prev => [transformedActivity, ...prev]);
+        setActivities((prev) => [transformedActivity, ...prev]);
       }
 
       return {
         success: true,
-        data: newActivity ? transformActivity(newActivity) : undefined
+        data: newActivity ? transformActivity(newActivity) : undefined,
       };
     } catch (err) {
       console.error("Failed to create activity:", err);
       return {
         success: false,
-        error: err instanceof Error ? err.message : "Failed to create activity"
+        error: err instanceof Error ? err.message : "Failed to create activity",
       };
     }
   };
 
-  const updateActivity = async (activityId: string, updates: UpdateActivityData) => {
+  const updateActivity = async (
+    activityId: string,
+    updates: UpdateActivityData,
+  ) => {
     try {
       const response = await apiService.updateActivity(activityId, updates);
 
@@ -550,18 +632,20 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       }
 
       // Update local state
-      setActivities(prev => prev.map(activity =>
-        activity.id === activityId
-          ? { ...activity, ...updates, updated_at: new Date().toISOString() }
-          : activity
-      ));
+      setActivities((prev) =>
+        prev.map((activity) =>
+          activity.id === activityId
+            ? { ...activity, ...updates, updated_at: new Date().toISOString() }
+            : activity,
+        ),
+      );
 
       return { success: true };
     } catch (err) {
       console.error("Failed to update activity:", err);
       return {
         success: false,
-        error: err instanceof Error ? err.message : "Failed to update activity"
+        error: err instanceof Error ? err.message : "Failed to update activity",
       };
     }
   };
@@ -575,14 +659,16 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       }
 
       // Remove from local state
-      setActivities(prev => prev.filter(activity => activity.id !== activityId));
+      setActivities((prev) =>
+        prev.filter((activity) => activity.id !== activityId),
+      );
 
       return { success: true };
     } catch (err) {
       console.error("Failed to delete activity:", err);
       return {
         success: false,
-        error: err instanceof Error ? err.message : "Failed to delete activity"
+        error: err instanceof Error ? err.message : "Failed to delete activity",
       };
     }
   };
@@ -596,18 +682,23 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       }
 
       // Update local state to increment participant count
-      setActivities(prev => prev.map(activity =>
-        activity.id === activityId
-          ? { ...activity, current_participants: activity.current_participants + 1 }
-          : activity
-      ));
+      setActivities((prev) =>
+        prev.map((activity) =>
+          activity.id === activityId
+            ? {
+                ...activity,
+                current_participants: activity.current_participants + 1,
+              }
+            : activity,
+        ),
+      );
 
       return { success: true };
     } catch (err) {
       console.error("Failed to join activity:", err);
       return {
         success: false,
-        error: err instanceof Error ? err.message : "Failed to join activity"
+        error: err instanceof Error ? err.message : "Failed to join activity",
       };
     }
   };
@@ -621,23 +712,33 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       }
 
       // Update local state to decrement participant count
-      setActivities(prev => prev.map(activity =>
-        activity.id === activityId
-          ? { ...activity, current_participants: Math.max(0, activity.current_participants - 1) }
-          : activity
-      ));
+      setActivities((prev) =>
+        prev.map((activity) =>
+          activity.id === activityId
+            ? {
+                ...activity,
+                current_participants: Math.max(
+                  0,
+                  activity.current_participants - 1,
+                ),
+              }
+            : activity,
+        ),
+      );
 
       return { success: true };
     } catch (err) {
       console.error("Failed to leave activity:", err);
       return {
         success: false,
-        error: err instanceof Error ? err.message : "Failed to leave activity"
+        error: err instanceof Error ? err.message : "Failed to leave activity",
       };
     }
   };
 
-  const getActivityParticipants = async (activityId: string): Promise<ActivityParticipant[]> => {
+  const getActivityParticipants = async (
+    activityId: string,
+  ): Promise<ActivityParticipant[]> => {
     try {
       const response = await apiService.getActivityParticipants(activityId);
 
@@ -646,7 +747,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         return [];
       }
 
-      return response.data?.success ? response.data.data : (response.data || []);
+      return response.data?.success ? response.data.data : response.data || [];
     } catch (err) {
       console.error("Failed to get activity participants:", err);
       return [];
@@ -656,7 +757,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
   const searchActivities = async (query: string, filters?: ActivityFilters) => {
     const searchFilters = {
       ...filters,
-      location: query // Use location search for now
+      location: query, // Use location search for now
     };
 
     await getActivities(searchFilters);
@@ -669,17 +770,22 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
   // User activity tracking functions
   const getUserOrganizedActivities = (): Activity[] => {
     if (!currentUserProfile) return [];
-    return activities.filter(activity =>
-      activity.organizer_id === currentUserProfile.id ||
-      activity.organizer?.id === currentUserProfile.id
+    return activities.filter(
+      (activity) =>
+        activity.organizer_id === currentUserProfile.id ||
+        activity.organizer?.id === currentUserProfile.id,
     );
   };
 
   const getUserParticipatedActivities = (): Activity[] => {
     if (!currentUserProfile) return [];
-    return activities.filter(activity =>
-      activity.participants?.some(p => p.user_id === currentUserProfile.id) ||
-      (activity.organizer_id !== currentUserProfile.id && activity.current_participants > 0)
+    return activities.filter(
+      (activity) =>
+        activity.participants?.some(
+          (p) => p.user_id === currentUserProfile.id,
+        ) ||
+        (activity.organizer_id !== currentUserProfile.id &&
+          activity.current_participants > 0),
     );
   };
 
@@ -691,11 +797,14 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         title: activityData.title,
         description: activityData.specialComments || activityData.description,
         activity_type: activityData.type || activityData.activity_type,
-        date_time: activityData.date_time || `${activityData.date}T${activityData.time}:00Z`,
+        date_time:
+          activityData.date_time ||
+          `${activityData.date}T${activityData.time}:00Z`,
         location: activityData.location,
-        max_participants: typeof activityData.maxParticipants === 'string'
-          ? parseInt(activityData.maxParticipants)
-          : activityData.max_participants || 10,
+        max_participants:
+          typeof activityData.maxParticipants === "string"
+            ? parseInt(activityData.maxParticipants)
+            : activityData.max_participants || 10,
         difficulty_level: activityData.difficulty?.toLowerCase() || "beginner",
         club_id: activityData.club || activityData.club_id,
         special_requirements: activityData.specialComments,

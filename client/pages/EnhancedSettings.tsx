@@ -302,7 +302,7 @@ export default function EnhancedSettings() {
       if ("caches" in window) {
         const cacheNames = await caches.keys();
         await Promise.all(
-          cacheNames.map(cacheName => caches.delete(cacheName))
+          cacheNames.map((cacheName) => caches.delete(cacheName)),
         );
       }
 
@@ -386,7 +386,8 @@ export default function EnhancedSettings() {
       // Simulate API call for complete data download
       toast({
         title: "Data Download Requested",
-        description: "You'll receive an email with your complete data archive within 24 hours.",
+        description:
+          "You'll receive an email with your complete data archive within 24 hours.",
       });
 
       // In a real app, this would trigger a backend process
@@ -425,7 +426,7 @@ I need assistance with:
 
 [Please describe your issue here]
 
-User ID: ${user?.id || 'Not logged in'}
+User ID: ${user?.id || "Not logged in"}
 App Version: 1.0.0
 Device: ${navigator.userAgent}
 
