@@ -223,6 +223,19 @@ export default function CategoryActivities() {
     setFilteredActivities(filtered);
   }, [enhancedActivities, type, location, selectedFilter, searchTerm, selectedDifficulty, selectedLocation, sortBy]);
 
+  // Calculate quick stats
+  const stats = {
+    total: filteredActivities.length,
+    thisWeek: filteredActivities.filter(a => {
+      const activityDate = new Date(a.date);
+      const weekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      return activityDate <= weekFromNow && activityDate >= new Date();
+    }).length,
+    spots: filteredActivities.reduce((sum, a) => sum + ((a.maxParticipants || 20) - (a.participants || 0)), 0),
+    avgDifficulty: filteredActivities.length > 0 ?
+      filteredActivities.filter(a => a.difficulty).length / filteredActivities.length * 100 : 0
+  };
+
   const filterOptions = [
     { value: "all", label: "All Time" },
     { value: "today", label: "Today" },
@@ -239,6 +252,28 @@ export default function CategoryActivities() {
     { value: "skiing", label: "Skiing" },
     { value: "surfing", label: "Surfing" },
     { value: "tennis", label: "Tennis" },
+  ];
+
+  const difficultyOptions = [
+    { value: "all", label: "All Levels" },
+    { value: "beginner", label: "Beginner" },
+    { value: "intermediate", label: "Intermediate" },
+    { value: "advanced", label: "Advanced" },
+  ];
+
+  const locationOptions = [
+    { value: "all", label: "All Locations" },
+    { value: "london", label: "London" },
+    { value: "richmond", label: "Richmond" },
+    { value: "surrey", label: "Surrey" },
+    { value: "cornwall", label: "Cornwall" },
+  ];
+
+  const sortOptions = [
+    { value: "date", label: "Date", icon: Calendar },
+    { value: "popularity", label: "Popularity", icon: TrendingUp },
+    { value: "distance", label: "Distance", icon: MapPin },
+    { value: "difficulty", label: "Difficulty", icon: Star },
   ];
 
   return (
