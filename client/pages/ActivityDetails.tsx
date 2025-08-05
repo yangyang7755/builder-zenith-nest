@@ -365,9 +365,30 @@ export default function ActivityDetails() {
     return null;
   }
 
-  const handleRequestToJoin = () => {
-    if (agreedToRequirements) {
-      setShowRequestModal(true);
+  const handleJoinActivity = async () => {
+    if (!currentActivityId) return;
+
+    if (isParticipating) {
+      // Leave activity
+      try {
+        await leaveActivity(currentActivityId);
+        alert("You have left this activity.");
+      } catch (error) {
+        alert("Failed to leave activity. Please try again.");
+      }
+    } else {
+      // Join activity
+      if (!agreedToRequirements) {
+        alert("Please agree to the requirements before joining.");
+        return;
+      }
+
+      try {
+        await joinActivity(currentActivityId);
+        alert("Successfully joined the activity!");
+      } catch (error) {
+        alert("Failed to join activity. Please try again.");
+      }
     }
   };
 
