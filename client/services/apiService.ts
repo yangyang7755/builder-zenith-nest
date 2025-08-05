@@ -84,39 +84,35 @@ class ApiService {
         ...options,
       });
 
-      // Clone response to avoid body stream issues
-      const responseClone = response.clone();
+      // Read response as text first to avoid body stream issues
       let responseData;
 
       try {
-        // Try JSON first, if that fails try text
-        responseData = await responseClone.json();
-      } catch (jsonError) {
-        try {
-          const responseText = await response.text();
-          if (responseText.trim()) {
-            try {
-              responseData = JSON.parse(responseText);
-            } catch {
-              responseData = { message: responseText };
-            }
-          } else {
-            responseData = {};
-          }
-        } catch (textError) {
-          console.error('Failed to read response:', textError);
+        const responseText = await response.text();
 
-          // Retry on read errors if we haven't exceeded max retries
-          if (retryCount < maxRetries) {
-            console.log(`Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`);
-            await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1)));
-            return this.executeRequest(endpoint, options, retryCount + 1);
+        if (responseText.trim()) {
+          try {
+            responseData = JSON.parse(responseText);
+          } catch (jsonError) {
+            // If it's not valid JSON, treat as plain text
+            responseData = { message: responseText };
           }
-
-          return {
-            error: `Failed to read response: ${textError instanceof Error ? textError.message : String(textError)}`
-          };
+        } else {
+          responseData = {};
         }
+      } catch (readError) {
+        console.error('Failed to read response:', readError);
+
+        // Retry on read errors if we haven't exceeded max retries
+        if (retryCount < maxRetries) {
+          console.log(`Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`);
+          await new Promise(resolve => setTimeout(resolve, 100 * (retryCount + 1)));
+          return this.executeRequest(endpoint, options, retryCount + 1);
+        }
+
+        return {
+          error: `Failed to read response: ${readError instanceof Error ? readError.message : String(readError)}`
+        };
       }
 
       if (!response.ok) {
