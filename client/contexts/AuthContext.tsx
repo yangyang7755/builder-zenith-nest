@@ -82,6 +82,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (response.ok) {
         const updatedProfile = await response.json();
         setProfile(updatedProfile);
+
+        // Persist updated profile to localStorage
+        localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
       }
     } catch (error) {
       console.error("Error updating profile:", error);
