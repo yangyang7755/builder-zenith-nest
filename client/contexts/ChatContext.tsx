@@ -92,10 +92,56 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       );
     };
 
+    const handleCreateActivityChat = (event: CustomEvent) => {
+      const { activityId, activityTitle, organizerId, participantName, message } = event.detail;
+
+      // Create automatic chat message when someone joins an activity
+      const chatMessage: ChatMessage = {
+        id: `chat_${Date.now()}`,
+        type: "general",
+        sender: participantName,
+        content: message,
+        timestamp: new Date(),
+        activityTitle,
+        activityOrganizer: organizerId
+      };
+
+      setChatMessages(prev => [chatMessage, ...prev]);
+
+      // Show notification
+      const notificationEvent = new CustomEvent('showNotification', {
+        detail: {
+          message: `${participantName} joined ${activityTitle}`,
+          type: 'info'
+        }
+      });
+      window.dispatchEvent(notificationEvent);
+    };
+
+    const handleUpdateActivityChat = (event: CustomEvent) => {
+      const { activityId, activityTitle, participantName, message, action } = event.detail;
+
+      // Create chat message for activity updates (like leaving)
+      const chatMessage: ChatMessage = {
+        id: `chat_${Date.now()}`,
+        type: "general",
+        sender: participantName,
+        content: message,
+        timestamp: new Date(),
+        activityTitle
+      };
+
+      setChatMessages(prev => [chatMessage, ...prev]);
+    };
+
     window.addEventListener('profileUpdated', handleProfileUpdate as EventListener);
+    window.addEventListener('createActivityChat', handleCreateActivityChat as EventListener);
+    window.addEventListener('updateActivityChat', handleUpdateActivityChat as EventListener);
 
     return () => {
       window.removeEventListener('profileUpdated', handleProfileUpdate as EventListener);
+      window.removeEventListener('createActivityChat', handleCreateActivityChat as EventListener);
+      window.removeEventListener('updateActivityChat', handleUpdateActivityChat as EventListener);
     };
   }, []);
 
