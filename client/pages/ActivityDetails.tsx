@@ -349,6 +349,12 @@ export default function ActivityDetails() {
   // Prefer static activity data for complete information, fallback to context
   const activity = staticActivity || contextActivity;
 
+  // Get participation status for the current activity
+  const currentActivityId = activityId || activity?.id;
+  const isParticipating = currentActivityId ? isUserParticipating(currentActivityId) : false;
+  const participationStats = currentActivityId ? getParticipationStats(currentActivityId) : null;
+  const canJoin = currentActivityId ? canJoinActivity(currentActivityId) : false;
+
   useEffect(() => {
     if (!activity) {
       navigate("/explore");
