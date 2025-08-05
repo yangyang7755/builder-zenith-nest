@@ -103,6 +103,24 @@ export default function EnhancedSettings() {
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  // Load saved preferences on mount
+  useEffect(() => {
+    const loadSavedPreferences = () => {
+      try {
+        const savedPreferences = localStorage.getItem('userPreferences');
+        if (savedPreferences) {
+          const parsed = JSON.parse(savedPreferences);
+          setPreferences(prev => ({ ...prev, ...parsed }));
+          console.log('Loaded saved preferences:', Object.keys(parsed).length, 'settings');
+        }
+      } catch (error) {
+        console.error('Failed to load preferences:', error);
+      }
+    };
+
+    loadSavedPreferences();
+  }, []);
+
   const updatePreference = async (key: string, value: any) => {
     const newPreferences = { ...preferences, [key]: value };
     setPreferences(newPreferences);
