@@ -92,9 +92,9 @@ const App = () => (
                 <ClubMembershipProvider>
                   <OnboardingProvider>
                 <ActivitiesProvider>
-                  <SavedActivitiesProvider>
-                    <ActivityParticipationProvider>
-                      <ActivityCompletionProvider>
+                  <ActivityCompletionProvider>
+                    <SavedActivitiesProvider>
+                      <ActivityParticipationProvider>
                       <ActivityDraftProvider>
                         <ChatProvider>
                       <Toaster />
@@ -288,9 +288,9 @@ const App = () => (
                       </BrowserRouter>
                         </ChatProvider>
                       </ActivityDraftProvider>
+                      </ActivityParticipationProvider>
+                    </SavedActivitiesProvider>
                   </ActivityCompletionProvider>
-                    </ActivityParticipationProvider>
-                  </SavedActivitiesProvider>
                 </ActivitiesProvider>
                 </OnboardingProvider>
                 </ClubMembershipProvider>
