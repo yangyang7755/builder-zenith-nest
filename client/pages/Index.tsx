@@ -140,6 +140,36 @@ export default function Index() {
     );
   };
 
+  // Get activities from user's clubs
+  const getActivitiesFromUserClubs = () => {
+    const userClubs = getUserClubs();
+    if (userClubs.length === 0) return [];
+
+    const userClubIds = userClubs.map(membership => membership.club_id);
+    const userClubNames = userClubs.map(membership => membership.club_name);
+
+    return activities.filter(activity => {
+      // Check if activity is associated with a club the user is a member of
+      const activityClubId = activity.club_id;
+      const activityClubName = activity.club?.name;
+
+      return userClubIds.includes(activityClubId) ||
+             userClubNames.includes(activityClubName);
+    });
+  };
+
+  const activitiesFromUserClubs = getActivitiesFromUserClubs();
+
+  // Helper function to check if activity is from user's club
+  const isFromUserClub = (activity: any) => {
+    const userClubs = getUserClubs();
+    const userClubIds = userClubs.map(membership => membership.club_id);
+    const userClubNames = userClubs.map(membership => membership.club_name);
+
+    return userClubIds.includes(activity.club_id) ||
+           userClubNames.includes(activity.club?.name);
+  };
+
   // Handle clubOnly query parameter
   useEffect(() => {
     const clubOnly = searchParams.get('clubOnly');
