@@ -56,6 +56,7 @@ import LoginEnhanced from "./pages/LoginEnhanced";
 import ProfileDemo from "./pages/ProfileDemo";
 import ProfileEnhanced from "./pages/ProfileEnhanced";
 import CategoryActivities from "./pages/CategoryActivities";
+import ChangePassword from "./pages/ChangePassword";
 import CreateClub from "./pages/CreateClub";
 import ClubManagerDashboard from "./pages/ClubManagerDashboard";
 import CreateHikingSimple from "./pages/CreateHikingSimple";
