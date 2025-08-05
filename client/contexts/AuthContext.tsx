@@ -109,6 +109,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     let mounted = true;
 
+    // Load persisted user data from localStorage
+    const loadPersistedData = () => {
+      try {
+        const savedProfile = localStorage.getItem('userProfile');
+        const savedSession = localStorage.getItem('userSession');
+
+        if (savedProfile && savedSession) {
+          const profile = JSON.parse(savedProfile);
+          const sessionData = JSON.parse(savedSession);
+
+          // Check if session is not too old (e.g., less than 24 hours)
+          const isSessionValid = Date.now() - sessionData.timestamp < 24 * 60 * 60 * 1000;
+
+          if (isSessionValid && mounted) {
+            setProfile(profile);
+            console.log('Loaded persisted user profile:', profile.full_name);
+          } else {
+            // Clear expired session data
+            localStorage.removeItem('userProfile');
+            localStorage.removeItem('userSession');
+          }
+        }
+      } catch (error) {
+        console.error('Error loading persisted user data:', error);
+        localStorage.removeItem('userProfile');
+        localStorage.removeItem('userSession');
+      }
+    };
+
+    // Load persisted data first
+    loadPersistedData();
+
     // Get initial session
     const getInitialSession = async () => {
       if (!supabase) {
