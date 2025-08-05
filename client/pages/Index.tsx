@@ -789,6 +789,10 @@ function MixedActivitiesSection({
   searchQuery,
   activities,
   formatActivityDate,
+  activitiesFromFollowedUsers,
+  activitiesFromUserClubs,
+  isOrganizerFollowed,
+  isFromUserClub,
 }: {
   filters: any;
   filteredActivities: any[];
@@ -796,6 +800,10 @@ function MixedActivitiesSection({
   searchQuery: string;
   activities: any[];
   formatActivityDate: (dateStr: string) => string;
+  activitiesFromFollowedUsers: any[];
+  activitiesFromUserClubs: any[];
+  isOrganizerFollowed: (activity: any) => boolean;
+  isFromUserClub: (activity: any) => boolean;
 }) {
   // Mixed activities with alternating cycling and climbing
   const mixedActivities = [
@@ -1441,7 +1449,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
           <div>
             <div className="text-gray-500">Discipline</div>
             <div className="font-medium text-black">
-              🧗‍♀️ {activity.discipline}
+              🧗‍��️ {activity.discipline}
             </div>
           </div>
         </div>
