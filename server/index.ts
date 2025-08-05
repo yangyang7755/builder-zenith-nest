@@ -30,6 +30,9 @@ import {
 } from "./routes/auth";
 import {
   handleUserRegistration,
+  handleUserLogin,
+  handleGetUserProfile,
+  handleUpdateUserProfile,
   handleGetUsers,
   handleClubCreation,
   handleGetUserClubs as handleGetUserClubsNew,
