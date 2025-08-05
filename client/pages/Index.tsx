@@ -877,8 +877,8 @@ function MixedActivitiesSection({
       location: "📍 Richmond Park, London",
       imageSrc:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-      organizer: "Richmond Cycling Club",
-      type: "cycling",
+      organizer: "Richmond Running Club",
+      type: "running",
       distance: "25km",
       pace: "20 kph",
       elevation: "150m",
@@ -1116,7 +1116,7 @@ function MixedActivitiesSection({
               <div key={activity.id} className="relative">
                 <div className="absolute top-2 right-2 z-10">
                   <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                    🏛️ Club
+                    ��️ Club
                   </div>
                 </div>
                 <ActivityCard
@@ -1700,7 +1700,7 @@ function CyclingExploreSection() {
     {
       title: "Hill Climbing Intervals",
       date: "📅 Thursday, 6:00 PM",
-      location: "���Leith Hill, Surrey",
+      location: "📍Leith Hill, Surrey",
       organizer: "Watts Cycling Club",
       distance: "35km",
       pace: "Interval training",
