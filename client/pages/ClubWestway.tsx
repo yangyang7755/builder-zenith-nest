@@ -345,7 +345,7 @@ export default function ClubWestway() {
                   Members
                 </h3>
                 <span className="text-sm text-gray-500 font-cabin">
-                  {formatMemberCount(getActualMemberCount(club))}
+                  {formatMemberCount(getActualMemberCount(club?.name || "westway"))}
                 </span>
               </div>
               <div className="grid grid-cols-6 gap-4">
