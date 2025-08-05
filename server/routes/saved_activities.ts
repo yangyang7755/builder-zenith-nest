@@ -297,12 +297,31 @@ export const handleCheckActivitySaved = async (req: Request, res: Response) => {
     }
 
     // Check if activity is saved
-    const { data: savedActivity } = await supabaseAdmin
+    const { data: savedActivity, error } = await supabaseAdmin
       .from('saved_activities')
       .select('id')
       .eq('user_id', user.id)
       .eq('activity_id', activityId)
       .single();
+
+    // Handle database errors
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned, which is expected
+      console.error("Database error:", error);
+
+      // If the table doesn't exist yet, return false
+      if (error.code === '42P01') {
+        console.log("saved_activities table doesn't exist yet, returning false");
+        return res.json({
+          success: true,
+          data: { is_saved: false }
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: "Failed to check saved status"
+      });
+    }
 
     res.json({
       success: true,
