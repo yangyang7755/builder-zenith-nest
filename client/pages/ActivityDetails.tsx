@@ -641,7 +641,7 @@ export default function ActivityDetails() {
               </h4>
             </div>
             <p className="text-sm text-black font-cabin ml-6">
-              {activity.currentParticipants || '0'}/{contextActivity?.maxParticipants || activity.capacity || 'N/A'} joined
+              {participationStats?.participantCount || activity.currentParticipants || '0'}/{contextActivity?.max_participants || contextActivity?.maxParticipants || activity.capacity || 'N/A'} joined
             </p>
           </div>
 
