@@ -578,12 +578,7 @@ Thank you!
             icon={<Lock className="w-5 h-5" />}
             title="Change Password"
             subtitle="Update your account password"
-            onClick={() =>
-              toast({
-                title: "Password Change",
-                description: "Password change coming soon.",
-              })
-            }
+            onClick={changePassword}
           />
           <SettingsItem
             icon={<MapPin className="w-5 h-5" />}
