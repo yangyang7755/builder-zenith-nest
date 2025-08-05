@@ -232,12 +232,25 @@ export default function Activities() {
 
         {selectedTab === "Joined" && (
           <div>
+            {/* Organized Activities Section */}
+            {organizedActivities.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-black font-cabin mb-4">
+                  Your Organized Activities ({organizedActivities.length})
+                </h2>
+                {organizedActivities.map((activity, index) => (
+                  <ActivityCard key={`organized-${activity.id}-${index}`} activity={activity} />
+                ))}
+              </div>
+            )}
+
+            {/* Participated Activities Section */}
             <h2 className="text-xl font-bold text-black font-cabin mb-4">
-              Joined Activities ({joinedActivities.length})
+              Joined Activities ({participatedActivities.length})
             </h2>
-            {joinedActivities.length > 0 ? (
-              joinedActivities.map((activity, index) => (
-                <ActivityCard key={index} activity={activity} />
+            {participatedActivities.length > 0 ? (
+              participatedActivities.map((activity, index) => (
+                <ActivityCard key={`participated-${activity.id}-${index}`} activity={activity} />
               ))
             ) : (
               <div className="text-center py-8">
