@@ -17,6 +17,8 @@ import { useChat } from "../contexts/ChatContext";
 import BottomNavigation from "../components/BottomNavigation";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { useActivities } from "../contexts/ActivitiesContext";
+import { useActivityParticipation } from "../contexts/ActivityParticipationContext";
+import { useUserProfile } from "../contexts/UserProfileContext";
 import ReviewModal from "../components/ReviewModal";
 
 // Comprehensive activity data structure
