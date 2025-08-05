@@ -21,6 +21,7 @@ interface ActivityCardProps {
   elevation?: string;
   difficulty?: string;
   activityId?: string;
+  isOrganizerFollowed?: boolean;
 }
 
 export default function ActivityCard({
