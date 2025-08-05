@@ -66,12 +66,12 @@ export default function ClubRichmond() {
         <div className="text-center mb-6">
           <img
             src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F7c405a1be5e04dc69eb62c5c70ba6efc?format=webp&width=800"
-            alt="Richmond Cycling Club"
+            alt="Richmond Running Club"
             className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-explore-green object-cover"
           />
 
           <h2 className="text-2xl font-bold text-black font-cabin mb-2">
-            Richmond Cycling Club
+            Richmond Running Club
           </h2>
 
           <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
