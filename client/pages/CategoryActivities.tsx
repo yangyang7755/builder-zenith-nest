@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, MapPin, Users, Clock, Filter } from "lucide-react";
+import { ArrowLeft, MapPin, Users, Clock, Filter, Search, Sliders, Calendar, Star, TrendingUp, Grid3X3, List } from "lucide-react";
 import { useActivities } from "../contexts/ActivitiesContext";
 import ActivityCard from "../components/ActivityCard";
 import BottomNavigation from "../components/BottomNavigation";
