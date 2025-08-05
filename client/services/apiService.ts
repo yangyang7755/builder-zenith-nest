@@ -99,39 +99,58 @@ class ApiService {
       let responseData;
 
       try {
-        // Try to read the response body only once using the most reliable method
-        if (response.body === null) {
-          responseData = {};
-        } else {
-          // Use Response.clone() properly to ensure we have an independent copy
-          const responseClone = response.clone();
+        // Check if response body is readable before attempting any operations
+        const bodyUsed = response.bodyUsed;
 
-          // Try text first on the clone
-          const responseText = await responseClone.text();
-
-          if (responseText.trim()) {
-            try {
-              responseData = JSON.parse(responseText);
-            } catch (jsonError) {
-              responseData = { message: responseText };
-            }
+        if (bodyUsed || response.body === null) {
+          // If body is already used or null, create a response based on status
+          if (statusOk) {
+            responseData = { success: true };
           } else {
-            responseData = {};
+            responseData = {
+              success: false,
+              error: `HTTP ${status}`,
+              message: `Request failed with status ${status}`
+            };
+          }
+        } else {
+          // Try to read the response body using a simple approach
+          try {
+            const responseText = await response.text();
+
+            if (responseText.trim()) {
+              try {
+                responseData = JSON.parse(responseText);
+              } catch (jsonError) {
+                responseData = { message: responseText };
+              }
+            } else {
+              responseData = statusOk ? { success: true } : { success: false, error: `HTTP ${status}` };
+            }
+          } catch (textError) {
+            // If we can't read the text, fall back to status-based response
+            console.warn('Could not read response text, using status-based response:', textError.message);
+            responseData = statusOk ? { success: true } : { success: false, error: `HTTP ${status}` };
           }
         }
       } catch (readError) {
         console.error('Failed to read response:', readError);
 
-        // Retry on read errors if we haven't exceeded max retries
-        if (retryCount < maxRetries) {
+        // If we can't read at all, check if we should retry
+        if (retryCount < maxRetries && (
+          readError.message.includes('body stream already read') ||
+          readError.message.includes('Response body is already used') ||
+          readError.message.includes('clone')
+        )) {
           console.log(`Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`);
-          await new Promise(resolve => setTimeout(resolve, 200 * (retryCount + 1)));
+          await new Promise(resolve => setTimeout(resolve, 300 * (retryCount + 1)));
           return this.executeRequest(endpoint, options, retryCount + 1);
         }
 
-        return {
-          error: `Failed to read response: ${readError instanceof Error ? readError.message : String(readError)}`
-        };
+        // Final fallback: return a response based on HTTP status
+        responseData = statusOk ?
+          { success: true } :
+          { success: false, error: `Failed to read response: ${readError instanceof Error ? readError.message : String(readError)}` };
       }
 
       if (!statusOk) {
