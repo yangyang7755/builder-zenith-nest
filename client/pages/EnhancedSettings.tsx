@@ -601,12 +601,7 @@ Thank you!
             icon={<Shield className="w-5 h-5" />}
             title="Account Security"
             subtitle="Two-factor authentication, login history"
-            onClick={() =>
-              toast({
-                title: "Security",
-                description: "Security settings coming soon.",
-              })
-            }
+            onClick={manageTwoFactor}
             badge="Secure"
           />
           <SettingsItem
