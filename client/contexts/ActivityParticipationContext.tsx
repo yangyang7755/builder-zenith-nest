@@ -241,7 +241,15 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
         return false;
       }
 
-      // Update participations
+      // Try to leave via API first
+      const response = await apiService.leaveActivity(activityId);
+
+      if (response.error && response.error !== 'BACKEND_UNAVAILABLE') {
+        showParticipationNotification("Failed to leave activity", "error");
+        return false;
+      }
+
+      // Update local participations
       setParticipations(prev => {
         const newMap = new Map(prev);
         const existing = newMap.get(activityId) || [];
@@ -277,10 +285,7 @@ export function ActivityParticipationProvider({ children }: { children: ReactNod
       window.dispatchEvent(chatEvent);
 
       showParticipationNotification(`You left "${activityTitle}"`, "info");
-      
-      // In a real app, this would call the API
-      // await apiService.leaveActivity(activityId);
-      
+
       return true;
     } catch (error) {
       console.error("Error leaving activity:", error);
