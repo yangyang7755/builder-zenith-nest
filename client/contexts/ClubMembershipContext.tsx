@@ -89,17 +89,17 @@ export function ClubMembershipProvider({ children }: { children: ReactNode }) {
       {
         id: "membership_2",
         user_id: "user_current",
-        club_id: "richmond-cycling-club",
-        club_name: "richmond cycling club",
-        role: "member", 
+        club_id: "richmond-running-club",
+        club_name: "richmond running club",
+        role: "member",
         joined_at: new Date("2024-01-15"),
         status: "active",
         club_data: {
-          id: "richmond-cycling-club",
-          name: "richmond cycling club",
-          displayName: getClubDisplayName("richmond cycling club"),
-          profileImage: getClubProfileImage("richmond cycling club"),
-          type: "cycling",
+          id: "richmond-running-club",
+          name: "richmond running club",
+          displayName: getClubDisplayName("richmond running club"),
+          profileImage: getClubProfileImage("richmond running club"),
+          type: "running",
           location: "Richmond, London",
           memberCount: 450
         }
