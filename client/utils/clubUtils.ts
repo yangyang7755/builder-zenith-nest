@@ -53,20 +53,20 @@ export const CLUB_DATABASE: { [key: string]: ClubData } = {
   },
 
   // Cycling clubs
-  "richmond-cycling-club": {
-    id: "richmond-cycling-club",
-    name: "richmond cycling club",
-    displayName: "Richmond Cycling Club",
-    profileImage: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop",
-    coverImage: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&h=400&fit=crop",
-    description: "Exploring Richmond Park and beyond with weekend social rides and training sessions.",
+  "richmond-running-club": {
+    id: "richmond-running-club",
+    name: "richmond running club",
+    displayName: "Richmond Running Club",
+    profileImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop",
+    description: "Exploring Richmond Park and beyond with weekend social runs and training sessions.",
     location: "Richmond Park, London",
-    type: "cycling",
-    website: "https://www.richmondcc.co.uk",
-    contactEmail: "rides@richmondcc.co.uk",
+    type: "running",
+    website: "https://www.richmondrc.co.uk",
+    contactEmail: "runs@richmondrc.co.uk",
     isPrivate: false,
     memberCount: 450,
-    tags: ["road cycling", "social rides", "training", "richmond park"]
+    tags: ["road running", "social runs", "training", "richmond park"]
   },
 
   "rapha-cycling-club": {
