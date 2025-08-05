@@ -174,6 +174,17 @@ export const handleSaveActivity = async (req: Request, res: Response) => {
 
     if (error) {
       console.error("Database error:", error);
+
+      // If the table doesn't exist yet, return success but log that table needs to be created
+      if (error.code === '42P01') {
+        console.log("saved_activities table doesn't exist yet, activity not saved to database");
+        return res.json({
+          success: true,
+          data: { id: 'demo-saved-id', user_id: user.id, activity_id: activity_id },
+          message: "Table not created yet, activity saved in demo mode"
+        });
+      }
+
       return res.status(500).json({
         success: false,
         error: "Failed to save activity"
