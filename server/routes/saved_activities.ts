@@ -41,9 +41,59 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
     }
 
     if (!supabaseAdmin) {
-      return res.status(503).json({
-        success: false,
-        error: "Database not available",
+      // Return demo saved activities when database is not available
+      console.log("Supabase not configured, returning demo saved activities");
+
+      const demoSavedActivities = [
+        {
+          id: "demo-saved-1",
+          saved_at: new Date().toISOString(),
+          activity: {
+            id: "demo-activity-1",
+            title: "Morning Climbing Session",
+            description: "Indoor climbing for all levels",
+            activity_type: "climbing",
+            date_time: "2024-12-28T10:00:00Z",
+            location: "Westway Climbing Centre",
+            max_participants: 15,
+            current_participants: 8,
+            difficulty_level: "Beginner",
+            price_per_person: 0,
+            status: "upcoming",
+            organizer: {
+              id: "demo-organizer-1",
+              full_name: "Demo Organizer",
+              profile_image: null
+            }
+          }
+        },
+        {
+          id: "demo-saved-2",
+          saved_at: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+          activity: {
+            id: "demo-activity-2",
+            title: "Thames Path Cycling",
+            description: "Scenic riverside cycling tour",
+            activity_type: "cycling",
+            date_time: "2024-12-29T14:00:00Z",
+            location: "Thames Path, London",
+            max_participants: 20,
+            current_participants: 12,
+            difficulty_level: "Intermediate",
+            price_per_person: 15,
+            status: "upcoming",
+            organizer: {
+              id: "demo-organizer-2",
+              full_name: "Cycling Club London",
+              profile_image: null
+            }
+          }
+        }
+      ];
+
+      return res.json({
+        success: true,
+        data: demoSavedActivities,
       });
     }
 
