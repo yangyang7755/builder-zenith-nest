@@ -184,14 +184,40 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
     if (error) {
       console.error("Database error:", error);
 
-      // If the table doesn't exist yet, return empty array instead of error
+      // If the table doesn't exist or relationships aren't set up, return demo data instead of error
       if (error.code === "42P01" || error.code === "PGRST200") {
         console.log(
-          "saved_activities table doesn't exist or relationships not set up, returning empty array",
+          "saved_activities table doesn't exist or relationships not set up, returning demo data",
         );
+
+        const demoSavedActivities = [
+          {
+            id: "demo-saved-1",
+            saved_at: new Date().toISOString(),
+            activity: {
+              id: "demo-activity-1",
+              title: "Morning Climbing Session",
+              description: "Indoor climbing for all levels",
+              activity_type: "climbing",
+              date_time: "2024-12-28T10:00:00Z",
+              location: "Westway Climbing Centre",
+              max_participants: 15,
+              current_participants: 8,
+              difficulty_level: "Beginner",
+              price_per_person: 0,
+              status: "upcoming",
+              organizer: {
+                id: "demo-organizer-1",
+                full_name: "Demo Organizer",
+                profile_image: null
+              }
+            }
+          }
+        ];
+
         return res.json({
           success: true,
-          data: [],
+          data: demoSavedActivities,
         });
       }
 
