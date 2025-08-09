@@ -410,7 +410,8 @@ export const handleGetUsers = async (req: Request, res: Response) => {
           full_name: "Alice Johnson",
           university: "University College London",
           bio: "Outdoor enthusiast and climbing instructor",
-          profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face",
+          profile_image:
+            "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face",
           created_at: new Date().toISOString(),
         },
         {
@@ -419,9 +420,10 @@ export const handleGetUsers = async (req: Request, res: Response) => {
           full_name: "Ben Smith",
           university: "Imperial College London",
           bio: "Cycling enthusiast and weekend warrior",
-          profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+          profile_image:
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
           created_at: new Date().toISOString(),
-        }
+        },
       ];
 
       return res.json({
@@ -434,7 +436,9 @@ export const handleGetUsers = async (req: Request, res: Response) => {
     // Fetch users from database
     const { data: users, error: usersError } = await supabaseAdmin
       .from("profiles")
-      .select("id, email, full_name, university, bio, profile_image, created_at")
+      .select(
+        "id, email, full_name, university, bio, profile_image, created_at",
+      )
       .order("created_at", { ascending: false })
       .limit(50);
 
@@ -570,7 +574,7 @@ export const handleGetUserClubs = async (req: Request, res: Response) => {
           memberCount: 450,
           role: "member",
           joinedAt: new Date().toISOString(),
-        }
+        },
       ];
 
       return res.json({
@@ -592,7 +596,7 @@ export const handleGetUserClubs = async (req: Request, res: Response) => {
         memberCount: 25,
         role: "member",
         joinedAt: new Date().toISOString(),
-      }
+      },
     ];
 
     res.json({
