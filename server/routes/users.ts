@@ -394,3 +394,218 @@ export const handleUpdateUserProfile = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const handleGetUsers = async (req: Request, res: Response) => {
+  try {
+    console.log("=== GET USERS REQUEST ===");
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      console.log("Supabase not configured, returning demo response");
+
+      const demoUsers = [
+        {
+          id: "demo-user-1",
+          email: "user1@example.com",
+          full_name: "Alice Johnson",
+          university: "University College London",
+          bio: "Outdoor enthusiast and climbing instructor",
+          profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face",
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "demo-user-2",
+          email: "user2@example.com",
+          full_name: "Ben Smith",
+          university: "Imperial College London",
+          bio: "Cycling enthusiast and weekend warrior",
+          profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+          created_at: new Date().toISOString(),
+        }
+      ];
+
+      return res.json({
+        success: true,
+        users: demoUsers,
+        total: demoUsers.length,
+      });
+    }
+
+    // Fetch users from database
+    const { data: users, error: usersError } = await supabaseAdmin
+      .from("profiles")
+      .select("id, email, full_name, university, bio, profile_image, created_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (usersError) {
+      console.error("Users fetch error:", usersError);
+      return res.status(500).json({
+        success: false,
+        error: "Failed to fetch users",
+      });
+    }
+
+    res.json({
+      success: true,
+      users: users || [],
+      total: users?.length || 0,
+    });
+  } catch (error) {
+    console.error("Get users error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch users",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
+export const handleClubCreation = async (req: Request, res: Response) => {
+  try {
+    console.log("=== CLUB CREATION REQUEST ===");
+    console.log("Request body:", JSON.stringify(req.body, null, 2));
+
+    const { name, description, type, location, isPrivate = false } = req.body;
+
+    if (!name || !description || !type || !location) {
+      return res.status(400).json({
+        success: false,
+        error: "Name, description, type, and location are required",
+      });
+    }
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      console.log("Supabase not configured, returning demo response");
+
+      const demoClub = {
+        id: `demo-club-${Date.now()}`,
+        name,
+        description,
+        type,
+        location,
+        isPrivate,
+        memberCount: 1,
+        managerId: "demo-user-current",
+        created_at: new Date().toISOString(),
+      };
+
+      return res.status(201).json({
+        success: true,
+        message: "Demo club created successfully",
+        club: demoClub,
+      });
+    }
+
+    // In a real implementation, this would create a club in the database
+    const clubData = {
+      name,
+      description,
+      type,
+      location,
+      is_private: isPrivate,
+      member_count: 1,
+      manager_id: req.user?.id || "unknown",
+      created_at: new Date().toISOString(),
+    };
+
+    // For now, return a demo response since we don't have clubs table
+    const demoClub = {
+      id: `club-${Date.now()}`,
+      ...clubData,
+    };
+
+    res.status(201).json({
+      success: true,
+      message: "Club created successfully",
+      club: demoClub,
+    });
+  } catch (error) {
+    console.error("Club creation error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to create club",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
+export const handleGetUserClubs = async (req: Request, res: Response) => {
+  try {
+    console.log("=== GET USER CLUBS REQUEST ===");
+
+    const userId = req.params.userId || req.user?.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID is required",
+      });
+    }
+
+    console.log("Fetching clubs for user:", userId);
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      console.log("Supabase not configured, returning demo response");
+
+      const demoClubs = [
+        {
+          id: "demo-club-1",
+          name: "Westway Climbing Centre",
+          description: "London's premier indoor climbing centre",
+          type: "climbing",
+          location: "London, UK",
+          memberCount: 1250,
+          role: "member",
+          joinedAt: new Date().toISOString(),
+        },
+        {
+          id: "demo-club-2",
+          name: "Richmond Running Club",
+          description: "Running club for all levels in Richmond",
+          type: "running",
+          location: "Richmond, London",
+          memberCount: 450,
+          role: "member",
+          joinedAt: new Date().toISOString(),
+        }
+      ];
+
+      return res.json({
+        success: true,
+        clubs: demoClubs,
+        total: demoClubs.length,
+      });
+    }
+
+    // In a real implementation, this would fetch from a club_members table
+    // For now, return demo data
+    const demoClubs = [
+      {
+        id: "club-1",
+        name: "Demo Club 1",
+        description: "A demo club for testing",
+        type: "general",
+        location: "London, UK",
+        memberCount: 25,
+        role: "member",
+        joinedAt: new Date().toISOString(),
+      }
+    ];
+
+    res.json({
+      success: true,
+      clubs: demoClubs,
+      total: demoClubs.length,
+    });
+  } catch (error) {
+    console.error("Get user clubs error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch user clubs",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
