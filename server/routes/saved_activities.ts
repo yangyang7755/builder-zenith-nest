@@ -63,9 +63,9 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
             organizer: {
               id: "demo-organizer-1",
               full_name: "Demo Organizer",
-              profile_image: null
-            }
-          }
+              profile_image: null,
+            },
+          },
         },
         {
           id: "demo-saved-2",
@@ -85,10 +85,10 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
             organizer: {
               id: "demo-organizer-2",
               full_name: "Cycling Club London",
-              profile_image: null
-            }
-          }
-        }
+              profile_image: null,
+            },
+          },
+        },
       ];
 
       return res.json({
@@ -148,7 +148,10 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
       savedActivities = result.data;
       error = result.error;
     } catch (relationshipError) {
-      console.log("Relationship query failed, trying simpler query:", relationshipError);
+      console.log(
+        "Relationship query failed, trying simpler query:",
+        relationshipError,
+      );
 
       // Fallback to simpler query without relationships
       try {
@@ -162,18 +165,19 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
           error = simpleResult.error;
         } else {
           // Transform simple results to match expected format
-          savedActivities = simpleResult.data?.map(item => ({
-            id: item.id,
-            saved_at: item.saved_at,
-            activity: {
-              id: item.activity_id,
-              title: "Demo Activity",
-              description: "Demo activity description",
-              activity_type: "general",
-              location: "Demo Location",
-              status: "upcoming"
-            }
-          })) || [];
+          savedActivities =
+            simpleResult.data?.map((item) => ({
+              id: item.id,
+              saved_at: item.saved_at,
+              activity: {
+                id: item.activity_id,
+                title: "Demo Activity",
+                description: "Demo activity description",
+                activity_type: "general",
+                location: "Demo Location",
+                status: "upcoming",
+              },
+            })) || [];
         }
       } catch (simpleError) {
         console.error("Simple query also failed:", simpleError);
@@ -209,10 +213,10 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
               organizer: {
                 id: "demo-organizer-1",
                 full_name: "Demo Organizer",
-                profile_image: null
-              }
-            }
-          }
+                profile_image: null,
+              },
+            },
+          },
         ];
 
         return res.json({
