@@ -105,7 +105,8 @@ const App = () => (
                                 <Sonner />
                                 <ToastContainer />
                                 <BrowserRouter>
-                                  <Routes>
+                                  <div className="mobile-container">
+                                    <Routes>
                                     <Route
                                       path="/"
                                       element={<SplashScreen />}
@@ -362,7 +363,8 @@ const App = () => (
                                     />
                                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                                     <Route path="*" element={<NotFound />} />
-                                  </Routes>
+                                    </Routes>
+                                  </div>
                                 </BrowserRouter>
                               </ChatProvider>
                             </ActivityDraftProvider>
