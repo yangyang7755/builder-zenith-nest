@@ -426,31 +426,31 @@ export default function CategoryActivities() {
 
       {/* Quick Stats */}
       {showQuickStats && (
-        <div className="px-6 py-4 bg-gradient-to-r from-explore-green/5 to-blue-50 border-b border-gray-100">
+        <div className="stats-container-mobile">
           <div className="grid grid-cols-4 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-explore-green">
                 {stats.total}
               </div>
-              <div className="text-xs text-gray-600 font-cabin">Total</div>
+              <div className="text-mobile-small text-gray-600">Total</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
                 {stats.thisWeek}
               </div>
-              <div className="text-xs text-gray-600 font-cabin">This Week</div>
+              <div className="text-mobile-small text-gray-600">This Week</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
                 {stats.spots}
               </div>
-              <div className="text-xs text-gray-600 font-cabin">Spots Left</div>
+              <div className="text-mobile-small text-gray-600">Spots Left</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">
                 {Math.round(stats.avgDifficulty)}%
               </div>
-              <div className="text-xs text-gray-600 font-cabin">Have Info</div>
+              <div className="text-mobile-small text-gray-600">Have Info</div>
             </div>
           </div>
         </div>
