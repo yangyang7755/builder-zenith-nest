@@ -354,8 +354,21 @@ export const formatMemberCount = (count: number): string => {
   return count.toString();
 };
 
-export const getActualMemberCount = (clubName: string): number => {
-  return getClubMemberCount(clubName);
+export const getActualMemberCount = (clubName: string | any): number => {
+  // Handle both string club names and Club objects
+  let name = clubName;
+
+  // If it's a Club object, extract the name
+  if (typeof clubName === 'object' && clubName?.name) {
+    name = clubName.name;
+  }
+
+  // If we have a Club object with memberCount, use it directly
+  if (typeof clubName === 'object' && typeof clubName?.memberCount === 'number') {
+    return clubName.memberCount;
+  }
+
+  return getClubMemberCount(name);
 };
 
 export const getPendingRequestsCount = (clubName: string): number => {
