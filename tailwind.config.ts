@@ -29,6 +29,19 @@ export default {
           gray: "#F5F5F5",
           "text-light": "rgba(0, 0, 0, 0.34)",
         },
+        // Unified Design Token Colors for Mobile Consistency
+        'explore-green': {
+          DEFAULT: '#10B981',
+          50: '#ECFDF5',
+          100: '#D1FAE5',
+          500: '#10B981',
+          600: '#059669',
+          700: '#047857',
+        },
+        'create-orange': '#F97316',
+        'activity-blue': '#3B82F6',
+        'chat-purple': '#8B5CF6',
+        'profile-pink': '#EC4899',
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
