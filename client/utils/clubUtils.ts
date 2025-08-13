@@ -201,8 +201,19 @@ export const getClubByName = (clubName: string): ClubData | null => {
   return CLUB_DATABASE[normalizedName] || null;
 };
 
-export const normalizeClubName = (name: string): string => {
-  return name
+export const normalizeClubName = (name: string | any): string => {
+  // Handle non-string inputs safely
+  if (!name) return "";
+
+  // If it's an object with a name property, use that
+  if (typeof name === 'object' && name.name) {
+    name = name.name;
+  }
+
+  // Convert to string if it's not already
+  const nameStr = String(name);
+
+  return nameStr
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, "") // Remove special characters
     .replace(/\s+/g, "-") // Replace spaces with hyphens
