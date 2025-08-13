@@ -345,9 +345,9 @@ export default function CategoryActivities() {
   ];
 
   return (
-    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto">
+    <div className="page-container-mobile">
       {/* Status Bar */}
-      <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
+      <div className="mobile-status-bar">
         <span>9:41</span>
         <div className="flex items-center gap-1">
           <div className="flex gap-0.5">
