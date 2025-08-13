@@ -371,7 +371,20 @@ export const getActualMemberCount = (clubName: string | any): number => {
   return getClubMemberCount(name);
 };
 
-export const getPendingRequestsCount = (clubName: string): number => {
+export const getPendingRequestsCount = (clubName: string | any): number => {
+  // Handle both string club names and Club objects
+  let name = clubName;
+
+  // If it's a Club object, extract the name
+  if (typeof clubName === 'object' && clubName?.name) {
+    name = clubName.name;
+  }
+
+  // If we have a Club object with pendingRequests, use its length
+  if (typeof clubName === 'object' && Array.isArray(clubName?.pendingRequests)) {
+    return clubName.pendingRequests.length;
+  }
+
   // In a real app, this would query pending join requests
   return Math.floor(Math.random() * 10) + 1;
 };
