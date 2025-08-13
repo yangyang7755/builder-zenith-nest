@@ -108,6 +108,26 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // Design Token Spacing for Mobile Consistency
+      spacing: {
+        'mobile-xs': '4px',
+        'mobile-sm': '8px',
+        'mobile-md': '16px',
+        'mobile-lg': '24px',
+        'mobile-xl': '32px',
+        'mobile-xxl': '48px',
+      },
+      // Mobile-first max widths
+      maxWidth: {
+        'mobile': '448px', // iPhone 14 Pro Max width
+        'mobile-sm': '375px', // iPhone SE width
+      },
+      // Mobile-specific heights
+      height: {
+        'mobile-header': '64px',
+        'mobile-tab-bar': '70px',
+        'mobile-status': '44px',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
