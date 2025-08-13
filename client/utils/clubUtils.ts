@@ -206,7 +206,7 @@ export const normalizeClubName = (name: string | any): string => {
   if (!name) return "";
 
   // If it's an object with a name property, use that
-  if (typeof name === 'object' && name.name) {
+  if (typeof name === "object" && name.name) {
     name = name.name;
   }
 
@@ -359,12 +359,15 @@ export const getActualMemberCount = (clubName: string | any): number => {
   let name = clubName;
 
   // If it's a Club object, extract the name
-  if (typeof clubName === 'object' && clubName?.name) {
+  if (typeof clubName === "object" && clubName?.name) {
     name = clubName.name;
   }
 
   // If we have a Club object with memberCount, use it directly
-  if (typeof clubName === 'object' && typeof clubName?.memberCount === 'number') {
+  if (
+    typeof clubName === "object" &&
+    typeof clubName?.memberCount === "number"
+  ) {
     return clubName.memberCount;
   }
 
@@ -376,12 +379,15 @@ export const getPendingRequestsCount = (clubName: string | any): number => {
   let name = clubName;
 
   // If it's a Club object, extract the name
-  if (typeof clubName === 'object' && clubName?.name) {
+  if (typeof clubName === "object" && clubName?.name) {
     name = clubName.name;
   }
 
   // If we have a Club object with pendingRequests, use its length
-  if (typeof clubName === 'object' && Array.isArray(clubName?.pendingRequests)) {
+  if (
+    typeof clubName === "object" &&
+    Array.isArray(clubName?.pendingRequests)
+  ) {
     return clubName.pendingRequests.length;
   }
 
