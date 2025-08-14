@@ -1,33 +1,28 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
-  
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
+  const handleLogin = async () => {
+    setError("");
     setLoading(true);
 
     try {
-      const { user, error } = await signIn(formData.email, formData.password);
-      
+      const { user, error } = await signIn(email, password);
+
       if (error) {
         setError(error.message || 'Failed to sign in');
       } else if (user) {
         // Successful login - redirect to main app
-        navigate('/explore');
+        navigate("/explore");
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -37,159 +32,105 @@ export default function Login() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
-
   return (
-    <div className="mobile-container min-h-screen bg-white">
-      {/* Status Bar */}
-      <div className="mobile-status-bar">
-        <span>9:41</span>
-        <div className="flex items-center gap-1">
-          <div className="flex gap-0.5">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="w-1 h-3 bg-black rounded-sm"></div>
-            ))}
+    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
+      <div className="flex flex-col justify-center items-center px-7 py-16 min-h-screen">
+        {/* Logo Section */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-32 h-32 mb-6">
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9e47fe83fd834e79a57361f8a278d9a9?format=webp&width=800"
+              alt="Wildpals Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
-          <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
-            <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
-          </svg>
+          <h2 className="text-2xl font-bold text-black font-cabin mb-2">
+            Wildpals
+          </h2>
         </div>
-      </div>
 
-      {/* Header */}
-      <div className="mobile-header">
-        <div className="flex items-center">
-          <button onClick={() => navigate('/auth')} className="mr-4">
-            <ArrowLeft className="w-6 h-6 text-black" />
-          </button>
-          <div>
-            <h1 className="text-mobile-h3 text-black">Welcome Back</h1>
-            <p className="text-mobile-caption text-gray-500">Sign in to your account</p>
+        {/* Welcome Back Title */}
+        <h1 className="text-4xl text-black text-center font-cabin mb-12">
+          Welcome Back
+        </h1>
+
+        {/* Error Message */}
+        {error && (
+          <div className="w-full max-w-sm mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded font-cabin text-sm">
+            {error}
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Content */}
-      <div className="px-6 py-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-              <p className="text-sm text-red-700 font-cabin">{error}</p>
-            </div>
-          )}
-
-          {/* Email Field */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 font-cabin">
-              Email Address
-            </label>
+        {/* Form */}
+        <div className="w-full max-w-sm space-y-4">
+          {/* Email Input */}
+          <div className="relative">
             <input
               type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="search-input-mobile"
-              placeholder="Enter your email"
-              autoComplete="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border-2 border-explore-green rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green"
             />
           </div>
 
-          {/* Password Field */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2 font-cabin">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="search-input-mobile pr-12"
-                placeholder="Enter your password"
-                autoComplete="current-password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            </div>
-          </div>
-
-          {/* Forgot Password */}
-          <div className="text-right">
-            <Link 
-              to="/auth/forgot-password" 
-              className="text-sm text-explore-green hover:text-green-600 font-cabin"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-
-          {/* Sign In Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-primary-mobile w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Signing In...
-              </div>
-            ) : (
-              'Sign In'
-            )}
-          </button>
-
-          {/* Demo Credentials for Testing */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h3 className="text-sm font-medium text-blue-800 mb-2 font-cabin">Demo Credentials</h3>
-            <p className="text-xs text-blue-700 mb-2 font-cabin">
-              Use these credentials to test the app:
-            </p>
-            <div className="text-xs text-blue-700 font-mono">
-              <p>Email: demo@wildpals.com</p>
-              <p>Password: demo123456</p>
-            </div>
+          {/* Password Input */}
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border-2 border-explore-green rounded-lg py-3 px-6 font-cabin text-base text-explore-green placeholder-explore-green focus:outline-none focus:ring-2 focus:ring-explore-green pr-16"
+            />
             <button
               type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black opacity-55 text-base font-cabin"
+            >
+              Show
+            </button>
+          </div>
+
+          {/* Login Button */}
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className="w-full bg-explore-green text-white py-3 px-6 rounded-lg font-cabin text-base mt-6 disabled:opacity-50"
+          >
+            {loading ? "Logging in..." : "Log in"}
+          </button>
+
+          {/* Forgot Password */}
+          <div className="text-center pt-4">
+            <button className="text-black font-cabin text-base">
+              Forgot your password?
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div className="text-center py-4">
+            <span className="text-gray-400 font-cabin text-base">or</span>
+          </div>
+
+          {/* Continue with Apple */}
+          <button className="w-full border-2 border-explore-green bg-white text-explore-green py-3 px-6 rounded-lg font-cabin text-base">
+            Continue with Apple
+          </button>
+
+          {/* Demo Credentials */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
+            <p className="text-xs text-blue-700 mb-2 font-cabin">Demo: demo@wildpals.com / demo123456</p>
+            <button
               onClick={() => {
-                setFormData({
-                  email: 'demo@wildpals.com',
-                  password: 'demo123456'
-                });
+                setEmail('demo@wildpals.com');
+                setPassword('demo123456');
               }}
-              className="mt-2 text-xs text-blue-600 hover:text-blue-800 font-cabin underline"
+              className="text-xs text-blue-600 underline font-cabin"
             >
               Fill demo credentials
             </button>
           </div>
-        </form>
-
-        {/* Sign Up Link */}
-        <div className="text-center mt-8">
-          <p className="text-gray-600 font-cabin">
-            Don't have an account?{' '}
-            <Link to="/auth/signup" className="text-explore-green font-semibold hover:text-green-600">
-              Sign Up
-            </Link>
-          </p>
         </div>
       </div>
     </div>
