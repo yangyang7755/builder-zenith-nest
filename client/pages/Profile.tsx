@@ -28,7 +28,7 @@ import { useHaptic } from "../hooks/useMobile";
 import { apiService } from "../services/apiService";
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<"completed" | "organized">(
