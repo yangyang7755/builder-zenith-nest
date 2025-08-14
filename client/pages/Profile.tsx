@@ -169,6 +169,14 @@ export default function Profile() {
     refreshVisibility();
   };
 
+  const handleReviewSubmitted = () => {
+    // Refresh activities and reviews when a new review is submitted
+    refetchActivities();
+    if (user && refetch) {
+      refetch();
+    }
+  };
+
   // Load user's activity history
   useEffect(() => {
     const loadActivityHistory = async () => {
