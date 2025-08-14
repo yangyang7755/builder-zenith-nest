@@ -1,4 +1,5 @@
 import "./global.css";
+import React from "react";
 
 import { Toaster } from "@/components/ui/toaster";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -87,8 +88,39 @@ import ToastContainer from "./components/ToastNotification";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () => {
+  // Global error handler for uncaught errors
+  React.useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      const isFrameError = event.error?.message?.includes('frame') ||
+                          event.error?.message?.includes('ErrorOverlay') ||
+                          event.error?.message?.includes('Cannot read properties of undefined');
+
+      if (isFrameError) {
+        console.warn('Frame access error caught and suppressed:', event.error?.message);
+        event.preventDefault();
+        return;
+      }
+
+      console.error('Uncaught error:', event.error);
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error('Unhandled promise rejection:', event.reason);
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <ToastProvider>
         <AuthProvider>
@@ -390,8 +422,10 @@ const App = () => (
         </AuthProvider>
       </ToastProvider>
     </TooltipProvider>
-  </QueryClientProvider>
-);
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
 
 const rootElement = document.getElementById("root")!;
 
