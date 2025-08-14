@@ -858,10 +858,10 @@ function MixedActivitiesSection({
 }) {
   // Mixed activities with alternating cycling and climbing
   const mixedActivities = [
-    // Climbing activity
+    // Climbing activity (UPCOMING - 3 months from now)
     {
       title: "Westway women's+ climbing morning",
-      date: `📅 ${formatActivityDate("2025-01-26")}`,
+      date: `📅 ${formatActivityDate("2025-04-26")}`,
       location: "📍 London, UK",
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
@@ -870,10 +870,10 @@ function MixedActivitiesSection({
       difficulty: "Intermediate",
       isFirstCard: true,
     },
-    // Cycling activity
+    // Cycling activity (UPCOMING - 3 months from now)
     {
       title: "Sunday Morning Social Ride",
-      date: `📅 ${formatActivityDate("2025-02-02")}`,
+      date: `📅 ${formatActivityDate("2025-05-02")}`,
       location: "📍 Richmond Park, London",
       imageSrc:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
@@ -1293,7 +1293,7 @@ function ClimbingExploreSection() {
     },
     {
       title: "Youth Climbing Club",
-      date: "📅 Saturday, 11:00 AM",
+      date: "�� Saturday, 11:00 AM",
       location: "📍VauxWall East",
       organizer: "Youth Development Team",
       grade: "Beginner to 6a",
