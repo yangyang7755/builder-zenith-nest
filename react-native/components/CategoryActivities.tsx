@@ -753,7 +753,7 @@ const styles = StyleSheet.create({
   joinButton: {
     paddingHorizontal: 12,
     paddingVertical: 4,
-    backgroundColor: "#10B981",
+    backgroundColor: designTokens.colors.primary,
     borderRadius: 12,
   },
   joinButtonText: {
