@@ -611,8 +611,8 @@ const styles = StyleSheet.create({
     borderColor: "#e5e7eb",
   },
   sortButtonActive: {
-    backgroundColor: "#10B981",
-    borderColor: "#10B981",
+    backgroundColor: designTokens.colors.primary,
+    borderColor: designTokens.colors.primary,
   },
   sortButtonText: {
     marginLeft: 8,
