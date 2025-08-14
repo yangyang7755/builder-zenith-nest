@@ -543,7 +543,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f3f4f6",
   },
   actionButtonActive: {
-    backgroundColor: "#10B981",
+    backgroundColor: designTokens.colors.primary,
   },
   searchContainer: {
     position: "relative",
