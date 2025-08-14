@@ -501,8 +501,7 @@ export default function CategoryActivities({ activities = [] }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
+    ...commonStyles.container,
   },
   header: {
     paddingHorizontal: 24,
