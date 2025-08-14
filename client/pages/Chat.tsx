@@ -4,9 +4,20 @@ import { useChat } from "../contexts/ChatContext";
 import BottomNavigation from "../components/BottomNavigation";
 
 export default function Chat() {
-  const { chatMessages } = useChat();
+  const {
+    chatMessages,
+    clubChats,
+    loading,
+    connected,
+    loadClubChats
+  } = useChat();
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("All");
+
+  // Load club chats on component mount
+  useEffect(() => {
+    loadClubChats();
+  }, []);
 
   // Club chats data
   const clubChats = [
