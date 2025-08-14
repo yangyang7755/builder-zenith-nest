@@ -52,7 +52,24 @@ export default function ReviewModal({ isOpen, onClose, activity, onReviewSubmitt
       setComment('');
     } catch (error) {
       console.error('Failed to submit review:', error);
-      alert('Failed to submit review. Please try again.');
+
+      let errorMessage = 'Failed to submit review. Please try again.';
+
+      if (error instanceof Error) {
+        if (error.message === 'BACKEND_UNAVAILABLE') {
+          errorMessage = 'Service temporarily unavailable. Your review will be saved when connection is restored.';
+        } else if (error.message.includes('Authentication required')) {
+          errorMessage = 'Please log in to submit a review.';
+        } else if (error.message.includes('already reviewed')) {
+          errorMessage = 'You have already reviewed this activity.';
+        } else if (error.message.includes('must have participated')) {
+          errorMessage = 'You can only review activities you participated in.';
+        } else if (error.message.includes('before it has passed')) {
+          errorMessage = 'You can only review activities after they have completed.';
+        }
+      }
+
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
