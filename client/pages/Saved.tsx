@@ -49,7 +49,7 @@ export default function Saved() {
     {
       id: "joined-2",
       title: "Sunday Morning Social Ride",
-      date: "2025-02-02",
+      date: "2025-05-02",
       time: "08:00",
       location: "Richmond Park",
       organizer: "Richmond Cycling Club",
