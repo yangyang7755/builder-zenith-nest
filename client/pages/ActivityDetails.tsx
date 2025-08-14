@@ -643,7 +643,7 @@ export default function ActivityDetails() {
               </h3>
             </div>
             <p className="text-sm text-gray-600 font-cabin ml-8">
-              {contextActivity?.location || activity.location}
+              {activity.location || activity.meetupLocation}
             </p>
           </div>
 
