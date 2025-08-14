@@ -40,10 +40,10 @@ export default function Login() {
         }
       } else if (user) {
         // Successful login - check if user needs onboarding
-        if (isOnboardingComplete) {
-          navigate("/explore");
-        } else {
+        if (isNewUser || !isOnboardingComplete) {
           navigate("/onboarding");
+        } else {
+          navigate("/explore");
         }
       }
     } catch (err) {
