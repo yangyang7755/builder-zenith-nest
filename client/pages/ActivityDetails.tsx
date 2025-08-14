@@ -628,7 +628,7 @@ export default function ActivityDetails() {
             Description
           </h3>
           <p className="text-sm text-black font-cabin leading-relaxed">
-            {activity.description || activity.specialComments || activity.special_requirements || "No description provided."}
+            {activity.description || activity.specialComments || activity.special_requirements || activity.activity_data?.description || "No description provided."}
           </p>
         </div>
 
