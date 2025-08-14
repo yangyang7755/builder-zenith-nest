@@ -17,7 +17,6 @@ import { useFollow } from "@/contexts/FollowContext";
 import { maddieWeiProfile } from "../data/demoProfiles";
 import BottomNavigation from "../components/BottomNavigation";
 import { ProfileEdit } from "../components/ProfileEdit";
-import { ComprehensiveProfileEdit } from "../components/ComprehensiveProfileEdit";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import {
   getClubProfileImage,
@@ -134,7 +133,7 @@ export default function Profile() {
     reviews: 23,
   };
 
-  // Use real authenticated user profile data
+  // Use real authenticated user profile data, or fall back to Maddie Wei demo profile
   const displayProfile = profile
     ? {
         ...profile,
@@ -143,7 +142,7 @@ export default function Profile() {
         rating: userProfileData?.average_rating || 0,
         reviews: userProfileData?.total_reviews || 0,
       }
-    : null;
+    : baseDemoProfile; // Show Maddie Wei profile for non-authenticated users
 
   const handleProfileUpdate = (updatedProfile: any) => {
     if (user && refetch) {
@@ -351,15 +350,6 @@ export default function Profile() {
           </p>
         </div>
 
-        {/* Comprehensive Profile Edit Section - Only show for authenticated users */}
-        {user && profile && (
-          <div className="px-6 pb-6">
-            <ComprehensiveProfileEdit
-              profile={profile}
-              onProfileUpdate={handleProfileUpdate}
-            />
-          </div>
-        )}
 
 
         {/* Personal Details Section */}
