@@ -52,7 +52,7 @@ function TabNavigator() {
 
           return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#10B981",
+        tabBarActiveTintColor: "#1F381F",
         tabBarInactiveTintColor: "#6B7280",
         tabBarStyle: styles.tabBar,
         headerShown: false,
