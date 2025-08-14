@@ -173,6 +173,14 @@ export function createServer() {
   app.post("/api/messages", handleSendDirectMessage);
   app.post("/api/messages/mark-read", handleMarkMessagesRead);
 
+  // Notification routes
+  app.get("/api/notifications", handleGetNotifications);
+  app.get("/api/notifications/unread-count", handleGetUnreadCount);
+  app.post("/api/notifications/mark-read", handleMarkNotificationRead);
+  app.post("/api/notifications/mark-all-read", handleMarkAllNotificationsRead);
+  app.delete("/api/notifications/:notification_id", handleDeleteNotification);
+  app.post("/api/notifications/create", handleCreateNotification);
+
   // Upload routes
   app.use("/api/uploads", uploadsRouter);
 
