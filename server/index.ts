@@ -81,8 +81,8 @@ export function createServer() {
 
   // Middleware
   app.use(cors());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json({ limit: '10mb' })); // Increase JSON body limit
+  app.use(express.urlencoded({ extended: true, limit: '10mb' })); // Increase URL-encoded body limit
 
   // Health check
   app.get("/api/ping", (_req, res) => {
