@@ -58,7 +58,7 @@ export default function Profile() {
   const isFollowingUser = isFollowing(currentUserId);
 
   // Use the profile hook to get real data when user is logged in
-  const { profile, followStats, loading, refetch } = useProfile(user?.id);
+  const { profile: userProfileData, followStats, loading, refetch } = useProfile(user?.id);
 
   // Load demo profile data from localStorage on mount
   useEffect(() => {
