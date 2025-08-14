@@ -120,6 +120,13 @@ export default function Login() {
           </div>
         )}
 
+        {/* Success Message for Resend */}
+        {resendSuccess && (
+          <div className="w-full max-w-sm mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded font-cabin text-sm">
+            Confirmation email sent! Please check your inbox and click the confirmation link.
+          </div>
+        )}
+
         {/* Form */}
         <div className="w-full max-w-sm space-y-4">
           {/* Email Input */}
