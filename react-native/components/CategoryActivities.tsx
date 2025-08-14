@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
   organizer: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#10B981",
+    color: designTokens.colors.primary,
     marginBottom: 8,
   },
   description: {
