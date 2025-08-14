@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Feather";
+import { designTokens, commonStyles, getColor, getShadow } from "../styles/designTokens";
 
 const { width } = Dimensions.get("window");
 
