@@ -1,6 +1,29 @@
 import { getAuthHeader } from "../lib/supabase";
 import { ApiResponse } from "./apiService";
 
+// Store original fetch to avoid third-party interference (like FullStory analytics)
+const originalFetch = window.fetch;
+
+// Fallback fetch function that tries multiple approaches
+const safeFetch = async (url: string, options?: RequestInit) => {
+  // Try original fetch first
+  if (originalFetch && typeof originalFetch === 'function') {
+    try {
+      return await originalFetch(url, options);
+    } catch (error) {
+      console.log("Original fetch failed in upload service, trying current fetch:", error);
+    }
+  }
+
+  // Fallback to current fetch (which might be wrapped by analytics)
+  try {
+    return await window.fetch(url, options);
+  } catch (error) {
+    console.log("Window fetch also failed in upload service:", error);
+    throw error;
+  }
+};
+
 export interface UploadResponse {
   url: string;
 }
