@@ -799,7 +799,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         activity_type: activityData.type || activityData.activity_type,
         date_time:
           activityData.date_time ||
-          `${activityData.date}T${activityData.time}:00Z`,
+          `${activityData.date}T${activityData.time}:00.000Z`,
         location: activityData.location,
         max_participants:
           typeof activityData.maxParticipants === "string"
