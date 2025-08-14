@@ -238,11 +238,12 @@ export default function AdminDashboard() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="clubs">Clubs</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="recent">Recent Activity</TabsTrigger>
+            <TabsTrigger value="notifications">🔔 Tests</TabsTrigger>
           </TabsList>
 
           {/* Users Tab */}
