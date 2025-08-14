@@ -158,7 +158,7 @@ export function useUserActivitiesAndReviews(userId?: string) {
           id: 'demo-organized-1',
           title: 'Westway Women\'s+ Climbing Morning',
           activity_type: 'climbing',
-          date: '2025-02-05',
+          date: '2025-04-05',
           location: 'Westway Climbing Centre',
           organizer_id: 'demo-user-id',
           organizer_name: 'Maddie Wei',
