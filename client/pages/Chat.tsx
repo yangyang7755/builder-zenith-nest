@@ -19,8 +19,8 @@ export default function Chat() {
     loadClubChats();
   }, []);
 
-  // Club chats data
-  const clubChats = [
+  // Use real club chats from context, with fallback to demo data
+  const staticClubChats = [
     {
       id: "oxford-cycling",
       name: "Oxford University Cycling Club",
