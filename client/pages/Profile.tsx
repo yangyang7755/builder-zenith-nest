@@ -145,17 +145,12 @@ export default function Profile() {
       }
     : null;
 
-  const isDemo = !user;
-
   const handleProfileUpdate = (updatedProfile: any) => {
     if (user && refetch) {
-      // Authenticated mode - refresh from server
+      // Refresh profile data from server after update
       refetch();
-    } else {
-      // Demo mode - update local state
-      setLocalProfileData(updatedProfile);
     }
-    // Always refresh visibility settings
+    // Refresh visibility settings
     refreshVisibility();
   };
 
