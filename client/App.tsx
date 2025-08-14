@@ -108,6 +108,7 @@ const App = () => (
                                 <BrowserRouter>
                                   <div className="mobile-container">
                                     <Routes>
+                                    {/* Public Routes */}
                                     <Route
                                       path="/"
                                       element={<SplashScreen />}
@@ -116,35 +117,22 @@ const App = () => (
                                       path="/auth"
                                       element={<AuthLanding />}
                                     />
-                                    <Route path="/login" element={<Login />} />
-                                    <Route
-                                      path="/enhanced-login"
-                                      element={<EnhancedLogin />}
-                                    />
-                                    <Route
-                                      path="/login-enhanced"
-                                      element={<LoginEnhanced />}
-                                    />
-                                    <Route
-                                      path="/signup"
-                                      element={<SignUp />}
-                                    />
-                                    <Route
-                                      path="/signin"
-                                      element={<SignIn />}
-                                    />
+                                    <Route path="/auth/login" element={<Login />} />
+                                    <Route path="/auth/signup" element={<SignUp />} />
                                     <Route path="/terms" element={<Terms />} />
                                     <Route
                                       path="/privacy"
                                       element={<Privacy />}
                                     />
-                                    <Route
-                                      path="/onboarding"
-                                      element={<Onboarding />}
-                                    />
+
+                                    {/* Protected Routes */}
                                     <Route
                                       path="/explore"
-                                      element={<Index />}
+                                      element={
+                                        <ProtectedRoute>
+                                          <Index />
+                                        </ProtectedRoute>
+                                      }
                                     />
                                     <Route
                                       path="/activities"
