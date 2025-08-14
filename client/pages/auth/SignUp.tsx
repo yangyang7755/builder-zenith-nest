@@ -129,21 +129,23 @@ export default function SignUp() {
       </div>
 
       {/* Content */}
-      <div className="px-6 py-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-              <p className="text-sm text-red-700 font-cabin">{error}</p>
-            </div>
-          )}
+      <div className="px-6 pb-20">
+        {/* Welcome Text */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-explore-green font-cabin mb-2">
+            Join Wildpals
+          </h2>
+          <p className="text-gray-600 font-cabin">
+            Connect with fellow outdoor enthusiasts
+          </p>
+        </div>
 
-          {/* Success Message */}
-          {success && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-              <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-              <p className="text-sm text-green-700 font-cabin">{success}</p>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* General Error Message */}
+          {errors.general && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <p className="text-sm text-red-700 font-cabin">{errors.general}</p>
             </div>
           )}
 
