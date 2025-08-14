@@ -21,12 +21,46 @@ export interface JoinRequest {
 
 export interface ChatMessage {
   id: string;
-  type: "join_request" | "general";
-  sender: string;
-  content: string;
-  timestamp: Date;
+  user_id: string;
+  club_id?: string;
+  message: string;
+  created_at: string;
+  profiles?: {
+    id: string;
+    full_name: string;
+    profile_image?: string;
+  };
+  // Legacy fields for backward compatibility
+  type?: "join_request" | "general";
+  sender?: string;
+  content?: string;
+  timestamp?: Date;
   activityTitle?: string;
   activityOrganizer?: string;
+}
+
+export interface DirectMessage {
+  id: string;
+  sender_id: string;
+  receiver_id: string;
+  message: string;
+  created_at: string;
+  read_at?: string;
+  sender?: {
+    id: string;
+    full_name: string;
+    profile_image?: string;
+  };
+}
+
+export interface ClubChat {
+  id: string;
+  name: string;
+  lastMessage?: string;
+  lastMessageTime?: string;
+  unreadCount: number;
+  memberCount: number;
+  avatar?: string;
 }
 
 interface ChatContextType {
