@@ -3,6 +3,9 @@ import { getAuthHeader } from "../lib/supabase";
 // API base URL - backend is served from same port as client via Vite middleware
 const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
+// Store original fetch to avoid third-party interference (like FullStory analytics)
+const originalFetch = window.fetch;
+
 // Check if backend is available
 let backendAvailable: boolean | null = null;
 let backendCheckPromise: Promise<boolean> | null = null;
