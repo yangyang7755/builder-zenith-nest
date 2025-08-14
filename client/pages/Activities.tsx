@@ -302,7 +302,6 @@ export default function Activities() {
 
       {/* Development Tools */}
       <div className="px-6 pb-6">
-        <ActivityCreationTest />
         <BackendTest />
         <DemoAuth />
         <UserNav />
