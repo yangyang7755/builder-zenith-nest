@@ -346,8 +346,8 @@ export default function ActivityDetails() {
     ? activitiesData[activityId as keyof typeof activitiesData]
     : null;
 
-  // Prefer static activity data for complete information, fallback to context
-  const activity = staticActivity || contextActivity;
+  // Prefer context activity data (user-created activities) over static data
+  const activity = contextActivity || staticActivity;
 
   // Get participation status for the current activity
   const currentActivityId = activityId || activity?.id;
