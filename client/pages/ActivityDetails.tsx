@@ -1005,13 +1005,13 @@ export default function ActivityDetails() {
                   onMouseEnter={() => setShowTooltip(true)}
                   onMouseLeave={() => setShowTooltip(false)}
                 >
-                  {activity.requirements.title}
+                  {(activity.requirements || activity.activity_data?.requirements)?.title}
                 </span>{" "}
                 <Info className="inline w-4 h-4 text-gray-400" />.
               </p>
 
               {/* Tooltip positioned outside the paragraph */}
-              {showTooltip && activity.requirements.details && (
+              {showTooltip && (activity.requirements || activity.activity_data?.requirements)?.details && (
                 <div className="absolute left-0 top-16 bg-explore-green text-white p-4 rounded-lg shadow-lg z-50 w-80 text-sm font-cabin">
                   <div className="font-bold text-base mb-2">
                     Requirements Details
@@ -1020,15 +1020,15 @@ export default function ActivityDetails() {
                     To join this session, you should be able to:
                   </div>
                   <ul className="space-y-1 mb-3">
-                    {activity.requirements.details.map((detail, index) => (
+                    {((activity.requirements || activity.activity_data?.requirements)?.details || []).map((detail, index) => (
                       <li key={index}>• {detail}</li>
                     ))}
                   </ul>
-                  {activity.requirements.warning && (
+                  {(activity.requirements || activity.activity_data?.requirements)?.warning && (
                     <div className="flex items-start gap-2 bg-yellow-500 bg-opacity-20 p-2 rounded">
                       <span className="text-yellow-300 font-bold">⚠</span>
                       <div className="text-sm">
-                        {activity.requirements.warning}
+                        {(activity.requirements || activity.activity_data?.requirements)?.warning}
                       </div>
                     </div>
                   )}
