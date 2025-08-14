@@ -7,6 +7,7 @@ import { useOnboarding } from "../../contexts/OnboardingContext";
 export default function SignUp() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
+  const { resetOnboarding } = useOnboarding();
 
   const [formData, setFormData] = useState({
     email: "",
