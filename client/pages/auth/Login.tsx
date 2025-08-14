@@ -66,8 +66,22 @@ export default function Login() {
 
         {/* Error Message */}
         {error && (
-          <div className="w-full max-w-sm mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded font-cabin text-sm">
+          <div className={`w-full max-w-sm mb-4 p-3 rounded font-cabin text-sm ${
+            showEmailConfirmation
+              ? 'bg-yellow-100 border border-yellow-400 text-yellow-700'
+              : 'bg-red-100 border border-red-400 text-red-700'
+          }`}>
             {error}
+            {showEmailConfirmation && (
+              <div className="mt-2 text-xs">
+                <p>If you haven't received the confirmation email:</p>
+                <ul className="list-disc list-inside mt-1">
+                  <li>Check your spam/junk folder</li>
+                  <li>Try creating a new account with a different email</li>
+                  <li>Contact support if the issue persists</li>
+                </ul>
+              </div>
+            )}
           </div>
         )}
 
