@@ -1071,7 +1071,7 @@ export default function ActivityDetails() {
         ) : (
           <button
             onClick={handleJoinActivity}
-            disabled={!isParticipating && !agreedToRequirements}
+            disabled={!isParticipating && (activity.requirements || activity.activity_data?.requirements) && !agreedToRequirements}
             className={`w-full py-3 rounded-lg text-lg font-cabin font-medium transition-colors ${
               isParticipating
                 ? "bg-red-500 text-white hover:bg-red-600"
