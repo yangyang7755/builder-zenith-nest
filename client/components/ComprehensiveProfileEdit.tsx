@@ -268,34 +268,13 @@ export function ComprehensiveProfileEdit({
 
       console.log('Sending full profile update data:', cleanUpdateData);
 
-      const response = await fetch('/api/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(cleanUpdateData)
-      });
+      // Use AuthContext's updateProfile method for proper state management
+      await updateAuthProfile(cleanUpdateData);
 
-      let responseData;
-      try {
-        const responseText = await response.text();
-        console.log('Raw response text:', responseText);
-        responseData = responseText ? JSON.parse(responseText) : {};
-      } catch (parseError) {
-        console.error('Parse error details:', parseError);
-        throw new Error(`Failed to parse response: ${parseError.message}`);
-      }
+      // Refresh profile to get latest data
+      await refreshProfile();
 
-      console.log('Direct fetch response:', responseData);
-      console.log('Response status:', response.status);
-
-      if (!response.ok) {
-        const errorMessage = responseData.error || `HTTP error! status: ${response.status}`;
-        console.error('Server error:', responseData);
-        throw new Error(errorMessage);
-      }
-
-      console.log('Profile update successful:', responseData);
+      console.log('Profile update successful via AuthContext');
 
       // For demo mode (no user), also save to localStorage as backup
       if (!user) {
