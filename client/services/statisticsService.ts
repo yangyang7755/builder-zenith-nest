@@ -48,7 +48,7 @@ const getUserParticipatedActivities = (activities: Activity[], userOrganizer: st
       maxParticipants: "12",
       specialComments: "Great climbing session",
       difficulty: "Intermediate",
-      createdAt: new Date("2025-01-26"),
+      createdAt: new Date("2025-04-26"),
     },
     {
       id: "participated-climb-2",
