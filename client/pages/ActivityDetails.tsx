@@ -384,7 +384,8 @@ export default function ActivityDetails() {
       }
     } else {
       // Join activity
-      if (!agreedToRequirements) {
+      const hasRequirements = activity.requirements || activity.activity_data?.requirements;
+      if (hasRequirements && !agreedToRequirements) {
         alert("Please agree to the requirements before joining.");
         return;
       }
