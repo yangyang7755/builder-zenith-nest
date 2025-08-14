@@ -151,10 +151,14 @@ export default function Profile() {
         ...profile,
         followers: followStats?.followers || 0,
         following: followStats?.following || 0,
-        rating: userProfileData?.average_rating || 0,
-        reviews: userProfileData?.total_reviews || 0,
+        rating: averageRating || userProfileData?.average_rating || 0,
+        reviews: totalReviews || userProfileData?.total_reviews || 0,
       }
-    : baseDemoProfile; // Show Maddie Wei profile for non-authenticated users
+    : {
+        ...baseDemoProfile,
+        rating: averageRating || baseDemoProfile.rating,
+        reviews: totalReviews || baseDemoProfile.reviews,
+      }; // Show Maddie Wei profile for non-authenticated users with real review data
 
   const handleProfileUpdate = (updatedProfile: any) => {
     if (user && refetch) {
