@@ -596,7 +596,7 @@ export default function ActivityDetails() {
             src={
               typeof activity.organizer === "string"
                 ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" // Default avatar
-                : activity.organizer?.image ||
+                : activity.organizer?.image || activity.organizer?.profile_image || activity.imageSrc ||
                   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
             }
             alt={
