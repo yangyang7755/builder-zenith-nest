@@ -69,11 +69,13 @@ export default function SignUp() {
       if (error) {
         setErrors({ general: error.message || 'Failed to create account' });
       } else if (user) {
-        // Successfully created account
+        // Successfully created account - reset onboarding and redirect to login
+        resetOnboarding(); // Ensure onboarding starts fresh for new user
         navigate("/auth/login", {
           state: {
             message: "Account created successfully! Please log in with your credentials.",
             email: formData.email,
+            isNewUser: true,
           },
         });
       }
