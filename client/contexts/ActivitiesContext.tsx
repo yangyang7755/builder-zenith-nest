@@ -615,6 +615,10 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
             elevationUnit: activityData.activity_data?.elevationUnit,
             cafeStop: activityData.activity_data?.cafeStop,
             difficulty: activityData.difficulty_level || activityData.activity_data?.difficulty,
+            requirements: activityData.activity_data?.requirements,
+            climbingLevel: activityData.activity_data?.climbingLevel,
+            languages: activityData.activity_data?.languages,
+            gearRequired: activityData.activity_data?.gearRequired,
           };
 
           setActivities((prev) => [demoActivity, ...prev]);
