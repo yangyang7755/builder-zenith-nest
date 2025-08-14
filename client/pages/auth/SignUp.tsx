@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, Eye, EyeOff, Mail, User, Lock } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function SignUp() {
   const navigate = useNavigate();
