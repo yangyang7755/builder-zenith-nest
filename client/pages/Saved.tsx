@@ -369,7 +369,11 @@ function ActivityCard({
         {activity.organizer && (
           <div className="flex items-center gap-2 text-gray-600">
             <Users className="w-4 h-4" />
-            <span className="text-sm font-cabin">By {activity.organizer}</span>
+            <span className="text-sm font-cabin">
+              By {typeof activity.organizer === "string"
+                ? activity.organizer
+                : activity.organizer?.full_name || activity.organizer?.name || "Unknown Organizer"}
+            </span>
           </div>
         )}
 
