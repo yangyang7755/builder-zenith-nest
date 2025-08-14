@@ -10,16 +10,26 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
 
   const handleLogin = async () => {
     setError("");
     setLoading(true);
+    setShowEmailConfirmation(false);
 
     try {
       const { user, error } = await signIn(email, password);
 
       if (error) {
-        setError(error.message || 'Failed to sign in');
+        // Check for email confirmation errors
+        if (error.message?.includes('Email not confirmed') ||
+            error.message?.includes('email_not_confirmed') ||
+            error.message?.includes('confirmation')) {
+          setShowEmailConfirmation(true);
+          setError('Please check your email and click the confirmation link before logging in.');
+        } else {
+          setError(error.message || 'Failed to sign in');
+        }
       } else if (user) {
         // Successful login - redirect to main app
         navigate("/explore");
