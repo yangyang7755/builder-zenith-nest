@@ -965,7 +965,7 @@ function MixedActivitiesSection({
                   distance={activity.distance}
                   pace={activity.pace}
                   elevation={activity.elevation}
-                  difficulty="Intermediate"
+                  difficulty={activity.difficulty || activity.difficulty_level || "Intermediate"}
                   activityId={activity.id}
                   isOrganizerFollowed={isOrganizerFollowed(activity)}
                   isFromUserClub={isFromUserClub(activity)}
@@ -1033,7 +1033,7 @@ function MixedActivitiesSection({
                   distance={activity.distance}
                   pace={activity.pace}
                   elevation={activity.elevation}
-                  difficulty="Intermediate"
+                  difficulty={activity.difficulty || activity.difficulty_level || "Intermediate"}
                   activityId={activity.id}
                   isOrganizerFollowed={isOrganizerFollowed(activity)}
                   isFromUserClub={isFromUserClub(activity)}
