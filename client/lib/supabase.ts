@@ -107,6 +107,16 @@ export const getCurrentUser = async () => {
   return user;
 };
 
+export const resendConfirmation = async (email: string) => {
+  if (!supabase) {
+    return { error: { message: "Authentication not configured" } };
+  }
+  return await supabase.auth.resend({
+    type: 'signup',
+    email: email,
+  });
+};
+
 // Database types (should match server types)
 export interface Profile {
   id: string;
