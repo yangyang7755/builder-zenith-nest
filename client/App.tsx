@@ -136,15 +136,27 @@ const App = () => (
                                     />
                                     <Route
                                       path="/activities"
-                                      element={<Activities />}
+                                      element={
+                                        <ProtectedRoute>
+                                          <Activities />
+                                        </ProtectedRoute>
+                                      }
                                     />
                                     <Route
                                       path="/category-activities"
-                                      element={<CategoryActivities />}
+                                      element={
+                                        <ProtectedRoute>
+                                          <CategoryActivities />
+                                        </ProtectedRoute>
+                                      }
                                     />
                                     <Route
                                       path="/create"
-                                      element={<CreateActivity />}
+                                      element={
+                                        <ProtectedRoute>
+                                          <CreateActivity />
+                                        </ProtectedRoute>
+                                      }
                                     />
                                     <Route
                                       path="/create/cycling"
