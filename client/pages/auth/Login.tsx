@@ -36,8 +36,12 @@ export default function Login() {
           setError(error.message || 'Failed to sign in');
         }
       } else if (user) {
-        // Successful login - redirect to main app
-        navigate("/explore");
+        // Successful login - check if user needs onboarding
+        if (isOnboardingComplete) {
+          navigate("/explore");
+        } else {
+          navigate("/onboarding");
+        }
       }
     } catch (err) {
       setError('An unexpected error occurred');
