@@ -257,18 +257,26 @@ const App = () => (
                                       path="/club/uclmc"
                                       element={<ClubUCLMC />}
                                     />
-                                    <Route path="/saved" element={<Saved />} />
+                                    <Route path="/saved" element={
+                                      <ProtectedRoute>
+                                        <Saved />
+                                      </ProtectedRoute>
+                                    } />
                                     <Route
                                       path="/profile"
-                                      element={<Profile />}
-                                    />
-                                    <Route
-                                      path="/profile-enhanced"
-                                      element={<ProfileEnhanced />}
+                                      element={
+                                        <ProtectedRoute>
+                                          <Profile />
+                                        </ProtectedRoute>
+                                      }
                                     />
                                     <Route
                                       path="/profile/edit"
-                                      element={<ProfileEdit />}
+                                      element={
+                                        <ProtectedRoute>
+                                          <ProfileEdit />
+                                        </ProtectedRoute>
+                                      }
                                     />
                                     <Route
                                       path="/profile/edit-comprehensive"
