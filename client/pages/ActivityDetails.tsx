@@ -793,7 +793,7 @@ export default function ActivityDetails() {
         </div>
 
         {/* Route Links Section */}
-        {(contextActivity?.routeLink || activity.routeLink) && (
+        {(activity.routeLink || activity.route_link || activity.activity_data?.routeLink) && (
           <div className="mb-6">
             <h3 className="text-xl font-bold text-black font-cabin mb-3">
               Route Information
@@ -802,12 +802,12 @@ export default function ActivityDetails() {
               <div className="flex items-center gap-2">
                 <ExternalLink className="w-4 h-4 text-blue-600" />
                 <a
-                  href={contextActivity?.routeLink || activity.routeLink}
+                  href={activity.routeLink || activity.route_link || activity.activity_data?.routeLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-cabin text-blue-600 hover:text-blue-800 underline"
                 >
-                  View {activity.type} route
+                  View {activity.type || activity.activity_type} route
                 </a>
               </div>
             </div>
