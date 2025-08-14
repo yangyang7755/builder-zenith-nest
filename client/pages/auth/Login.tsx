@@ -105,9 +105,16 @@ export default function Login() {
                 <p>If you haven't received the confirmation email:</p>
                 <ul className="list-disc list-inside mt-1">
                   <li>Check your spam/junk folder</li>
-                  <li>Try creating a new account with a different email</li>
-                  <li>Contact support if the issue persists</li>
+                  <li>Wait a few minutes and check again</li>
+                  <li>Click the button below to resend</li>
                 </ul>
+                <button
+                  onClick={handleResendConfirmation}
+                  disabled={resendLoading || !email}
+                  className="mt-2 px-3 py-1 bg-yellow-600 text-white rounded text-xs disabled:opacity-50 hover:bg-yellow-700"
+                >
+                  {resendLoading ? 'Sending...' : 'Resend confirmation email'}
+                </button>
               </div>
             )}
           </div>
