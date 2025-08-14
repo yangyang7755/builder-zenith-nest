@@ -2,7 +2,7 @@
 export const designTokens = {
   // Colors - matching both web and mobile versions
   colors: {
-    primary: "#10B981", // explore-green
+    primary: "#1F381F", // dark explore-green
     secondary: "#3B82F6", // blue
     accent: "#F59E0B", // orange
     purple: "#8B5CF6",
