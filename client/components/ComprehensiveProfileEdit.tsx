@@ -266,20 +266,14 @@ export function ComprehensiveProfileEdit({
       // Add small delay to prevent racing conditions
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      // SIMPLIFIED TEST: Try with minimal data first
-      const testData = {
-        full_name: cleanUpdateData.full_name || 'Test User',
-        bio: cleanUpdateData.bio || 'Test bio'
-      };
-
-      console.log('Sending simplified test data:', testData);
+      console.log('Sending full profile update data:', cleanUpdateData);
 
       const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(testData)
+        body: JSON.stringify(cleanUpdateData)
       });
 
       let responseData;
