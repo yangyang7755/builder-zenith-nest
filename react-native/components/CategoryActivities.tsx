@@ -780,7 +780,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   createButton: {
-    backgroundColor: "#10B981",
+    backgroundColor: designTokens.colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
