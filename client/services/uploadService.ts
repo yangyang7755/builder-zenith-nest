@@ -49,7 +49,7 @@ class UploadService {
         });
       }
 
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      const response = await safeFetch(`${this.baseUrl}${endpoint}`, {
         method: "POST",
         headers: {
           Authorization: authHeader,
