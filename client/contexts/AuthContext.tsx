@@ -49,12 +49,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch user profile from our API
   const fetchProfile = async (userId: string, authToken: string) => {
     try {
+      // Create timeout for the fetch request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       const response = await fetch("/api/profile", {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const profileData = await response.json();
@@ -70,9 +77,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             timestamp: Date.now(),
           }),
         );
+      } else {
+        console.log(`Profile fetch failed with status: ${response.status}`);
+        // If profile fetch fails but we have a valid user, create a basic profile
+        if (userId) {
+          const basicProfile = {
+            id: userId,
+            email: "user@example.com",
+            full_name: "User",
+            university: null,
+            bio: null,
+            profile_image: null,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          setProfile(basicProfile);
+        }
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
+      // Create a fallback profile for development
+      if (userId) {
+        const fallbackProfile = {
+          id: userId,
+          email: "user@example.com",
+          full_name: "User",
+          university: null,
+          bio: null,
+          profile_image: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        setProfile(fallbackProfile);
+        console.log("Using fallback profile due to fetch error");
+      }
     }
   };
 
