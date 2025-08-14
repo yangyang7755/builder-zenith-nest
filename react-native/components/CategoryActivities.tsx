@@ -504,11 +504,11 @@ const styles = StyleSheet.create({
     ...commonStyles.container,
   },
   header: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    backgroundColor: "#ffffff",
+    paddingHorizontal: designTokens.spacing.lg,
+    paddingVertical: designTokens.spacing.md,
+    backgroundColor: designTokens.colors.background.primary,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
+    borderBottomColor: designTokens.colors.border.light,
   },
   headerTop: {
     flexDirection: "row",
