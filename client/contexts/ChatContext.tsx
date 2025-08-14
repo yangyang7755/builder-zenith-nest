@@ -116,6 +116,33 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [clubMessages, setClubMessages] = useState<Map<string, ChatMessage[]>>(new Map());
   const [directMessages, setDirectMessages] = useState<Map<string, DirectMessage[]>>(new Map());
   const [loading, setLoading] = useState(false);
+
+  // Set up Socket.IO event listeners
+  useEffect(() => {
+    if (socket.connected) {
+      // Listen for new club messages
+      socket.onClubMessage((message: any) => {
+        setClubMessages((prev) => {
+          const newMap = new Map(prev);
+          const clubId = message.club_id;
+          const existing = newMap.get(clubId) || [];
+          newMap.set(clubId, [...existing, message]);
+          return newMap;
+        });
+      });
+
+      // Listen for new direct messages
+      socket.onDirectMessage((message: any) => {
+        setDirectMessages((prev) => {
+          const newMap = new Map(prev);
+          const otherUserId = message.sender_id === user?.id ? message.receiver_id : message.sender_id;
+          const existing = newMap.get(otherUserId) || [];
+          newMap.set(otherUserId, [...existing, message]);
+          return newMap;
+        });
+      });
+    }
+  }, [socket.connected, user?.id]);
   const [requestedActivities, setRequestedActivities] = useState<Set<string>>(
     new Set(),
   );
