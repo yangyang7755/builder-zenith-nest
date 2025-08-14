@@ -1050,13 +1050,17 @@ export default function ActivityDetails() {
         )}
 
         {/* Request to Join Button or Review Button */}
-        {hasActivityPassed() ? (
+        {hasActivityPassed() && isParticipating ? (
           <button
             onClick={() => setShowReviewModal(true)}
             className="w-full py-3 rounded-lg text-lg font-cabin font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors"
           >
             Leave a Review
           </button>
+        ) : hasActivityPassed() && !isParticipating ? (
+          <div className="w-full py-3 rounded-lg text-lg font-cabin font-medium bg-gray-300 text-gray-500 text-center">
+            Activity Completed
+          </div>
         ) : (
           <button
             onClick={handleJoinActivity}
