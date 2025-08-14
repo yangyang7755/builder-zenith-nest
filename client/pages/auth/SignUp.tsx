@@ -91,9 +91,9 @@ export default function SignUp() {
   };
 
   return (
-    <div className="mobile-container min-h-screen bg-white">
+    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
       {/* Status Bar */}
-      <div className="mobile-status-bar">
+      <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
         <span>9:41</span>
         <div className="flex items-center gap-1">
           <div className="flex gap-0.5">
@@ -102,23 +102,30 @@ export default function SignUp() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
+            <rect
+              x="1"
+              y="3"
+              width="22"
+              height="10"
+              rx="2"
+              stroke="black"
+              strokeWidth="1"
+              fill="none"
+            />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
       </div>
 
-      {/* Header */}
-      <div className="mobile-header">
-        <div className="flex items-center">
-          <button onClick={() => navigate('/auth')} className="mr-4">
-            <ArrowLeft className="w-6 h-6 text-black" />
-          </button>
-          <div>
-            <h1 className="text-mobile-h3 text-black">Create Account</h1>
-            <p className="text-mobile-caption text-gray-500">Join the WildPals community</p>
-          </div>
-        </div>
+      {/* Navigation Header */}
+      <div className="flex items-center justify-between p-6 pb-4">
+        <button onClick={() => navigate('/auth')}>
+          <ArrowLeft className="w-6 h-6 text-black" />
+        </button>
+        <h1 className="text-xl font-bold text-black font-cabin">
+          Create Account
+        </h1>
+        <div className="w-6" />
       </div>
 
       {/* Content */}
