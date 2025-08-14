@@ -639,31 +639,51 @@ export default function Profile() {
               {activeTab === "completed" ? (
                 <>
                   {/* Completed Activities with Reviews */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="text-2xl">🧗</div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-black">
-                          Westway Women's+ Climbing Morning
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          Coach Holly Peristiani • Feb 5, 2025
-                        </p>
-                        <div className="flex items-center gap-1 mt-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className="w-3 h-3 fill-yellow-400 text-yellow-400"
-                            />
-                          ))}
-                          <span className="text-xs text-gray-500 ml-1">
-                            Your review: "Amazing session!"
-                          </span>
+                  {completedActivities.length > 0 ? (
+                    completedActivities.map((activity) => (
+                      <div key={activity.id} className="bg-gray-50 rounded-lg p-4">
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="text-2xl">
+                            {activity.activity_type === 'climbing' && '🧗'}
+                            {activity.activity_type === 'cycling' && '🚴'}
+                            {activity.activity_type === 'running' && '🏃'}
+                            {activity.activity_type === 'hiking' && '🥾'}
+                            {!['climbing', 'cycling', 'running', 'hiking'].includes(activity.activity_type) && '🏃'}
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-black">
+                              {activity.title}
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              {activity.organizer_name} • {new Date(activity.date).toLocaleDateString()}
+                            </p>
+                            {activity.recent_review && (
+                              <div className="flex items-center gap-1 mt-1">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star
+                                    key={star}
+                                    className={`w-3 h-3 ${
+                                      star <= activity.recent_review!.rating
+                                        ? 'fill-yellow-400 text-yellow-400'
+                                        : 'text-gray-300'
+                                    }`}
+                                  />
+                                ))}
+                                <span className="text-xs text-gray-500 ml-1">
+                                  Your review: "{activity.recent_review.comment}"
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <CheckCircle className="w-5 h-5 text-green-500" />
                         </div>
                       </div>
-                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <p>No completed activities yet</p>
                     </div>
-                  </div>
+                  )}
 
                   <div className="bg-gray-50 rounded-lg p-4">
                     <div className="flex items-start gap-3 mb-3">
