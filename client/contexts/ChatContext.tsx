@@ -105,7 +105,17 @@ interface ChatContextType {
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export function ChatProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  const socket = useSocket();
+
+  // Legacy state (keep for compatibility)
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
+
+  // Real chat state
+  const [clubChats, setClubChats] = useState<ClubChat[]>([]);
+  const [clubMessages, setClubMessages] = useState<Map<string, ChatMessage[]>>(new Map());
+  const [directMessages, setDirectMessages] = useState<Map<string, DirectMessage[]>>(new Map());
+  const [loading, setLoading] = useState(false);
   const [requestedActivities, setRequestedActivities] = useState<Set<string>>(
     new Set(),
   );
