@@ -60,6 +60,17 @@ export default function Profile() {
   // Use the profile hook to get real data when user is logged in
   const { profile: userProfileData, followStats, loading, refetch } = useProfile(user?.id);
 
+  // Use activities and reviews hook
+  const {
+    completedActivities,
+    organizedActivities,
+    totalActivities,
+    averageRating,
+    totalReviews,
+    loading: activitiesLoading,
+    refetch: refetchActivities
+  } = useUserActivitiesAndReviews(user?.id);
+
   // Load demo profile data from localStorage on mount
   useEffect(() => {
     if (!user) {
