@@ -20,60 +20,74 @@ export default function SignUp() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return false;
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.full_name.trim()) {
+      newErrors.full_name = "Name is required";
+    } else if (formData.full_name.length < 2) {
+      newErrors.full_name = "Name must be at least 2 characters";
     }
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      return false;
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
     }
-    if (!formData.fullName.trim()) {
-      setError('Full name is required');
-      return false;
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
     }
-    return true;
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords don't match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
 
     if (!validateForm()) {
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
       const { user, error } = await signUp(formData.email, formData.password, {
-        full_name: formData.fullName,
-        university: formData.university || null
+        full_name: formData.full_name,
       });
-      
+
       if (error) {
-        setError(error.message || 'Failed to create account');
+        setErrors({ general: error.message || 'Failed to create account' });
       } else if (user) {
-        setSuccess('Account created successfully! Please check your email to verify your account.');
-        // Redirect to login after a short delay
-        setTimeout(() => {
-          navigate('/auth/login');
-        }, 3000);
+        // Successfully created account
+        navigate("/auth/login", {
+          state: {
+            message: "Account created successfully! Please log in with your credentials.",
+            email: formData.email,
+          },
+        });
       }
-    } catch (err) {
-      setError('An unexpected error occurred');
-      console.error('SignUp error:', err);
+    } catch (error) {
+      console.error("Registration error:", error);
+      setErrors({ general: 'An unexpected error occurred' });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }));
+    }
   };
 
   return (
