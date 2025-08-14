@@ -989,7 +989,7 @@ export default function ActivityDetails() {
         )}
 
         {/* Requirements Section */}
-        {activity.requirements && (
+        {(activity.requirements || activity.activity_data?.requirements) && (
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-3">
               <AlertTriangle className="w-5 h-5 text-yellow-500" />
