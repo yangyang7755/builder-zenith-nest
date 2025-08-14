@@ -158,7 +158,7 @@ export default function SignUp() {
               type="text"
               id="fullName"
               name="fullName"
-              value={formData.fullName}
+              value={formData.full_name}
               onChange={(e) => handleInputChange("full_name", e.target.value)}
               required
               className="search-input-mobile"
@@ -177,7 +177,7 @@ export default function SignUp() {
               id="email"
               name="email"
               value={formData.email}
-              onChange={(e) => handleInputChange("full_name", e.target.value)}
+              onChange={(e) => handleInputChange("email", e.target.value)}
               required
               className="search-input-mobile"
               placeholder="Enter your email"
@@ -195,7 +195,7 @@ export default function SignUp() {
               id="university"
               name="university"
               value={formData.university}
-              onChange={(e) => handleInputChange("full_name", e.target.value)}
+              onChange={(e) => handleInputChange("university", e.target.value)}
               className="search-input-mobile"
               placeholder="Your university or college"
               autoComplete="organization"
@@ -213,7 +213,7 @@ export default function SignUp() {
                 id="password"
                 name="password"
                 value={formData.password}
-                onChange={(e) => handleInputChange("full_name", e.target.value)}
+                onChange={(e) => handleInputChange("password", e.target.value)}
                 required
                 className="search-input-mobile pr-12"
                 placeholder="Create a password"
@@ -241,7 +241,7 @@ export default function SignUp() {
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
-              onChange={(e) => handleInputChange("full_name", e.target.value)}
+              onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
               required
               className="search-input-mobile"
               placeholder="Confirm your password"
