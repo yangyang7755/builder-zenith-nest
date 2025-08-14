@@ -743,7 +743,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: "100%",
-    backgroundColor: "#10B981",
+    backgroundColor: designTokens.colors.primary,
     borderRadius: 4,
   },
   spotsText: {
