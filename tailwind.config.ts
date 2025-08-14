@@ -31,12 +31,12 @@ export default {
         },
         // Unified Design Token Colors for Mobile Consistency
         'explore-green': {
-          DEFAULT: '#10B981',
-          50: '#ECFDF5',
-          100: '#D1FAE5',
-          500: '#10B981',
-          600: '#059669',
-          700: '#047857',
+          DEFAULT: '#1F381F',
+          50: '#F0F4F0',
+          100: '#D8E5D8',
+          500: '#1F381F',
+          600: '#1A301A',
+          700: '#152815',
         },
         'create-orange': '#F97316',
         'activity-blue': '#3B82F6',
