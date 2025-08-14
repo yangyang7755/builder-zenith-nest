@@ -6,6 +6,74 @@ import { useToast } from "../contexts/ToastContext";
 import DateTimePicker from "../components/DateTimePicker";
 import MapView from "../components/MapView";
 
+// Helper function to generate tennis requirements based on type and skill level
+function getTennisRequirements(tennisType: string, skillLevel: string, isCompetitive: boolean) {
+  const baseRequirements = {
+    title: "basic tennis skills",
+    description: "This tennis session requires basic tennis knowledge and appropriate equipment.",
+    details: [] as string[],
+    warning: "Tennis involves physical activity and potential for injury. Please play within your ability level.",
+  };
+
+  if (isCompetitive) {
+    baseRequirements.title = "competitive tennis experience";
+    baseRequirements.details = [
+      "Consistent serve and groundstrokes",
+      "Understanding of match play and scoring",
+      "Own tennis racquet and appropriate tennis attire",
+      "Ability to play competitive sets",
+      "Experience with tournament-style play",
+    ];
+    baseRequirements.warning = "Competitive tennis is physically demanding. Ensure you're match-fit and warmed up properly.";
+  } else if (tennisType === "Doubles") {
+    baseRequirements.title = "doubles tennis knowledge";
+    baseRequirements.details = [
+      "Understanding of doubles court positioning",
+      "Basic knowledge of doubles strategy and communication",
+      "Comfortable playing at the net and baseline",
+      "Own tennis racquet in good condition",
+      "Appropriate tennis footwear and clothing",
+    ];
+  } else if (tennisType === "Singles") {
+    baseRequirements.title = "singles tennis ability";
+    baseRequirements.details = [
+      "Consistent baseline groundstrokes (forehand and backhand)",
+      "Basic serving technique and ability",
+      "Understanding of tennis scoring system",
+      "Own tennis racquet and tennis balls",
+      "Appropriate non-marking tennis shoes",
+    ];
+  } else {
+    // Casual/Social tennis
+    baseRequirements.title = "basic tennis knowledge";
+    baseRequirements.details = [
+      "Basic ability to hit and return tennis balls",
+      "Understanding of basic tennis rules",
+      "Own tennis racquet (or equipment available for rental)",
+      "Comfortable with light physical activity",
+      "Appropriate sports clothing and footwear",
+    ];
+  }
+
+  // Add skill-level specific requirements
+  if (skillLevel === "Advanced") {
+    baseRequirements.details.push("Advanced stroke technique and match experience");
+    baseRequirements.details.push("Understanding of advanced tennis tactics");
+  } else if (skillLevel === "Intermediate") {
+    baseRequirements.details.push("Solid basic strokes and rally ability");
+    baseRequirements.details.push("Some match or lesson experience");
+  }
+
+  return baseRequirements;
+}
+
+// Helper function to map tennis details to difficulty
+function getDifficultyFromTennis(skillLevel: string, isCompetitive: boolean): string {
+  if (isCompetitive || skillLevel === "Advanced") return "Advanced";
+  if (skillLevel === "Intermediate") return "Intermediate";
+  return "Beginner";
+}
+
 export default function CreateTennisSimple() {
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -18,9 +86,13 @@ export default function CreateTennisSimple() {
     coordinates: { lat: 51.5074, lng: -0.1278 },
     date: "",
     time: "",
-    climbingLevel: "",
-    languages: "",
-    gearRequired: "",
+    skillLevel: "Beginner" as "Beginner" | "Intermediate" | "Advanced",
+    courtSurface: "Hard" as "Hard" | "Clay" | "Grass" | "Indoor",
+    isCompetitive: false,
+    duration: "60",
+    equipmentProvided: false,
+    coachingIncluded: false,
+    refreshments: false,
     femaleOnly: false,
     ageMin: "",
     ageMax: "",
@@ -51,8 +123,11 @@ export default function CreateTennisSimple() {
       return;
     }
 
-    // Create activity with proper title
-    const activityTitle = `${selectedType} at ${formData.location}`;
+    // Create activity with proper title and requirements
+    const competitiveText = formData.isCompetitive ? "Competitive " : "";
+    const activityTitle = `${competitiveText}${selectedType} Tennis`;
+    const requirements = getTennisRequirements(selectedType, formData.skillLevel, formData.isCompetitive);
+    const difficulty = getDifficultyFromTennis(formData.skillLevel, formData.isCompetitive);
 
     addActivity({
       type: "tennis",
@@ -64,34 +139,29 @@ export default function CreateTennisSimple() {
       organizer: "You",
       maxParticipants: formData.maxPeople,
       specialComments: formData.specialComments,
-      climbingLevel: formData.climbingLevel,
-      languages: formData.languages,
-      gearRequired: formData.gearRequired,
+      description: formData.specialComments || `Join us for ${competitiveText.toLowerCase()}${selectedType.toLowerCase()} tennis at ${formData.location}. ${requirements.description}`,
+      skillLevel: formData.skillLevel,
+      courtSurface: formData.courtSurface,
+      isCompetitive: formData.isCompetitive,
+      duration: formData.duration,
+      equipmentProvided: formData.equipmentProvided,
+      coachingIncluded: formData.coachingIncluded,
+      refreshments: formData.refreshments,
       subtype: selectedType,
       gender: formData.femaleOnly ? "Female only" : "All genders",
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
-      club: formData.visibility === "Club members" ? "westway" : undefined,
+      difficulty: difficulty,
+      club: formData.visibility === "Club members" ? "tennis-club" : undefined,
       coordinates: formData.coordinates,
-      imageSrc:
-        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
+      requirements: requirements,
+      imageSrc: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=40&h=40&fit=crop&crop=face",
     });
 
     showToast("Tennis activity created successfully!", "success");
     navigate("/explore");
   };
-
-  if (showLocationMap) {
-    return (
-      <MapView
-        activities={[]}
-        onClose={() => setShowLocationMap(false)}
-        onLocationSelect={handleLocationSelect}
-        mode="select"
-      />
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
@@ -105,16 +175,7 @@ export default function CreateTennisSimple() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect
-              x="1"
-              y="3"
-              width="22"
-              height="10"
-              rx="2"
-              stroke="black"
-              strokeWidth="1"
-              fill="none"
-            />
+            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -123,21 +184,31 @@ export default function CreateTennisSimple() {
       {/* Scrollable Content */}
       <div className="overflow-y-auto pb-20 h-[calc(100vh-96px)]">
         <div className="px-6">
+          {/* Header */}
+          <div className="flex items-center gap-4 py-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 text-explore-green font-cabin"
+            >
+              ← Back
+            </button>
+          </div>
+
           {/* Title */}
           <div className="text-center py-4">
             <h1 className="text-3xl font-bold text-explore-green font-cabin">
-              New tennis!
+              New tennis match!
             </h1>
           </div>
 
           <div className="space-y-6">
-            {/* Type */}
+            {/* Tennis Type */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Type
+                Match Type
               </h3>
               <div className="flex gap-2 flex-wrap">
-                {["Singles", "Doubles", "Group practice"].map((type) => (
+                {["Singles", "Doubles", "Mixed Doubles", "Social"].map((type) => (
                   <button
                     key={type}
                     onClick={() => setSelectedType(type)}
@@ -153,10 +224,49 @@ export default function CreateTennisSimple() {
               </div>
             </div>
 
+            {/* Skill Level */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Skill Level
+              </h3>
+              <div className="flex gap-2">
+                {["Beginner", "Intermediate", "Advanced"].map((level) => (
+                  <button
+                    key={level}
+                    onClick={() => setFormData({ ...formData, skillLevel: level as any })}
+                    className={`px-4 py-2 rounded-lg border border-black font-bold text-sm font-cabin ${
+                      formData.skillLevel === level
+                        ? "bg-explore-green text-white"
+                        : "bg-explore-gray text-explore-green"
+                    }`}
+                  >
+                    {level}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Competitive Toggle */}
+            <div>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.isCompetitive}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isCompetitive: e.target.checked })
+                  }
+                  className="w-5 h-5 text-explore-green border-2 border-gray-300 rounded focus:ring-explore-green"
+                />
+                <span className="text-lg font-medium text-black font-cabin">
+                  Competitive match
+                </span>
+              </label>
+            </div>
+
             {/* Max number of people */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Max number of people
+                Max number of players
               </h3>
               <input
                 type="number"
@@ -169,20 +279,68 @@ export default function CreateTennisSimple() {
               />
             </div>
 
+            {/* Court Surface */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Court Surface
+              </h3>
+              <select
+                value={formData.courtSurface}
+                onChange={(e) =>
+                  setFormData({ ...formData, courtSurface: e.target.value as any })
+                }
+                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+              >
+                <option value="Hard">Hard Court</option>
+                <option value="Clay">Clay Court</option>
+                <option value="Grass">Grass Court</option>
+                <option value="Indoor">Indoor Court</option>
+              </select>
+            </div>
+
+            {/* Duration */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Session Duration (minutes)
+              </h3>
+              <select
+                value={formData.duration}
+                onChange={(e) =>
+                  setFormData({ ...formData, duration: e.target.value })
+                }
+                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+              >
+                <option value="30">30 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="90">1.5 hours</option>
+                <option value="120">2 hours</option>
+              </select>
+            </div>
+
             {/* Location */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Location
+                Tennis Club/Court
               </h3>
-              <button
-                onClick={() => setShowLocationMap(true)}
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin text-left flex items-center gap-3"
-              >
-                <MapPin className="w-5 h-5 text-gray-400" />
-                <span className={`flex-1 ${formData.location ? "text-black" : "text-gray-500"}`}>
-                  {formData.location || "Select tennis court/club"}
-                </span>
-              </button>
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
+                  className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+                  placeholder="Enter tennis club or court location"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowLocationMap(true)}
+                  className="flex items-center gap-2 text-explore-green font-cabin"
+                >
+                  <MapPin className="w-4 h-4" />
+                  Choose location on map
+                </button>
+              </div>
             </div>
 
             {/* Meetup location */}
@@ -197,7 +355,7 @@ export default function CreateTennisSimple() {
                   setFormData({ ...formData, meetupLocation: e.target.value })
                 }
                 className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter meetup location"
+                placeholder="Where should players meet? (e.g., Reception, Court 1)"
               />
             </div>
 
@@ -209,52 +367,52 @@ export default function CreateTennisSimple() {
               onTimeChange={(time) => setFormData({ ...formData, time })}
             />
 
-            {/* Tennis level */}
+            {/* Additional Features */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Tennis level
+                Additional Features
               </h3>
-              <input
-                type="text"
-                value={formData.climbingLevel}
-                onChange={(e) =>
-                  setFormData({ ...formData, climbingLevel: e.target.value })
-                }
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter skill level (e.g., Beginner, Intermediate, Advanced)"
-              />
-            </div>
-
-            {/* Languages */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Languages
-              </h3>
-              <input
-                type="text"
-                value={formData.languages}
-                onChange={(e) =>
-                  setFormData({ ...formData, languages: e.target.value })
-                }
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter languages spoken"
-              />
-            </div>
-
-            {/* Gear required */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Gear required
-              </h3>
-              <input
-                type="text"
-                value={formData.gearRequired}
-                onChange={(e) =>
-                  setFormData({ ...formData, gearRequired: e.target.value })
-                }
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="List required gear (e.g., Tennis racket, Tennis balls)"
-              />
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.equipmentProvided}
+                    onChange={(e) =>
+                      setFormData({ ...formData, equipmentProvided: e.target.checked })
+                    }
+                    className="w-5 h-5 text-explore-green border-2 border-gray-300 rounded focus:ring-explore-green"
+                  />
+                  <span className="text-lg font-medium text-black font-cabin">
+                    Equipment provided/rental available
+                  </span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.coachingIncluded}
+                    onChange={(e) =>
+                      setFormData({ ...formData, coachingIncluded: e.target.checked })
+                    }
+                    className="w-5 h-5 text-explore-green border-2 border-gray-300 rounded focus:ring-explore-green"
+                  />
+                  <span className="text-lg font-medium text-black font-cabin">
+                    Coaching/instruction included
+                  </span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.refreshments}
+                    onChange={(e) =>
+                      setFormData({ ...formData, refreshments: e.target.checked })
+                    }
+                    className="w-5 h-5 text-explore-green border-2 border-gray-300 rounded focus:ring-explore-green"
+                  />
+                  <span className="text-lg font-medium text-black font-cabin">
+                    Refreshments provided
+                  </span>
+                </label>
+              </div>
             </div>
 
             {/* Optional (special filters) */}
@@ -312,7 +470,7 @@ export default function CreateTennisSimple() {
                 <h3 className="text-lg font-medium text-black font-cabin mb-3">
                   Activity visibility
                 </h3>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2">
                   {["All", "Followers", "Club members"].map((option) => (
                     <button
                       key={option}
@@ -345,7 +503,7 @@ export default function CreateTennisSimple() {
                     })
                   }
                   className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin h-32 resize-none"
-                  placeholder="Write down additional plans of the day here ..."
+                  placeholder="Describe skill requirements, match format, or any special instructions..."
                 />
               </div>
 
@@ -354,85 +512,35 @@ export default function CreateTennisSimple() {
                 onClick={handleSubmit}
                 className="w-full bg-explore-green text-white py-3 px-6 rounded-lg text-base font-cabin font-medium"
               >
-                Create activity
+                Create tennis activity
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
-  );
-}
-
-function BottomNavigation() {
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white h-14 flex items-center justify-around border-t border-gray-200 max-w-md mx-auto">
-      {/* Home Icon */}
-      <Link to="/explore" className="p-2">
-        <svg className="w-8 h-7" viewBox="0 0 35 31" fill="none">
-          <path
-            d="M31.4958 7.46836L21.4451 1.22114C18.7055 -0.484058 14.5003 -0.391047 11.8655 1.42266L3.12341 7.48386C1.37849 8.693 0 11.1733 0 13.1264V23.8227C0 27.7756 3.61199 31 8.06155 31H26.8718C31.3213 31 34.9333 27.7911 34.9333 23.8382V13.328C34.9333 11.2353 33.4152 8.662 31.4958 7.46836ZM18.7753 24.7993C18.7753 25.4349 18.1821 25.9619 17.4666 25.9619C16.7512 25.9619 16.1579 25.4349 16.1579 24.7993V20.1487C16.1579 19.5132 16.7512 18.9861 17.4666 18.9861C18.1821 18.9861 18.7753 19.5132 18.7753 20.1487V24.7993Z"
-            fill="#2F2F2F"
-          />
-        </svg>
-      </Link>
-
-      {/* Clock Icon */}
-      <Link to="/saved" className="p-2">
-        <svg
-          className="w-7 h-7"
-          viewBox="0 0 30 30"
-          fill="none"
-          stroke="#1E1E1E"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="15" cy="15" r="12.5" />
-          <path d="M15 7.5V15L20 17.5" />
-        </svg>
-      </Link>
-
-      {/* Plus Icon - Active */}
-      <Link to="/create" className="p-2 bg-explore-green rounded-full">
-        <svg
-          className="w-7 h-7"
-          viewBox="0 0 30 30"
-          fill="none"
-          stroke="#FFFFFF"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M15 6.25V23.75M6.25 15H23.75" />
-        </svg>
-      </Link>
-
-      {/* Chat Icon */}
-      <Link to="/chat" className="p-2">
-        <svg className="w-7 h-7" viewBox="0 0 30 30" fill="none">
-          <path
-            d="M2.5 27.5V5C2.5 4.3125 2.74479 3.72396 3.23438 3.23438C3.72396 2.74479 4.3125 2.5 5 2.5H25C25.6875 2.5 26.276 2.74479 26.7656 3.23438C27.2552 3.72396 27.5 4.3125 27.5 5V20C27.5 20.6875 27.2552 21.276 26.7656 21.7656C26.276 22.2552 25.6875 22.5 25 22.5H7.5L2.5 27.5Z"
-            fill="#1D1B20"
-          />
-        </svg>
-      </Link>
-
-      {/* Profile Icon */}
-      <Link to="/profile" className="p-2">
-        <svg className="w-8 h-8" viewBox="0 0 35 35" fill="none">
-          <path
-            d="M17.5 17.4999C15.8958 17.4999 14.5225 16.9287 13.3802 15.7864C12.2378 14.644 11.6666 13.2708 11.6666 11.6666C11.6666 10.0624 12.2378 8.68915 13.3802 7.54679C14.5225 6.40443 15.8958 5.83325 17.5 5.83325C19.1041 5.83325 20.4774 6.40443 21.6198 7.54679C22.7621 8.68915 23.3333 10.0624 23.3333 11.6666C23.3333 13.2708 22.7621 14.644 21.6198 15.7864C20.4774 16.9287 19.1041 17.4999 17.5 17.4999ZM5.83331 29.1666V25.0833C5.83331 24.2569 6.04599 23.4973 6.47133 22.8046C6.89668 22.1119 7.46179 21.5833 8.16665 21.2187C9.67359 20.4652 11.2048 19.9001 12.7604 19.5234C14.316 19.1466 15.8958 18.9583 17.5 18.9583C19.1041 18.9583 20.684 19.1466 22.2396 19.5234C23.7951 19.9001 25.3264 20.4652 26.8333 21.2187C27.5382 21.5833 28.1033 22.1119 28.5286 22.8046C28.954 23.4973 29.1666 24.2569 29.1666 25.0833V29.1666H5.83331Z"
-            fill="#1D1B20"
-          />
-        </svg>
-      </Link>
-
-      {/* Navigation Indicator */}
-      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white border border-explore-green rounded-full"></div>
+      {/* Map Modal */}
+      {showLocationMap && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full h-full max-w-md max-h-[80vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-bold">Choose Location</h3>
+              <button
+                onClick={() => setShowLocationMap(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1">
+              <MapView
+                onLocationSelect={handleLocationSelect}
+                initialLocation={formData.coordinates}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
