@@ -6,21 +6,117 @@ import { useToast } from "../contexts/ToastContext";
 import DateTimePicker from "../components/DateTimePicker";
 import MapView from "../components/MapView";
 
+// Helper function to generate skiing requirements based on type and skill level
+function getSkiingRequirements(skiingType: string, skillLevel: string, terrain: string) {
+  const baseRequirements = {
+    title: "intermediate skiing ability",
+    description: "This skiing session requires mountain safety awareness and appropriate equipment.",
+    details: [] as string[],
+    warning: "Mountain skiing involves inherent risks including changing weather, avalanche danger, and terrain hazards. Always ski within your ability level.",
+  };
+
+  if (skiingType === "Alpine") {
+    baseRequirements.title = "alpine skiing proficiency";
+    baseRequirements.details = [
+      "Comfortable skiing parallel turns on groomed runs",
+      "Ability to control speed and stop confidently",
+      "Experience with chairlifts and mountain procedures",
+      "Own skis, boots, and poles or rental available",
+      "Valid ski pass or day ticket for the resort",
+    ];
+  } else if (skiingType === "Cross Country") {
+    baseRequirements.title = "cross-country skiing experience";
+    baseRequirements.details = [
+      "Experience with Nordic skiing technique",
+      "Comfortable with diagonal stride and double poling",
+      "Own cross-country skis and boots or rental available",
+      "Basic understanding of trail marking systems",
+      "Appropriate clothing for extended outdoor activity",
+    ];
+  } else if (skiingType === "Touring") {
+    baseRequirements.title = "ski touring experience";
+    baseRequirements.details = [
+      "Advanced alpine skiing skills",
+      "Experience with touring bindings and skins",
+      "Basic avalanche safety knowledge",
+      "Own touring equipment (skis, boots, bindings, skins)",
+      "Avalanche transceiver, probe, and shovel",
+    ];
+    baseRequirements.warning = "Ski touring involves serious avalanche and mountain risks. Only join if you have proper training and experience in backcountry skiing.";
+  } else if (skiingType === "Freestyle") {
+    baseRequirements.title = "freestyle skiing skills";
+    baseRequirements.details = [
+      "Advanced skiing ability on all terrain",
+      "Experience with jumps, rails, or terrain park features",
+      "Comfortable skiing switch (backwards)",
+      "Helmet mandatory for terrain park activity",
+      "Understanding of terrain park safety rules",
+    ];
+  } else {
+    // General skiing
+    baseRequirements.details = [
+      "Basic parallel skiing ability",
+      "Comfortable on blue (intermediate) runs",
+      "Experience with chairlifts and ski area procedures",
+      "Own equipment or rental available at resort",
+      "Valid lift pass or day ticket",
+    ];
+  }
+
+  // Add skill level specific requirements
+  if (skillLevel === "Advanced") {
+    baseRequirements.details.push("Confident skiing all marked runs including black runs");
+    baseRequirements.details.push("Experience with various snow conditions and weather");
+  } else if (skillLevel === "Intermediate") {
+    baseRequirements.details.push("Comfortable on blue runs with some red run experience");
+    baseRequirements.details.push("Solid parallel turn technique");
+  } else {
+    baseRequirements.title = "basic skiing ability";
+    baseRequirements.details = baseRequirements.details.filter(d => 
+      !d.includes("Advanced") && !d.includes("black runs")
+    );
+    baseRequirements.details.push("Completed beginner lessons or equivalent experience");
+  }
+
+  // Add terrain-specific requirements
+  if (terrain === "Off-piste") {
+    baseRequirements.details.push("Off-piste skiing experience and avalanche awareness");
+    baseRequirements.details.push("Recommended: avalanche transceiver and basic rescue knowledge");
+  } else if (terrain === "Black runs") {
+    baseRequirements.details.push("Confident on steep terrain and challenging conditions");
+  }
+
+  return baseRequirements;
+}
+
+// Helper function to map skiing details to difficulty
+function getDifficultyFromSkiing(skillLevel: string, terrain: string, skiingType: string): string {
+  if (skillLevel === "Advanced" || terrain === "Off-piste" || skiingType === "Touring" || terrain === "Black runs") return "Advanced";
+  if (skillLevel === "Intermediate" || terrain === "Red runs" || skiingType === "Freestyle") return "Intermediate";
+  return "Beginner";
+}
+
 export default function CreateSkiingSimple() {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const [selectedType, setSelectedType] = useState("Alpine skiing");
+  const [selectedType, setSelectedType] = useState("Alpine");
   const [showLocationMap, setShowLocationMap] = useState(false);
   const [formData, setFormData] = useState({
     maxPeople: "",
     location: "",
     meetupLocation: "",
-    coordinates: { lat: 46.8182, lng: 8.2275 }, // Alps coordinates
+    coordinates: { lat: 46.0207, lng: 7.7491 }, // Default to Swiss Alps
     date: "",
     time: "",
-    climbingLevel: "",
-    languages: "",
-    gearRequired: "",
+    skillLevel: "Beginner" as "Beginner" | "Intermediate" | "Advanced",
+    terrain: "Blue runs" as "Blue runs" | "Red runs" | "Black runs" | "Off-piste" | "Terrain park",
+    snowConditions: "Groomed" as "Groomed" | "Powder" | "Packed" | "Icy" | "Spring snow",
+    liftPass: "Day pass" as "Day pass" | "Season pass" | "Multi-day" | "Not included",
+    equipmentProvided: false,
+    instructionIncluded: false,
+    aprèsSkiIncluded: false,
+    transport: false,
+    duration: "Full day",
     femaleOnly: false,
     ageMin: "",
     ageMax: "",
@@ -51,8 +147,11 @@ export default function CreateSkiingSimple() {
       return;
     }
 
-    // Create activity with proper title
-    const activityTitle = `${selectedType} at ${formData.location}`;
+    // Create activity with proper title and requirements
+    const terrainText = formData.terrain !== "Blue runs" ? ` - ${formData.terrain}` : "";
+    const activityTitle = `${selectedType} Skiing${terrainText}`;
+    const requirements = getSkiingRequirements(selectedType, formData.skillLevel, formData.terrain);
+    const difficulty = getDifficultyFromSkiing(formData.skillLevel, formData.terrain, selectedType);
 
     addActivity({
       type: "skiing",
@@ -64,34 +163,31 @@ export default function CreateSkiingSimple() {
       organizer: "You",
       maxParticipants: formData.maxPeople,
       specialComments: formData.specialComments,
-      climbingLevel: formData.climbingLevel,
-      languages: formData.languages,
-      gearRequired: formData.gearRequired,
+      description: formData.specialComments || `Join us for ${selectedType.toLowerCase()} skiing at ${formData.location}. ${requirements.description}`,
+      skillLevel: formData.skillLevel,
+      terrain: formData.terrain,
+      snowConditions: formData.snowConditions,
+      liftPass: formData.liftPass,
+      equipmentProvided: formData.equipmentProvided,
+      instructionIncluded: formData.instructionIncluded,
+      aprèsSkiIncluded: formData.aprèsSkiIncluded,
+      transport: formData.transport,
+      duration: formData.duration,
       subtype: selectedType,
       gender: formData.femaleOnly ? "Female only" : "All genders",
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
-      club: formData.visibility === "Club members" ? "westway" : undefined,
+      difficulty: difficulty,
+      club: formData.visibility === "Club members" ? "ski-club" : undefined,
       coordinates: formData.coordinates,
-      imageSrc:
-        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
+      requirements: requirements,
+      imageSrc: "https://images.unsplash.com/photo-1551524164-6cf2ac426081?w=40&h=40&fit=crop&crop=face",
     });
 
     showToast("Skiing activity created successfully!", "success");
     navigate("/explore");
   };
-
-  if (showLocationMap) {
-    return (
-      <MapView
-        activities={[]}
-        onClose={() => setShowLocationMap(false)}
-        onLocationSelect={handleLocationSelect}
-        mode="select"
-      />
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
@@ -105,16 +201,7 @@ export default function CreateSkiingSimple() {
             ))}
           </div>
           <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect
-              x="1"
-              y="3"
-              width="22"
-              height="10"
-              rx="2"
-              stroke="black"
-              strokeWidth="1"
-              fill="none"
-            />
+            <rect x="1" y="3" width="22" height="10" rx="2" stroke="black" strokeWidth="1" fill="none" />
             <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
           </svg>
         </div>
@@ -123,21 +210,31 @@ export default function CreateSkiingSimple() {
       {/* Scrollable Content */}
       <div className="overflow-y-auto pb-20 h-[calc(100vh-96px)]">
         <div className="px-6">
+          {/* Header */}
+          <div className="flex items-center gap-4 py-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 text-explore-green font-cabin"
+            >
+              ← Back
+            </button>
+          </div>
+
           {/* Title */}
           <div className="text-center py-4">
             <h1 className="text-3xl font-bold text-explore-green font-cabin">
-              New ski!
+              New ski day! ⛷️
             </h1>
           </div>
 
           <div className="space-y-6">
-            {/* Type */}
+            {/* Skiing Type */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Type
+                Skiing Type
               </h3>
               <div className="flex gap-2 flex-wrap">
-                {["Alpine skiing", "Cross-country", "Snowboarding"].map((type) => (
+                {["Alpine", "Cross Country", "Touring", "Freestyle"].map((type) => (
                   <button
                     key={type}
                     onClick={() => setSelectedType(type)}
@@ -153,10 +250,94 @@ export default function CreateSkiingSimple() {
               </div>
             </div>
 
+            {/* Skill Level */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Required Skill Level
+              </h3>
+              <div className="flex gap-2">
+                {["Beginner", "Intermediate", "Advanced"].map((level) => (
+                  <button
+                    key={level}
+                    onClick={() => setFormData({ ...formData, skillLevel: level as any })}
+                    className={`px-4 py-2 rounded-lg border border-black font-bold text-sm font-cabin ${
+                      formData.skillLevel === level
+                        ? "bg-explore-green text-white"
+                        : "bg-explore-gray text-explore-green"
+                    }`}
+                  >
+                    {level}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Terrain */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Terrain/Runs
+              </h3>
+              <select
+                value={formData.terrain}
+                onChange={(e) =>
+                  setFormData({ ...formData, terrain: e.target.value as any })
+                }
+                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+              >
+                <option value="Blue runs">Blue runs (Beginner)</option>
+                <option value="Red runs">Red runs (Intermediate)</option>
+                <option value="Black runs">Black runs (Advanced)</option>
+                <option value="Off-piste">Off-piste</option>
+                <option value="Terrain park">Terrain park</option>
+              </select>
+            </div>
+
+            {/* Snow Conditions */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Snow Conditions
+              </h3>
+              <select
+                value={formData.snowConditions}
+                onChange={(e) =>
+                  setFormData({ ...formData, snowConditions: e.target.value as any })
+                }
+                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+              >
+                <option value="Groomed">Groomed runs</option>
+                <option value="Powder">Fresh powder</option>
+                <option value="Packed">Packed powder</option>
+                <option value="Icy">Icy conditions</option>
+                <option value="Spring snow">Spring snow</option>
+              </select>
+            </div>
+
+            {/* Duration */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Duration
+              </h3>
+              <div className="flex gap-2 flex-wrap">
+                {["Half day", "Full day", "Weekend", "Week"].map((duration) => (
+                  <button
+                    key={duration}
+                    onClick={() => setFormData({ ...formData, duration })}
+                    className={`px-4 py-2 rounded-lg border border-black font-bold text-sm font-cabin ${
+                      formData.duration === duration
+                        ? "bg-explore-green text-white"
+                        : "bg-explore-gray text-explore-green"
+                    }`}
+                  >
+                    {duration}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Max number of people */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Max number of people
+                Max number of skiers
               </h3>
               <input
                 type="number"
@@ -169,20 +350,49 @@ export default function CreateSkiingSimple() {
               />
             </div>
 
+            {/* Lift Pass */}
+            <div>
+              <h3 className="text-xl font-medium text-black font-cabin mb-3">
+                Lift Pass
+              </h3>
+              <select
+                value={formData.liftPass}
+                onChange={(e) =>
+                  setFormData({ ...formData, liftPass: e.target.value as any })
+                }
+                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+              >
+                <option value="Day pass">Day pass included</option>
+                <option value="Season pass">Season pass holders</option>
+                <option value="Multi-day">Multi-day pass included</option>
+                <option value="Not included">Not included - buy your own</option>
+              </select>
+            </div>
+
             {/* Location */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Location
+                Ski Resort/Area
               </h3>
-              <button
-                onClick={() => setShowLocationMap(true)}
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin text-left flex items-center gap-3"
-              >
-                <MapPin className="w-5 h-5 text-gray-400" />
-                <span className={`flex-1 ${formData.location ? "text-black" : "text-gray-500"}`}>
-                  {formData.location || "Select ski resort/location"}
-                </span>
-              </button>
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
+                  className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
+                  placeholder="Enter ski resort name"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowLocationMap(true)}
+                  className="flex items-center gap-2 text-explore-green font-cabin"
+                >
+                  <MapPin className="w-4 h-4" />
+                  Choose location on map
+                </button>
+              </div>
             </div>
 
             {/* Meetup location */}
@@ -197,7 +407,7 @@ export default function CreateSkiingSimple() {
                   setFormData({ ...formData, meetupLocation: e.target.value })
                 }
                 className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter meetup location"
+                placeholder="Where should skiers meet? (e.g., Base lodge, Lift 1, Car park)"
               />
             </div>
 
@@ -209,52 +419,65 @@ export default function CreateSkiingSimple() {
               onTimeChange={(time) => setFormData({ ...formData, time })}
             />
 
-            {/* Skiing level */}
+            {/* Additional Features */}
             <div>
               <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Skiing level
+                Additional Features
               </h3>
-              <input
-                type="text"
-                value={formData.climbingLevel}
-                onChange={(e) =>
-                  setFormData({ ...formData, climbingLevel: e.target.value })
-                }
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter skill level (e.g., Beginner, Intermediate, Expert)"
-              />
-            </div>
-
-            {/* Languages */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Languages
-              </h3>
-              <input
-                type="text"
-                value={formData.languages}
-                onChange={(e) =>
-                  setFormData({ ...formData, languages: e.target.value })
-                }
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="Enter languages spoken"
-              />
-            </div>
-
-            {/* Gear required */}
-            <div>
-              <h3 className="text-xl font-medium text-black font-cabin mb-3">
-                Gear required
-              </h3>
-              <input
-                type="text"
-                value={formData.gearRequired}
-                onChange={(e) =>
-                  setFormData({ ...formData, gearRequired: e.target.value })
-                }
-                className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin"
-                placeholder="List required gear (e.g., Skis, Boots, Helmet)"
-              />
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.equipmentProvided}
+                    onChange={(e) =>
+                      setFormData({ ...formData, equipmentProvided: e.target.checked })
+                    }
+                    className="w-5 h-5 text-explore-green border-2 border-gray-300 rounded focus:ring-explore-green"
+                  />
+                  <span className="text-lg font-medium text-black font-cabin">
+                    Ski equipment rental available
+                  </span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.instructionIncluded}
+                    onChange={(e) =>
+                      setFormData({ ...formData, instructionIncluded: e.target.checked })
+                    }
+                    className="w-5 h-5 text-explore-green border-2 border-gray-300 rounded focus:ring-explore-green"
+                  />
+                  <span className="text-lg font-medium text-black font-cabin">
+                    Ski instruction/lessons included
+                  </span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.aprèsSkiIncluded}
+                    onChange={(e) =>
+                      setFormData({ ...formData, aprèsSkiIncluded: e.target.checked })
+                    }
+                    className="w-5 h-5 text-explore-green border-2 border-gray-300 rounded focus:ring-explore-green"
+                  />
+                  <span className="text-lg font-medium text-black font-cabin">
+                    Après-ski activities included
+                  </span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.transport}
+                    onChange={(e) =>
+                      setFormData({ ...formData, transport: e.target.checked })
+                    }
+                    className="w-5 h-5 text-explore-green border-2 border-gray-300 rounded focus:ring-explore-green"
+                  />
+                  <span className="text-lg font-medium text-black font-cabin">
+                    Transport to resort included
+                  </span>
+                </label>
+              </div>
             </div>
 
             {/* Optional (special filters) */}
@@ -312,7 +535,7 @@ export default function CreateSkiingSimple() {
                 <h3 className="text-lg font-medium text-black font-cabin mb-3">
                   Activity visibility
                 </h3>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2">
                   {["All", "Followers", "Club members"].map((option) => (
                     <button
                       key={option}
@@ -345,7 +568,7 @@ export default function CreateSkiingSimple() {
                     })
                   }
                   className="w-full border-2 border-gray-300 rounded-lg py-3 px-4 font-cabin h-32 resize-none"
-                  placeholder="Write down additional plans of the day here ..."
+                  placeholder="Describe snow conditions, terrain details, equipment needs, or meeting arrangements..."
                 />
               </div>
 
@@ -354,85 +577,35 @@ export default function CreateSkiingSimple() {
                 onClick={handleSubmit}
                 className="w-full bg-explore-green text-white py-3 px-6 rounded-lg text-base font-cabin font-medium"
               >
-                Create activity
+                Create skiing activity
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <BottomNavigation />
-    </div>
-  );
-}
-
-function BottomNavigation() {
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white h-14 flex items-center justify-around border-t border-gray-200 max-w-md mx-auto">
-      {/* Home Icon */}
-      <Link to="/explore" className="p-2">
-        <svg className="w-8 h-7" viewBox="0 0 35 31" fill="none">
-          <path
-            d="M31.4958 7.46836L21.4451 1.22114C18.7055 -0.484058 14.5003 -0.391047 11.8655 1.42266L3.12341 7.48386C1.37849 8.693 0 11.1733 0 13.1264V23.8227C0 27.7756 3.61199 31 8.06155 31H26.8718C31.3213 31 34.9333 27.7911 34.9333 23.8382V13.328C34.9333 11.2353 33.4152 8.662 31.4958 7.46836ZM18.7753 24.7993C18.7753 25.4349 18.1821 25.9619 17.4666 25.9619C16.7512 25.9619 16.1579 25.4349 16.1579 24.7993V20.1487C16.1579 19.5132 16.7512 18.9861 17.4666 18.9861C18.1821 18.9861 18.7753 19.5132 18.7753 20.1487V24.7993Z"
-            fill="#2F2F2F"
-          />
-        </svg>
-      </Link>
-
-      {/* Clock Icon */}
-      <Link to="/saved" className="p-2">
-        <svg
-          className="w-7 h-7"
-          viewBox="0 0 30 30"
-          fill="none"
-          stroke="#1E1E1E"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="15" cy="15" r="12.5" />
-          <path d="M15 7.5V15L20 17.5" />
-        </svg>
-      </Link>
-
-      {/* Plus Icon - Active */}
-      <Link to="/create" className="p-2 bg-explore-green rounded-full">
-        <svg
-          className="w-7 h-7"
-          viewBox="0 0 30 30"
-          fill="none"
-          stroke="#FFFFFF"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M15 6.25V23.75M6.25 15H23.75" />
-        </svg>
-      </Link>
-
-      {/* Chat Icon */}
-      <Link to="/chat" className="p-2">
-        <svg className="w-7 h-7" viewBox="0 0 30 30" fill="none">
-          <path
-            d="M2.5 27.5V5C2.5 4.3125 2.74479 3.72396 3.23438 3.23438C3.72396 2.74479 4.3125 2.5 5 2.5H25C25.6875 2.5 26.276 2.74479 26.7656 3.23438C27.2552 3.72396 27.5 4.3125 27.5 5V20C27.5 20.6875 27.2552 21.276 26.7656 21.7656C26.276 22.2552 25.6875 22.5 25 22.5H7.5L2.5 27.5Z"
-            fill="#1D1B20"
-          />
-        </svg>
-      </Link>
-
-      {/* Profile Icon */}
-      <Link to="/profile" className="p-2">
-        <svg className="w-8 h-8" viewBox="0 0 35 35" fill="none">
-          <path
-            d="M17.5 17.4999C15.8958 17.4999 14.5225 16.9287 13.3802 15.7864C12.2378 14.644 11.6666 13.2708 11.6666 11.6666C11.6666 10.0624 12.2378 8.68915 13.3802 7.54679C14.5225 6.40443 15.8958 5.83325 17.5 5.83325C19.1041 5.83325 20.4774 6.40443 21.6198 7.54679C22.7621 8.68915 23.3333 10.0624 23.3333 11.6666C23.3333 13.2708 22.7621 14.644 21.6198 15.7864C20.4774 16.9287 19.1041 17.4999 17.5 17.4999ZM5.83331 29.1666V25.0833C5.83331 24.2569 6.04599 23.4973 6.47133 22.8046C6.89668 22.1119 7.46179 21.5833 8.16665 21.2187C9.67359 20.4652 11.2048 19.9001 12.7604 19.5234C14.316 19.1466 15.8958 18.9583 17.5 18.9583C19.1041 18.9583 20.684 19.1466 22.2396 19.5234C23.7951 19.9001 25.3264 20.4652 26.8333 21.2187C27.5382 21.5833 28.1033 22.1119 28.5286 22.8046C28.954 23.4973 29.1666 24.2569 29.1666 25.0833V29.1666H5.83331Z"
-            fill="#1D1B20"
-          />
-        </svg>
-      </Link>
-
-      {/* Navigation Indicator */}
-      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white border border-explore-green rounded-full"></div>
+      {/* Map Modal */}
+      {showLocationMap && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full h-full max-w-md max-h-[80vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-bold">Choose Ski Resort</h3>
+              <button
+                onClick={() => setShowLocationMap(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1">
+              <MapView
+                onLocationSelect={handleLocationSelect}
+                initialLocation={formData.coordinates}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
