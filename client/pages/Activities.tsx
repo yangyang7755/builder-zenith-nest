@@ -9,7 +9,6 @@ import BackendTest from "../components/BackendTest";
 import DemoAuth from "../components/DemoAuth";
 import UserNav from "../components/UserNav";
 import BottomNavigation from "../components/BottomNavigation";
-import ActivityCreationTest from "../components/ActivityCreationTest";
 
 export default function Activities() {
   const { savedActivities, unsaveActivity } = useSavedActivities();
