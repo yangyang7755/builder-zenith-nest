@@ -652,9 +652,45 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
             cafeStop: activityData.activity_data?.cafeStop,
             difficulty: activityData.difficulty_level || activityData.activity_data?.difficulty,
             requirements: activityData.activity_data?.requirements,
+            // Climbing fields
             climbingLevel: activityData.activity_data?.climbingLevel,
             languages: activityData.activity_data?.languages,
             gearRequired: activityData.activity_data?.gearRequired,
+            gradeRange: activityData.activity_data?.gradeRange,
+            // Running fields
+            terrain: activityData.activity_data?.terrain,
+            elevationGain: activityData.activity_data?.elevationGain,
+            targetPace: activityData.activity_data?.targetPace,
+            waterStations: activityData.activity_data?.waterStations,
+            // Tennis fields
+            skillLevel: activityData.activity_data?.skillLevel,
+            courtSurface: activityData.activity_data?.courtSurface,
+            isCompetitive: activityData.activity_data?.isCompetitive,
+            duration: activityData.activity_data?.duration,
+            equipmentProvided: activityData.activity_data?.equipmentProvided,
+            coachingIncluded: activityData.activity_data?.coachingIncluded,
+            refreshments: activityData.activity_data?.refreshments,
+            // Surfing fields
+            surfingType: activityData.activity_data?.surfingType,
+            waveHeight: activityData.activity_data?.waveHeight,
+            waveConditions: activityData.activity_data?.waveConditions,
+            tideInfo: activityData.activity_data?.tideInfo,
+            waterTemp: activityData.activity_data?.waterTemp,
+            // Skiing fields
+            snowConditions: activityData.activity_data?.snowConditions,
+            liftPass: activityData.activity_data?.liftPass,
+            instructionIncluded: activityData.activity_data?.instructionIncluded,
+            aprèsSkiIncluded: activityData.activity_data?.aprèsSkiIncluded,
+            transport: activityData.activity_data?.transport,
+            // Hiking fields
+            hikingType: activityData.activity_data?.hikingType,
+            navigationRequired: activityData.activity_data?.navigationRequired,
+            waterSources: activityData.activity_data?.waterSources,
+            shelterAvailable: activityData.activity_data?.shelterAvailable,
+            wildlifeWarning: activityData.activity_data?.wildlifeWarning,
+            permitRequired: activityData.activity_data?.permitRequired,
+            transportIncluded: activityData.activity_data?.transportIncluded,
+            guidedTour: activityData.activity_data?.guidedTour,
           };
 
           setActivities((prev) => [demoActivity, ...prev]);
