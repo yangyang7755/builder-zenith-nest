@@ -452,6 +452,11 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Notification Test Tab */}
+          <TabsContent value="notifications">
+            <NotificationTest />
+          </TabsContent>
         </Tabs>
       </div>
 
