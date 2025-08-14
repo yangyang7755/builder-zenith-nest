@@ -119,7 +119,7 @@ export default function Chat() {
 
   const getFilteredClubChats = () => {
     if (activeFilter === "All" || activeFilter === "Clubs") {
-      return clubChats.sort((a, b) => {
+      return displayClubChats.sort((a, b) => {
         // Prioritize unread messages
         if (a.unread && !b.unread) return -1;
         if (!a.unread && b.unread) return 1;
