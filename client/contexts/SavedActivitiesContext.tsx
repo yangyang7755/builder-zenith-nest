@@ -33,7 +33,16 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
   const loadSavedActivities = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getSavedActivities();
+
+      // Add timeout to prevent hanging requests
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 5000)
+      );
+
+      const response = await Promise.race([
+        apiService.getSavedActivities(),
+        timeoutPromise
+      ]) as any;
 
       if (response.error) {
         if (response.error === "BACKEND_UNAVAILABLE") {
