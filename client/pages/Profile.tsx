@@ -134,19 +134,16 @@ export default function Profile() {
     reviews: 23,
   };
 
-  const displayProfile =
-    user && profile
-      ? {
-          ...profile,
-          followers: followStats.followers,
-          following: followStats.following,
-          rating: profile.average_rating || 0,
-          reviews: profile.total_reviews || 0,
-        }
-      : {
-          ...baseDemoProfile,
-          ...(localProfileData || {}), // Override with any local updates
-        };
+  // Use real authenticated user profile data
+  const displayProfile = profile
+    ? {
+        ...profile,
+        followers: followStats?.followers || 0,
+        following: followStats?.following || 0,
+        rating: userProfileData?.average_rating || 0,
+        reviews: userProfileData?.total_reviews || 0,
+      }
+    : null;
 
   const isDemo = !user;
 
