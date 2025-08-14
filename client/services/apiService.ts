@@ -201,18 +201,34 @@ class ApiService {
           };
         }
 
-        // Log other server errors
-        console.error(
-          "Server error response:",
-          JSON.stringify(responseData, null, 2),
+        // Handle 400 Bad Request - could be validation errors or missing data
+        if (status === 400) {
+          console.log(
+            "Bad request (400) - possibly missing data or validation error, falling back to demo mode",
+          );
+          return {
+            error: "BACKEND_UNAVAILABLE",
+          };
+        }
+
+        // Handle 401 Unauthorized - authentication issues
+        if (status === 401) {
+          console.log(
+            "Unauthorized (401) - authentication required, falling back to demo mode",
+          );
+          return {
+            error: "BACKEND_UNAVAILABLE",
+          };
+        }
+
+        // Log other server errors but still try to work in demo mode
+        console.log(
+          `Server error ${status}, falling back to demo mode:`,
+          responseData?.error || responseData?.message || "Unknown error",
         );
-        const errorMessage =
-          responseData?.error ||
-          responseData?.message ||
-          `HTTP error! status: ${status}`;
 
         return {
-          error: errorMessage,
+          error: "BACKEND_UNAVAILABLE",
           data: responseData,
         };
       }
