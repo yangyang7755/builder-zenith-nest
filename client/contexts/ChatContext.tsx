@@ -143,6 +143,204 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       });
     }
   }, [socket.connected, user?.id]);
+
+  // Load user's club chats
+  const loadClubChats = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getUserClubs();
+
+      if (response.error === "BACKEND_UNAVAILABLE") {
+        // Use demo club chats when backend is unavailable
+        const demoClubs = [
+          {
+            id: "oxford-cycling",
+            name: "Oxford University Cycling Club",
+            lastMessage: "Training ride tomorrow! Meet at Radcliffe Camera 7am",
+            lastMessageTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+            unreadCount: 0,
+            memberCount: 45,
+            avatar: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60&h=60&fit=crop"
+          },
+          {
+            id: "westway-climbing",
+            name: "Westway Climbing Centre",
+            lastMessage: "New routes set this week! Come check them out 🧗‍♀️",
+            lastMessageTime: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+            unreadCount: 2,
+            memberCount: 120,
+            avatar: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800"
+          }
+        ];
+        setClubChats(demoClubs);
+        return;
+      }
+
+      if (response.data) {
+        // Transform user clubs to chat format
+        const clubs = response.data.map((club: any) => ({
+          id: club.id,
+          name: club.name,
+          lastMessage: "",
+          lastMessageTime: "",
+          unreadCount: 0,
+          memberCount: club.member_count || 0,
+          avatar: club.profile_image
+        }));
+        setClubChats(clubs);
+      }
+    } catch (error) {
+      console.error("Failed to load club chats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load messages for a specific club
+  const loadClubMessages = async (clubId: string) => {
+    try {
+      setLoading(true);
+      const response = await apiService.getClubMessages(clubId);
+
+      if (response.error === "BACKEND_UNAVAILABLE") {
+        // Demo messages when backend unavailable
+        const demoMessages = [
+          {
+            id: "msg1",
+            user_id: "demo-user-1",
+            club_id: clubId,
+            message: "Looking forward to tomorrow's ride!",
+            created_at: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+            profiles: { id: "demo-user-1", full_name: "Sarah Johnson" }
+          }
+        ];
+        setClubMessages(prev => new Map(prev.set(clubId, demoMessages)));
+        return;
+      }
+
+      if (response.data) {
+        setClubMessages(prev => new Map(prev.set(clubId, response.data)));
+      }
+    } catch (error) {
+      console.error("Failed to load club messages:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load direct messages with another user
+  const loadDirectMessages = async (otherUserId: string) => {
+    try {
+      setLoading(true);
+      const response = await apiService.getDirectMessages(otherUserId);
+
+      if (response.error === "BACKEND_UNAVAILABLE") {
+        // Demo direct messages
+        const demoMessages = [
+          {
+            id: "dm1",
+            sender_id: user?.id || "demo-user",
+            receiver_id: otherUserId,
+            message: "Hey! Are you joining the ride tomorrow?",
+            created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+            sender: { id: user?.id || "demo-user", full_name: "You" }
+          }
+        ];
+        setDirectMessages(prev => new Map(prev.set(otherUserId, demoMessages)));
+        return;
+      }
+
+      if (response.data) {
+        setDirectMessages(prev => new Map(prev.set(otherUserId, response.data)));
+      }
+    } catch (error) {
+      console.error("Failed to load direct messages:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Send a club message
+  const sendClubMessageAPI = async (clubId: string, message: string) => {
+    try {
+      // Send via API first
+      const response = await apiService.sendClubMessage(clubId, message);
+
+      if (response.error === "BACKEND_UNAVAILABLE") {
+        // Add to local state as demo
+        const demoMessage = {
+          id: `msg-${Date.now()}`,
+          user_id: user?.id || "demo-user",
+          club_id: clubId,
+          message,
+          created_at: new Date().toISOString(),
+          profiles: { id: user?.id || "demo-user", full_name: user?.user_metadata?.full_name || "You" }
+        };
+        setClubMessages(prev => {
+          const newMap = new Map(prev);
+          const existing = newMap.get(clubId) || [];
+          newMap.set(clubId, [...existing, demoMessage]);
+          return newMap;
+        });
+        return;
+      }
+
+      // Send via Socket.IO for real-time delivery
+      if (socket.connected) {
+        socket.sendClubMessage(clubId, message);
+      }
+    } catch (error) {
+      console.error("Failed to send club message:", error);
+      throw error;
+    }
+  };
+
+  // Send a direct message
+  const sendDirectMessageAPI = async (receiverId: string, message: string) => {
+    try {
+      // Send via API first
+      const response = await apiService.sendDirectMessage(receiverId, message);
+
+      if (response.error === "BACKEND_UNAVAILABLE") {
+        // Add to local state as demo
+        const demoMessage = {
+          id: `dm-${Date.now()}`,
+          sender_id: user?.id || "demo-user",
+          receiver_id: receiverId,
+          message,
+          created_at: new Date().toISOString(),
+          sender: { id: user?.id || "demo-user", full_name: user?.user_metadata?.full_name || "You" }
+        };
+        setDirectMessages(prev => {
+          const newMap = new Map(prev);
+          const existing = newMap.get(receiverId) || [];
+          newMap.set(receiverId, [...existing, demoMessage]);
+          return newMap;
+        });
+        return;
+      }
+
+      // Send via Socket.IO for real-time delivery
+      if (socket.connected) {
+        socket.sendDirectMessage(receiverId, message);
+      }
+    } catch (error) {
+      console.error("Failed to send direct message:", error);
+      throw error;
+    }
+  };
+
+  // Mark messages as read
+  const markMessagesAsRead = async (senderId: string) => {
+    try {
+      const response = await apiService.markMessagesAsRead(senderId);
+      if (response.error && response.error !== "BACKEND_UNAVAILABLE") {
+        console.error("Failed to mark messages as read:", response.error);
+      }
+    } catch (error) {
+      console.error("Failed to mark messages as read:", error);
+    }
+  };
   const [requestedActivities, setRequestedActivities] = useState<Set<string>>(
     new Set(),
   );
