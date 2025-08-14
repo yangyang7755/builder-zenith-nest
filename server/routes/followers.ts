@@ -107,6 +107,18 @@ export const handleFollowUser = async (req: Request, res: Response) => {
       return res.status(500).json({ error: "Failed to follow user" });
     }
 
+    // Create notification for the followed user
+    await createNotification(
+      validatedData.following_id,
+      "new_follower",
+      "You have a new follower",
+      `${newFollow.following?.full_name || "Someone"} started following you`,
+      {
+        follower_id: user.id,
+        follower_name: newFollow.following?.full_name
+      }
+    );
+
     res.status(201).json(newFollow);
   } catch (error) {
     if (error instanceof z.ZodError) {
