@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { supabaseAdmin, getUserFromToken } from "../lib/supabase";
+import { createNotification } from "./notifications";
 
 // Follow schema for validation
 const FollowSchema = z.object({
