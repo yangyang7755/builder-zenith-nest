@@ -864,11 +864,45 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
           requirements: activityData.requirements,
           description: activityData.description,
           // Add any other legacy fields that should be preserved
+          // Climbing fields
           ...(activityData.climbingLevel && { climbingLevel: activityData.climbingLevel }),
           ...(activityData.languages && { languages: activityData.languages }),
           ...(activityData.gearRequired && { gearRequired: activityData.gearRequired }),
-          ...(activityData.terrain && { terrain: activityData.terrain }),
           ...(activityData.gradeRange && { gradeRange: activityData.gradeRange }),
+          // Running fields
+          ...(activityData.terrain && { terrain: activityData.terrain }),
+          ...(activityData.elevationGain && { elevationGain: activityData.elevationGain }),
+          ...(activityData.targetPace && { targetPace: activityData.targetPace }),
+          ...(activityData.waterStations && { waterStations: activityData.waterStations }),
+          // Tennis fields
+          ...(activityData.skillLevel && { skillLevel: activityData.skillLevel }),
+          ...(activityData.courtSurface && { courtSurface: activityData.courtSurface }),
+          ...(activityData.isCompetitive && { isCompetitive: activityData.isCompetitive }),
+          ...(activityData.duration && { duration: activityData.duration }),
+          ...(activityData.equipmentProvided && { equipmentProvided: activityData.equipmentProvided }),
+          ...(activityData.coachingIncluded && { coachingIncluded: activityData.coachingIncluded }),
+          ...(activityData.refreshments && { refreshments: activityData.refreshments }),
+          // Surfing fields
+          ...(activityData.surfingType && { surfingType: activityData.surfingType }),
+          ...(activityData.waveHeight && { waveHeight: activityData.waveHeight }),
+          ...(activityData.waveConditions && { waveConditions: activityData.waveConditions }),
+          ...(activityData.tideInfo && { tideInfo: activityData.tideInfo }),
+          ...(activityData.waterTemp && { waterTemp: activityData.waterTemp }),
+          // Skiing fields
+          ...(activityData.snowConditions && { snowConditions: activityData.snowConditions }),
+          ...(activityData.liftPass && { liftPass: activityData.liftPass }),
+          ...(activityData.instructionIncluded && { instructionIncluded: activityData.instructionIncluded }),
+          ...(activityData.aprèsSkiIncluded && { aprèsSkiIncluded: activityData.aprèsSkiIncluded }),
+          ...(activityData.transport && { transport: activityData.transport }),
+          // Hiking fields
+          ...(activityData.hikingType && { hikingType: activityData.hikingType }),
+          ...(activityData.navigationRequired && { navigationRequired: activityData.navigationRequired }),
+          ...(activityData.waterSources && { waterSources: activityData.waterSources }),
+          ...(activityData.shelterAvailable && { shelterAvailable: activityData.shelterAvailable }),
+          ...(activityData.wildlifeWarning && { wildlifeWarning: activityData.wildlifeWarning }),
+          ...(activityData.permitRequired && { permitRequired: activityData.permitRequired }),
+          ...(activityData.transportIncluded && { transportIncluded: activityData.transportIncluded }),
+          ...(activityData.guidedTour && { guidedTour: activityData.guidedTour }),
         },
       };
 
