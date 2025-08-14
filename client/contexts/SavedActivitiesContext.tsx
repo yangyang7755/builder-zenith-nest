@@ -92,6 +92,11 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error loading saved activities:", error);
+      // On error, keep existing state but ensure we don't stay in loading state
+      // Could be network error, timeout, or other connectivity issue
+      if (error instanceof Error && error.message === 'Request timeout') {
+        console.log("Saved activities request timed out, keeping current state");
+      }
     } finally {
       setLoading(false);
     }
