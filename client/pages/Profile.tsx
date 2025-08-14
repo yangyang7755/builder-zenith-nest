@@ -606,7 +606,7 @@ export default function Profile() {
                 Activities & Reviews
               </h3>
               <span className="text-sm text-gray-500">
-                {activityHistory.length} completed
+                {totalActivities} total
               </span>
             </div>
 
