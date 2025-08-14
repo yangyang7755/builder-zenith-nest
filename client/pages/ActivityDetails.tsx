@@ -1075,9 +1075,9 @@ export default function ActivityDetails() {
             className={`w-full py-3 rounded-lg text-lg font-cabin font-medium transition-colors ${
               isParticipating
                 ? "bg-red-500 text-white hover:bg-red-600"
-                : agreedToRequirements
-                  ? "bg-explore-green text-white hover:bg-explore-green-light"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : (activity.requirements || activity.activity_data?.requirements) ?
+                    (agreedToRequirements ? "bg-explore-green text-white hover:bg-explore-green-light" : "bg-gray-300 text-gray-500 cursor-not-allowed")
+                  : "bg-explore-green text-white hover:bg-explore-green-light"
             }`}
           >
             {isParticipating ? "Leave Activity" : "Join Activity"}
