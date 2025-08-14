@@ -147,7 +147,7 @@ export function ComprehensiveProfileEdit({
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, updateProfile: updateAuthProfile, refreshProfile } = useAuth();
 
   const [profileData, setProfileData] = useState<ProfileData>({
     full_name: profile?.full_name || 'Maddie Wei',
