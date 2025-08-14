@@ -30,7 +30,7 @@ const checkBackendAvailability = async (): Promise<boolean> => {
 
       try {
         // Try a simple ping to check if backend is available
-        const response = await fetch(`${API_BASE_URL}/ping`, {
+        const response = await originalFetch(`${API_BASE_URL}/ping`, {
           method: "GET",
           signal: controller.signal,
         });
