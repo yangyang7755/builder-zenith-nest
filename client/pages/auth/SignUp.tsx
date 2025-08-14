@@ -150,57 +150,58 @@ export default function SignUp() {
             </div>
           )}
 
-          {/* Full Name Field */}
+          {/* Full Name */}
           <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2 font-cabin">
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
               Full Name *
             </label>
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              value={formData.full_name}
-              onChange={(e) => handleInputChange("full_name", e.target.value)}
-              required
-              className="search-input-mobile"
-              placeholder="Enter your full name"
-              autoComplete="name"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <User className="w-5 h-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                value={formData.full_name}
+                onChange={(e) => handleInputChange("full_name", e.target.value)}
+                placeholder="Enter your full name"
+                className={`w-full pl-12 pr-4 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.full_name ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+              />
+            </div>
+            {errors.full_name && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">
+                {errors.full_name}
+              </p>
+            )}
           </div>
 
-          {/* Email Field */}
+          {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 font-cabin">
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
               Email Address *
             </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              required
-              className="search-input-mobile"
-              placeholder="Enter your email"
-              autoComplete="email"
-            />
-          </div>
-
-          {/* University Field */}
-          <div>
-            <label htmlFor="university" className="block text-sm font-medium text-gray-700 mb-2 font-cabin">
-              University (Optional)
-            </label>
-            <input
-              type="text"
-              id="university"
-              name="university"
-              value={formData.university}
-              onChange={(e) => handleInputChange("university", e.target.value)}
-              className="search-input-mobile"
-              placeholder="Your university or college"
-              autoComplete="organization"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="w-5 h-5 text-gray-400" />
+              </div>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                placeholder="Enter your email"
+                className={`w-full pl-12 pr-4 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+              />
+            </div>
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">
+                {errors.email}
+              </p>
+            )}
           </div>
 
           {/* Password Field */}
