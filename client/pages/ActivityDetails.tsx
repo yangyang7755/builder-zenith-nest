@@ -689,9 +689,8 @@ export default function ActivityDetails() {
           {/* Activity-specific details */}
           {(activity.type === "cycling" || activity.type === "running") && (
             <>
-              {(activity.distance ||
-                (contextActivity?.distance &&
-                  contextActivity?.distanceUnit)) && (
+              {((activity.distance || activity.activity_data?.distance) ||
+                (activity.distance && activity.distanceUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <Target className="w-4 h-4 text-green-500" />
@@ -700,14 +699,16 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {contextActivity
-                      ? `${contextActivity.distance} ${contextActivity.distanceUnit}`
-                      : activity.distance}
+                    {activity.distance && activity.distanceUnit
+                      ? `${activity.distance} ${activity.distanceUnit}`
+                      : activity.activity_data?.distance
+                        ? `${activity.activity_data.distance} ${activity.activity_data.distanceUnit || 'km'}`
+                        : activity.distance}
                   </p>
                 </div>
               )}
-              {(activity.pace ||
-                (contextActivity?.pace && contextActivity?.paceUnit)) && (
+              {((activity.pace || activity.activity_data?.pace) ||
+                (activity.pace && activity.paceUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-yellow-500">⚡</span>
@@ -716,15 +717,16 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {contextActivity
-                      ? `${contextActivity.pace} ${contextActivity.paceUnit}`
-                      : activity.pace}
+                    {activity.pace && activity.paceUnit
+                      ? `${activity.pace} ${activity.paceUnit}`
+                      : activity.activity_data?.pace
+                        ? `${activity.activity_data.pace} ${activity.activity_data.paceUnit || 'kph'}`
+                        : activity.pace}
                   </p>
                 </div>
               )}
-              {(activity.elevation ||
-                (contextActivity?.elevation &&
-                  contextActivity?.elevationUnit)) && (
+              {((activity.elevation || activity.activity_data?.elevation) ||
+                (activity.elevation && activity.elevationUnit)) && (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-green-600">⛰️</span>
@@ -733,9 +735,11 @@ export default function ActivityDetails() {
                     </h4>
                   </div>
                   <p className="text-sm text-black font-cabin ml-6">
-                    {contextActivity
-                      ? `${contextActivity.elevation} ${contextActivity.elevationUnit}`
-                      : activity.elevation}
+                    {activity.elevation && activity.elevationUnit
+                      ? `${activity.elevation} ${activity.elevationUnit}`
+                      : activity.activity_data?.elevation
+                        ? `${activity.activity_data.elevation} ${activity.activity_data.elevationUnit || 'm'}`
+                        : activity.elevation}
                   </p>
                 </div>
               )}
