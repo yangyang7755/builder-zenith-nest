@@ -64,6 +64,14 @@ import {
   handleMarkMessagesRead,
   handleGetClubOnlineUsers,
 } from "./routes/chat";
+import {
+  handleGetNotifications,
+  handleMarkNotificationRead,
+  handleMarkAllNotificationsRead,
+  handleGetUnreadCount,
+  handleDeleteNotification,
+  handleCreateNotification,
+} from "./routes/notifications";
 import uploadsRouter from "./routes/uploads";
 import healthRouter from "./routes/health";
 import { supabaseAdmin } from "./lib/supabase";
