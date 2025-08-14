@@ -568,11 +568,11 @@ export default function ActivityDetails() {
                   }`}
                 />
               </button>
-              {activity.difficulty && (
+              {(activity.difficulty || activity.difficulty_level) && (
                 <span
-                  className={`text-sm px-3 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty)}`}
+                  className={`text-sm px-3 py-1 rounded-full font-cabin font-medium ${getDifficultyColor(activity.difficulty || activity.difficulty_level)}`}
                 >
-                  {activity.difficulty}
+                  {activity.difficulty || (activity.difficulty_level && activity.difficulty_level.charAt(0).toUpperCase() + activity.difficulty_level.slice(1))}
                 </span>
               )}
             </div>
