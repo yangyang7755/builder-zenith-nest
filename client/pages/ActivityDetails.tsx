@@ -654,11 +654,13 @@ export default function ActivityDetails() {
               <h3 className="text-xl font-bold text-black font-cabin">Time</h3>
             </div>
             <p className="text-sm text-black font-cabin ml-8">
-              {contextActivity
-                ? `${contextActivity.date}, ${contextActivity.time}`
-                : activity.id === "westway-womens-climb"
-                  ? "Every Wednesday, 10:00-12:00 AM"
-                  : activity.schedule}
+              {activity.date && activity.time
+                ? `${activity.date}, ${activity.time}`
+                : activity.date_time
+                  ? new Date(activity.date_time).toLocaleString()
+                  : activity.id === "westway-womens-climb"
+                    ? "Every Wednesday, 10:00-12:00 AM"
+                    : activity.schedule}
             </p>
           </div>
 
@@ -912,7 +914,7 @@ export default function ActivityDetails() {
               )}
               {activity.waveHeight && (
                 <div className="flex items-center gap-2">
-                  <span className="text-blue-600">🌊</span>
+                  <span className="text-blue-600">��</span>
                   <span className="text-sm font-cabin">
                     Waves: {activity.waveHeight}
                   </span>
