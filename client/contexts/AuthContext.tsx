@@ -9,6 +9,9 @@ import {
   getCurrentUser,
 } from "../lib/supabase";
 
+// Store original fetch to avoid third-party interference (like FullStory analytics)
+const originalFetch = window.fetch;
+
 interface AuthContextType {
   user: User | null;
   profile: Profile | null;
