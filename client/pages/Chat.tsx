@@ -63,6 +63,17 @@ export default function Chat() {
     },
   ];
 
+  // Use real club chats if available, otherwise fall back to static data
+  const displayClubChats = clubChats.length > 0 ? clubChats.map(club => ({
+    id: club.id,
+    name: club.name,
+    lastMessage: club.lastMessage || "No messages yet",
+    timestamp: club.lastMessageTime ? new Date(club.lastMessageTime) : new Date(),
+    avatar: club.avatar || "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60&h=60&fit=crop",
+    unread: club.unreadCount > 0,
+    type: "club" as const,
+  })) : staticClubChats;
+
   const getTimeAgo = (timestamp: Date) => {
     const now = new Date();
     const diffMs = now.getTime() - timestamp.getTime();
