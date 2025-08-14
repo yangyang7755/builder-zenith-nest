@@ -51,6 +51,26 @@ export const handleGetReviews = async (req: Request, res: Response) => {
 
 export const handleCreateReview = async (req: Request, res: Response) => {
   try {
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      // Return demo success response for development
+      const demoReview = {
+        id: "demo-review-" + Date.now(),
+        activity_id: req.body.activity_id,
+        reviewer_id: "demo-user-id",
+        reviewee_id: req.body.reviewee_id,
+        rating: req.body.rating,
+        comment: req.body.comment,
+        created_at: new Date().toISOString(),
+        reviewer: {
+          id: "demo-user-id",
+          full_name: "Demo User",
+          profile_image: null
+        }
+      };
+      return res.status(201).json(demoReview);
+    }
+
     const user = await getUserFromToken(req.headers.authorization || "");
     if (!user) {
       return res.status(401).json({ error: "Authentication required" });
