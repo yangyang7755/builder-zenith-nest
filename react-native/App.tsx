@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Feather";
 import { StyleSheet } from "react-native";
 
-// Import screens (these would need to be created)
+// Import screens
 import ExploreScreen from "./screens/ExploreScreen";
 import ActivitiesScreen from "./screens/ActivitiesScreen";
 import CreateScreen from "./screens/CreateScreen";
