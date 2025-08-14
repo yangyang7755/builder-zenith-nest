@@ -792,6 +792,14 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
   // Legacy method for backward compatibility
   const addActivity = async (activityData: any): Promise<boolean> => {
     try {
+      console.log("Creating activity with legacy data:", activityData);
+
+      // Validate required fields
+      if (!activityData.title || !activityData.date || !activityData.time || !activityData.location) {
+        console.error("Missing required fields for activity creation");
+        return false;
+      }
+
       // Transform legacy format to new format
       const newActivityData: CreateActivityData = {
         title: activityData.title,
@@ -805,14 +813,19 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
           typeof activityData.maxParticipants === "string"
             ? parseInt(activityData.maxParticipants)
             : activityData.max_participants || 10,
-        difficulty_level: activityData.difficulty?.toLowerCase() || "beginner",
+        difficulty_level: (activityData.difficulty?.toLowerCase() as any) || "beginner",
         club_id: activityData.club || activityData.club_id,
         special_requirements: activityData.specialComments,
         activity_image: activityData.imageSrc || activityData.activity_image,
         route_link: activityData.routeLink || activityData.route_link,
+        price_per_person: 0, // Default to free for legacy activities
       };
 
+      console.log("Transformed activity data:", newActivityData);
+
       const result = await createActivity(newActivityData);
+      console.log("Activity creation result:", result);
+
       return result.success;
     } catch (err) {
       console.error("Failed to add activity (legacy):", err);
