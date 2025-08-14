@@ -6,6 +6,26 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 // Store original fetch to avoid third-party interference (like FullStory analytics)
 const originalFetch = window.fetch;
 
+// Fallback fetch function that tries multiple approaches
+const safeFetch = async (url: string, options?: RequestInit) => {
+  // Try original fetch first
+  if (originalFetch && typeof originalFetch === 'function') {
+    try {
+      return await originalFetch(url, options);
+    } catch (error) {
+      console.log("Original fetch failed, trying current fetch:", error);
+    }
+  }
+
+  // Fallback to current fetch (which might be wrapped by analytics)
+  try {
+    return await window.fetch(url, options);
+  } catch (error) {
+    console.log("Window fetch also failed:", error);
+    throw error;
+  }
+};
+
 // Check if backend is available
 let backendAvailable: boolean | null = null;
 let backendCheckPromise: Promise<boolean> | null = null;
