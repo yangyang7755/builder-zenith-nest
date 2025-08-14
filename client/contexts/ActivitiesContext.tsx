@@ -819,6 +819,25 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         activity_image: activityData.imageSrc || activityData.activity_image,
         route_link: activityData.routeLink || activityData.route_link,
         price_per_person: 0, // Default to free for legacy activities
+        activity_data: {
+          // Store activity-specific data in the flexible JSONB field
+          distance: activityData.distance,
+          distanceUnit: activityData.distanceUnit,
+          pace: activityData.pace,
+          paceUnit: activityData.paceUnit,
+          elevation: activityData.elevation,
+          elevationUnit: activityData.elevationUnit,
+          cafeStop: activityData.cafeStop,
+          subtype: activityData.subtype,
+          gender: activityData.gender,
+          ageMin: activityData.ageMin,
+          ageMax: activityData.ageMax,
+          visibility: activityData.visibility,
+          // Add any other legacy fields that should be preserved
+          ...(activityData.climbingLevel && { climbingLevel: activityData.climbingLevel }),
+          ...(activityData.terrain && { terrain: activityData.terrain }),
+          ...(activityData.gradeRange && { gradeRange: activityData.gradeRange }),
+        },
       };
 
       console.log("Transformed activity data:", newActivityData);
