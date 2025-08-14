@@ -286,6 +286,10 @@ const App = () => {
                                       path="/club/uclmc"
                                       element={<ClubUCLMC />}
                                     />
+                                    <Route
+                                      path="/onboarding"
+                                      element={<Onboarding />}
+                                    />
                                     <Route path="/saved" element={
                                       <ProtectedRoute>
                                         <Saved />
