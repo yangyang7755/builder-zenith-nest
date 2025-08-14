@@ -102,7 +102,7 @@ class ApiService {
         controller.abort();
       }, 10000); // 10 second timeout
 
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      const response = await originalFetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
           "Content-Type": "application/json",
           ...(authHeader && { Authorization: authHeader }),
