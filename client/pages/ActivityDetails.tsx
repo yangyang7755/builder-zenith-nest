@@ -602,7 +602,7 @@ export default function ActivityDetails() {
             alt={
               typeof activity.organizer === "string"
                 ? activity.organizer
-                : activity.organizer?.name || "Organizer"
+                : activity.organizer?.name || activity.organizer?.full_name || activity.organizerName || "Organizer"
             }
             className="w-12 h-12 rounded-full border border-black object-cover"
           />
