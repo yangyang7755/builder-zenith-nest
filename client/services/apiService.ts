@@ -229,17 +229,33 @@ class ApiService {
 
   // Activity methods
   async getActivities(filters?: {
-    club?: string;
-    type?: string;
+    club_id?: string;
+    activity_type?: string;
     location?: string;
+    difficulty_level?: string;
+    date_from?: string;
+    date_to?: string;
+    status?: string;
+    limit?: number;
+    offset?: number;
   }) {
     const params = new URLSearchParams();
-    if (filters?.club) params.append("club", filters.club);
-    if (filters?.type) params.append("type", filters.type);
+    if (filters?.club_id) params.append("club_id", filters.club_id);
+    if (filters?.activity_type) params.append("activity_type", filters.activity_type);
     if (filters?.location) params.append("location", filters.location);
+    if (filters?.difficulty_level) params.append("difficulty_level", filters.difficulty_level);
+    if (filters?.date_from) params.append("date_from", filters.date_from);
+    if (filters?.date_to) params.append("date_to", filters.date_to);
+    if (filters?.status) params.append("status", filters.status);
+    if (filters?.limit) params.append("limit", filters.limit.toString());
+    if (filters?.offset) params.append("offset", filters.offset.toString());
 
     const query = params.toString() ? `?${params.toString()}` : "";
     return this.request<any[]>(`/activities${query}`);
+  }
+
+  async getActivity(id: string) {
+    return this.request<any>(`/activities/${id}`);
   }
 
   async createActivity(activity: any) {
