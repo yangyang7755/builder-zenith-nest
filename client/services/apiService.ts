@@ -21,22 +21,33 @@ const checkBackendAvailability = async (): Promise<boolean> => {
   // Start the check
   backendCheckPromise = (async () => {
     try {
-      // Try a simple ping to check if backend is available
-      const response = await fetch(`${API_BASE_URL}/ping`, {
-        method: "GET",
-        signal: AbortSignal.timeout(2000), // 2 second timeout
-      });
+      // Create a cross-browser compatible timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
 
-      // Treat 503 (Service Unavailable) and other server errors as backend unavailable
-      backendAvailable = response.ok && response.status !== 503;
-      console.log(
-        `Backend availability check: ${backendAvailable ? "Available" : "Unavailable"} (Status: ${response.status})`,
-      );
-      return backendAvailable;
+      try {
+        // Try a simple ping to check if backend is available
+        const response = await fetch(`${API_BASE_URL}/ping`, {
+          method: "GET",
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        // Treat 503 (Service Unavailable) and other server errors as backend unavailable
+        backendAvailable = response.ok && response.status !== 503;
+        console.log(
+          `Backend availability check: ${backendAvailable ? "Available" : "Unavailable"} (Status: ${response.status})`,
+        );
+        return backendAvailable;
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        throw fetchError;
+      }
     } catch (error) {
       console.log(
         "Backend not available (network error), using demo mode:",
-        error.message,
+        error instanceof Error ? error.message : String(error),
       );
       backendAvailable = false;
       return false;
