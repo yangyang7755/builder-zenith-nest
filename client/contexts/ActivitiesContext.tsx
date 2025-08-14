@@ -601,6 +601,16 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
             imageSrc: activityData.activity_image,
             visibility: "All",
             createdAt: new Date(),
+
+            // Extract activity-specific data from activity_data for legacy compatibility
+            distance: activityData.activity_data?.distance,
+            distanceUnit: activityData.activity_data?.distanceUnit,
+            pace: activityData.activity_data?.pace,
+            paceUnit: activityData.activity_data?.paceUnit,
+            elevation: activityData.activity_data?.elevation,
+            elevationUnit: activityData.activity_data?.elevationUnit,
+            cafeStop: activityData.activity_data?.cafeStop,
+            difficulty: activityData.difficulty_level || activityData.activity_data?.difficulty,
           };
 
           setActivities((prev) => [demoActivity, ...prev]);
