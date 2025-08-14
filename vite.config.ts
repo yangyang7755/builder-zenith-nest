@@ -12,6 +12,9 @@ export default defineConfig(({ mode }) => ({
       allow: ["./client", "./shared"],
       deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "server/**"],
     },
+    hmr: {
+      overlay: false, // Disable error overlay to prevent frame access issues
+    },
   },
   build: {
     outDir: "dist/spa",
