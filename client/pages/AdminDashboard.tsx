@@ -24,6 +24,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { userService } from '@/services/userService';
 import BottomNavigation from '@/components/BottomNavigation';
+import NotificationTest from '@/components/NotificationTest';
 
 interface User {
   id: string;
