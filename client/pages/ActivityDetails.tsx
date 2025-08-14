@@ -974,6 +974,46 @@ export default function ActivityDetails() {
                   </span>
                 </div>
               )}
+              {(activity.activity_data?.waterTemp) && (
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-600">🌡️</span>
+                  <span className="text-sm font-cabin">
+                    Water temp: {activity.activity_data.waterTemp}°C
+                  </span>
+                </div>
+              )}
+              {(activity.activity_data?.liftPass) && (
+                <div className="flex items-center gap-2">
+                  <span className="text-purple-600">🎫</span>
+                  <span className="text-sm font-cabin">
+                    Lift pass: {activity.activity_data.liftPass}
+                  </span>
+                </div>
+              )}
+              {(activity.activity_data?.snowConditions) && (
+                <div className="flex items-center gap-2">
+                  <span className="text-white">❄️</span>
+                  <span className="text-sm font-cabin">
+                    Snow: {activity.activity_data.snowConditions}
+                  </span>
+                </div>
+              )}
+              {(activity.activity_data?.waveConditions) && (
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-600">🌊</span>
+                  <span className="text-sm font-cabin">
+                    Conditions: {activity.activity_data.waveConditions}
+                  </span>
+                </div>
+              )}
+              {(activity.activity_data?.duration) && (
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-600">⏱️</span>
+                  <span className="text-sm font-cabin">
+                    Duration: {activity.activity_data.duration} minutes
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}
