@@ -64,9 +64,29 @@ export interface ClubChat {
 }
 
 interface ChatContextType {
+  // Legacy join requests (keep for compatibility)
   joinRequests: JoinRequest[];
   chatMessages: ChatMessage[];
   requestedActivities: Set<string>;
+
+  // Real chat functionality
+  clubChats: ClubChat[];
+  clubMessages: Map<string, ChatMessage[]>;
+  directMessages: Map<string, DirectMessage[]>;
+  loading: boolean;
+  connected: boolean;
+
+  // Methods
+  loadClubChats: () => Promise<void>;
+  loadClubMessages: (clubId: string) => Promise<void>;
+  loadDirectMessages: (otherUserId: string) => Promise<void>;
+  sendClubMessage: (clubId: string, message: string) => Promise<void>;
+  sendDirectMessage: (receiverId: string, message: string) => Promise<void>;
+  joinClub: (clubId: string) => void;
+  leaveClub: (clubId: string) => void;
+  markMessagesAsRead: (senderId: string) => Promise<void>;
+
+  // Legacy methods (keep for compatibility)
   addJoinRequest: (
     request: Omit<JoinRequest, "id" | "timestamp" | "status"> & {
       activityId: string;
