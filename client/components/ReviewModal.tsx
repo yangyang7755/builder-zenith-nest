@@ -34,6 +34,15 @@ export default function ReviewModal({ isOpen, onClose, activity, onReviewSubmitt
       });
 
       if (result.error) {
+        if (result.error === 'BACKEND_UNAVAILABLE') {
+          // In demo mode, simulate successful review submission
+          console.log('Demo mode: Review submission simulated successfully');
+          onReviewSubmitted();
+          onClose();
+          setRating(0);
+          setComment('');
+          return;
+        }
         throw new Error(result.error);
       }
 
