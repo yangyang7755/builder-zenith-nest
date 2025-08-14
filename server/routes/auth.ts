@@ -175,11 +175,6 @@ export const handleUpdateProfile = async (req: Request, res: Response) => {
       return res.json(demoProfile);
     }
 
-    // Check if Supabase is configured
-    if (!supabaseAdmin) {
-      console.log('Running in demo mode - returning demo response');
-      return res.json(demoProfile);
-    }
 
     const user = await getUserFromToken(req.headers.authorization || "");
 
