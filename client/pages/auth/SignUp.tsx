@@ -159,7 +159,7 @@ export default function SignUp() {
               id="fullName"
               name="fullName"
               value={formData.fullName}
-              onChange={handleChange}
+              onChange={(e) => handleInputChange("full_name", e.target.value)}
               required
               className="search-input-mobile"
               placeholder="Enter your full name"
@@ -177,7 +177,7 @@ export default function SignUp() {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={(e) => handleInputChange("full_name", e.target.value)}
               required
               className="search-input-mobile"
               placeholder="Enter your email"
@@ -195,7 +195,7 @@ export default function SignUp() {
               id="university"
               name="university"
               value={formData.university}
-              onChange={handleChange}
+              onChange={(e) => handleInputChange("full_name", e.target.value)}
               className="search-input-mobile"
               placeholder="Your university or college"
               autoComplete="organization"
@@ -213,7 +213,7 @@ export default function SignUp() {
                 id="password"
                 name="password"
                 value={formData.password}
-                onChange={handleChange}
+                onChange={(e) => handleInputChange("full_name", e.target.value)}
                 required
                 className="search-input-mobile pr-12"
                 placeholder="Create a password"
@@ -241,7 +241,7 @@ export default function SignUp() {
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
-              onChange={handleChange}
+              onChange={(e) => handleInputChange("full_name", e.target.value)}
               required
               className="search-input-mobile"
               placeholder="Confirm your password"
