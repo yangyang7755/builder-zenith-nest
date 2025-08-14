@@ -430,6 +430,10 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       elevationUnit: backendActivity.activity_data?.elevationUnit,
       cafeStop: backendActivity.activity_data?.cafeStop,
       difficulty: backendActivity.difficulty_level || backendActivity.activity_data?.difficulty,
+      requirements: backendActivity.activity_data?.requirements,
+      climbingLevel: backendActivity.activity_data?.climbingLevel,
+      languages: backendActivity.activity_data?.languages,
+      gearRequired: backendActivity.activity_data?.gearRequired,
     };
   };
 
