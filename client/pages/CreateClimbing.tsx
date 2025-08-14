@@ -42,6 +42,9 @@ export default function CreateClimbing() {
     // Create activity with proper title
     const activityTitle = `${selectedType} at ${formData.location}`;
 
+    // Create comprehensive activity with requirements
+    const requirements = getClimbingRequirements(selectedType, formData.climbingLevel);
+
     addActivity({
       type: "climbing",
       title: activityTitle,
@@ -52,6 +55,7 @@ export default function CreateClimbing() {
       organizer: "You",
       maxParticipants: formData.maxPeople,
       specialComments: formData.specialComments,
+      description: formData.specialComments || `Join us for ${selectedType} at ${formData.location}. ${requirements.description}`,
       climbingLevel: formData.climbingLevel,
       languages: formData.languages,
       gearRequired: formData.gearRequired,
@@ -60,9 +64,12 @@ export default function CreateClimbing() {
       ageMin: formData.ageMin,
       ageMax: formData.ageMax,
       visibility: formData.visibility,
-      club: formData.visibility === "Club members" ? "westway" : undefined, // Assume climbing is for Westway club
+      difficulty: getDifficultyFromLevel(formData.climbingLevel),
+      club: formData.visibility === "Club members" ? "westway" : undefined,
       imageSrc:
         "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
+      // Add requirements for safety precautions
+      requirements: requirements,
     });
 
     showToast("Climbing activity created successfully!", "success");
