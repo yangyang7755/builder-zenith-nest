@@ -853,8 +853,11 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
           ageMin: activityData.ageMin,
           ageMax: activityData.ageMax,
           visibility: activityData.visibility,
+          requirements: activityData.requirements,
           // Add any other legacy fields that should be preserved
           ...(activityData.climbingLevel && { climbingLevel: activityData.climbingLevel }),
+          ...(activityData.languages && { languages: activityData.languages }),
+          ...(activityData.gearRequired && { gearRequired: activityData.gearRequired }),
           ...(activityData.terrain && { terrain: activityData.terrain }),
           ...(activityData.gradeRange && { gradeRange: activityData.gradeRange }),
         },
