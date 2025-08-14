@@ -674,11 +674,12 @@ export default function ActivityDetails() {
             </div>
             <p className="text-sm text-black font-cabin ml-6">
               {participationStats?.participantCount ||
+                activity.current_participants ||
                 activity.currentParticipants ||
                 "0"}
               /
-              {contextActivity?.max_participants ||
-                contextActivity?.maxParticipants ||
+              {activity.max_participants ||
+                activity.maxParticipants ||
                 activity.capacity ||
                 "N/A"}{" "}
               joined
@@ -914,7 +915,7 @@ export default function ActivityDetails() {
               )}
               {activity.waveHeight && (
                 <div className="flex items-center gap-2">
-                  <span className="text-blue-600">��</span>
+                  <span className="text-blue-600">🌊</span>
                   <span className="text-sm font-cabin">
                     Waves: {activity.waveHeight}
                   </span>
