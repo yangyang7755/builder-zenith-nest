@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { supabaseAdmin, getUserFromToken, Database } from "../lib/supabase";
+import { createNotification } from "./notifications";
 
 // Helper function to get authenticated user (with demo fallback)
 async function getAuthenticatedUser(req: Request) {
