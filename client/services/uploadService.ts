@@ -86,7 +86,7 @@ class UploadService {
     try {
       const authHeader = await getAuthHeader();
 
-      const response = await fetch(`${this.baseUrl}/profile-image`, {
+      const response = await safeFetch(`${this.baseUrl}/profile-image`, {
         method: "DELETE",
         headers: {
           Authorization: authHeader,
