@@ -431,9 +431,45 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       cafeStop: backendActivity.activity_data?.cafeStop,
       difficulty: backendActivity.difficulty_level || backendActivity.activity_data?.difficulty,
       requirements: backendActivity.activity_data?.requirements,
+      // Climbing fields
       climbingLevel: backendActivity.activity_data?.climbingLevel,
       languages: backendActivity.activity_data?.languages,
       gearRequired: backendActivity.activity_data?.gearRequired,
+      gradeRange: backendActivity.activity_data?.gradeRange,
+      // Running fields
+      terrain: backendActivity.activity_data?.terrain,
+      elevationGain: backendActivity.activity_data?.elevationGain,
+      targetPace: backendActivity.activity_data?.targetPace,
+      waterStations: backendActivity.activity_data?.waterStations,
+      // Tennis fields
+      skillLevel: backendActivity.activity_data?.skillLevel,
+      courtSurface: backendActivity.activity_data?.courtSurface,
+      isCompetitive: backendActivity.activity_data?.isCompetitive,
+      duration: backendActivity.activity_data?.duration,
+      equipmentProvided: backendActivity.activity_data?.equipmentProvided,
+      coachingIncluded: backendActivity.activity_data?.coachingIncluded,
+      refreshments: backendActivity.activity_data?.refreshments,
+      // Surfing fields
+      surfingType: backendActivity.activity_data?.surfingType,
+      waveHeight: backendActivity.activity_data?.waveHeight,
+      waveConditions: backendActivity.activity_data?.waveConditions,
+      tideInfo: backendActivity.activity_data?.tideInfo,
+      waterTemp: backendActivity.activity_data?.waterTemp,
+      // Skiing fields
+      snowConditions: backendActivity.activity_data?.snowConditions,
+      liftPass: backendActivity.activity_data?.liftPass,
+      instructionIncluded: backendActivity.activity_data?.instructionIncluded,
+      aprèsSkiIncluded: backendActivity.activity_data?.aprèsSkiIncluded,
+      transport: backendActivity.activity_data?.transport,
+      // Hiking fields
+      hikingType: backendActivity.activity_data?.hikingType,
+      navigationRequired: backendActivity.activity_data?.navigationRequired,
+      waterSources: backendActivity.activity_data?.waterSources,
+      shelterAvailable: backendActivity.activity_data?.shelterAvailable,
+      wildlifeWarning: backendActivity.activity_data?.wildlifeWarning,
+      permitRequired: backendActivity.activity_data?.permitRequired,
+      transportIncluded: backendActivity.activity_data?.transportIncluded,
+      guidedTour: backendActivity.activity_data?.guidedTour,
     };
   };
 
