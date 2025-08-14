@@ -832,7 +832,15 @@ export default function ActivityDetails() {
           activity.format ||
           activity.prizes ||
           activity.courtSurface ||
-          activity.refreshments) && (
+          activity.refreshments ||
+          activity.activity_data?.waterTemp ||
+          activity.activity_data?.liftPass ||
+          activity.activity_data?.snowConditions ||
+          activity.activity_data?.waveConditions ||
+          activity.activity_data?.skillLevel ||
+          activity.activity_data?.duration ||
+          activity.activity_data?.hikingType ||
+          activity.activity_data?.surfingType) && (
           <div className="mb-6">
             <h3 className="text-xl font-bold text-black font-cabin mb-3">
               Additional Information
