@@ -758,6 +758,21 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
       });
     }
 
+    // Create notification for organizer (if different from user)
+    if (activity.organizer_id !== user.id) {
+      await createNotification(
+        activity.organizer_id,
+        "activity_joined",
+        "New participant joined your activity",
+        `Someone joined "${activity.title}"`,
+        {
+          activity_id: id,
+          participant_id: user.id,
+          activity_title: activity.title
+        }
+      );
+    }
+
     res.json({
       success: true,
       message: "Successfully joined activity"
