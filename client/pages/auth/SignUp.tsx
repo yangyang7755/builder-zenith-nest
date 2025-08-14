@@ -6,18 +6,18 @@ import { useAuth } from "../../contexts/AuthContext";
 export default function SignUp() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
-  
+
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    fullName: '',
-    university: ''
+    email: "",
+    password: "",
+    confirmPassword: "",
+    full_name: "",
   });
+
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
     if (formData.password !== formData.confirmPassword) {
