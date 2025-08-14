@@ -204,51 +204,80 @@ export default function SignUp() {
             )}
           </div>
 
-          {/* Password Field */}
+          {/* Password */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2 font-cabin">
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
               Password *
             </label>
             <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Lock className="w-5 h-5 text-gray-400" />
+              </div>
               <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                name="password"
+                type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
-                required
-                className="search-input-mobile pr-12"
                 placeholder="Create a password"
-                autoComplete="new-password"
-                minLength={6}
+                className={`w-full pl-12 pr-12 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
               />
               <button
                 type="button"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5 text-gray-400" />
+                ) : (
+                  <Eye className="w-5 h-5 text-gray-400" />
+                )}
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-1 font-cabin">Must be at least 6 characters long</p>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">
+                {errors.password}
+              </p>
+            )}
           </div>
 
-          {/* Confirm Password Field */}
+          {/* Confirm Password */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2 font-cabin">
+            <label className="block text-lg font-medium text-black font-cabin mb-3">
               Confirm Password *
             </label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-              required
-              className="search-input-mobile"
-              placeholder="Confirm your password"
-              autoComplete="new-password"
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Lock className="w-5 h-5 text-gray-400" />
+              </div>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                placeholder="Confirm your password"
+                className={`w-full pl-12 pr-12 py-4 border-2 rounded-lg font-cabin text-black placeholder-gray-500 ${
+                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                } focus:border-explore-green focus:outline-none`}
+                disabled={loading}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="w-5 h-5 text-gray-400" />
+                ) : (
+                  <Eye className="w-5 h-5 text-gray-400" />
+                )}
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-2 font-cabin">
+                {errors.confirmPassword}
+              </p>
+            )}
           </div>
 
           {/* Terms Checkbox */}
