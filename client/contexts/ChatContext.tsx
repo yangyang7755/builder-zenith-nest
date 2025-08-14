@@ -5,6 +5,9 @@ import {
   ReactNode,
   useEffect,
 } from "react";
+import { apiService } from "../services/apiService";
+import { useSocket } from "../hooks/useSocket";
+import { useAuth } from "./AuthContext";
 
 export interface JoinRequest {
   id: string;
