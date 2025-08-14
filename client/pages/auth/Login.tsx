@@ -45,6 +45,31 @@ export default function Login() {
     }
   };
 
+  const handleResendConfirmation = async () => {
+    if (!email) {
+      setError('Please enter your email address first');
+      return;
+    }
+
+    setResendLoading(true);
+    setResendSuccess(false);
+
+    try {
+      const { error } = await resendConfirmation(email);
+      if (error) {
+        setError(error.message || 'Failed to resend confirmation email');
+      } else {
+        setResendSuccess(true);
+        setError('');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred while resending confirmation');
+      console.error('Resend confirmation error:', err);
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
       <div className="flex flex-col justify-center items-center px-7 py-16 min-h-screen">
