@@ -12,6 +12,7 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
     full_name: "",
+    university: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
