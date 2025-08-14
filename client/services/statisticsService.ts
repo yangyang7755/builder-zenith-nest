@@ -40,7 +40,7 @@ const getUserParticipatedActivities = (activities: Activity[], userOrganizer: st
       id: "participated-climb-1",
       type: "climbing",
       title: "Westway Women's+ Climb",
-      date: "2025-01-26",
+      date: "2025-04-26",
       time: "10:00",
       location: "Westway Climbing Centre",
       meetupLocation: "Westway Climbing Centre",
