@@ -5,6 +5,67 @@ import { useActivities } from "../contexts/ActivitiesContext";
 import { useToast } from "../contexts/ToastContext";
 import DateTimePicker from "../components/DateTimePicker";
 
+// Helper function to generate climbing requirements based on type and level
+function getClimbingRequirements(climbingType: string, level: string) {
+  const baseRequirements = {
+    title: "climbing safety requirements",
+    description: "This climbing session requires adherence to safety protocols.",
+    details: [] as string[],
+    warning: "Climbing involves inherent risks. Please ensure you're adequately prepared and follow all safety guidelines.",
+  };
+
+  if (climbingType === "Indoor") {
+    baseRequirements.title = "indoor climbing safety requirements";
+    baseRequirements.details = [
+      "Completed climbing gym safety induction or have prior indoor climbing experience",
+      "Comfortable with bouldering fundamentals and fall practice",
+      "Able to identify and avoid dangerous routes or holds",
+      "Basic understanding of climbing gym etiquette and rules",
+      "Climbing shoes (rental available on-site)",
+    ];
+    baseRequirements.warning = "Indoor climbing involves falling practice and risk of injury. Always climb within your ability level and ask for help if unsure.";
+  } else if (climbingType === "Sport climbing") {
+    baseRequirements.title = "sport climbing competency";
+    baseRequirements.details = [
+      "Comfortable leading sport routes at the specified grade",
+      "Competent in clipping bolts and building anchors",
+      "Experienced in belaying lead climbers and catching falls",
+      "Able to clean routes and lower safely",
+      "Own sport climbing rack or comfortable borrowing gear",
+    ];
+  } else if (climbingType === "Trad climbing") {
+    baseRequirements.title = "traditional climbing experience";
+    baseRequirements.details = [
+      "Extensive sport climbing background",
+      "Experience placing and cleaning traditional protection",
+      "Confident in building multi-directional anchors",
+      "Comfortable with gear-protected lead falls",
+      "Own trad rack or access to appropriate gear",
+    ];
+  }
+
+  // Add level-specific requirements if level is provided
+  if (level) {
+    baseRequirements.details.push(`Climbing experience at ${level} grade or equivalent`);
+  }
+
+  return baseRequirements;
+}
+
+// Helper function to map climbing level to difficulty
+function getDifficultyFromLevel(level: string): string {
+  if (!level) return "Beginner";
+
+  const lowerLevel = level.toLowerCase();
+  if (lowerLevel.includes("5.6") || lowerLevel.includes("5.7") || lowerLevel.includes("v0") || lowerLevel.includes("v1")) {
+    return "Beginner";
+  } else if (lowerLevel.includes("5.8") || lowerLevel.includes("5.9") || lowerLevel.includes("5.10") || lowerLevel.includes("v2") || lowerLevel.includes("v3")) {
+    return "Intermediate";
+  } else {
+    return "Advanced";
+  }
+}
+
 export default function CreateClimbing() {
   const navigate = useNavigate();
   const { showToast } = useToast();
