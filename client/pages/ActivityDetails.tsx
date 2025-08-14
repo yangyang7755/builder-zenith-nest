@@ -610,7 +610,7 @@ export default function ActivityDetails() {
             <h2 className="text-lg font-bold text-black font-cabin">
               {typeof activity.organizer === "string"
                 ? activity.organizer
-                : activity.organizer?.name || "Unknown Organizer"}
+                : activity.organizer?.name || activity.organizer?.full_name || activity.organizerName || "Unknown Organizer"}
             </h2>
             {(typeof activity.organizer === "string"
               ? activity.organizer
