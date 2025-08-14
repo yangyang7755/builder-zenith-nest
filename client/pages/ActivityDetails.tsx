@@ -861,11 +861,11 @@ export default function ActivityDetails() {
                   </span>
                 </div>
               )}
-              {(contextActivity?.cafeStop || activity.cafeStop) && (
+              {(activity.cafeStop || activity.activity_data?.cafeStop) && (
                 <div className="flex items-center gap-2">
                   <span className="text-brown-600">☕</span>
                   <span className="text-sm font-cabin">
-                    Cafe stop: {contextActivity?.cafeStop || activity.cafeStop}
+                    Cafe stop: {activity.cafeStop || activity.activity_data?.cafeStop}
                   </span>
                 </div>
               )}
