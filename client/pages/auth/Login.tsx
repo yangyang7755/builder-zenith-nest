@@ -7,6 +7,7 @@ import { resendConfirmation } from "../../lib/supabase";
 export default function Login() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
+  const { isOnboardingComplete } = useOnboarding();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
