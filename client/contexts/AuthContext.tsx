@@ -122,7 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!session?.access_token) return;
 
     try {
-      const response = await fetch("/api/profile", {
+      const response = await originalFetch("/api/profile", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${session.access_token}`,
