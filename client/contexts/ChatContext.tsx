@@ -617,9 +617,29 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   return (
     <ChatContext.Provider
       value={{
+        // Legacy properties (keep for compatibility)
         joinRequests,
         chatMessages,
         requestedActivities,
+
+        // Real chat properties
+        clubChats,
+        clubMessages,
+        directMessages,
+        loading,
+        connected: socket.connected,
+
+        // Real chat methods
+        loadClubChats,
+        loadClubMessages,
+        loadDirectMessages,
+        sendClubMessage: sendClubMessageAPI,
+        sendDirectMessage: sendDirectMessageAPI,
+        joinClub: socket.joinClub,
+        leaveClub: socket.leaveClub,
+        markMessagesAsRead,
+
+        // Legacy methods (keep for compatibility)
         addJoinRequest,
         addChatMessage,
         hasRequestedActivity,
