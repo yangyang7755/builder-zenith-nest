@@ -304,6 +304,20 @@ router.post('/activity-image', upload.single('image'), async (req, res) => {
 
     if (error) {
       console.error('Storage upload error:', error);
+
+      // If bucket doesn't exist, fall back to demo mode (base64)
+      if (error.message?.includes('Bucket not found') || error.status === 404) {
+        console.log('Storage bucket not found, falling back to demo mode');
+        const base64 = req.file.buffer.toString('base64');
+        const dataUrl = `data:${req.file.mimetype};base64,${base64}`;
+
+        return res.json({
+          success: true,
+          data: { url: dataUrl },
+          message: 'Activity image uploaded successfully (demo mode - storage not configured)'
+        });
+      }
+
       return res.status(500).json({ success: false, message: 'Failed to upload image' });
     }
 
