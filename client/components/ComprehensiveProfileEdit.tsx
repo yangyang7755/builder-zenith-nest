@@ -386,9 +386,19 @@ export function ComprehensiveProfileEdit({
 
       if (result.data?.url) {
         updateField('profile_image', result.data.url);
+
+        // Also update the profile in the auth context immediately
+        try {
+          await updateAuthProfile({ profile_image: result.data.url });
+          await refreshProfile();
+        } catch (contextError) {
+          console.error('Failed to update profile in auth context:', contextError);
+          // Continue with local update even if context update fails
+        }
+
         toast({
           title: "Photo Updated",
-          description: "Your profile photo has been uploaded successfully.",
+          description: "Your profile photo has been uploaded and saved successfully.",
         });
       } else if (result.error) {
         throw new Error(result.error);
