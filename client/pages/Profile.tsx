@@ -18,7 +18,6 @@ import { maddieWeiProfile } from "../data/demoProfiles";
 import BottomNavigation from "../components/BottomNavigation";
 import { ProfileEdit } from "../components/ProfileEdit";
 import { ComprehensiveProfileEdit } from "../components/ComprehensiveProfileEdit";
-import { SettingsOverview } from "../components/SettingsOverview";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import {
   getClubProfileImage,
