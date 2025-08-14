@@ -420,6 +420,16 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       imageSrc: backendActivity.activity_image,
       visibility: "All",
       createdAt: new Date(backendActivity.created_at),
+
+      // Extract activity-specific data from activity_data JSONB field for legacy compatibility
+      distance: backendActivity.activity_data?.distance,
+      distanceUnit: backendActivity.activity_data?.distanceUnit,
+      pace: backendActivity.activity_data?.pace,
+      paceUnit: backendActivity.activity_data?.paceUnit,
+      elevation: backendActivity.activity_data?.elevation,
+      elevationUnit: backendActivity.activity_data?.elevationUnit,
+      cafeStop: backendActivity.activity_data?.cafeStop,
+      difficulty: backendActivity.difficulty_level || backendActivity.activity_data?.difficulty,
     };
   };
 
