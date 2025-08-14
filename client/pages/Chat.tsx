@@ -180,6 +180,12 @@ export default function Chat() {
           <h1 className="text-3xl font-bold text-explore-green font-cabin">
             Chat!
           </h1>
+          {connected && (
+            <p className="text-xs text-green-600 font-cabin mt-1">● Real-time connected</p>
+          )}
+          {loading && (
+            <p className="text-xs text-gray-500 font-cabin mt-1">Loading chats...</p>
+          )}
         </div>
 
         {/* Filter Chips */}
