@@ -1,70 +1,31 @@
-import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { Card, CardContent } from "@/components/ui/card";
-import { User } from "lucide-react";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requireAuth?: boolean;
 }
 
-export default function ProtectedRoute({
-  children,
-  requireAuth = true,
-}: ProtectedRouteProps) {
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
-  const location = useLocation();
 
-  // Show loading spinner while checking authentication
+  // Show loading screen while checking authentication
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Card className="w-96">
-          <CardContent className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Loading...
-            </h3>
-            <p className="text-gray-500">Checking authentication status</p>
-          </CardContent>
-        </Card>
+      <div className="mobile-container min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-explore-green border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 font-cabin">Loading...</p>
+        </div>
       </div>
     );
   }
 
-  // If authentication is required but user is not logged in
-  if (requireAuth && !user) {
-    return <Navigate to="/signin" state={{ from: location }} replace />;
+  // Redirect to auth if not authenticated
+  if (!user) {
+    return <Navigate to="/auth" replace />;
   }
 
-  // If user is logged in but trying to access auth pages, redirect to home
-  if (
-    !requireAuth &&
-    user &&
-    (location.pathname === "/signin" || location.pathname === "/signup")
-  ) {
-    return <Navigate to="/explore" replace />;
-  }
-
+  // Render protected content
   return <>{children}</>;
-}
-
-// Convenience component for pages that don't require auth
-export function PublicRoute({ children }: { children: React.ReactNode }) {
-  return <ProtectedRoute requireAuth={false}>{children}</ProtectedRoute>;
-}
-
-// Higher-order component for protecting entire page components
-export function withAuthProtection<T extends object>(
-  Component: React.ComponentType<T>,
-  requireAuth: boolean = true,
-) {
-  return function ProtectedComponent(props: T) {
-    return (
-      <ProtectedRoute requireAuth={requireAuth}>
-        <Component {...props} />
-      </ProtectedRoute>
-    );
-  };
 }
