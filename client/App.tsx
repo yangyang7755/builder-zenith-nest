@@ -293,11 +293,7 @@ const App = () => {
                                     } />
                                     <Route
                                       path="/profile"
-                                      element={
-                                        <ProtectedRoute>
-                                          <Profile />
-                                        </ProtectedRoute>
-                                      }
+                                      element={<Profile />}
                                     />
                                     <Route
                                       path="/profile/edit"
