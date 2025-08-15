@@ -723,7 +723,9 @@ export default function CategoryActivities() {
                         <div className="flex items-center gap-1 text-gray-600">
                           <Users className="w-3 h-3" />
                           <span className="font-cabin">
-                            {activity.participants || 0}/
+                            {typeof activity.participants === 'number'
+                              ? activity.participants
+                              : (activity.participants?.count || activity.current_participants || 0)}/
                             {activity.maxParticipants || 20} joined
                           </span>
                         </div>
