@@ -755,16 +755,24 @@ export default function CategoryActivities() {
                       {viewMode === "list" && (
                         <div className="mt-3 flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            {activity.participants &&
+                            {(activity.participants || activity.current_participants) &&
                               activity.maxParticipants && (
                                 <div className="w-16 bg-gray-200 rounded-full h-2">
                                   <div
                                     className="bg-explore-green h-2 rounded-full"
                                     style={{
                                       width: `${Math.min(
-                                        activity.participants && activity.maxParticipants
-                                          ? ((activity.participants / activity.maxParticipants) * 100)
-                                          : 0,
+                                        (() => {
+                                          const participants = typeof activity.participants === 'number'
+                                            ? activity.participants
+                                            : (activity.participants?.count || activity.current_participants || 0);
+                                          const maxParticipants = typeof activity.maxParticipants === 'number'
+                                            ? activity.maxParticipants
+                                            : parseInt(activity.maxParticipants || '20');
+                                          return participants && maxParticipants
+                                            ? ((participants / maxParticipants) * 100)
+                                            : 0;
+                                        })(),
                                         100
                                       )}%`,
                                     }}
