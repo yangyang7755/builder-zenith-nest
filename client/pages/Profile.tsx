@@ -534,10 +534,10 @@ export default function Profile() {
                   const sportEmojis = {
                     climbing: "🧗",
                     cycling: "🚴",
-                    running: "🏃",
+                    running: "👟",
                     hiking: "🥾",
                     skiing: "⛷️",
-                    surfing: "🏄",
+                    surfing: "🌊",
                     tennis: "🎾"
                   };
                   return (
