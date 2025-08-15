@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,12 +9,12 @@ import {
   SafeAreaView,
   Dimensions,
   Modal,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
-import { designTokens } from '../styles/designTokens';
+} from "react-native";
+import Icon from "react-native-vector-icons/Feather";
+import { useNavigation } from "@react-navigation/native";
+import { designTokens } from "../styles/designTokens";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 interface Sport {
   sport: string;
@@ -75,90 +75,94 @@ const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'completed' | 'organized'>('completed');
-  const [activeSportTab, setActiveSportTab] = useState<string>('climbing');
-  
+  const [activeTab, setActiveTab] = useState<"completed" | "organized">(
+    "completed",
+  );
+  const [activeSportTab, setActiveSportTab] = useState<string>("climbing");
+
   // Demo data - replace with actual data fetching
   const [profileData] = useState<ProfileData>({
-    full_name: 'Maddie Wei',
-    profile_image: 'https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fb4460a1279a84ad1b10626393196b1cf?format=webp&width=800',
-    bio: 'Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!',
+    full_name: "Maddie Wei",
+    profile_image:
+      "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fb4460a1279a84ad1b10626393196b1cf?format=webp&width=800",
+    bio: "Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!",
     age: 22,
-    gender: 'Female',
-    nationality: 'British',
-    institution: 'Oxford University',
-    occupation: 'Student',
-    location: 'Oxford, UK',
+    gender: "Female",
+    nationality: "British",
+    institution: "Oxford University",
+    occupation: "Student",
+    location: "Oxford, UK",
     sports: [
       {
-        sport: 'Climbing',
-        level: 'Advanced',
-        experience: '3 years',
-        maxGrade: '7a',
-        certifications: ['Lead Climbing', 'Belaying'],
-        specialties: ['Bouldering', 'Sport Climbing'],
-        skills: ['Route Reading', 'Mental Game', 'Technique']
+        sport: "Climbing",
+        level: "Advanced",
+        experience: "3 years",
+        maxGrade: "7a",
+        certifications: ["Lead Climbing", "Belaying"],
+        specialties: ["Bouldering", "Sport Climbing"],
+        skills: ["Route Reading", "Mental Game", "Technique"],
       },
       {
-        sport: 'Cycling',
-        level: 'Intermediate',
-        experience: '2 years',
-        distance: '30-50km',
-        pace: '25km/h',
-        preferences: ['Road Cycling', 'Scenic Routes']
-      }
+        sport: "Cycling",
+        level: "Intermediate",
+        experience: "2 years",
+        distance: "30-50km",
+        pace: "25km/h",
+        preferences: ["Road Cycling", "Scenic Routes"],
+      },
     ],
     followers: 152,
     following: 87,
     rating: 4.8,
-    reviews: 23
+    reviews: 23,
   });
 
   const [completedActivities] = useState<Activity[]>([
     {
-      id: '1',
-      title: 'Westway Climbing Session',
-      activity_type: 'climbing',
-      date: '2024-01-15',
-      organizer_name: 'Holly Smith',
+      id: "1",
+      title: "Westway Climbing Session",
+      activity_type: "climbing",
+      date: "2024-01-15",
+      organizer_name: "Holly Smith",
       recent_review: {
         rating: 5,
-        comment: 'Amazing climbing session!'
-      }
+        comment: "Amazing climbing session!",
+      },
     },
     {
-      id: '2',
-      title: 'Richmond Park Cycling',
-      activity_type: 'cycling',
-      date: '2024-01-10',
-      organizer_name: 'Marcus Rodriguez',
+      id: "2",
+      title: "Richmond Park Cycling",
+      activity_type: "cycling",
+      date: "2024-01-10",
+      organizer_name: "Marcus Rodriguez",
       recent_review: {
         rating: 4,
-        comment: 'Great route and company'
-      }
-    }
+        comment: "Great route and company",
+      },
+    },
   ]);
 
   const [organizedActivities] = useState<Activity[]>([
     {
-      id: '3',
-      title: 'Oxford Bouldering Meet',
-      activity_type: 'climbing',
-      date: '2024-01-20',
-      organizer_name: 'Maddie Wei',
+      id: "3",
+      title: "Oxford Bouldering Meet",
+      activity_type: "climbing",
+      date: "2024-01-20",
+      organizer_name: "Maddie Wei",
       average_rating: 4.7,
       total_reviews: 12,
-      participant_count: 15
-    }
+      participant_count: 15,
+    },
   ]);
 
   const [userClubs] = useState<Club[]>([
     {
-      id: '1',
-      name: 'Oxford University Climbing Club',
-      profileImage: 'https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c',
-      memberCount: 245
-    }
+      id: "1",
+      name: "Oxford University Climbing Club",
+      profileImage:
+        "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c",
+      memberCount: 245,
+    },
   ]);
 
   useEffect(() => {
@@ -169,15 +173,15 @@ const ProfileScreen: React.FC = () => {
 
   const getSportEmoji = (sport: string) => {
     const emojis: { [key: string]: string } = {
-      climbing: '🧗',
-      cycling: '🚴',
-      running: '👟',
-      hiking: '🥾',
-      skiing: '⛷️',
-      surfing: '🌊',
-      tennis: '🎾'
+      climbing: "🧗",
+      cycling: "🚴",
+      running: "👟",
+      hiking: "🥾",
+      skiing: "⛷️",
+      surfing: "🌊",
+      tennis: "🎾",
     };
-    return emojis[sport.toLowerCase()] || '⚡';
+    return emojis[sport.toLowerCase()] || "⚡";
   };
 
   const renderStars = (rating: number, size: number = 16) => {
@@ -188,7 +192,7 @@ const ProfileScreen: React.FC = () => {
             key={star}
             name="star"
             size={size}
-            color={star <= Math.floor(rating) ? '#FBBF24' : '#D1D5DB'}
+            color={star <= Math.floor(rating) ? "#FBBF24" : "#D1D5DB"}
             style={star <= Math.floor(rating) ? styles.filledStar : {}}
           />
         ))}
@@ -197,7 +201,9 @@ const ProfileScreen: React.FC = () => {
   };
 
   const getSportData = (sportName: string) => {
-    return profileData.sports?.find(s => s.sport.toLowerCase() === sportName.toLowerCase());
+    return profileData.sports?.find(
+      (s) => s.sport.toLowerCase() === sportName.toLowerCase(),
+    );
   };
 
   const renderPersonalDetails = () => (
@@ -231,7 +237,7 @@ const ProfileScreen: React.FC = () => {
   const renderSportsSection = () => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Sports & Licensing</Text>
-      
+
       {/* Sport Tabs */}
       <View style={styles.tabContainer}>
         {profileData.sports?.map((sport, index) => {
@@ -241,14 +247,16 @@ const ProfileScreen: React.FC = () => {
               key={index}
               style={[
                 styles.tab,
-                activeSportTab === sportKey && styles.activeTab
+                activeSportTab === sportKey && styles.activeTab,
               ]}
               onPress={() => setActiveSportTab(sportKey)}
             >
-              <Text style={[
-                styles.tabText,
-                activeSportTab === sportKey && styles.activeTabText
-              ]}>
+              <Text
+                style={[
+                  styles.tabText,
+                  activeSportTab === sportKey && styles.activeTabText,
+                ]}
+              >
                 {getSportEmoji(sport.sport)} {sport.sport}
               </Text>
             </TouchableOpacity>
@@ -265,13 +273,21 @@ const ProfileScreen: React.FC = () => {
           <View key={index} style={styles.sportCard}>
             <View style={styles.sportHeader}>
               <Text style={styles.sportName}>{sport.sport}</Text>
-              <View style={[
-                styles.levelBadge,
-                sport.level === 'Expert' || sport.level === 'Professional' ? styles.expertLevel :
-                sport.level === 'Advanced' ? styles.advancedLevel :
-                sport.level === 'Intermediate' ? styles.intermediateLevel : styles.beginnerLevel
-              ]}>
-                <Text style={styles.levelText}>{sport.level || 'Beginner'}</Text>
+              <View
+                style={[
+                  styles.levelBadge,
+                  sport.level === "Expert" || sport.level === "Professional"
+                    ? styles.expertLevel
+                    : sport.level === "Advanced"
+                      ? styles.advancedLevel
+                      : sport.level === "Intermediate"
+                        ? styles.intermediateLevel
+                        : styles.beginnerLevel,
+                ]}
+              >
+                <Text style={styles.levelText}>
+                  {sport.level || "Beginner"}
+                </Text>
               </View>
             </View>
 
@@ -282,9 +298,9 @@ const ProfileScreen: React.FC = () => {
                   <Text style={styles.detailValue}>{sport.experience}</Text>
                 </View>
               )}
-              
+
               {/* Climbing specific */}
-              {sportKey === 'climbing' && (
+              {sportKey === "climbing" && (
                 <>
                   {sport.maxGrade && (
                     <View style={styles.sportDetailItem}>
@@ -295,20 +311,24 @@ const ProfileScreen: React.FC = () => {
                   {sport.certifications && sport.certifications.length > 0 && (
                     <View style={styles.sportDetailItem}>
                       <Text style={styles.detailLabel}>Certifications:</Text>
-                      <Text style={styles.detailValue}>{sport.certifications.join(', ')}</Text>
+                      <Text style={styles.detailValue}>
+                        {sport.certifications.join(", ")}
+                      </Text>
                     </View>
                   )}
                   {sport.specialties && sport.specialties.length > 0 && (
                     <View style={styles.sportDetailItem}>
                       <Text style={styles.detailLabel}>Specialties:</Text>
-                      <Text style={styles.detailValue}>{sport.specialties.join(', ')}</Text>
+                      <Text style={styles.detailValue}>
+                        {sport.specialties.join(", ")}
+                      </Text>
                     </View>
                   )}
                 </>
               )}
 
               {/* Cycling/Running specific */}
-              {(sportKey === 'cycling' || sportKey === 'running') && (
+              {(sportKey === "cycling" || sportKey === "running") && (
                 <>
                   {sport.distance && (
                     <View style={styles.sportDetailItem}>
@@ -318,7 +338,11 @@ const ProfileScreen: React.FC = () => {
                   )}
                   {sport.pace && (
                     <View style={styles.sportDetailItem}>
-                      <Text style={styles.detailLabel}>{sportKey === 'cycling' ? 'Preferred Pace:' : 'Best Pace:'}</Text>
+                      <Text style={styles.detailLabel}>
+                        {sportKey === "cycling"
+                          ? "Preferred Pace:"
+                          : "Best Pace:"}
+                      </Text>
                       <Text style={styles.detailValue}>{sport.pace}</Text>
                     </View>
                   )}
@@ -329,11 +353,13 @@ const ProfileScreen: React.FC = () => {
             {/* Skills/Preferences tags */}
             {(sport.skills || sport.preferences) && (
               <View style={styles.tagsContainer}>
-                {(sport.skills || sport.preferences || []).map((tag, tagIndex) => (
-                  <View key={tagIndex} style={styles.tag}>
-                    <Text style={styles.tagText}>{tag}</Text>
-                  </View>
-                ))}
+                {(sport.skills || sport.preferences || []).map(
+                  (tag, tagIndex) => (
+                    <View key={tagIndex} style={styles.tag}>
+                      <Text style={styles.tagText}>{tag}</Text>
+                    </View>
+                  ),
+                )}
               </View>
             )}
           </View>
@@ -346,24 +372,36 @@ const ProfileScreen: React.FC = () => {
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Activities & Reviews</Text>
-        <Text style={styles.totalCount}>{completedActivities.length + organizedActivities.length} total</Text>
+        <Text style={styles.totalCount}>
+          {completedActivities.length + organizedActivities.length} total
+        </Text>
       </View>
 
       {/* Activity Tabs */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'completed' && styles.activeTab]}
-          onPress={() => setActiveTab('completed')}
+          style={[styles.tab, activeTab === "completed" && styles.activeTab]}
+          onPress={() => setActiveTab("completed")}
         >
-          <Text style={[styles.tabText, activeTab === 'completed' && styles.activeTabText]}>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "completed" && styles.activeTabText,
+            ]}
+          >
             Completed Activities
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'organized' && styles.activeTab]}
-          onPress={() => setActiveTab('organized')}
+          style={[styles.tab, activeTab === "organized" && styles.activeTab]}
+          onPress={() => setActiveTab("organized")}
         >
-          <Text style={[styles.tabText, activeTab === 'organized' && styles.activeTabText]}>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "organized" && styles.activeTabText,
+            ]}
+          >
             Organized Activities
           </Text>
         </TouchableOpacity>
@@ -371,7 +409,7 @@ const ProfileScreen: React.FC = () => {
 
       {/* Activity Content */}
       <View style={styles.activitiesContainer}>
-        {activeTab === 'completed' ? (
+        {activeTab === "completed" ? (
           completedActivities.length > 0 ? (
             completedActivities.map((activity) => (
               <View key={activity.id} style={styles.activityCard}>
@@ -382,7 +420,8 @@ const ProfileScreen: React.FC = () => {
                   <View style={styles.activityInfo}>
                     <Text style={styles.activityTitle}>{activity.title}</Text>
                     <Text style={styles.activitySubtitle}>
-                      {activity.organizer_name} • {new Date(activity.date).toLocaleDateString()}
+                      {activity.organizer_name} •{" "}
+                      {new Date(activity.date).toLocaleDateString()}
                     </Text>
                     {activity.recent_review && (
                       <View style={styles.reviewContainer}>
@@ -400,39 +439,48 @@ const ProfileScreen: React.FC = () => {
           ) : (
             <View style={styles.emptyState}>
               <Text style={styles.emptyTitle}>No completed activities yet</Text>
-              <Text style={styles.emptySubtitle}>Join activities from the explore page to see them here!</Text>
+              <Text style={styles.emptySubtitle}>
+                Join activities from the explore page to see them here!
+              </Text>
             </View>
           )
-        ) : (
-          organizedActivities.length > 0 ? (
-            organizedActivities.map((activity) => (
-              <View key={activity.id} style={[styles.activityCard, styles.organizedActivity]}>
-                <View style={styles.activityHeader}>
-                  <Text style={styles.activityEmoji}>
-                    {getSportEmoji(activity.activity_type)}
+        ) : organizedActivities.length > 0 ? (
+          organizedActivities.map((activity) => (
+            <View
+              key={activity.id}
+              style={[styles.activityCard, styles.organizedActivity]}
+            >
+              <View style={styles.activityHeader}>
+                <Text style={styles.activityEmoji}>
+                  {getSportEmoji(activity.activity_type)}
+                </Text>
+                <View style={styles.activityInfo}>
+                  <Text style={styles.activityTitle}>{activity.title}</Text>
+                  <Text style={styles.activitySubtitle}>
+                    You organized •{" "}
+                    {new Date(activity.date).toLocaleDateString()}
                   </Text>
-                  <View style={styles.activityInfo}>
-                    <Text style={styles.activityTitle}>{activity.title}</Text>
-                    <Text style={styles.activitySubtitle}>
-                      You organized • {new Date(activity.date).toLocaleDateString()}
+                  <View style={styles.organizerStats}>
+                    {renderStars(activity.average_rating || 0, 12)}
+                    <Text style={styles.organizerRating}>
+                      {(activity.average_rating || 0).toFixed(1)} avg rating (
+                      {activity.total_reviews || 0} reviews)
                     </Text>
-                    <View style={styles.organizerStats}>
-                      {renderStars(activity.average_rating || 0, 12)}
-                      <Text style={styles.organizerRating}>
-                        {(activity.average_rating || 0).toFixed(1)} avg rating ({activity.total_reviews || 0} reviews)
-                      </Text>
-                    </View>
                   </View>
-                  <Text style={styles.participantCount}>{activity.participant_count} joined</Text>
                 </View>
+                <Text style={styles.participantCount}>
+                  {activity.participant_count} joined
+                </Text>
               </View>
-            ))
-          ) : (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyTitle}>No organized activities yet</Text>
-              <Text style={styles.emptySubtitle}>Create activities to help others discover new adventures!</Text>
             </View>
-          )
+          ))
+        ) : (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyTitle}>No organized activities yet</Text>
+            <Text style={styles.emptySubtitle}>
+              Create activities to help others discover new adventures!
+            </Text>
+          </View>
         )}
       </View>
     </View>
@@ -445,10 +493,15 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.clubsContainer}>
           {userClubs.map((club) => (
             <TouchableOpacity key={club.id} style={styles.clubCard}>
-              <Image source={{ uri: club.profileImage }} style={styles.clubImage} />
+              <Image
+                source={{ uri: club.profileImage }}
+                style={styles.clubImage}
+              />
               <View style={styles.clubInfo}>
                 <Text style={styles.clubName}>{club.name}</Text>
-                <Text style={styles.clubMembers}>{club.memberCount} members</Text>
+                <Text style={styles.clubMembers}>
+                  {club.memberCount} members
+                </Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -459,7 +512,9 @@ const ProfileScreen: React.FC = () => {
             <Icon name="users" size={32} color="#9CA3AF" />
           </View>
           <Text style={styles.emptyTitle}>No clubs joined yet</Text>
-          <Text style={styles.emptySubtitle}>Explore clubs to connect with like-minded outdoor enthusiasts!</Text>
+          <Text style={styles.emptySubtitle}>
+            Explore clubs to connect with like-minded outdoor enthusiasts!
+          </Text>
           <TouchableOpacity style={styles.exploreButton}>
             <Icon name="search" size={16} color="white" />
             <Text style={styles.exploreButtonText}>Explore Clubs</Text>
@@ -477,27 +532,39 @@ const ProfileScreen: React.FC = () => {
           <Icon name="arrow-left" size={24} color="#6B7280" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Profile</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Settings' as never)}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Settings" as never)}
+        >
           <Icon name="settings" size={24} color="#6B7280" />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.profileTop}>
-            <Image source={{ uri: profileData.profile_image }} style={styles.profileImage} />
+            <Image
+              source={{ uri: profileData.profile_image }}
+              style={styles.profileImage}
+            />
             <View style={styles.profileInfo}>
               <Text style={styles.profileName}>{profileData.full_name}</Text>
-              
+
               {/* Stats */}
               <View style={styles.statsContainer}>
                 <TouchableOpacity onPress={() => setShowFollowers(true)}>
-                  <Text style={styles.statText}>{profileData.followers} Followers</Text>
+                  <Text style={styles.statText}>
+                    {profileData.followers} Followers
+                  </Text>
                 </TouchableOpacity>
                 <Text style={styles.statDivider}>•</Text>
                 <TouchableOpacity onPress={() => setShowFollowing(true)}>
-                  <Text style={styles.statText}>{profileData.following} Following</Text>
+                  <Text style={styles.statText}>
+                    {profileData.following} Following
+                  </Text>
                 </TouchableOpacity>
               </View>
 
@@ -505,7 +572,8 @@ const ProfileScreen: React.FC = () => {
               <TouchableOpacity style={styles.ratingContainer}>
                 {renderStars(profileData.rating)}
                 <Text style={styles.ratingText}>
-                  {profileData.rating.toFixed(1)} ({profileData.reviews} reviews)
+                  {profileData.rating.toFixed(1)} ({profileData.reviews}{" "}
+                  reviews)
                 </Text>
               </TouchableOpacity>
             </View>
@@ -520,15 +588,15 @@ const ProfileScreen: React.FC = () => {
             ))}
             {profileData.occupation && (
               <View style={styles.occupationTag}>
-                <Text style={styles.occupationTagText}>{profileData.occupation}</Text>
+                <Text style={styles.occupationTagText}>
+                  {profileData.occupation}
+                </Text>
               </View>
             )}
           </View>
 
           {/* Bio */}
-          {profileData.bio && (
-            <Text style={styles.bio}>{profileData.bio}</Text>
-          )}
+          {profileData.bio && <Text style={styles.bio}>{profileData.bio}</Text>}
         </View>
 
         {renderPersonalDetails()}
@@ -592,21 +660,21 @@ const ProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   headerTitle: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#6B7280',
+    fontWeight: "500",
+    color: "#6B7280",
   },
   scrollView: {
     flex: 1,
@@ -615,8 +683,8 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   profileTop: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     marginBottom: 16,
   },
   profileImage: {
@@ -630,43 +698,43 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000000',
+    fontWeight: "bold",
+    color: "#000000",
     marginBottom: 8,
   },
   statsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
   },
   statText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   statDivider: {
     marginHorizontal: 8,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   starsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 8,
   },
   filledStar: {
-    color: '#FBBF24',
+    color: "#FBBF24",
   },
   ratingText: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#000000',
+    fontWeight: "500",
+    color: "#000000",
   },
   tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
     marginBottom: 16,
   },
@@ -677,26 +745,26 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   sportTagText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   occupationTag: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: "#FEF3C7",
     borderWidth: 1,
-    borderColor: '#FCD34D',
+    borderColor: "#FCD34D",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
   },
   occupationTagText: {
-    color: '#D97706',
+    color: "#D97706",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   bio: {
     fontSize: 14,
-    color: '#374151',
+    color: "#374151",
     lineHeight: 20,
   },
   section: {
@@ -705,58 +773,58 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000000',
+    fontWeight: "bold",
+    color: "#000000",
     marginBottom: 16,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   totalCount: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   detailsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 16,
   },
   detailItem: {
-    width: '45%',
+    width: "45%",
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   detailLabel: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginBottom: 4,
   },
   detailValue: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#000000',
+    fontWeight: "500",
+    color: "#000000",
   },
   tabContainer: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: "#F3F4F6",
     borderRadius: 8,
     padding: 4,
     marginBottom: 16,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   tab: {
     flex: 1,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 6,
-    alignItems: 'center',
+    alignItems: "center",
   },
   activeTab: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -764,28 +832,28 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#6B7280',
-    textAlign: 'center',
+    fontWeight: "500",
+    color: "#6B7280",
+    textAlign: "center",
   },
   activeTabText: {
     color: designTokens.colors.primary,
   },
   sportCard: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: "#F9FAFB",
     borderRadius: 8,
     padding: 16,
   },
   sportHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12,
   },
   sportName: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000000',
+    fontWeight: "600",
+    color: "#000000",
   },
   levelBadge: {
     paddingHorizontal: 12,
@@ -796,53 +864,53 @@ const styles = StyleSheet.create({
     backgroundColor: designTokens.colors.primary,
   },
   advancedLevel: {
-    backgroundColor: '#F97316',
+    backgroundColor: "#F97316",
   },
   intermediateLevel: {
-    backgroundColor: '#EAB308',
+    backgroundColor: "#EAB308",
   },
   beginnerLevel: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: "#3B82F6",
   },
   levelText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   sportDetails: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12,
   },
   sportDetailItem: {
-    width: '45%',
+    width: "45%",
   },
   tag: {
-    backgroundColor: '#DBEAFE',
+    backgroundColor: "#DBEAFE",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
   },
   tagText: {
-    color: '#1D4ED8',
+    color: "#1D4ED8",
     fontSize: 12,
   },
   activitiesContainer: {
     gap: 12,
   },
   activityCard: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: "#F9FAFB",
     borderRadius: 8,
     padding: 16,
   },
   organizedActivity: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: "#EFF6FF",
     borderLeftWidth: 4,
     borderLeftColor: designTokens.colors.primary,
   },
   activityHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     gap: 12,
   },
   activityEmoji: {
@@ -853,47 +921,47 @@ const styles = StyleSheet.create({
   },
   activityTitle: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#000000',
+    fontWeight: "500",
+    color: "#000000",
     marginBottom: 4,
   },
   activitySubtitle: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginBottom: 4,
   },
   reviewContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 4,
   },
   reviewComment: {
     fontSize: 12,
-    color: '#6B7280',
+    color: "#6B7280",
     marginLeft: 4,
   },
   organizerStats: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 8,
   },
   organizerRating: {
     fontSize: 12,
-    color: '#6B7280',
+    color: "#6B7280",
     marginLeft: 4,
   },
   participantCount: {
     fontSize: 12,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   clubsContainer: {
     gap: 12,
   },
   clubCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 12,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: "#F9FAFB",
     borderRadius: 8,
   },
   clubImage: {
@@ -907,51 +975,51 @@ const styles = StyleSheet.create({
   },
   clubName: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#000000',
+    fontWeight: "500",
+    color: "#000000",
     marginBottom: 2,
   },
   clubMembers: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   locationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   locationText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   emptyState: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 32,
   },
   emptyIcon: {
     width: 64,
     height: 64,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: "#F3F4F6",
     borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 12,
   },
   emptyTitle: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#000000',
+    fontWeight: "500",
+    color: "#000000",
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#6B7280',
-    textAlign: 'center',
+    color: "#6B7280",
+    textAlign: "center",
     marginBottom: 16,
   },
   exploreButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: designTokens.colors.primary,
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -959,27 +1027,27 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   exploreButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   modalTitle: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#6B7280',
+    fontWeight: "500",
+    color: "#6B7280",
   },
   modalContent: {
     flex: 1,

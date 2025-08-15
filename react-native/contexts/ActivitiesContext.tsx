@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Activity {
   id: string;
@@ -35,7 +41,7 @@ interface Participant {
   user_name: string;
   user_image?: string;
   joined_at: string;
-  status: 'confirmed' | 'pending' | 'cancelled';
+  status: "confirmed" | "pending" | "cancelled";
 }
 
 interface Review {
@@ -61,19 +67,27 @@ interface ActivitiesContextType {
   deleteActivity: (id: string) => Promise<void>;
   joinActivity: (activityId: string) => Promise<void>;
   leaveActivity: (activityId: string) => Promise<void>;
-  addReview: (activityId: string, rating: number, comment: string) => Promise<void>;
+  addReview: (
+    activityId: string,
+    rating: number,
+    comment: string,
+  ) => Promise<void>;
   getActivityById: (id: string) => Activity | undefined;
   getActivitiesByType: (type: string) => Activity[];
   searchActivities: (query: string) => Activity[];
 }
 
-const ActivitiesContext = createContext<ActivitiesContextType | undefined>(undefined);
+const ActivitiesContext = createContext<ActivitiesContextType | undefined>(
+  undefined,
+);
 
 interface ActivitiesProviderProps {
   children: ReactNode;
 }
 
-export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children }) => {
+export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({
+  children,
+}) => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [userActivities, setUserActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,23 +101,22 @@ export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Check cache first
-      const cachedActivities = await AsyncStorage.getItem('activities');
+      const cachedActivities = await AsyncStorage.getItem("activities");
       if (cachedActivities) {
         setActivities(JSON.parse(cachedActivities));
       }
-      
+
       // Fetch fresh data
       const freshActivities = await mockFetchActivities();
       setActivities(freshActivities);
-      
+
       // Update cache
-      await AsyncStorage.setItem('activities', JSON.stringify(freshActivities));
-      
+      await AsyncStorage.setItem("activities", JSON.stringify(freshActivities));
     } catch (err) {
-      setError('Failed to fetch activities');
-      console.error('Fetch activities error:', err);
+      setError("Failed to fetch activities");
+      console.error("Fetch activities error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -113,39 +126,42 @@ export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Mock API call - replace with actual user activities fetch
       const userActivitiesData = await mockFetchUserActivities();
       setUserActivities(userActivitiesData);
-      
     } catch (err) {
-      setError('Failed to fetch user activities');
-      console.error('Fetch user activities error:', err);
+      setError("Failed to fetch user activities");
+      console.error("Fetch user activities error:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const createActivity = async (activityData: Partial<Activity>): Promise<Activity> => {
+  const createActivity = async (
+    activityData: Partial<Activity>,
+  ): Promise<Activity> => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Mock API call - replace with actual activity creation
       const newActivity = await mockCreateActivity(activityData);
-      
-      setActivities(prev => [newActivity, ...prev]);
-      setUserActivities(prev => [newActivity, ...prev]);
-      
+
+      setActivities((prev) => [newActivity, ...prev]);
+      setUserActivities((prev) => [newActivity, ...prev]);
+
       // Update cache
       const updatedActivities = [newActivity, ...activities];
-      await AsyncStorage.setItem('activities', JSON.stringify(updatedActivities));
-      
+      await AsyncStorage.setItem(
+        "activities",
+        JSON.stringify(updatedActivities),
+      );
+
       return newActivity;
-      
     } catch (err) {
-      setError('Failed to create activity');
-      console.error('Create activity error:', err);
+      setError("Failed to create activity");
+      console.error("Create activity error:", err);
       throw err;
     } finally {
       setIsLoading(false);
@@ -156,25 +172,24 @@ export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Mock API call - replace with actual activity update
       const updatedActivity = await mockUpdateActivity(id, updates);
-      
-      setActivities(prev => 
-        prev.map(activity => 
-          activity.id === id ? { ...activity, ...updatedActivity } : activity
-        )
+
+      setActivities((prev) =>
+        prev.map((activity) =>
+          activity.id === id ? { ...activity, ...updatedActivity } : activity,
+        ),
       );
-      
-      setUserActivities(prev => 
-        prev.map(activity => 
-          activity.id === id ? { ...activity, ...updatedActivity } : activity
-        )
+
+      setUserActivities((prev) =>
+        prev.map((activity) =>
+          activity.id === id ? { ...activity, ...updatedActivity } : activity,
+        ),
       );
-      
     } catch (err) {
-      setError('Failed to update activity');
-      console.error('Update activity error:', err);
+      setError("Failed to update activity");
+      console.error("Update activity error:", err);
       throw err;
     } finally {
       setIsLoading(false);
@@ -185,16 +200,17 @@ export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Mock API call - replace with actual activity deletion
       await mockDeleteActivity(id);
-      
-      setActivities(prev => prev.filter(activity => activity.id !== id));
-      setUserActivities(prev => prev.filter(activity => activity.id !== id));
-      
+
+      setActivities((prev) => prev.filter((activity) => activity.id !== id));
+      setUserActivities((prev) =>
+        prev.filter((activity) => activity.id !== id),
+      );
     } catch (err) {
-      setError('Failed to delete activity');
-      console.error('Delete activity error:', err);
+      setError("Failed to delete activity");
+      console.error("Delete activity error:", err);
       throw err;
     } finally {
       setIsLoading(false);
@@ -204,22 +220,24 @@ export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children
   const joinActivity = async (activityId: string) => {
     try {
       setError(null);
-      
+
       // Mock API call - replace with actual join activity
       await mockJoinActivity(activityId);
-      
+
       // Update local state
-      setActivities(prev => 
-        prev.map(activity => 
-          activity.id === activityId 
-            ? { ...activity, current_participants: activity.current_participants + 1 }
-            : activity
-        )
+      setActivities((prev) =>
+        prev.map((activity) =>
+          activity.id === activityId
+            ? {
+                ...activity,
+                current_participants: activity.current_participants + 1,
+              }
+            : activity,
+        ),
       );
-      
     } catch (err) {
-      setError('Failed to join activity');
-      console.error('Join activity error:', err);
+      setError("Failed to join activity");
+      console.error("Join activity error:", err);
       throw err;
     }
   };
@@ -227,39 +245,49 @@ export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children
   const leaveActivity = async (activityId: string) => {
     try {
       setError(null);
-      
+
       // Mock API call - replace with actual leave activity
       await mockLeaveActivity(activityId);
-      
+
       // Update local state
-      setActivities(prev => 
-        prev.map(activity => 
-          activity.id === activityId 
-            ? { ...activity, current_participants: Math.max(0, activity.current_participants - 1) }
-            : activity
-        )
+      setActivities((prev) =>
+        prev.map((activity) =>
+          activity.id === activityId
+            ? {
+                ...activity,
+                current_participants: Math.max(
+                  0,
+                  activity.current_participants - 1,
+                ),
+              }
+            : activity,
+        ),
       );
-      
     } catch (err) {
-      setError('Failed to leave activity');
-      console.error('Leave activity error:', err);
+      setError("Failed to leave activity");
+      console.error("Leave activity error:", err);
       throw err;
     }
   };
 
-  const addReview = async (activityId: string, rating: number, comment: string) => {
+  const addReview = async (
+    activityId: string,
+    rating: number,
+    comment: string,
+  ) => {
     try {
       setError(null);
-      
+
       // Mock API call - replace with actual review submission
       const review = await mockAddReview(activityId, rating, comment);
-      
+
       // Update local state
-      setActivities(prev => 
-        prev.map(activity => {
+      setActivities((prev) =>
+        prev.map((activity) => {
           if (activity.id === activityId) {
             const reviews = [...(activity.reviews || []), review];
-            const averageRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+            const averageRating =
+              reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
             return {
               ...activity,
               reviews,
@@ -268,33 +296,33 @@ export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children
             };
           }
           return activity;
-        })
+        }),
       );
-      
     } catch (err) {
-      setError('Failed to add review');
-      console.error('Add review error:', err);
+      setError("Failed to add review");
+      console.error("Add review error:", err);
       throw err;
     }
   };
 
   const getActivityById = (id: string): Activity | undefined => {
-    return activities.find(activity => activity.id === id);
+    return activities.find((activity) => activity.id === id);
   };
 
   const getActivitiesByType = (type: string): Activity[] => {
-    return activities.filter(activity => 
-      activity.activity_type.toLowerCase() === type.toLowerCase()
+    return activities.filter(
+      (activity) => activity.activity_type.toLowerCase() === type.toLowerCase(),
     );
   };
 
   const searchActivities = (query: string): Activity[] => {
     const lowercaseQuery = query.toLowerCase();
-    return activities.filter(activity =>
-      activity.title.toLowerCase().includes(lowercaseQuery) ||
-      activity.description.toLowerCase().includes(lowercaseQuery) ||
-      activity.location.toLowerCase().includes(lowercaseQuery) ||
-      activity.activity_type.toLowerCase().includes(lowercaseQuery)
+    return activities.filter(
+      (activity) =>
+        activity.title.toLowerCase().includes(lowercaseQuery) ||
+        activity.description.toLowerCase().includes(lowercaseQuery) ||
+        activity.location.toLowerCase().includes(lowercaseQuery) ||
+        activity.activity_type.toLowerCase().includes(lowercaseQuery),
     );
   };
 
@@ -325,50 +353,56 @@ export const ActivitiesProvider: React.FC<ActivitiesProviderProps> = ({ children
 
 // Mock API functions - replace with actual API calls
 const mockFetchActivities = async (): Promise<Activity[]> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   return [
     {
-      id: '1',
-      title: 'Westway Climbing Session',
-      description: 'Join us for an indoor climbing session at Westway Climbing Centre. Perfect for all skill levels!',
-      activity_type: 'climbing',
-      date: '2024-02-15',
-      time: '18:00',
-      location: 'Westway Climbing Centre, London',
+      id: "1",
+      title: "Westway Climbing Session",
+      description:
+        "Join us for an indoor climbing session at Westway Climbing Centre. Perfect for all skill levels!",
+      activity_type: "climbing",
+      date: "2024-02-15",
+      time: "18:00",
+      location: "Westway Climbing Centre, London",
       max_participants: 8,
       current_participants: 5,
-      organizer_id: 'org_1',
-      organizer_name: 'Holly Smith',
-      organizer_image: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop',
-      skill_level: 'Beginner to Advanced',
+      organizer_id: "org_1",
+      organizer_name: "Holly Smith",
+      organizer_image:
+        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop",
+      skill_level: "Beginner to Advanced",
       price: 15,
-      meeting_point: 'Main entrance',
-      what_to_bring: ['Climbing shoes', 'Water bottle', 'Chalk (optional)'],
-      images: ['https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400'],
-      created_at: '2024-01-15T10:00:00Z',
-      updated_at: '2024-01-15T10:00:00Z',
+      meeting_point: "Main entrance",
+      what_to_bring: ["Climbing shoes", "Water bottle", "Chalk (optional)"],
+      images: [
+        "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400",
+      ],
+      created_at: "2024-01-15T10:00:00Z",
+      updated_at: "2024-01-15T10:00:00Z",
       average_rating: 4.5,
       total_reviews: 12,
     },
     {
-      id: '2',
-      title: 'Richmond Park Cycling',
-      description: 'Scenic cycling route through Richmond Park. Great for intermediate cyclists.',
-      activity_type: 'cycling',
-      date: '2024-02-16',
-      time: '09:00',
-      location: 'Richmond Park, London',
+      id: "2",
+      title: "Richmond Park Cycling",
+      description:
+        "Scenic cycling route through Richmond Park. Great for intermediate cyclists.",
+      activity_type: "cycling",
+      date: "2024-02-16",
+      time: "09:00",
+      location: "Richmond Park, London",
       max_participants: 12,
       current_participants: 8,
-      organizer_id: 'org_2',
-      organizer_name: 'Marcus Rodriguez',
-      organizer_image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop',
-      skill_level: 'Intermediate',
-      meeting_point: 'Richmond Gate car park',
-      what_to_bring: ['Bike', 'Helmet', 'Water bottle'],
-      created_at: '2024-01-16T10:00:00Z',
-      updated_at: '2024-01-16T10:00:00Z',
+      organizer_id: "org_2",
+      organizer_name: "Marcus Rodriguez",
+      organizer_image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop",
+      skill_level: "Intermediate",
+      meeting_point: "Richmond Gate car park",
+      what_to_bring: ["Bike", "Helmet", "Water bottle"],
+      created_at: "2024-01-16T10:00:00Z",
+      updated_at: "2024-01-16T10:00:00Z",
       average_rating: 4.2,
       total_reviews: 8,
     },
@@ -376,26 +410,28 @@ const mockFetchActivities = async (): Promise<Activity[]> => {
 };
 
 const mockFetchUserActivities = async (): Promise<Activity[]> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
   return [];
 };
 
-const mockCreateActivity = async (activityData: Partial<Activity>): Promise<Activity> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
+const mockCreateActivity = async (
+  activityData: Partial<Activity>,
+): Promise<Activity> => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   return {
     id: Date.now().toString(),
-    title: activityData.title || '',
-    description: activityData.description || '',
-    activity_type: activityData.activity_type || '',
-    date: activityData.date || '',
-    time: activityData.time || '',
-    location: activityData.location || '',
+    title: activityData.title || "",
+    description: activityData.description || "",
+    activity_type: activityData.activity_type || "",
+    date: activityData.date || "",
+    time: activityData.time || "",
+    location: activityData.location || "",
     max_participants: activityData.max_participants || 10,
     current_participants: 1,
-    organizer_id: 'current_user',
-    organizer_name: 'You',
-    skill_level: activityData.skill_level || 'All levels',
+    organizer_id: "current_user",
+    organizer_name: "You",
+    skill_level: activityData.skill_level || "All levels",
     price: activityData.price,
     meeting_point: activityData.meeting_point,
     what_to_bring: activityData.what_to_bring || [],
@@ -408,30 +444,34 @@ const mockCreateActivity = async (activityData: Partial<Activity>): Promise<Acti
 };
 
 const mockUpdateActivity = async (id: string, updates: Partial<Activity>) => {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
   return { ...updates, updated_at: new Date().toISOString() };
 };
 
 const mockDeleteActivity = async (id: string) => {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 };
 
 const mockJoinActivity = async (activityId: string) => {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 };
 
 const mockLeaveActivity = async (activityId: string) => {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 };
 
-const mockAddReview = async (activityId: string, rating: number, comment: string): Promise<Review> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
+const mockAddReview = async (
+  activityId: string,
+  rating: number,
+  comment: string,
+): Promise<Review> => {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
   return {
     id: Date.now().toString(),
     activity_id: activityId,
-    reviewer_id: 'current_user',
-    reviewer_name: 'You',
+    reviewer_id: "current_user",
+    reviewer_name: "You",
     rating,
     comment,
     created_at: new Date().toISOString(),
@@ -441,7 +481,7 @@ const mockAddReview = async (activityId: string, rating: number, comment: string
 export const useActivities = (): ActivitiesContextType => {
   const context = useContext(ActivitiesContext);
   if (context === undefined) {
-    throw new Error('useActivities must be used within an ActivitiesProvider');
+    throw new Error("useActivities must be used within an ActivitiesProvider");
   }
   return context;
 };

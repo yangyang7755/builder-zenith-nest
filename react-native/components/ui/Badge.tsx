@@ -1,25 +1,25 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
-import { designTokens } from '../../styles/designTokens';
+import React from "react";
+import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import { designTokens } from "../../styles/designTokens";
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'outline';
-  size?: 'sm' | 'md' | 'lg';
+  variant?:
+    | "primary"
+    | "secondary"
+    | "success"
+    | "warning"
+    | "error"
+    | "outline";
+  size?: "sm" | "md" | "lg";
   style?: ViewStyle;
   textStyle?: TextStyle;
 }
 
 const Badge: React.FC<BadgeProps> = ({
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   style,
   textStyle,
 }) => {
@@ -46,12 +46,12 @@ const Badge: React.FC<BadgeProps> = ({
 
 const styles = StyleSheet.create({
   base: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     borderRadius: designTokens.borderRadius.full,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  
+
   // Variants
   primary: {
     backgroundColor: designTokens.colors.primary,
@@ -69,11 +69,11 @@ const styles = StyleSheet.create({
     backgroundColor: designTokens.colors.error,
   },
   outline: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: designTokens.colors.border.medium,
   },
-  
+
   // Sizes
   size_sm: {
     paddingHorizontal: 8,
@@ -87,13 +87,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 6,
   },
-  
+
   // Text styles
   baseText: {
     fontWeight: designTokens.typography.fontWeight.medium,
-    textAlign: 'center',
+    textAlign: "center",
   },
-  
+
   // Text variants
   primaryText: {
     color: designTokens.colors.white,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   outlineText: {
     color: designTokens.colors.text.secondary,
   },
-  
+
   // Text sizes
   smText: {
     fontSize: 10,

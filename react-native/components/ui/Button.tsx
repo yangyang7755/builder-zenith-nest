@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   TouchableOpacity,
   Text,
@@ -6,14 +6,14 @@ import {
   ViewStyle,
   TextStyle,
   ActivityIndicator,
-} from 'react-native';
-import { designTokens } from '../../styles/designTokens';
+} from "react-native";
+import { designTokens } from "../../styles/designTokens";
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
   disabled?: boolean;
   loading?: boolean;
   style?: ViewStyle;
@@ -24,8 +24,8 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   disabled = false,
   loading = false,
   style,
@@ -57,7 +57,9 @@ const Button: React.FC<ButtonProps> = ({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'primary' ? '#FFFFFF' : designTokens.colors.primary}
+          color={
+            variant === "primary" ? "#FFFFFF" : designTokens.colors.primary
+          }
           size="small"
         />
       ) : (
@@ -73,12 +75,12 @@ const Button: React.FC<ButtonProps> = ({
 const styles = StyleSheet.create({
   base: {
     borderRadius: designTokens.borderRadius.lg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
     gap: 8,
   },
-  
+
   // Variants
   primary: {
     backgroundColor: designTokens.colors.primary,
@@ -87,14 +89,14 @@ const styles = StyleSheet.create({
     backgroundColor: designTokens.colors.secondary,
   },
   outline: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: designTokens.colors.primary,
   },
   ghost: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
-  
+
   // Sizes
   size_sm: {
     paddingHorizontal: 12,
@@ -111,18 +113,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     minHeight: 48,
   },
-  
+
   // Disabled state
   disabled: {
     opacity: 0.5,
   },
-  
+
   // Text styles
   baseText: {
     fontWeight: designTokens.typography.fontWeight.medium,
-    textAlign: 'center',
+    textAlign: "center",
   },
-  
+
   // Text variants
   primaryText: {
     color: designTokens.colors.white,
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
   ghostText: {
     color: designTokens.colors.primary,
   },
-  
+
   // Text sizes
   smText: {
     fontSize: designTokens.typography.fontSize.sm,
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
   lgText: {
     fontSize: designTokens.typography.fontSize.lg,
   },
-  
+
   disabledText: {
     opacity: 0.7,
   },

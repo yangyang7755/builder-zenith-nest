@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,16 +10,16 @@ import {
   TextInput,
   FlatList,
   Dimensions,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
-import { designTokens } from '../styles/designTokens';
-import { useActivities } from '../contexts/ActivitiesContext';
-import Card from '../components/ui/Card';
-import Badge from '../components/ui/Badge';
-import Avatar from '../components/ui/Avatar';
+} from "react-native";
+import Icon from "react-native-vector-icons/Feather";
+import { useNavigation } from "@react-navigation/native";
+import { designTokens } from "../styles/designTokens";
+import { useActivities } from "../contexts/ActivitiesContext";
+import Card from "../components/ui/Card";
+import Badge from "../components/ui/Badge";
+import Avatar from "../components/ui/Avatar";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 interface Activity {
   id: string;
@@ -52,37 +52,39 @@ interface Club {
 const ExploreScreen: React.FC = () => {
   const navigation = useNavigation();
   const { activities, isLoading, fetchActivities } = useActivities();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("all");
   const [featuredActivities, setFeaturedActivities] = useState<Activity[]>([]);
   const [featuredClubs] = useState<Club[]>([
     {
-      id: '1',
-      name: 'Oxford University Climbing Club',
-      description: 'Premier climbing community at Oxford',
+      id: "1",
+      name: "Oxford University Climbing Club",
+      description: "Premier climbing community at Oxford",
       members: 245,
-      activity_type: 'climbing',
-      image: 'https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c',
+      activity_type: "climbing",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c",
     },
     {
-      id: '2',
-      name: 'London Cycling Network',
-      description: 'Explore London on two wheels',
+      id: "2",
+      name: "London Cycling Network",
+      description: "Explore London on two wheels",
       members: 432,
-      activity_type: 'cycling',
-      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
+      activity_type: "cycling",
+      image:
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400",
     },
   ]);
 
   const categories = [
-    { id: 'all', name: 'All', icon: 'grid', emoji: '🎯' },
-    { id: 'climbing', name: 'Climbing', icon: 'mountain', emoji: '🧗' },
-    { id: 'cycling', name: 'Cycling', icon: 'circle', emoji: '🚴' },
-    { id: 'running', name: 'Running', icon: 'zap', emoji: '👟' },
-    { id: 'hiking', name: 'Hiking', icon: 'map', emoji: '🥾' },
-    { id: 'skiing', name: 'Skiing', icon: 'triangle', emoji: '⛷️' },
-    { id: 'surfing', name: 'Surfing', icon: 'waves', emoji: '🌊' },
-    { id: 'tennis', name: 'Tennis', icon: 'circle', emoji: '🎾' },
+    { id: "all", name: "All", icon: "grid", emoji: "🎯" },
+    { id: "climbing", name: "Climbing", icon: "mountain", emoji: "🧗" },
+    { id: "cycling", name: "Cycling", icon: "circle", emoji: "🚴" },
+    { id: "running", name: "Running", icon: "zap", emoji: "👟" },
+    { id: "hiking", name: "Hiking", icon: "map", emoji: "🥾" },
+    { id: "skiing", name: "Skiing", icon: "triangle", emoji: "⛷️" },
+    { id: "surfing", name: "Surfing", icon: "waves", emoji: "🌊" },
+    { id: "tennis", name: "Tennis", icon: "circle", emoji: "🎾" },
   ];
 
   useEffect(() => {
@@ -96,57 +98,73 @@ const ExploreScreen: React.FC = () => {
 
   const getFilteredActivities = () => {
     let filtered = activities;
-    
-    if (activeCategory !== 'all') {
-      filtered = filtered.filter(activity => 
-        activity.activity_type.toLowerCase() === activeCategory.toLowerCase()
+
+    if (activeCategory !== "all") {
+      filtered = filtered.filter(
+        (activity) =>
+          activity.activity_type.toLowerCase() === activeCategory.toLowerCase(),
       );
     }
-    
+
     if (searchQuery) {
-      filtered = filtered.filter(activity =>
-        activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        activity.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        activity.organizer_name.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        (activity) =>
+          activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          activity.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          activity.organizer_name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()),
       );
     }
-    
+
     return filtered;
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
     });
   };
 
   const renderFeaturedActivity = ({ item: activity }: { item: Activity }) => (
     <TouchableOpacity
       style={styles.featuredCard}
-      onPress={() => navigation.navigate('ActivityDetail' as never, { activityId: activity.id } as never)}
+      onPress={() =>
+        navigation.navigate(
+          "ActivityDetail" as never,
+          { activityId: activity.id } as never,
+        )
+      }
     >
       <Image
-        source={{ 
-          uri: activity.images?.[0] || 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400'
+        source={{
+          uri:
+            activity.images?.[0] ||
+            "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400",
         }}
         style={styles.featuredImage}
       />
       <View style={styles.featuredOverlay}>
         <View style={styles.featuredContent}>
           <Text style={styles.featuredCategory}>
-            {categories.find(c => c.id === activity.activity_type)?.emoji} {activity.activity_type}
+            {categories.find((c) => c.id === activity.activity_type)?.emoji}{" "}
+            {activity.activity_type}
           </Text>
           <Text style={styles.featuredTitle}>{activity.title}</Text>
           <View style={styles.featuredDetails}>
             <View style={styles.featuredDetail}>
               <Icon name="calendar" size={12} color="#FFFFFF" />
-              <Text style={styles.featuredDetailText}>{formatDate(activity.date)}</Text>
+              <Text style={styles.featuredDetailText}>
+                {formatDate(activity.date)}
+              </Text>
             </View>
             <View style={styles.featuredDetail}>
               <Icon name="map-pin" size={12} color="#FFFFFF" />
-              <Text style={styles.featuredDetailText}>{activity.location.split(',')[0]}</Text>
+              <Text style={styles.featuredDetailText}>
+                {activity.location.split(",")[0]}
+              </Text>
             </View>
           </View>
         </View>
@@ -157,11 +175,18 @@ const ExploreScreen: React.FC = () => {
   const renderActivityCard = ({ item: activity }: { item: Activity }) => (
     <TouchableOpacity
       style={styles.activityCard}
-      onPress={() => navigation.navigate('ActivityDetail' as never, { activityId: activity.id } as never)}
+      onPress={() =>
+        navigation.navigate(
+          "ActivityDetail" as never,
+          { activityId: activity.id } as never,
+        )
+      }
     >
       <Image
-        source={{ 
-          uri: activity.images?.[0] || 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400'
+        source={{
+          uri:
+            activity.images?.[0] ||
+            "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400",
         }}
         style={styles.activityImage}
       />
@@ -172,20 +197,32 @@ const ExploreScreen: React.FC = () => {
             <Text style={styles.activityPrice}>£{activity.price}</Text>
           )}
         </View>
-        
+
         <View style={styles.activityMeta}>
           <View style={styles.activityDetail}>
-            <Icon name="calendar" size={14} color={designTokens.colors.text.secondary} />
+            <Icon
+              name="calendar"
+              size={14}
+              color={designTokens.colors.text.secondary}
+            />
             <Text style={styles.activityDetailText}>
               {formatDate(activity.date)} • {activity.time}
             </Text>
           </View>
           <View style={styles.activityDetail}>
-            <Icon name="map-pin" size={14} color={designTokens.colors.text.secondary} />
+            <Icon
+              name="map-pin"
+              size={14}
+              color={designTokens.colors.text.secondary}
+            />
             <Text style={styles.activityDetailText}>{activity.location}</Text>
           </View>
           <View style={styles.activityDetail}>
-            <Icon name="users" size={14} color={designTokens.colors.text.secondary} />
+            <Icon
+              name="users"
+              size={14}
+              color={designTokens.colors.text.secondary}
+            />
             <Text style={styles.activityDetailText}>
               {activity.current_participants}/{activity.max_participants} joined
             </Text>
@@ -194,26 +231,24 @@ const ExploreScreen: React.FC = () => {
 
         <View style={styles.activityFooter}>
           <View style={styles.organizerInfo}>
-            <Avatar 
-              uri={activity.organizer_image} 
-              name={activity.organizer_name} 
-              size="sm" 
+            <Avatar
+              uri={activity.organizer_image}
+              name={activity.organizer_name}
+              size="sm"
             />
             <Text style={styles.organizerName}>{activity.organizer_name}</Text>
           </View>
           {activity.average_rating && (
             <View style={styles.rating}>
               <Icon name="star" size={12} color="#FBBF24" />
-              <Text style={styles.ratingText}>{activity.average_rating.toFixed(1)}</Text>
+              <Text style={styles.ratingText}>
+                {activity.average_rating.toFixed(1)}
+              </Text>
             </View>
           )}
         </View>
 
-        <Badge 
-          variant="primary" 
-          size="sm" 
-          style={styles.skillBadge}
-        >
+        <Badge variant="primary" size="sm" style={styles.skillBadge}>
           {activity.skill_level}
         </Badge>
       </View>
@@ -223,14 +258,20 @@ const ExploreScreen: React.FC = () => {
   const renderClubCard = ({ item: club }: { item: Club }) => (
     <TouchableOpacity
       style={styles.clubCard}
-      onPress={() => navigation.navigate('ClubDetail' as never, { clubId: club.id } as never)}
+      onPress={() =>
+        navigation.navigate("ClubDetail" as never, { clubId: club.id } as never)
+      }
     >
       <Image source={{ uri: club.image }} style={styles.clubImage} />
       <View style={styles.clubContent}>
         <Text style={styles.clubName}>{club.name}</Text>
         <Text style={styles.clubDescription}>{club.description}</Text>
         <View style={styles.clubMeta}>
-          <Icon name="users" size={14} color={designTokens.colors.text.secondary} />
+          <Icon
+            name="users"
+            size={14}
+            color={designTokens.colors.text.secondary}
+          />
           <Text style={styles.clubMembers}>{club.members} members</Text>
         </View>
       </View>
@@ -243,14 +284,24 @@ const ExploreScreen: React.FC = () => {
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <Text style={styles.headerTitle}>Explore</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Notifications' as never)}>
-            <Icon name="bell" size={24} color={designTokens.colors.text.secondary} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Notifications" as never)}
+          >
+            <Icon
+              name="bell"
+              size={24}
+              color={designTokens.colors.text.secondary}
+            />
           </TouchableOpacity>
         </View>
-        
+
         {/* Search Bar */}
         <View style={styles.searchContainer}>
-          <Icon name="search" size={20} color={designTokens.colors.text.secondary} />
+          <Icon
+            name="search"
+            size={20}
+            color={designTokens.colors.text.secondary}
+          />
           <TextInput
             style={styles.searchInput}
             placeholder="Search activities, locations..."
@@ -259,18 +310,25 @@ const ExploreScreen: React.FC = () => {
             placeholderTextColor={designTokens.colors.text.secondary}
           />
           {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Icon name="x" size={20} color={designTokens.colors.text.secondary} />
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <Icon
+                name="x"
+                size={20}
+                color={designTokens.colors.text.secondary}
+              />
             </TouchableOpacity>
           )}
         </View>
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Categories */}
         <View style={styles.section}>
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.categoriesContainer}
           >
@@ -279,20 +337,25 @@ const ExploreScreen: React.FC = () => {
                 key={category.id}
                 style={[
                   styles.categoryCard,
-                  activeCategory === category.id && styles.activeCategoryCard
+                  activeCategory === category.id && styles.activeCategoryCard,
                 ]}
                 onPress={() => setActiveCategory(category.id)}
               >
-                <Text style={[
-                  styles.categoryEmoji,
-                  activeCategory === category.id && styles.activeCategoryEmoji
-                ]}>
+                <Text
+                  style={[
+                    styles.categoryEmoji,
+                    activeCategory === category.id &&
+                      styles.activeCategoryEmoji,
+                  ]}
+                >
                   {category.emoji}
                 </Text>
-                <Text style={[
-                  styles.categoryName,
-                  activeCategory === category.id && styles.activeCategoryName
-                ]}>
+                <Text
+                  style={[
+                    styles.categoryName,
+                    activeCategory === category.id && styles.activeCategoryName,
+                  ]}
+                >
                   {category.name}
                 </Text>
               </TouchableOpacity>
@@ -319,13 +382,15 @@ const ExploreScreen: React.FC = () => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>
-              {activeCategory === 'all' ? 'All Activities' : `${categories.find(c => c.id === activeCategory)?.name} Activities`}
+              {activeCategory === "all"
+                ? "All Activities"
+                : `${categories.find((c) => c.id === activeCategory)?.name} Activities`}
             </Text>
             <Text style={styles.sectionCount}>
               {getFilteredActivities().length} found
             </Text>
           </View>
-          
+
           {isLoading ? (
             <View style={styles.loadingContainer}>
               <Text style={styles.loadingText}>Loading activities...</Text>
@@ -342,10 +407,9 @@ const ExploreScreen: React.FC = () => {
             <View style={styles.emptyState}>
               <Text style={styles.emptyTitle}>No activities found</Text>
               <Text style={styles.emptySubtitle}>
-                {searchQuery 
+                {searchQuery
                   ? `No activities match "${searchQuery}"`
-                  : `No ${activeCategory === 'all' ? '' : activeCategory} activities available`
-                }
+                  : `No ${activeCategory === "all" ? "" : activeCategory} activities available`}
               </Text>
             </View>
           )}
@@ -381,19 +445,19 @@ const styles = StyleSheet.create({
     backgroundColor: designTokens.colors.background,
   },
   headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   headerTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: designTokens.colors.text.primary,
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: designTokens.colors.gray[100],
     borderRadius: 12,
     paddingHorizontal: 16,
@@ -412,15 +476,15 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
     marginBottom: 12,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: designTokens.colors.text.primary,
   },
   sectionCount: {
@@ -432,7 +496,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   categoryCard: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,
@@ -451,7 +515,7 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
     color: designTokens.colors.text.secondary,
   },
   activeCategoryName: {
@@ -465,20 +529,20 @@ const styles = StyleSheet.create({
     width: width * 0.8,
     height: 200,
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   featuredImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   featuredOverlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    justifyContent: "flex-end",
   },
   featuredContent: {
     padding: 16,
@@ -491,17 +555,17 @@ const styles = StyleSheet.create({
   },
   featuredTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: designTokens.colors.white,
     marginBottom: 8,
   },
   featuredDetails: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 16,
   },
   featuredDetail: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   featuredDetailText: {
@@ -516,32 +580,32 @@ const styles = StyleSheet.create({
   activityCard: {
     backgroundColor: designTokens.colors.white,
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...designTokens.shadows.md,
   },
   activityImage: {
-    width: '100%',
+    width: "100%",
     height: 160,
   },
   activityContent: {
     padding: 16,
   },
   activityHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 8,
   },
   activityTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: designTokens.colors.text.primary,
     flex: 1,
     marginRight: 8,
   },
   activityPrice: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: designTokens.colors.primary,
   },
   activityMeta: {
@@ -549,8 +613,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   activityDetail: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   activityDetailText: {
@@ -558,14 +622,14 @@ const styles = StyleSheet.create({
     color: designTokens.colors.text.secondary,
   },
   activityFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   organizerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   organizerName: {
@@ -573,8 +637,8 @@ const styles = StyleSheet.create({
     color: designTokens.colors.text.secondary,
   },
   rating: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   ratingText: {
@@ -582,7 +646,7 @@ const styles = StyleSheet.create({
     color: designTokens.colors.text.secondary,
   },
   skillBadge: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   clubsContainer: {
     paddingHorizontal: 16,
@@ -592,11 +656,11 @@ const styles = StyleSheet.create({
     width: width * 0.7,
     backgroundColor: designTokens.colors.white,
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
     ...designTokens.shadows.md,
   },
   clubImage: {
-    width: '100%',
+    width: "100%",
     height: 120,
   },
   clubContent: {
@@ -604,7 +668,7 @@ const styles = StyleSheet.create({
   },
   clubName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: designTokens.colors.text.primary,
     marginBottom: 4,
   },
@@ -614,8 +678,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   clubMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   clubMembers: {
@@ -624,7 +688,7 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     padding: 32,
-    alignItems: 'center',
+    alignItems: "center",
   },
   loadingText: {
     fontSize: 16,
@@ -632,18 +696,18 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     padding: 32,
-    alignItems: 'center',
+    alignItems: "center",
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: designTokens.colors.text.primary,
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 14,
     color: designTokens.colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

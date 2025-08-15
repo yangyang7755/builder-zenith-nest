@@ -1,17 +1,11 @@
-import React from 'react';
-import {
-  View,
-  Image,
-  Text,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native';
-import { designTokens } from '../../styles/designTokens';
+import React from "react";
+import { View, Image, Text, StyleSheet, ViewStyle } from "react-native";
+import { designTokens } from "../../styles/designTokens";
 
 interface AvatarProps {
   uri?: string;
   name?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: "sm" | "md" | "lg" | "xl";
   style?: ViewStyle;
   fallbackStyle?: ViewStyle;
   textStyle?: any;
@@ -19,26 +13,22 @@ interface AvatarProps {
 
 const Avatar: React.FC<AvatarProps> = ({
   uri,
-  name = '',
-  size = 'md',
+  name = "",
+  size = "md",
   style,
   fallbackStyle,
   textStyle,
 }) => {
   const getInitials = (fullName: string) => {
     return fullName
-      .split(' ')
-      .map(n => n[0])
-      .join('')
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
-  const containerStyle = [
-    styles.container,
-    styles[`size_${size}`],
-    style,
-  ];
+  const containerStyle = [styles.container, styles[`size_${size}`], style];
 
   const fallbackContainerStyle = [
     styles.fallback,
@@ -57,16 +47,14 @@ const Avatar: React.FC<AvatarProps> = ({
       <Image
         source={{ uri }}
         style={containerStyle}
-        defaultSource={require('../../assets/placeholder-avatar.png')}
+        defaultSource={require("../../assets/placeholder-avatar.png")}
       />
     );
   }
 
   return (
     <View style={fallbackContainerStyle}>
-      <Text style={fallbackTextStyle}>
-        {getInitials(name)}
-      </Text>
+      <Text style={fallbackTextStyle}>{getInitials(name)}</Text>
     </View>
   );
 };
@@ -76,14 +64,14 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
     backgroundColor: designTokens.colors.gray[200],
   },
-  
+
   fallback: {
     borderRadius: 9999,
     backgroundColor: designTokens.colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  
+
   // Sizes
   size_sm: {
     width: 32,
@@ -101,12 +89,12 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
   },
-  
+
   fallbackText: {
     color: designTokens.colors.white,
     fontWeight: designTokens.typography.fontWeight.bold,
   },
-  
+
   // Text sizes
   smText: {
     fontSize: 12,
