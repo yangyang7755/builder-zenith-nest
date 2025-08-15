@@ -198,10 +198,13 @@ export const createServer = () => {
   return app;
 };
 
-httpServer.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📱 Client URL: ${process.env.CLIENT_URL || "http://localhost:5173"}`);
-  console.log(`🔗 API Base: http://localhost:${PORT}/api`);
-});
+// Only start server if this file is run directly (not imported)
+if (process.env.NODE_ENV !== 'test' && import.meta.url.endsWith('server/index.ts')) {
+  httpServer.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📱 Client URL: ${process.env.CLIENT_URL || "http://localhost:5173"}`);
+    console.log(`🔗 API Base: http://localhost:${PORT}/api`);
+  });
+}
 
 export { io, app, httpServer };
