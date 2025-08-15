@@ -86,13 +86,43 @@ export function FollowProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // Initialize with demo data for development
+  // Initialize with real backend data or empty arrays for new users
   useEffect(() => {
-    initializeDemoData();
+    initializeFollowData();
   }, []);
 
+  const initializeFollowData = async () => {
+    try {
+      // Try to fetch real follower data from backend
+      // const [followersData, followingData] = await Promise.all([
+      //   apiService.getFollowers(),
+      //   apiService.getFollowing()
+      // ]);
+      // setFollowers(followersData || []);
+      // setFollowing(followingData || []);
+
+      // For now, start with empty arrays for new users
+      // Only show demo data for specific demo users
+      const isDemoUser = window.location.pathname.includes('demo') ||
+                        localStorage.getItem('isDemoUser') === 'true';
+
+      if (isDemoUser) {
+        initializeDemoData();
+      } else {
+        // New users start with no followers
+        setFollowers([]);
+        setFollowing([]);
+      }
+    } catch (error) {
+      console.error("Error initializing follow data:", error);
+      // Fallback to empty arrays
+      setFollowers([]);
+      setFollowing([]);
+    }
+  };
+
   const initializeDemoData = () => {
-    // Demo follower relationships
+    // Demo follower relationships (only for demo users)
     const demoFollowers: FollowRelationship[] = [
       {
         id: "follow_1",
@@ -107,7 +137,7 @@ export function FollowProvider({ children }: { children: ReactNode }) {
         }
       },
       {
-        id: "follow_2", 
+        id: "follow_2",
         follower_id: "user_coach_holly",
         following_id: "user_current",
         created_at: new Date("2024-01-20"),
