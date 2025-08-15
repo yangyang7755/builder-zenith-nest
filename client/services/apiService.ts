@@ -315,28 +315,6 @@ class ApiService {
     return this.request<any>(`/activities/${id}`);
   }
 
-  async ensureProfileExists() {
-    try {
-      // Get current user ID (this is a simplified approach - in a real app you'd get this from auth token)
-      const userId = "demo-user-id"; // For demo purposes
-
-      // First try to get the current profile
-      const profileResponse = await this.request<any>(`/users/${userId}/profile`);
-
-      if (profileResponse.data?.profile) {
-        console.log("Profile already exists");
-        return profileResponse;
-      }
-
-      // If profile doesn't exist, we'll rely on the backend to create it during activity creation
-      console.log("Profile doesn't exist, but backend should handle this automatically");
-      return { data: null };
-    } catch (error) {
-      console.warn("Error checking profile, continuing with activity creation:", error);
-      return { data: null };
-    }
-  }
-
   async createActivity(activity: any) {
     return this.request<any>("/activities", {
       method: "POST",
