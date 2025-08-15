@@ -178,7 +178,7 @@ export default function SimpleInteractiveMap({
   const getActivityMarkerStyle = (type: string) => {
     const styles: { [key: string]: { color: string; emoji: string } } = {
       cycling: { color: '#3B82F6', emoji: '🚴' },
-      running: { color: '#EF4444', emoji: '🏃' },
+      running: { color: '#EF4444', emoji: '👟' },
       climbing: { color: '#F59E0B', emoji: '🧗' },
       hiking: { color: '#10B981', emoji: '🥾' },
       swimming: { color: '#06B6D4', emoji: '🏊' },
