@@ -306,6 +306,14 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 
   // Transform backend activity to frontend format with backward compatibility
   const transformActivity = (backendActivity: any): Activity => {
+    // Handle current_participants which might come as {count: number} object from Supabase count
+    let current_participants = 0;
+    if (typeof backendActivity.current_participants === 'object' && backendActivity.current_participants?.count !== undefined) {
+      current_participants = backendActivity.current_participants.count;
+    } else if (typeof backendActivity.current_participants === 'number') {
+      current_participants = backendActivity.current_participants;
+    }
+
     return {
       // New schema fields
       id: backendActivity.id,
@@ -316,7 +324,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       location: backendActivity.location,
       coordinates: backendActivity.coordinates,
       max_participants: backendActivity.max_participants || 10,
-      current_participants: backendActivity.current_participants || 0,
+      current_participants: current_participants,
       difficulty_level: backendActivity.difficulty_level || "beginner",
       activity_image: backendActivity.activity_image,
       route_link: backendActivity.route_link,
