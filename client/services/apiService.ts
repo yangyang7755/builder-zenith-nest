@@ -148,6 +148,46 @@ export const apiService = {
     }
   },
 
+  // Saved Activities methods
+  async getSavedActivities(): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/saved-activities`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch saved activities' };
+    }
+  },
+
+  async saveActivity(activityId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/saved-activities`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify({ activity_id: activityId }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to save activity' };
+    }
+  },
+
+  async unsaveActivity(activityId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/saved-activities/${activityId}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to unsave activity' };
+    }
+  },
+
   // Activity participation methods
   async getUserActivityHistory(params: {
     status?: 'completed' | 'upcoming';
