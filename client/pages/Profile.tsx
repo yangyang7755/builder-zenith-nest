@@ -55,6 +55,9 @@ export default function Profile() {
     isLoading: followLoading,
     refreshFollowData,
   } = useFollow();
+
+  // Guard against undefined followStats
+  const safeFollowStats = followStats || { followers: 0, following: 0 };
   const haptic = useHaptic();
 
   // For demo purposes, use Maddie Wei's user ID
