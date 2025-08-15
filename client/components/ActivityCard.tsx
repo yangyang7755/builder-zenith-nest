@@ -324,7 +324,7 @@ export default function ActivityCard({
               ? "Pending"
               : isParticipating
                 ? "Leave Activity"
-                : participationStats.is_full
+                : participationStats?.is_full
                   ? "Request to Join"
                   : "Join Activity"}
           </button>
