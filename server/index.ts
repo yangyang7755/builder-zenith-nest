@@ -1,199 +1,188 @@
-import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { handleDemo } from "./routes/demo";
-import {
-  handleGetActivities,
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+// Import route handlers
+import { 
+  handleGetClubs, 
+  handleGetClub, 
+  handleUpdateClub, 
+  handleJoinRequest, 
+  handleApproveRequest, 
+  handleDenyRequest,
+  handleCreateClub 
+} from "./routes/clubs";
+import { handleHealth } from "./routes/health";
+import { 
+  handleGetActivities, 
+  handleCreateActivity, 
   handleGetActivity,
-  handleCreateActivity,
-  handleUpdateActivity,
-  handleDeleteActivity,
   handleJoinActivity,
   handleLeaveActivity,
-  handleGetParticipants,
-  handleGetUserActivityHistory,
+  handleUpdateActivity,
+  handleDeleteActivity 
 } from "./routes/activities";
-import {
-  handleGetClubs,
-  handleGetClub,
-  handleUpdateClub,
-  handleJoinRequest,
-  handleApproveRequest,
-  handleDenyRequest,
-  handleCreateClub,
-} from "./routes/clubs";
-import {
-  handleGetProfile,
-  handleUpdateProfile,
-  handleGetUserClubs,
-  handleGetUserActivities,
-} from "./routes/auth";
-import {
-  handleUserRegistration,
-  handleUserLogin,
+import { 
+  handleGetReviews, 
+  handleCreateReview, 
+  handleUpdateReview, 
+  handleDeleteReview 
+} from "./routes/reviews";
+import { 
+  handleGetFollowers, 
+  handleGetFollowing, 
+  handleFollowUser, 
+  handleUnfollowUser, 
+  handleGetFollowStats 
+} from "./routes/followers";
+import { 
+  handleCreateUser, 
+  handleGetUser, 
+  handleUpdateUser,
   handleGetUserProfile,
   handleUpdateUserProfile,
-  handleGetUsers,
-  handleClubCreation,
-  handleGetUserClubs as handleGetUserClubsNew,
+  handleGetUserActivityHistory,
+  handleGetActivitiesNeedingReview 
 } from "./routes/users";
-import {
-  handleGetReviews,
-  handleCreateReview,
-  handleUpdateReview,
-  handleDeleteReview,
-} from "./routes/reviews";
-import {
-  handleGetFollowers,
-  handleGetFollowing,
-  handleFollowUser,
-  handleUnfollowUser,
-  handleGetFollowStats,
-} from "./routes/followers";
-import {
-  handleGetSavedActivities,
-  handleSaveActivity,
-  handleUnsaveActivity,
-  handleCheckActivitySaved,
-} from "./routes/saved_activities";
-import {
-  handleGetClubMessages,
-  handleGetDirectMessages,
-  handleSendClubMessage,
-  handleSendDirectMessage,
-  handleMarkMessagesRead,
-  handleGetClubOnlineUsers,
-} from "./routes/chat";
-import {
-  handleGetNotifications,
-  handleMarkNotificationRead,
-  handleMarkAllNotificationsRead,
-  handleGetUnreadCount,
-  handleDeleteNotification,
-  handleCreateNotification,
-} from "./routes/notifications";
-import uploadsRouter from "./routes/uploads";
-import healthRouter from "./routes/health";
-import {
-  handleCreateProfileFromOnboarding,
-  handleUpdateProfileFromOnboarding,
-} from "./routes/profile-onboarding";
-import { supabaseAdmin } from "./lib/supabase";
+import { handleFileUpload } from "./routes/uploads";
+import { handleNotifications, handleMarkNotificationRead } from "./routes/notifications";
 
-export function createServer() {
-  const app = express();
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  },
+});
 
-  // Middleware
-  app.use(cors());
-  app.use(express.json({ limit: '10mb' })); // Increase JSON body limit
-  app.use(express.urlencoded({ extended: true, limit: '10mb' })); // Increase URL-encoded body limit
+// Middleware
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true,
+}));
 
-  // Health check
-  app.get("/api/ping", (_req, res) => {
-    const ping = process.env.PING_MESSAGE ?? "ping";
-    res.json({ message: ping });
+// Health check
+app.get("/api/health", handleHealth);
+
+// Club routes
+app.get("/api/clubs", handleGetClubs);
+app.post("/api/clubs", handleCreateClub);
+app.get("/api/clubs/:id", handleGetClub);
+app.put("/api/clubs/:id", handleUpdateClub);
+app.post("/api/clubs/:id/join", handleJoinRequest);
+app.put("/api/clubs/:id/requests/:requestId/approve", handleApproveRequest);
+app.delete("/api/clubs/:id/requests/:requestId/deny", handleDenyRequest);
+
+// Activity routes
+app.get("/api/activities", handleGetActivities);
+app.post("/api/activities", handleCreateActivity);
+app.get("/api/activities/:id", handleGetActivity);
+app.put("/api/activities/:id", handleUpdateActivity);
+app.delete("/api/activities/:id", handleDeleteActivity);
+app.post("/api/activities/:id/join", handleJoinActivity);
+app.delete("/api/activities/:id/leave", handleLeaveActivity);
+
+// Review routes
+app.get("/api/reviews", handleGetReviews);
+app.post("/api/reviews", handleCreateReview);
+app.put("/api/reviews/:id", handleUpdateReview);
+app.delete("/api/reviews/:id", handleDeleteReview);
+
+// Follow routes
+app.get("/api/followers/:user_id", handleGetFollowers);
+app.get("/api/following/:user_id", handleGetFollowing);
+app.post("/api/follow", handleFollowUser);
+app.delete("/api/unfollow/:user_id", handleUnfollowUser);
+app.get("/api/follow-stats/:user_id", handleGetFollowStats);
+
+// User routes
+app.post("/api/users", handleCreateUser);
+app.get("/api/users/:id", handleGetUser);
+app.put("/api/users/:id", handleUpdateUser);
+app.get("/api/users/:id/profile", handleGetUserProfile);
+app.put("/api/users/profile", handleUpdateUserProfile);
+app.get("/api/user/activities", handleGetUserActivityHistory);
+app.get("/api/user/activities/pending-reviews", handleGetActivitiesNeedingReview);
+
+// Upload routes
+app.post("/api/upload", handleFileUpload);
+
+// Notification routes
+app.get("/api/notifications", handleNotifications);
+app.put("/api/notifications/:id/read", handleMarkNotificationRead);
+
+// Socket.IO for real-time features
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  // Join user-specific room for notifications
+  socket.on("join-user-room", (userId) => {
+    socket.join(`user-${userId}`);
+    console.log(`User ${userId} joined their room`);
   });
 
-  // Demo route
-  app.get("/api/demo", handleDemo);
-
-  // Debug route to test server functionality
-  app.post("/api/debug/profile", (req, res) => {
-    console.log("=== DEBUG PROFILE UPDATE ===");
-    console.log("Request body:", JSON.stringify(req.body, null, 2));
-    console.log("Request headers:", req.headers);
-    console.log("Supabase admin exists:", !!supabaseAdmin);
-    res.json({
-      success: true,
-      message: "Debug endpoint working",
-      receivedData: req.body,
-      hasSupabase: !!supabaseAdmin,
-    });
+  // Join activity-specific room for real-time updates
+  socket.on("join-activity-room", (activityId) => {
+    socket.join(`activity-${activityId}`);
+    console.log(`User joined activity room: ${activityId}`);
   });
 
-  // Activity routes
-  app.get("/api/activities", handleGetActivities);
-  app.post("/api/activities", handleCreateActivity);
-  app.get("/api/activities/:id", handleGetActivity);
-  app.put("/api/activities/:id", handleUpdateActivity);
-  app.delete("/api/activities/:id", handleDeleteActivity);
-  app.post("/api/activities/:id/join", handleJoinActivity);
-  app.delete("/api/activities/:id/leave", handleLeaveActivity);
-  app.get("/api/activities/:id/participants", handleGetParticipants);
-  app.get("/api/activities/user/history", handleGetUserActivityHistory);
+  // Handle real-time review submission
+  socket.on("review-submitted", (data) => {
+    // Broadcast to activity room
+    socket.to(`activity-${data.activityId}`).emit("new-review", data);
+    // Notify organizer
+    if (data.organizerId) {
+      socket.to(`user-${data.organizerId}`).emit("review-received", data);
+    }
+  });
 
-  // Saved Activities routes
-  app.get("/api/saved-activities", handleGetSavedActivities);
-  app.post("/api/saved-activities", handleSaveActivity);
-  app.delete("/api/saved-activities/:activityId", handleUnsaveActivity);
-  app.get("/api/saved-activities/check/:activityId", handleCheckActivitySaved);
+  // Handle real-time follow events
+  socket.on("user-followed", (data) => {
+    // Notify the followed user
+    socket.to(`user-${data.followedUserId}`).emit("new-follower", data);
+  });
 
-  // Club routes
-  app.get("/api/clubs", handleGetClubs);
-  app.post("/api/clubs", handleCreateClub);
-  app.get("/api/clubs/:id", handleGetClub);
-  app.put("/api/clubs/:id", handleUpdateClub);
-  app.post("/api/clubs/:id/join", handleJoinRequest);
-  app.post("/api/clubs/:id/requests/:requestId/approve", handleApproveRequest);
-  app.delete("/api/clubs/:id/requests/:requestId", handleDenyRequest);
+  // Handle real-time activity updates
+  socket.on("activity-joined", (data) => {
+    // Broadcast to activity room
+    socket.to(`activity-${data.activityId}`).emit("participant-joined", data);
+    // Notify organizer
+    if (data.organizerId) {
+      socket.to(`user-${data.organizerId}`).emit("activity-participant-joined", data);
+    }
+  });
 
-  // Auth/Profile routes
-  app.get("/api/profile", handleGetProfile);
-  app.put("/api/profile", handleUpdateProfile);
-  app.get("/api/user/clubs", handleGetUserClubs);
-  app.get("/api/user/activities", handleGetUserActivities);
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
 
-  // User Authentication routes
-  app.post("/api/users/register", handleUserRegistration);
-  app.post("/api/users/login", handleUserLogin);
-  app.get("/api/users/:userId/profile", handleGetUserProfile);
-  app.put("/api/users/:userId/profile", handleUpdateUserProfile);
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error("Server error:", err);
+  res.status(500).json({ 
+    error: "Internal server error",
+    message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong"
+  });
+});
 
-  // Onboarding-based Profile Creation routes
-  app.post("/api/profile/onboarding", handleCreateProfileFromOnboarding);
-  app.put("/api/profile/onboarding", handleUpdateProfileFromOnboarding);
+// 404 handler
+app.use((req: express.Request, res: express.Response) => {
+  res.status(404).json({ error: "Route not found" });
+});
 
-  // User Management routes
-  app.get("/api/users", handleGetUsers);
-  app.get("/api/users/:userId/clubs", handleGetUserClubsNew);
+const PORT = process.env.PORT || 3001;
 
-  // Enhanced Club Management
-  app.post("/api/clubs/create", handleClubCreation);
+httpServer.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📱 Client URL: ${process.env.CLIENT_URL || "http://localhost:5173"}`);
+  console.log(`🔗 API Base: http://localhost:${PORT}/api`);
+});
 
-  // Reviews routes
-  app.get("/api/reviews", handleGetReviews);
-  app.post("/api/reviews", handleCreateReview);
-  app.put("/api/reviews/:id", handleUpdateReview);
-  app.delete("/api/reviews/:id", handleDeleteReview);
-
-  // Followers routes
-  app.get("/api/users/:user_id/followers", handleGetFollowers);
-  app.get("/api/users/:user_id/following", handleGetFollowing);
-  app.get("/api/users/:user_id/follow-stats", handleGetFollowStats);
-  app.post("/api/follow", handleFollowUser);
-  app.delete("/api/follow/:user_id", handleUnfollowUser);
-
-  // Chat routes
-  app.get("/api/clubs/:club_id/messages", handleGetClubMessages);
-  app.post("/api/clubs/:club_id/messages", handleSendClubMessage);
-  app.get("/api/clubs/:club_id/online-users", handleGetClubOnlineUsers);
-  app.get("/api/messages/:other_user_id", handleGetDirectMessages);
-  app.post("/api/messages", handleSendDirectMessage);
-  app.post("/api/messages/mark-read", handleMarkMessagesRead);
-
-  // Notification routes
-  app.get("/api/notifications", handleGetNotifications);
-  app.get("/api/notifications/unread-count", handleGetUnreadCount);
-  app.post("/api/notifications/mark-read", handleMarkNotificationRead);
-  app.post("/api/notifications/mark-all-read", handleMarkAllNotificationsRead);
-  app.delete("/api/notifications/:notification_id", handleDeleteNotification);
-  app.post("/api/notifications/create", handleCreateNotification);
-
-  // Upload routes
-  app.use("/api/uploads", uploadsRouter);
-
-  // Health check routes
-  app.use("/api/health", healthRouter);
-
-  return app;
-}
+export { io };
