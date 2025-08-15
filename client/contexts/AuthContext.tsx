@@ -178,6 +178,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Create profile from onboarding data
+  const createProfileFromOnboardingData = async (onboardingProfile: UserProfile) => {
+    if (!user || !session?.access_token) {
+      throw new Error("User not authenticated");
+    }
+
+    try {
+      console.log("Creating profile from onboarding data for user:", user.email);
+
+      const result = await createProfileFromOnboarding(
+        onboardingProfile,
+        user.email || "",
+        session.access_token
+      );
+
+      if (result.success && result.profile) {
+        setProfile(result.profile);
+
+        // Persist updated profile to localStorage
+        localStorage.setItem("userProfile", JSON.stringify(result.profile));
+        console.log("Profile created and updated from onboarding data");
+      } else {
+        throw new Error(result.error || "Failed to create profile from onboarding");
+      }
+    } catch (error) {
+      console.error("Error creating profile from onboarding:", error);
+      throw error;
+    }
+  };
+
+  // Check if current profile was created from onboarding data
+  const hasOnboardingBasedProfile = () => {
+    if (!profile) return false;
+
+    // Check if profile has fields that would come from onboarding
+    return !!(
+      profile.age ||
+      profile.gender ||
+      profile.nationality ||
+      profile.occupation ||
+      (profile.sports && Array.isArray(profile.sports) && profile.sports.length > 0)
+    );
+  };
+
   useEffect(() => {
     let mounted = true;
 
