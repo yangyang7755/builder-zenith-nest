@@ -216,9 +216,25 @@ export const handleGetActivities = async (req: Request, res: Response) => {
       });
     }
 
+    // Add participant counts to activities
+    const activitiesWithCounts = await Promise.all(
+      (activities || []).map(async (activity) => {
+        const { data: participantCount } = await supabaseAdmin
+          .from("activity_participants")
+          .select("*", { count: 'exact' })
+          .eq("activity_id", activity.id)
+          .eq("status", "joined");
+
+        return {
+          ...activity,
+          current_participants: participantCount?.length || 0
+        };
+      })
+    );
+
     res.json({
       success: true,
-      data: activities || [],
+      data: activitiesWithCounts,
       pagination: {
         total: count || 0,
         limit,
@@ -307,6 +323,17 @@ export const handleGetActivity = async (req: Request, res: Response) => {
       `)
       .eq("id", id)
       .single();
+
+    // Add current participants count
+    if (activity) {
+      const { data: participantCount } = await supabaseAdmin
+        .from("activity_participants")
+        .select("*", { count: 'exact' })
+        .eq("activity_id", activity.id)
+        .eq("status", "joined");
+
+      activity.current_participants = participantCount?.length || 0;
+    }
 
     if (error) {
       console.error("Database error:", error);
