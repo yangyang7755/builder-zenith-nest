@@ -85,6 +85,7 @@ import { UserProfileProvider } from "./contexts/UserProfileContext";
 import { ActivityParticipationProvider } from "./contexts/ActivityParticipationContext";
 import { ClubMembershipProvider } from "./contexts/ClubMembershipContext";
 import ToastContainer from "./components/ToastNotification";
+import OnboardingProfileSync from "./components/OnboardingProfileSync";
 
 const queryClient = new QueryClient();
 
