@@ -153,21 +153,42 @@ export const handleCreateProfileFromOnboarding = async (req: Request, res: Respo
     };
 
     console.log("Profile data to create:", profileData);
+    console.log("Extended data to attempt:", extendedData);
 
-    // Create or update profile in database
-    const { data: profile, error: profileError } = await supabaseAdmin
+    // Try to create profile with extended fields first
+    let profile;
+    let finalProfileData = { ...profileData, ...extendedData };
+
+    const { data: extendedProfile, error: extendedError } = await supabaseAdmin
       .from("profiles")
-      .upsert(profileData)
+      .upsert(finalProfileData)
       .select("*")
       .single();
 
-    if (profileError) {
-      console.error("Profile creation error:", profileError);
-      return res.status(500).json({
-        success: false,
-        error: "Failed to create profile from onboarding data",
-        details: profileError.message,
-      });
+    if (extendedError) {
+      console.log("Extended profile creation failed, trying core fields only:", extendedError.message);
+
+      // Fall back to core fields only
+      const { data: coreProfile, error: coreError } = await supabaseAdmin
+        .from("profiles")
+        .upsert(profileData)
+        .select("*")
+        .single();
+
+      if (coreError) {
+        console.error("Core profile creation also failed:", coreError);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to create profile from onboarding data",
+          details: coreError.message,
+        });
+      }
+
+      profile = coreProfile;
+      console.log("Successfully created profile with core fields only");
+    } else {
+      profile = extendedProfile;
+      console.log("Successfully created profile with extended fields");
     }
 
     console.log("Profile created successfully:", profile);
