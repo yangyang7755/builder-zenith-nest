@@ -799,7 +799,8 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
     }
 
     // Check if activity is full
-    if (activity.max_participants && activity.current_participants >= activity.max_participants) {
+    const currentCount = activity.current_participants || 0;
+    if (activity.max_participants && currentCount >= activity.max_participants) {
       return res.status(400).json({
         success: false,
         error: "Activity is full"
