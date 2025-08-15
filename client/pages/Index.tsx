@@ -276,20 +276,28 @@ export default function Index() {
     // Apply comprehensive filters
     if (filters.activityType.length > 0) {
       const beforeTypeFilter = filtered.length;
+      console.log(`Starting type filter with ${beforeTypeFilter} activities. Filter types:`, filters.activityType);
+
       filtered = filtered.filter((activity) => {
+        // Check both activity.type and activity.activity_type for compatibility
+        const activityType = activity.type || activity.activity_type;
+        console.log(`Checking activity "${activity.title}" with type: "${activityType}"`);
+
         const matches = filters.activityType.some(
           (type) =>
-            activity.type === type.toLowerCase() ||
-            (type === "Cycling" && activity.type === "cycling") ||
-            (type === "Climbing" && activity.type === "climbing") ||
-            (type === "Running" && activity.type === "running") ||
-            (type === "Hiking" && activity.type === "hiking") ||
-            (type === "Skiing" && activity.type === "skiing") ||
-            (type === "Surfing" && activity.type === "surfing") ||
-            (type === "Tennis" && activity.type === "tennis"),
+            activityType === type.toLowerCase() ||
+            (type === "Cycling" && activityType === "cycling") ||
+            (type === "Climbing" && activityType === "climbing") ||
+            (type === "Running" && activityType === "running") ||
+            (type === "Hiking" && activityType === "hiking") ||
+            (type === "Skiing" && activityType === "skiing") ||
+            (type === "Surfing" && activityType === "surfing") ||
+            (type === "Tennis" && activityType === "tennis"),
         );
         if (!matches) {
-          console.log(`Activity "${activity.title}" (type: ${activity.type}) filtered out by type filter`);
+          console.log(`Activity "${activity.title}" (type: ${activityType}) filtered out by type filter. Available types:`, filters.activityType);
+        } else {
+          console.log(`Activity "${activity.title}" (type: ${activityType}) passed type filter`);
         }
         return matches;
       });
