@@ -170,10 +170,25 @@ export default function Profile() {
     reviews: 23,
   };
 
-  // Use real authenticated user profile data, or fall back to Maddie Wei demo profile
-  const displayProfile = profile
+  // Use real authenticated user profile data with onboarding enhancements, or fall back to demo profile
+  const displayProfile = profile || shouldUseOnboardingData
     ? {
-        ...profile,
+        // Start with backend profile or empty object
+        ...(profile || {}),
+        // Override with onboarding data if it should be used
+        ...(shouldUseOnboardingData ? {
+          full_name: onboardingProfile.name,
+          bio: onboardingProfile.bio || `${onboardingProfile.profession || "Outdoor enthusiast"} from ${onboardingProfile.country || "Unknown"}`,
+          age: onboardingProfile.birthday ? calculateAge(onboardingProfile.birthday) : null,
+          gender: onboardingProfile.gender,
+          nationality: onboardingProfile.country,
+          institution: !onboardingProfile.hideUniversity ? onboardingProfile.university : null,
+          occupation: onboardingProfile.profession,
+          location: onboardingProfile.location || onboardingProfile.country,
+          sports: onboardingProfile.sports || [],
+          languages: onboardingProfile.languages || [],
+        } : {}),
+        // Add stats
         followers: followStats?.followers || 0,
         following: followStats?.following || 0,
         rating: averageRating || userProfileData?.average_rating || 0,
