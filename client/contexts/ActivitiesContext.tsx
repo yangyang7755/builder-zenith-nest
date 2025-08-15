@@ -707,6 +707,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
   const addActivity = async (activityData: any): Promise<boolean> => {
     try {
       console.log("Creating activity with legacy data:", activityData);
+      console.log("Activity type from form:", activityData.type);
 
       // Validate required fields
       if (!activityData.title || !activityData.date || !activityData.time || !activityData.location) {
