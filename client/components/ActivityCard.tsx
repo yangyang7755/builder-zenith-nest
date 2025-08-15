@@ -315,7 +315,7 @@ export default function ActivityCard({
                 ? "native-button:disabled"
                 : isParticipating
                   ? "native-button-destructive"
-                  : participationStats.is_full
+                  : participationStats?.is_full
                     ? "native-button-secondary"
                     : ""
             }`}
