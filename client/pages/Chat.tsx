@@ -320,11 +320,13 @@ export default function Chat() {
                   {activeFilter === "Unread" &&
                     "All caught up! No unread messages."}
                   {activeFilter === "Clubs" &&
-                    "Join some clubs to see group chats here."}
+                    "Join some clubs from the explore page to see group chats here."}
                   {activeFilter === "Requests" &&
                     "No pending requests at the moment."}
                   {activeFilter === "Following" &&
-                    "No messages from people you follow."}
+                    "Follow other users to start conversations."}
+                  {activeFilter === "All" &&
+                    "Start by joining clubs or following other users to begin chatting!"}
                 </p>
               </div>
             )}
