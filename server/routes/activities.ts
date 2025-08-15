@@ -740,6 +740,17 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
       .eq("status", "upcoming")
       .single();
 
+    // Get current participant count separately
+    if (activity && !activityError) {
+      const { count: participantCount } = await supabaseAdmin
+        .from("activity_participants")
+        .select("*", { count: 'exact' })
+        .eq("activity_id", activity.id)
+        .eq("status", "joined");
+
+      activity.current_participants = participantCount || 0;
+    }
+
     if (activityError || !activity) {
       return res.status(404).json({
         success: false,
