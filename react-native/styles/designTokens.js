@@ -1,304 +1,179 @@
-// Unified design tokens for React Native
-// Mirrors client/styles/design-tokens.ts for consistency
-
 export const designTokens = {
-  // Colors - matching web version exactly
   colors: {
-    primary: "#1F381F", // dark explore-green
-    secondary: "#3B82F6", // blue
-    accent: "#F59E0B", // orange
-    purple: "#8B5CF6",
-    success: "#10B981",
-    warning: "#F59E0B", 
-    error: "#EF4444",
+    // Primary colors
+    primary: '#1F381F', // explore-green
+    primaryHover: '#16A34A',
+    primaryLight: '#86EFAC',
     
-    // Grays
+    // Secondary colors
+    secondary: '#F97316',
+    secondaryLight: '#FED7AA',
+    
+    // Neutral colors
+    white: '#FFFFFF',
+    black: '#000000',
     gray: {
-      50: "#F9FAFB",
-      100: "#F3F4F6", 
-      200: "#E5E7EB",
-      300: "#D1D5DB",
-      400: "#9CA3AF",
-      500: "#6B7280",
-      600: "#4B5563",
-      700: "#374151",
-      800: "#1F2937",
-      900: "#111827",
+      50: '#F9FAFB',
+      100: '#F3F4F6',
+      200: '#E5E7EB',
+      300: '#D1D5DB',
+      400: '#9CA3AF',
+      500: '#6B7280',
+      600: '#4B5563',
+      700: '#374151',
+      800: '#1F2937',
+      900: '#111827',
     },
     
-    white: "#FFFFFF",
-    black: "#000000",
+    // Status colors
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#3B82F6',
     
-    // Semantic colors
+    // Background colors
+    background: '#FFFFFF',
+    surface: '#F9FAFB',
+    card: '#FFFFFF',
+    
+    // Text colors
     text: {
-      primary: "#000000",
-      secondary: "#6B7280",
-      tertiary: "#9CA3AF",
-      accent: "#1F381F",
+      primary: '#000000',
+      secondary: '#6B7280',
+      light: '#9CA3AF',
+      inverse: '#FFFFFF',
     },
     
-    background: {
-      primary: "#FFFFFF",
-      secondary: "#F9FAFB",
-      tertiary: "#F3F4F6",
-      accent: "#F0FDF4",
-    },
-    
+    // Border colors
     border: {
-      light: "#F3F4F6",
-      medium: "#E5E7EB",
-      dark: "#D1D5DB",
-    }
+      light: '#E5E7EB',
+      medium: '#D1D5DB',
+      dark: '#9CA3AF',
+    },
+    
+    // Activity colors
+    activity: {
+      climbing: '#F97316',
+      cycling: '#3B82F6',
+      running: '#EF4444',
+      hiking: '#84CC16',
+      skiing: '#06B6D4',
+      surfing: '#8B5CF6',
+      tennis: '#EC4899',
+    },
   },
   
-  // Typography - React Native compatible
-  typography: {
-    h1: { fontSize: 32, fontWeight: "bold", lineHeight: 38 },
-    h2: { fontSize: 24, fontWeight: "bold", lineHeight: 30 },
-    h3: { fontSize: 20, fontWeight: "600", lineHeight: 28 },
-    h4: { fontSize: 18, fontWeight: "600", lineHeight: 25 },
-    body: { fontSize: 16, fontWeight: "normal", lineHeight: 24 },
-    bodySm: { fontSize: 14, fontWeight: "normal", lineHeight: 21 },
-    caption: { fontSize: 12, fontWeight: "normal", lineHeight: 18 },
-    button: { fontSize: 16, fontWeight: "500", lineHeight: 16 },
-    buttonSm: { fontSize: 14, fontWeight: "500", lineHeight: 14 },
-  },
-  
-  // Spacing - consistent spacing scale
   spacing: {
     xs: 4,
     sm: 8,
-    md: 16,
-    lg: 24,
-    xl: 32,
-    xxl: 48,
-    xxxl: 64,
+    md: 12,
+    lg: 16,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 32,
+    '4xl': 40,
+    '5xl': 48,
+    '6xl': 64,
   },
   
-  // Border radius
+  typography: {
+    fontSize: {
+      xs: 12,
+      sm: 14,
+      base: 16,
+      lg: 18,
+      xl: 20,
+      '2xl': 24,
+      '3xl': 28,
+      '4xl': 32,
+      '5xl': 36,
+      '6xl': 48,
+    },
+    fontWeight: {
+      light: '300',
+      normal: '400',
+      medium: '500',
+      semibold: '600',
+      bold: '700',
+      extrabold: '800',
+    },
+    lineHeight: {
+      tight: 1.2,
+      normal: 1.5,
+      relaxed: 1.75,
+    },
+  },
+  
   borderRadius: {
+    none: 0,
     sm: 4,
-    md: 8,
-    lg: 12,
-    xl: 16,
-    xxl: 24,
-    round: 9999,
+    md: 6,
+    lg: 8,
+    xl: 12,
+    '2xl': 16,
+    '3xl': 24,
+    full: 9999,
   },
   
-  // Component specific tokens
-  components: {
-    header: {
-      height: 64,
-      paddingX: 24,
-      paddingY: 16,
-    },
-    
-    tabBar: {
-      height: 70,
-      paddingX: 16,
-      paddingY: 8,
-    },
-    
-    card: {
-      padding: 16,
-      borderRadius: 8,
-      borderWidth: 1,
-    },
-    
-    button: {
-      paddingX: 16,
-      paddingY: 12,
-      borderRadius: 8,
-    },
-    
-    buttonSm: {
-      paddingX: 12,
-      paddingY: 8,
-      borderRadius: 6,
-    },
-    
-    input: {
-      paddingX: 16,
-      paddingY: 12,
-      borderRadius: 8,
-      borderWidth: 1,
-    },
-  },
-  
-  // Shadows for React Native
   shadows: {
     sm: {
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.05,
       shadowRadius: 2,
       elevation: 1,
     },
     md: {
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.1,
-      shadowRadius: 4,
+      shadowRadius: 6,
       elevation: 3,
     },
     lg: {
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 4 },
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 10 },
       shadowOpacity: 0.15,
-      shadowRadius: 8,
-      elevation: 6,
-    },
-    xl: {
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.2,
-      shadowRadius: 16,
-      elevation: 10,
+      shadowRadius: 15,
+      elevation: 5,
     },
   },
   
-  // Layout constants
   layout: {
-    screenPadding: 24,
-    sectionSpacing: 32,
-    cardSpacing: 16,
+    containerPadding: 16,
+    cardPadding: 16,
+    headerHeight: 56,
+    tabBarHeight: 70,
+    bottomNavHeight: 60,
+  },
+  
+  animation: {
+    duration: {
+      fast: 150,
+      normal: 300,
+      slow: 500,
+    },
+    easing: {
+      ease: 'ease',
+      easeIn: 'ease-in',
+      easeOut: 'ease-out',
+      easeInOut: 'ease-in-out',
+    },
+  },
+};
+
+// Helper functions for common styling patterns
+export const getActivityColor = (activityType) => {
+  return designTokens.colors.activity[activityType.toLowerCase()] || designTokens.colors.primary;
+};
+
+export const getShadowStyle = (level = 'md') => {
+  return designTokens.shadows[level] || designTokens.shadows.md;
+};
+
+export const getSpacing = (...values) => {
+  if (values.length === 1) {
+    return designTokens.spacing[values[0]] || values[0];
   }
-};
-
-// Helper functions for React Native styling
-export const getColor = (path) => {
-  const keys = path.split('.');
-  let result = designTokens.colors;
-  
-  for (const key of keys) {
-    result = result[key];
-    if (result === undefined) break;
-  }
-  
-  return result || path;
-};
-
-export const getSpacing = (size) => {
-  return designTokens.spacing[size] || 0;
-};
-
-export const getTypography = (variant) => {
-  return designTokens.typography[variant] || designTokens.typography.body;
-};
-
-export const getShadow = (variant) => {
-  return designTokens.shadows[variant] || {};
-};
-
-// Pre-built style objects for common patterns
-export const commonStyles = {
-  // Container styles
-  container: {
-    flex: 1,
-    backgroundColor: designTokens.colors.background.primary,
-  },
-  
-  screenContainer: {
-    flex: 1,
-    backgroundColor: designTokens.colors.background.primary,
-    paddingHorizontal: designTokens.layout.screenPadding,
-  },
-  
-  // Header styles
-  header: {
-    height: designTokens.components.header.height,
-    paddingHorizontal: designTokens.components.header.paddingX,
-    paddingVertical: designTokens.components.header.paddingY,
-    backgroundColor: designTokens.colors.background.primary,
-    borderBottomWidth: 1,
-    borderBottomColor: designTokens.colors.border.light,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  
-  headerTitle: {
-    ...designTokens.typography.h3,
-    color: designTokens.colors.text.primary,
-  },
-  
-  headerSubtitle: {
-    ...designTokens.typography.bodySm,
-    color: designTokens.colors.text.secondary,
-  },
-  
-  // Button styles
-  buttonPrimary: {
-    paddingHorizontal: designTokens.components.button.paddingX,
-    paddingVertical: designTokens.components.button.paddingY,
-    backgroundColor: designTokens.colors.primary,
-    borderRadius: designTokens.components.button.borderRadius,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...designTokens.shadows.sm,
-  },
-  
-  buttonPrimaryText: {
-    ...designTokens.typography.button,
-    color: designTokens.colors.white,
-  },
-  
-  buttonSecondary: {
-    paddingHorizontal: designTokens.components.button.paddingX,
-    paddingVertical: designTokens.components.button.paddingY,
-    backgroundColor: designTokens.colors.background.tertiary,
-    borderRadius: designTokens.components.button.borderRadius,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  
-  buttonSecondaryText: {
-    ...designTokens.typography.button,
-    color: designTokens.colors.text.primary,
-  },
-  
-  // Card styles
-  card: {
-    backgroundColor: designTokens.colors.background.primary,
-    borderRadius: designTokens.components.card.borderRadius,
-    borderWidth: designTokens.components.card.borderWidth,
-    borderColor: designTokens.colors.border.medium,
-    padding: designTokens.components.card.padding,
-    marginBottom: designTokens.layout.cardSpacing,
-    ...designTokens.shadows.sm,
-  },
-  
-  // Input styles
-  input: {
-    paddingHorizontal: designTokens.components.input.paddingX,
-    paddingVertical: designTokens.components.input.paddingY,
-    borderWidth: designTokens.components.input.borderWidth,
-    borderColor: designTokens.colors.border.medium,
-    borderRadius: designTokens.components.input.borderRadius,
-    backgroundColor: designTokens.colors.background.primary,
-    ...designTokens.typography.body,
-    color: designTokens.colors.text.primary,
-  },
-  
-  inputFocused: {
-    borderColor: designTokens.colors.primary,
-    borderWidth: 2,
-  },
-  
-  // Text styles
-  textPrimary: {
-    ...designTokens.typography.body,
-    color: designTokens.colors.text.primary,
-  },
-  
-  textSecondary: {
-    ...designTokens.typography.bodySm,
-    color: designTokens.colors.text.secondary,
-  },
-  
-  textAccent: {
-    ...designTokens.typography.body,
-    color: designTokens.colors.text.accent,
-    fontWeight: '500',
-  },
+  return values.map(value => designTokens.spacing[value] || value);
 };
