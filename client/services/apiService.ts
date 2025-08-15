@@ -316,10 +316,13 @@ class ApiService {
   }
 
   async createActivity(activity: any) {
-    return this.request<any>("/activities", {
+    console.log("API: Creating activity with data:", activity);
+    const result = await this.request<any>("/activities", {
       method: "POST",
       body: JSON.stringify(activity),
     });
+    console.log("API: Create activity result:", result);
+    return result;
   }
 
   async updateActivity(id: string, updates: any) {
