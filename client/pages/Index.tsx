@@ -262,6 +262,8 @@ export default function Index() {
   };
 
   useEffect(() => {
+    console.log("Filtering activities. Total activities:", activities.length);
+    console.log("Current filters:", filters);
     let filtered = activities;
 
     if (searchQuery.trim()) {
@@ -273,8 +275,9 @@ export default function Index() {
 
     // Apply comprehensive filters
     if (filters.activityType.length > 0) {
-      filtered = filtered.filter((activity) =>
-        filters.activityType.some(
+      const beforeTypeFilter = filtered.length;
+      filtered = filtered.filter((activity) => {
+        const matches = filters.activityType.some(
           (type) =>
             activity.type === type.toLowerCase() ||
             (type === "Cycling" && activity.type === "cycling") ||
@@ -284,8 +287,13 @@ export default function Index() {
             (type === "Skiing" && activity.type === "skiing") ||
             (type === "Surfing" && activity.type === "surfing") ||
             (type === "Tennis" && activity.type === "tennis"),
-        ),
-      );
+        );
+        if (!matches) {
+          console.log(`Activity "${activity.title}" (type: ${activity.type}) filtered out by type filter`);
+        }
+        return matches;
+      });
+      console.log(`Type filter: ${beforeTypeFilter} -> ${filtered.length} activities`);
     }
 
     // Filter by date range
@@ -575,7 +583,7 @@ export default function Index() {
               age={26}
               climbingLevel="6a-6c Sport"
               date="📅 Weekend mornings"
-              location="📍 VauxWall East"
+              location="��� VauxWall East"
               description="Keen sport climber seeking a reliable partner for weekend sessions. Planning outdoor trips to Portland and Peak District."
               availability="Saturdays 9am-1pm"
               experience="3 years indoor, outdoor certified"
