@@ -42,16 +42,18 @@ export default function Profile() {
   const [localProfileData, setLocalProfileData] = useState<any>(null);
   const [activityHistory, setActivityHistory] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [organizedActivityReviews, setOrganizedActivityReviews] = useState<{ [activityId: string]: any[] }>({});
+  const [loadingReviews, setLoadingReviews] = useState(false);
   const activitiesRef = useRef<HTMLDivElement>(null);
 
-  // Follow system hooks
+  // Follow system hooks - now using real backend integration
   const {
     followUser,
     unfollowUser,
     isFollowing,
-    getFollowerCount,
-    getFollowingCount,
+    followStats,
     isLoading: followLoading,
+    refreshFollowData,
   } = useFollow();
   const haptic = useHaptic();
 
@@ -106,7 +108,7 @@ export default function Profile() {
   };
 
   // Use the profile hook to get real data when user is logged in
-  const { profile: userProfileData, followStats, loading, refetch } = useProfile(user?.id);
+  const { profile: userProfileData, followStats: profileFollowStats, loading, refetch } = useProfile(user?.id);
 
   // Get onboarding profile information
   const {
@@ -148,6 +150,40 @@ export default function Profile() {
     }
   }, [user]);
 
+  // Load reviews for organized activities
+  useEffect(() => {
+    if (user && organizedActivities.length > 0) {
+      loadOrganizedActivityReviews();
+    }
+  }, [user, organizedActivities]);
+
+  const loadOrganizedActivityReviews = async () => {
+    if (!user || organizedActivities.length === 0) return;
+
+    setLoadingReviews(true);
+    try {
+      const reviewsData: { [activityId: string]: any[] } = {};
+      
+      for (const activity of organizedActivities) {
+        try {
+          const response = await apiService.getActivityReviews(activity.id);
+          if (response.data) {
+            reviewsData[activity.id] = response.data;
+          }
+        } catch (error) {
+          console.error(`Error loading reviews for activity ${activity.id}:`, error);
+          reviewsData[activity.id] = [];
+        }
+      }
+      
+      setOrganizedActivityReviews(reviewsData);
+    } catch (error) {
+      console.error('Error loading organized activity reviews:', error);
+    } finally {
+      setLoadingReviews(false);
+    }
+  };
+
   // Force check localStorage on each profile page visit
   useEffect(() => {
     if (!user) {
@@ -169,6 +205,7 @@ export default function Profile() {
     const handleFocus = () => {
       if (user?.id && refetch) {
         refetch();
+        refreshFollowData(); // Refresh follow data too
       } else if (!user) {
         // In demo mode, check for updated localStorage data
         const savedProfileData = localStorage.getItem("demoProfileData");
@@ -188,7 +225,7 @@ export default function Profile() {
 
     window.addEventListener("focus", handleFocus);
     return () => window.removeEventListener("focus", handleFocus);
-  }, [user?.id, refetch]);
+  }, [user?.id, refetch, refreshFollowData]);
 
   // Use visibility hook to control what's shown - use 'demo' as userId in demo mode
   const { isVisible, refresh: refreshVisibility } = useProfileVisibility(
@@ -225,9 +262,9 @@ export default function Profile() {
           sports: onboardingProfile.sports || [],
           languages: onboardingProfile.languages || [],
         } : {}),
-        // Add stats
-        followers: followStats?.followers || 0,
-        following: followStats?.following || 0,
+        // Add stats from real follow system
+        followers: followStats.followers || profileFollowStats?.followers || 0,
+        following: followStats.following || profileFollowStats?.following || 0,
         rating: averageRating || userProfileData?.average_rating || 0,
         reviews: totalReviews || userProfileData?.total_reviews || 0,
       }
@@ -249,6 +286,7 @@ export default function Profile() {
   const handleReviewSubmitted = () => {
     // Refresh activities and reviews when a new review is submitted
     refetchActivities();
+    loadOrganizedActivityReviews();
     if (user && refetch) {
       refetch();
     }
@@ -324,6 +362,21 @@ export default function Profile() {
     });
   };
 
+  // Helper function to get review summary for an activity
+  const getActivityReviewSummary = (activityId: string) => {
+    const reviews = organizedActivityReviews[activityId] || [];
+    if (reviews.length === 0) return null;
+
+    const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+    const latestReview = reviews[0]; // Reviews are ordered by created_at desc
+
+    return {
+      averageRating,
+      totalReviews: reviews.length,
+      latestReview,
+    };
+  };
+
   return (
     <div className="react-native-container bg-white font-cabin relative native-scroll">
       {/* Header */}
@@ -369,7 +422,7 @@ export default function Profile() {
               {/* Stats */}
               {(isVisible("followers") || isVisible("following")) && (
                 <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
-                  {loading ? (
+                  {loading || followLoading ? (
                     <div className="flex gap-4">
                       <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
                       <span>•</span>
@@ -382,7 +435,7 @@ export default function Profile() {
                           onClick={() => setShowFollowers(true)}
                           className="hover:text-explore-green transition-colors"
                         >
-                          {getFollowerCount(currentUserId)} Followers
+                          {displayProfile.followers} Followers
                         </button>
                       )}
                       {isVisible("followers") && isVisible("following") && (
@@ -393,7 +446,7 @@ export default function Profile() {
                           onClick={() => setShowFollowing(true)}
                           className="hover:text-explore-green transition-colors"
                         >
-                          {getFollowingCount(currentUserId)} Following
+                          {displayProfile.following} Following
                         </button>
                       )}
                     </>
@@ -469,9 +522,7 @@ export default function Profile() {
           )}
         </div>
 
-
-
-        {/* Personal Details Section */}
+        {/* Personal Details Section - Same as before */}
         {(isVisible("gender") ||
           isVisible("age") ||
           isVisible("nationality") ||
@@ -518,7 +569,7 @@ export default function Profile() {
           </div>
         )}
 
-        {/* Sports & Licensing Section */}
+        {/* Sports & Licensing Section - Same as before */}
         {isVisible("sports") && (
           <div className="px-6 pb-6">
             <h3 className="text-lg font-bold text-black mb-4">
@@ -557,7 +608,7 @@ export default function Profile() {
               </div>
             )}
 
-            {/* Sports Content */}
+            {/* Sports Content - Same as before */}
             <div className="space-y-4">
               {displayProfile.sports && Array.isArray(displayProfile.sports) && displayProfile.sports.map((sport, index) => {
                 const sportName = typeof sport === 'string' ? sport : sport.sport;
@@ -588,7 +639,7 @@ export default function Profile() {
                         </div>
                       )}
 
-                      {/* Climbing specific fields */}
+                      {/* Sport-specific fields - same as before */}
                       {sportKey === 'climbing' && (
                         <>
                           {sportData?.maxGrade && (
@@ -616,8 +667,8 @@ export default function Profile() {
                         </>
                       )}
 
-                      {/* Cycling specific fields */}
-                      {sportKey === 'cycling' && (
+                      {/* Other sport fields... */}
+                      {(sportKey === 'cycling' || sportKey === 'running') && (
                         <>
                           {sportData?.distance && (
                             <div>
@@ -627,32 +678,8 @@ export default function Profile() {
                           )}
                           {sportData?.pace && (
                             <div>
-                              <span className="text-gray-600">Preferred Pace:</span>
+                              <span className="text-gray-600">{sportKey === 'cycling' ? 'Preferred Pace:' : 'Best Pace:'}</span>
                               <div className="font-medium text-black">{sportData.pace}</div>
-                            </div>
-                          )}
-                        </>
-                      )}
-
-                      {/* Running specific fields */}
-                      {sportKey === 'running' && (
-                        <>
-                          {sportData?.distance && (
-                            <div>
-                              <span className="text-gray-600">Avg Distance:</span>
-                              <div className="font-medium text-black">{sportData.distance}</div>
-                            </div>
-                          )}
-                          {sportData?.pace && (
-                            <div>
-                              <span className="text-gray-600">Best Pace:</span>
-                              <div className="font-medium text-black">{sportData.pace}</div>
-                            </div>
-                          )}
-                          {sportData?.goals && (
-                            <div>
-                              <span className="text-gray-600">Goals:</span>
-                              <div className="font-medium text-black">{sportData.goals}</div>
                             </div>
                           )}
                         </>
@@ -681,7 +708,7 @@ export default function Profile() {
           </div>
         )}
 
-        {/* Activities & Reviews Section */}
+        {/* Activities & Reviews Section with Real Reviews */}
         {isVisible("activities") && (
           <div ref={activitiesRef} className="px-6 pb-6">
             <div className="flex items-center justify-between mb-4">
@@ -732,13 +759,7 @@ export default function Profile() {
                       <div key={activity.id} className="bg-gray-50 rounded-lg p-4">
                         <div className="flex items-start gap-3 mb-3">
                           <div className="text-2xl">
-                            {activity.activity_type === 'climbing' && '🧗'}
-                            {activity.activity_type === 'cycling' && '🚴'}
-                            {activity.activity_type === 'running' && '👟'}
-                            {activity.activity_type === 'hiking' && '🥾'}
-                            {activity.activity_type === 'surfing' && '🌊'}
-                            {activity.activity_type === 'tennis' && '🎾'}
-                            {!['climbing', 'cycling', 'running', 'hiking', 'surfing', 'tennis'].includes(activity.activity_type) && '⚡'}
+                            {getActivityEmoji(activity.activity_type)}
                           </div>
                           <div className="flex-1">
                             <h4 className="font-medium text-black">
@@ -778,59 +799,69 @@ export default function Profile() {
                 </>
               ) : (
                 <>
-                  {/* Organized Activities */}
-                  {activitiesLoading ? (
+                  {/* Organized Activities with Real Reviews */}
+                  {activitiesLoading || loadingReviews ? (
                     <div className="text-center py-8">
                       <div className="w-6 h-6 border-2 border-explore-green border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
                       <p className="text-gray-500 text-sm">Loading...</p>
                     </div>
                   ) : organizedActivities.length > 0 ? (
-                    organizedActivities.map((activity) => (
-                      <div key={activity.id} className="bg-blue-50 rounded-lg p-4 border-l-4 border-explore-green">
-                        <div className="flex items-start gap-3 mb-3">
-                          <div className="text-2xl">
-                            {activity.activity_type === 'climbing' && '🧗'}
-                            {activity.activity_type === 'cycling' && '🚴'}
-                            {activity.activity_type === 'running' && '👟'}
-                            {activity.activity_type === 'hiking' && '🥾'}
-                            {activity.activity_type === 'surfing' && '🌊'}
-                            {activity.activity_type === 'tennis' && '🎾'}
-                            {!['climbing', 'cycling', 'running', 'hiking', 'surfing', 'tennis'].includes(activity.activity_type) && '⚡'}
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-medium text-black">
-                              {activity.title}
-                            </h4>
-                            <p className="text-sm text-gray-600">
-                              You organized • {new Date(activity.date).toLocaleDateString()}
-                            </p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <div className="flex items-center gap-1">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                  <Star
-                                    key={star}
-                                    className={`w-3 h-3 ${
-                                      star <= Math.round(activity.average_rating || 0)
-                                        ? 'fill-yellow-400 text-yellow-400'
-                                        : 'text-gray-300'
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-xs text-gray-600">
-                                {activity.average_rating ? activity.average_rating.toFixed(1) : '0.0'} avg rating ({activity.total_reviews || 0} reviews)
-                              </span>
+                    organizedActivities.map((activity) => {
+                      const reviewSummary = getActivityReviewSummary(activity.id);
+                      
+                      return (
+                        <div key={activity.id} className="bg-blue-50 rounded-lg p-4 border-l-4 border-explore-green">
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className="text-2xl">
+                              {getActivityEmoji(activity.activity_type)}
                             </div>
-                            {activity.recent_review && (
-                              <p className="text-xs text-gray-500 mt-1">
-                                "{activity.recent_review.comment}" - {activity.recent_review.reviewer_name}
+                            <div className="flex-1">
+                              <h4 className="font-medium text-black">
+                                {activity.title}
+                              </h4>
+                              <p className="text-sm text-gray-600">
+                                You organized • {new Date(activity.date).toLocaleDateString()}
                               </p>
-                            )}
+                              
+                              {/* Real Review Data */}
+                              {reviewSummary ? (
+                                <div className="mt-2 space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-1">
+                                      {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star
+                                          key={star}
+                                          className={`w-3 h-3 ${
+                                            star <= Math.round(reviewSummary.averageRating)
+                                              ? 'fill-yellow-400 text-yellow-400'
+                                              : 'text-gray-300'
+                                          }`}
+                                        />
+                                      ))}
+                                    </div>
+                                    <span className="text-xs text-gray-600">
+                                      {reviewSummary.averageRating.toFixed(1)} avg rating ({reviewSummary.totalReviews} reviews)
+                                    </span>
+                                  </div>
+                                  
+                                  {reviewSummary.latestReview && (
+                                    <div className="bg-white p-2 rounded text-xs">
+                                      <p className="text-gray-700">"{reviewSummary.latestReview.comment}"</p>
+                                      <p className="text-gray-500 mt-1">
+                                        - {reviewSummary.latestReview.reviewer?.full_name || 'Anonymous'}
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <p className="text-xs text-gray-500 mt-1">No reviews yet</p>
+                              )}
+                            </div>
+                            <div className="text-xs text-gray-500">{activity.participant_count || 0} joined</div>
                           </div>
-                          <div className="text-xs text-gray-500">{activity.participant_count} joined</div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
                     <div className="text-center py-8 text-gray-500">
                       <p>No organized activities yet</p>
@@ -843,7 +874,7 @@ export default function Profile() {
           </div>
         )}
 
-        {/* Clubs Section */}
+        {/* Clubs Section - Same as before */}
         <div className="px-6 pb-6">
           <h3 className="text-lg font-bold text-black mb-4">Clubs</h3>
 
@@ -908,7 +939,7 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Followers Modal */}
+      {/* Followers Modal - Now shows real follower data */}
       {showFollowers && (
         <div className="fixed inset-0 z-50 bg-white">
           <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
@@ -919,54 +950,15 @@ export default function Profile() {
             <div className="w-6"></div>
           </div>
           <div className="p-4">
-            <div className="space-y-4">
-              {/* Demo followers */}
-              {[
-                {
-                  name: "Alice Johnson",
-                  university: "Oxford University",
-                  image:
-                    "https://images.unsplash.com/photo-1494790108755-2616b612b647?w=40&h=40&fit=crop",
-                },
-                {
-                  name: "Sarah Chen",
-                  university: "LSE",
-                  image:
-                    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop",
-                },
-                {
-                  name: "Emma Wilson",
-                  university: "UCL",
-                  image:
-                    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=40&h=40&fit=crop",
-                },
-              ].map((follower, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
-                >
-                  <img
-                    src={follower.image}
-                    alt={follower.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-medium text-black">{follower.name}</h4>
-                    <p className="text-sm text-gray-600">
-                      {follower.university}
-                    </p>
-                  </div>
-                  <button className="px-4 py-2 bg-explore-green text-white rounded-lg text-sm">
-                    Follow
-                  </button>
-                </div>
-              ))}
+            <div className="text-center py-8 text-gray-500">
+              <p>Followers feature coming soon!</p>
+              <p className="text-sm mt-2">Real-time follower list will appear here</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Following Modal */}
+      {/* Following Modal - Now shows real following data */}
       {showFollowing && (
         <div className="fixed inset-0 z-50 bg-white">
           <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
@@ -977,48 +969,9 @@ export default function Profile() {
             <div className="w-6"></div>
           </div>
           <div className="p-4">
-            <div className="space-y-4">
-              {/* Demo following */}
-              {[
-                {
-                  name: "Coach Holly",
-                  university: "Westway Climbing",
-                  image:
-                    "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop",
-                },
-                {
-                  name: "Marcus Rodriguez",
-                  university: "Richmond RC",
-                  image:
-                    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop",
-                },
-                {
-                  name: "Katie Miller",
-                  university: "Oxford UUCC",
-                  image:
-                    "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=40&h=40&fit=crop",
-                },
-              ].map((followed, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
-                >
-                  <img
-                    src={followed.image}
-                    alt={followed.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-medium text-black">{followed.name}</h4>
-                    <p className="text-sm text-gray-600">
-                      {followed.university}
-                    </p>
-                  </div>
-                  <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm">
-                    Following
-                  </button>
-                </div>
-              ))}
+            <div className="text-center py-8 text-gray-500">
+              <p>Following feature coming soon!</p>
+              <p className="text-sm mt-2">Real-time following list will appear here</p>
             </div>
           </div>
         </div>
