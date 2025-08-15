@@ -11,14 +11,12 @@ import ActivitiesScreen from "./screens/ActivitiesScreen";
 import CreateScreen from "./screens/CreateScreen";
 import ChatScreen from "./screens/ChatScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import CategoryActivities from "./components/CategoryActivities";
 import ActivityDetailScreen from "./screens/ActivityDetailScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
-// Import contexts (these would need to be converted)
+// Import contexts
 import { AuthProvider } from "./contexts/AuthContext";
 import { ActivitiesProvider } from "./contexts/ActivitiesContext";
-import { UserProfileProvider } from "./contexts/UserProfileContext";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -76,7 +74,6 @@ function AppStack() {
       }}
     >
       <Stack.Screen name="Main" component={TabNavigator} />
-      <Stack.Screen name="CategoryActivities" component={CategoryActivities} />
       <Stack.Screen name="ActivityDetail" component={ActivityDetailScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
@@ -87,11 +84,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthProvider>
-        <UserProfileProvider>
-          <ActivitiesProvider>
-            <AppStack />
-          </ActivitiesProvider>
-        </UserProfileProvider>
+        <ActivitiesProvider>
+          <AppStack />
+        </ActivitiesProvider>
       </AuthProvider>
     </NavigationContainer>
   );
