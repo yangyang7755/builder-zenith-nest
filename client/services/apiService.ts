@@ -86,6 +86,21 @@ export const apiService = {
     }
   },
 
+  async getReviews(params: { user_id?: string; activity_id?: string } = {}): Promise<ApiResponse<any[]>> {
+    try {
+      const queryParams = new URLSearchParams();
+      if (params.user_id) queryParams.append('user_id', params.user_id);
+      if (params.activity_id) queryParams.append('activity_id', params.activity_id);
+
+      const response = await fetch(`${API_BASE_URL}/reviews?${queryParams}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch reviews' };
+    }
+  },
+
   // Followers/Following API methods
   async getUserFollowers(userId: string): Promise<ApiResponse<any[]>> {
     try {
