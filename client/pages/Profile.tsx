@@ -777,7 +777,12 @@ export default function Profile() {
               ) : (
                 <>
                   {/* Organized Activities */}
-                  {organizedActivities.length > 0 ? (
+                  {activitiesLoading ? (
+                    <div className="text-center py-8">
+                      <div className="w-6 h-6 border-2 border-explore-green border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                      <p className="text-gray-500 text-sm">Loading...</p>
+                    </div>
+                  ) : organizedActivities.length > 0 ? (
                     organizedActivities.map((activity) => (
                       <div key={activity.id} className="bg-blue-50 rounded-lg p-4 border-l-4 border-explore-green">
                         <div className="flex items-start gap-3 mb-3">
