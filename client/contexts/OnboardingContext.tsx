@@ -139,15 +139,49 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(ONBOARDING_STORAGE_KEY, JSON.stringify(onboardingData));
   };
 
-  const completeOnboarding = () => {
+  const completeOnboarding = async () => {
     setIsOnboardingComplete(true);
     setShowWelcomeMessage(true);
-    
+
     const onboardingData = {
       isComplete: true,
       profile: userProfile,
     };
     localStorage.setItem(ONBOARDING_STORAGE_KEY, JSON.stringify(onboardingData));
+
+    // Try to create backend profile if we have meaningful onboarding data
+    try {
+      // Import here to avoid circular dependency
+      const { createProfileFromOnboarding, hasOnboardingData } = await import("../services/onboardingService");
+
+      if (hasOnboardingData(userProfile)) {
+        console.log("Onboarding completed with meaningful data, attempting to create backend profile");
+
+        // Get current auth token if available
+        const { supabase } = await import("../lib/supabase");
+        let authToken = "";
+
+        if (supabase) {
+          const { data: { session } } = await supabase.auth.getSession();
+          authToken = session?.access_token || "";
+        }
+
+        // Get user email from auth or use a placeholder
+        let userEmail = "user@example.com";
+        if (supabase) {
+          const { data: { user } } = await supabase.auth.getUser();
+          userEmail = user?.email || userEmail;
+        }
+
+        await createProfileFromOnboarding(userProfile, userEmail, authToken);
+        console.log("Backend profile created successfully from onboarding data");
+      } else {
+        console.log("Onboarding completed but insufficient data for backend profile creation");
+      }
+    } catch (error) {
+      console.error("Failed to create backend profile from onboarding:", error);
+      // Don't fail the onboarding completion if backend profile creation fails
+    }
   };
 
   const resetOnboarding = () => {
