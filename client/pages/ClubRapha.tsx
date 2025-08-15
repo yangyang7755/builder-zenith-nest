@@ -61,7 +61,7 @@ export default function ClubRapha() {
         <div className="text-center mb-6">
           <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=96&h=96&fit=crop"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F88bca9c7cd744a57bb7cf584dcc74c21?format=webp&width=800"
               alt="Rapha Cycling Club London"
               className="w-full h-full object-cover"
             />
