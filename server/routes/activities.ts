@@ -156,8 +156,7 @@ export const handleGetActivities = async (req: Request, res: Response) => {
           id,
           name,
           profile_image
-        ),
-        current_participants:activity_participants(count)
+        )
       `)
       .order("date_time", { ascending: true });
 
