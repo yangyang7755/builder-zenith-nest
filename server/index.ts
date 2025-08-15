@@ -4,14 +4,14 @@ import { createServer as createHttpServer } from "http";
 import { Server } from "socket.io";
 
 // Import route handlers
-import {
-  handleGetClubs,
-  handleGetClub,
-  handleUpdateClub,
-  handleJoinRequest,
-  handleApproveRequest,
+import { 
+  handleGetClubs, 
+  handleGetClub, 
+  handleUpdateClub, 
+  handleJoinRequest, 
+  handleApproveRequest, 
   handleDenyRequest,
-  handleCreateClub,
+  handleCreateClub 
 } from "./routes/clubs";
 import healthRouter from "./routes/health";
 import {
@@ -21,20 +21,20 @@ import {
   handleJoinActivity,
   handleLeaveActivity,
   handleUpdateActivity,
-  handleDeleteActivity,
+  handleDeleteActivity
 } from "./routes/activities";
 import {
   handleGetReviews,
   handleCreateReview,
   handleUpdateReview,
-  handleDeleteReview,
+  handleDeleteReview
 } from "./routes/reviews";
 import {
   handleGetFollowers,
   handleGetFollowing,
   handleFollowUser,
   handleUnfollowUser,
-  handleGetFollowStats,
+  handleGetFollowStats
 } from "./routes/followers";
 import {
   handleCreateUser,
@@ -43,18 +43,18 @@ import {
   handleGetUserProfile,
   handleUpdateUserProfile,
   handleGetUserActivityHistory,
-  handleGetActivitiesNeedingReview,
+  handleGetActivitiesNeedingReview
 } from "./routes/users";
 import uploadsRouter from "./routes/uploads";
 import {
   handleGetNotifications,
-  handleMarkNotificationRead,
+  handleMarkNotificationRead
 } from "./routes/notifications";
 import {
   handleGetSavedActivities,
   handleSaveActivity,
   handleUnsaveActivity,
-  handleCheckActivitySaved,
+  handleCheckActivitySaved
 } from "./routes/saved_activities";
 
 const app = express();
@@ -70,12 +70,10 @@ const io = new Server(httpServer, {
 // Middleware
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-  }),
-);
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true,
+}));
 
 // Health check
 app.use("/api/health", healthRouter);
@@ -118,10 +116,7 @@ app.put("/api/users/:id", handleUpdateUser);
 app.get("/api/users/:id/profile", handleGetUserProfile);
 app.put("/api/users/profile", handleUpdateUserProfile);
 app.get("/api/user/activities", handleGetUserActivityHistory);
-app.get(
-  "/api/user/activities/pending-reviews",
-  handleGetActivitiesNeedingReview,
-);
+app.get("/api/user/activities/pending-reviews", handleGetActivitiesNeedingReview);
 
 // Upload routes
 app.use("/api/uploads", uploadsRouter);
@@ -174,9 +169,7 @@ io.on("connection", (socket) => {
     socket.to(`activity-${data.activityId}`).emit("participant-joined", data);
     // Notify organizer
     if (data.organizerId) {
-      socket
-        .to(`user-${data.organizerId}`)
-        .emit("activity-participant-joined", data);
+      socket.to(`user-${data.organizerId}`).emit("activity-participant-joined", data);
     }
   });
 
@@ -186,23 +179,13 @@ io.on("connection", (socket) => {
 });
 
 // Error handling middleware
-app.use(
-  (
-    err: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
-  ) => {
-    console.error("Server error:", err);
-    res.status(500).json({
-      error: "Internal server error",
-      message:
-        process.env.NODE_ENV === "development"
-          ? err.message
-          : "Something went wrong",
-    });
-  },
-);
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error("Server error:", err);
+  res.status(500).json({ 
+    error: "Internal server error",
+    message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong"
+  });
+});
 
 // 404 handler
 app.use((req: express.Request, res: express.Response) => {
@@ -215,18 +198,6 @@ export const createExpressApp = () => {
   return app;
 };
 
-// Only start server if this file is run directly (not imported)
-if (
-  process.env.NODE_ENV !== "test" &&
-  import.meta.url.endsWith("server/index.ts")
-) {
-  httpServer.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(
-      `📱 Client URL: ${process.env.CLIENT_URL || "http://localhost:5173"}`,
-    );
-    console.log(`🔗 API Base: http://localhost:${PORT}/api`);
-  });
-}
+// Note: Server is started by server/server.ts, not here
 
 export { io, app, httpServer };
