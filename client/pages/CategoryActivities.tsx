@@ -747,7 +747,12 @@ export default function CategoryActivities() {
                                   <div
                                     className="bg-explore-green h-2 rounded-full"
                                     style={{
-                                      width: `${Math.min((activity.participants / activity.maxParticipants) * 100, 100)}%`,
+                                      width: `${Math.min(
+                                        activity.participants && activity.maxParticipants
+                                          ? ((activity.participants / activity.maxParticipants) * 100)
+                                          : 0,
+                                        100
+                                      )}%`,
                                     }}
                                   />
                                 </div>
