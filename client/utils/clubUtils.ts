@@ -122,9 +122,9 @@ export const CLUB_DATABASE: { [key: string]: ClubData } = {
     name: "oxford university cycling club",
     displayName: "Oxford University Cycling Club",
     profileImage:
-      "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=100&h=100&fit=crop",
+      "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=100",
     coverImage:
-      "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800&h=400&fit=crop",
+      "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800",
     description:
       "Oxford's premier cycling club for students and alumni, racing and touring since 1893.",
     location: "Oxford, UK",
