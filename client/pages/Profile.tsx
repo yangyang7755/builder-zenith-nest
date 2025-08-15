@@ -249,6 +249,15 @@ export default function Profile() {
     }
   };
 
+  // Set default sport tab based on user's sports
+  useEffect(() => {
+    if (displayProfile.sports && Array.isArray(displayProfile.sports) && displayProfile.sports.length > 0) {
+      const firstSport = displayProfile.sports[0];
+      const sportName = typeof firstSport === 'string' ? firstSport : firstSport.sport;
+      setActiveSportTab(sportName.toLowerCase() as any);
+    }
+  }, [displayProfile.sports]);
+
   // Load user's activity history
   useEffect(() => {
     const loadActivityHistory = async () => {
