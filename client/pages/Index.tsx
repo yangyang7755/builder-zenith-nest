@@ -612,7 +612,7 @@ export default function Index() {
           </h2>
           <div className="flex gap-4 justify-start flex-wrap">
             <ClubLogo
-              src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F88bca9c7cd744a57bb7cf584dcc74c21?format=webp&width=800"
               alt="Rapha Cycling Club London"
               isMember={false}
               clubId="rapha-cycling"
@@ -1452,7 +1452,7 @@ function CyclingExploreSection() {
     },
     {
       title: "Intermediate Chaingang",
-      date: "📅 Tuesday, 6:30 PM",
+      date: "���� Tuesday, 6:30 PM",
       location: "📍Box Hill, Surrey",
       organizer: "Surrey Road Cycling",
       distance: "40km",
