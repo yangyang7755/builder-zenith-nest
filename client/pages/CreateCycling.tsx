@@ -143,7 +143,7 @@ export default function CreateCycling() {
     // Create activity with proper title
     const activityTitle = `${selectedType} ride ${formData.distance ? `- ${formData.distance}${formData.distanceUnit}` : ""}`;
 
-    addActivity({
+    const result = await addActivity({
       type: "cycling",
       title: activityTitle,
       date: formData.date,
