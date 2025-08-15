@@ -439,36 +439,318 @@ export default function Onboarding() {
             <div className="text-center">
               <Target className="w-16 h-16 text-explore-green mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-black font-cabin mb-2">
-                What's your skill level?
+                Sport Details & Skills
               </h2>
               <p className="text-gray-600 font-cabin">
-                Set your level for each sport (optional - complete later)
+                Tell us more about your experience in each sport
               </p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {tempData.sports.map((sport) => (
-                <div key={sport}>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                <div key={sport} className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-black mb-3 capitalize">
                     {sport}
-                  </label>
-                  <div className="flex gap-2 flex-wrap">
-                    {skillLevels.map((level) => {
-                      const levelKey = `${sport.toLowerCase()}Level`;
-                      return (
-                        <button
-                          key={level}
-                          onClick={() => setTempData(prev => ({ ...prev, [levelKey]: level }))}
-                          className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
-                            tempData[levelKey] === level
-                              ? "bg-explore-green text-white border-explore-green"
-                              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                          }`}
-                        >
-                          {level}
-                        </button>
-                      );
-                    })}
+                  </h3>
+
+                  {/* Skill Level */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Skill Level
+                    </label>
+                    <div className="flex gap-2 flex-wrap">
+                      {skillLevels.map((level) => {
+                        const levelKey = `${sport.toLowerCase()}Level`;
+                        return (
+                          <button
+                            key={level}
+                            onClick={() => setTempData(prev => ({ ...prev, [levelKey]: level }))}
+                            className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                              tempData[levelKey] === level
+                                ? "bg-explore-green text-white border-explore-green"
+                                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                            }`}
+                          >
+                            {level}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
+
+                  {/* Sport-specific details */}
+                  {sport.toLowerCase() === 'climbing' && (
+                    <>
+                      {/* Climbing Max Grade */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Max Grade (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {climbingGrades.map((grade) => (
+                            <button
+                              key={grade}
+                              onClick={() => setTempData(prev => ({ ...prev, climbingMaxGrade: grade }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.climbingMaxGrade === grade
+                                  ? "bg-blue-500 text-white border-blue-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {grade}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Climbing Certifications */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Certifications (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {climbingCertifications.map((cert) => (
+                            <button
+                              key={cert}
+                              onClick={() => setTempData(prev => ({
+                                ...prev,
+                                climbingCertifications: prev.climbingCertifications.includes(cert)
+                                  ? prev.climbingCertifications.filter(c => c !== cert)
+                                  : [...prev.climbingCertifications, cert]
+                              }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.climbingCertifications.includes(cert)
+                                  ? "bg-orange-500 text-white border-orange-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {cert}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Climbing Specialties */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Specialties (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {climbingSpecialties.map((specialty) => (
+                            <button
+                              key={specialty}
+                              onClick={() => setTempData(prev => ({
+                                ...prev,
+                                climbingSpecialties: prev.climbingSpecialties.includes(specialty)
+                                  ? prev.climbingSpecialties.filter(s => s !== specialty)
+                                  : [...prev.climbingSpecialties, specialty]
+                              }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.climbingSpecialties.includes(specialty)
+                                  ? "bg-purple-500 text-white border-purple-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {specialty}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Climbing Skills */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Climbing Types (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {climbingSkills.map((skill) => (
+                            <button
+                              key={skill}
+                              onClick={() => setTempData(prev => ({
+                                ...prev,
+                                climbingSkills: prev.climbingSkills.includes(skill)
+                                  ? prev.climbingSkills.filter(s => s !== skill)
+                                  : [...prev.climbingSkills, skill]
+                              }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.climbingSkills.includes(skill)
+                                  ? "bg-blue-500 text-white border-blue-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {skill}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Cycling specific fields */}
+                  {sport.toLowerCase() === 'cycling' && (
+                    <>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Typical Distance (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {cyclingDistances.map((distance) => (
+                            <button
+                              key={distance}
+                              onClick={() => setTempData(prev => ({ ...prev, cyclingDistance: distance }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.cyclingDistance === distance
+                                  ? "bg-green-500 text-white border-green-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {distance}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Preferred Pace (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {cyclingPaces.map((pace) => (
+                            <button
+                              key={pace}
+                              onClick={() => setTempData(prev => ({ ...prev, cyclingPace: pace }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.cyclingPace === pace
+                                  ? "bg-green-500 text-white border-green-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {pace}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Preferences (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {cyclingPreferences.map((pref) => (
+                            <button
+                              key={pref}
+                              onClick={() => setTempData(prev => ({
+                                ...prev,
+                                cyclingPreferences: prev.cyclingPreferences.includes(pref)
+                                  ? prev.cyclingPreferences.filter(p => p !== pref)
+                                  : [...prev.cyclingPreferences, pref]
+                              }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.cyclingPreferences.includes(pref)
+                                  ? "bg-green-500 text-white border-green-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {pref}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Running specific fields */}
+                  {sport.toLowerCase() === 'running' && (
+                    <>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Typical Distance (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {runningDistances.map((distance) => (
+                            <button
+                              key={distance}
+                              onClick={() => setTempData(prev => ({ ...prev, runningDistance: distance }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.runningDistance === distance
+                                  ? "bg-purple-500 text-white border-purple-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {distance}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Pace (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {runningPaces.map((pace) => (
+                            <button
+                              key={pace}
+                              onClick={() => setTempData(prev => ({ ...prev, runningPace: pace }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.runningPace === pace
+                                  ? "bg-purple-500 text-white border-purple-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {pace}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Goals (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {runningGoals.map((goal) => (
+                            <button
+                              key={goal}
+                              onClick={() => setTempData(prev => ({ ...prev, runningGoals: goal }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.runningGoals === goal
+                                  ? "bg-purple-500 text-white border-purple-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {goal}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Preferences (optional)
+                        </label>
+                        <div className="flex gap-2 flex-wrap">
+                          {runningPreferences.map((pref) => (
+                            <button
+                              key={pref}
+                              onClick={() => setTempData(prev => ({
+                                ...prev,
+                                runningPreferences: prev.runningPreferences.includes(pref)
+                                  ? prev.runningPreferences.filter(p => p !== pref)
+                                  : [...prev.runningPreferences, pref]
+                              }))}
+                              className={`px-3 py-2 rounded-lg text-sm font-cabin border transition-colors ${
+                                tempData.runningPreferences.includes(pref)
+                                  ? "bg-purple-500 text-white border-purple-500"
+                                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {pref}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
