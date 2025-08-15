@@ -109,7 +109,7 @@ export default function Index() {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
-    activityType: ["Cycling", "Climbing"],
+    activityType: ["Cycling", "Climbing", "Running", "Hiking", "Skiing", "Surfing", "Tennis"],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     date: { start: "", end: "" },
