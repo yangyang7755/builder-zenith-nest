@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useProfileVisibility } from "@/hooks/useProfileVisibility";
 import { useFollow } from "@/contexts/FollowContext";
+import { useOnboardingProfileInfo } from "@/components/OnboardingProfileSync";
 import { maddieWeiProfile } from "../data/demoProfiles";
 import BottomNavigation from "../components/BottomNavigation";
 import { ProfileEdit } from "../components/ProfileEdit";
