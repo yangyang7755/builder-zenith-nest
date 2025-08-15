@@ -470,14 +470,6 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
     try {
       console.log("Creating activity with data:", activityData);
 
-      // Ensure profile exists before creating activity
-      try {
-        console.log("Ensuring profile exists before activity creation...");
-        await apiService.ensureProfileExists();
-      } catch (profileError) {
-        console.warn("Profile creation failed, continuing with activity creation:", profileError);
-      }
-
       const response = await apiService.createActivity(activityData);
       console.log("Create activity response:", response);
 
