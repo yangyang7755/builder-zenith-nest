@@ -396,6 +396,45 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
       });
     }
 
+    // Ensure profile exists before creating activity
+    const { data: existingProfile, error: profileCheckError } = await supabaseAdmin
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if (profileCheckError && profileCheckError.code === 'PGRST116') {
+      // Profile doesn't exist, create one
+      console.log("Profile doesn't exist for user, creating one...");
+      const { data: newProfile, error: profileCreateError } = await supabaseAdmin
+        .from("profiles")
+        .insert({
+          id: user.id,
+          email: user.email,
+          full_name: user.email?.split('@')[0] || "User", // Use email prefix as name
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (profileCreateError) {
+        console.error("Profile creation error:", profileCreateError);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to create user profile",
+          details: profileCreateError
+        });
+      }
+      console.log("Profile created successfully:", newProfile);
+    } else if (profileCheckError) {
+      console.error("Profile check error:", profileCheckError);
+      return res.status(500).json({
+        success: false,
+        error: "Failed to verify user profile"
+      });
+    }
+
     const { data: newActivity, error } = await supabaseAdmin
       .from("activities")
       .insert({
@@ -417,7 +456,8 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
       console.error("Database error:", error);
       return res.status(500).json({
         success: false,
-        error: "Failed to create activity"
+        error: "Failed to create activity",
+        details: error
       });
     }
 
