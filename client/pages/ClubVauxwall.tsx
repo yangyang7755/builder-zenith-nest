@@ -61,7 +61,7 @@ export default function ClubVauxwall() {
         <div className="text-center mb-6">
           <div className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=96&h=96&fit=crop"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fce3624672f324cdbb888f18e32d8b72d?format=webp&width=800"
               alt="VauxWall East Climbing Centre"
               className="w-full h-full object-cover"
             />

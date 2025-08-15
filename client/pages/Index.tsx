@@ -618,7 +618,7 @@ export default function Index() {
               clubId="rapha-cycling"
             />
             <ClubLogo
-              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=70&h=70&fit=crop"
+              src="https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fce3624672f324cdbb888f18e32d8b72d?format=webp&width=800"
               alt="VauxWall East Climbing Centre"
               isMember={false}
               clubId="vauxwall-climbing"
