@@ -77,34 +77,46 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
 
     setIsLoading(true);
     try {
-      const [followersResponse, followingResponse, statsResponse] = await Promise.all([
+      // Use Promise.allSettled to handle individual failures gracefully
+      const [followersResult, followingResult, statsResult] = await Promise.allSettled([
         apiService.getUserFollowers(user.id),
         apiService.getUserFollowing(user.id),
         apiService.getFollowStats(user.id)
       ]);
 
-      // Ensure followers is always an array
-      if (followersResponse.data && Array.isArray(followersResponse.data)) {
-        setFollowers(followersResponse.data);
+      // Handle followers response
+      if (followersResult.status === 'fulfilled' &&
+          followersResult.value.data &&
+          Array.isArray(followersResult.value.data)) {
+        setFollowers(followersResult.value.data);
       } else {
+        console.warn('Failed to fetch followers:', followersResult.status === 'rejected' ? followersResult.reason : followersResult.value.error);
         setFollowers([]);
       }
 
-      // Ensure following is always an array
-      if (followingResponse.data && Array.isArray(followingResponse.data)) {
-        setFollowing(followingResponse.data);
+      // Handle following response
+      if (followingResult.status === 'fulfilled' &&
+          followingResult.value.data &&
+          Array.isArray(followingResult.value.data)) {
+        setFollowing(followingResult.value.data);
       } else {
+        console.warn('Failed to fetch following:', followingResult.status === 'rejected' ? followingResult.reason : followingResult.value.error);
         setFollowing([]);
       }
 
-      // Ensure stats have default values
-      if (statsResponse.data) {
+      // Handle stats response
+      if (statsResult.status === 'fulfilled' && statsResult.value.data) {
         setFollowStats({
-          followers: statsResponse.data.followers || 0,
-          following: statsResponse.data.following || 0
+          followers: statsResult.value.data.followers || 0,
+          following: statsResult.value.data.following || 0
         });
       } else {
-        setFollowStats({ followers: 0, following: 0 });
+        console.warn('Failed to fetch follow stats:', statsResult.status === 'rejected' ? statsResult.reason : statsResult.value.error);
+        // Use local data count as fallback
+        setFollowStats({
+          followers: followers.length,
+          following: following.length
+        });
       }
     } catch (error) {
       console.error('Error refreshing follow data:', error);
@@ -139,7 +151,11 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       const response = await apiService.followUser(userId);
-      
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
       if (response.data) {
         // Update local state optimistically
         setFollowing(prev => {
@@ -155,12 +171,24 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
           title: "Following! 👥",
           description: `You are now following ${response.data.following?.full_name || 'this user'}`,
         });
+      } else {
+        throw new Error('No data returned from follow request');
       }
     } catch (error: any) {
       console.error('Error following user:', error);
+
+      let errorMessage = "Please try again later.";
+      if (error.message?.includes('timeout')) {
+        errorMessage = "Request timed out. Please check your connection.";
+      } else if (error.message?.includes('Failed to fetch')) {
+        errorMessage = "Network error. Please check your connection.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       toast({
         title: "Error Following User",
-        description: error.response?.data?.error || "Please try again later.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -173,8 +201,12 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
 
     try {
       setIsLoading(true);
-      await apiService.unfollowUser(userId);
-      
+      const response = await apiService.unfollowUser(userId);
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
       // Update local state optimistically
       setFollowing(prev => {
         const currentFollowing = Array.isArray(prev) ? prev : [];
@@ -191,9 +223,19 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
       });
     } catch (error: any) {
       console.error('Error unfollowing user:', error);
+
+      let errorMessage = "Please try again later.";
+      if (error.message?.includes('timeout')) {
+        errorMessage = "Request timed out. Please check your connection.";
+      } else if (error.message?.includes('Failed to fetch')) {
+        errorMessage = "Network error. Please check your connection.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       toast({
         title: "Error Unfollowing User",
-        description: error.response?.data?.error || "Please try again later.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
