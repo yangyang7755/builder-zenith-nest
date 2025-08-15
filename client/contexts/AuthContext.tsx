@@ -381,6 +381,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     },
     updateProfile,
     refreshProfile,
+    createProfileFromOnboardingData,
+    hasOnboardingBasedProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
