@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Star } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { apiService } from '@/services/apiService';
-import { useAuth } from '@/contexts/AuthContext';
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Star } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { apiService } from "@/services/apiService";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Activity {
   id: string;
@@ -22,19 +29,23 @@ interface ReviewPromptProps {
   onReviewSubmitted: () => void;
 }
 
-export const ReviewPrompt: React.FC<ReviewPromptProps> = ({ 
-  pastActivities, 
-  onReviewSubmitted 
+export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
+  pastActivities,
+  onReviewSubmitted,
 }) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
   const [showPrompt, setShowPrompt] = useState(false);
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [reviewedActivities, setReviewedActivities] = useState<Set<string>>(new Set());
-  const [pendingReviewActivities, setPendingReviewActivities] = useState<Activity[]>([]);
+  const [reviewedActivities, setReviewedActivities] = useState<Set<string>>(
+    new Set(),
+  );
+  const [pendingReviewActivities, setPendingReviewActivities] = useState<
+    Activity[]
+  >([]);
 
   useEffect(() => {
     checkForPendingReviews();
@@ -46,20 +57,22 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
     try {
       // Get activities that need reviews (past activities where user participated but hasn't reviewed)
       const activitiesNeedingReview = [];
-      
+
       for (const activity of pastActivities) {
         // Check if activity is past due (more than 1 day after activity date)
         const activityDate = new Date(activity.date);
         const now = new Date();
-        const daysPassed = Math.floor((now.getTime() - activityDate.getTime()) / (1000 * 3600 * 24));
-        
+        const daysPassed = Math.floor(
+          (now.getTime() - activityDate.getTime()) / (1000 * 3600 * 24),
+        );
+
         if (daysPassed >= 1) {
           // Check if user already reviewed this activity
           const response = await apiService.getActivityReviews(activity.id);
           const existingReview = response.data?.find(
-            (review: any) => review.reviewer_id === user.id
+            (review: any) => review.reviewer_id === user.id,
           );
-          
+
           if (!existingReview) {
             activitiesNeedingReview.push(activity);
           }
@@ -67,14 +80,14 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
       }
 
       setPendingReviewActivities(activitiesNeedingReview);
-      
+
       // Show prompt if there are activities to review
       if (activitiesNeedingReview.length > 0) {
         setCurrentActivityIndex(0);
         setShowPrompt(true);
       }
     } catch (error) {
-      console.error('Error checking for pending reviews:', error);
+      console.error("Error checking for pending reviews:", error);
     }
   };
 
@@ -97,28 +110,28 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
       };
 
       const response = await apiService.createActivityReview(reviewData);
-      
+
       if (response.data) {
         toast({
           title: "Review Submitted! ⭐",
           description: `Thank you for reviewing "${currentActivity.title}"`,
         });
 
-        setReviewedActivities(prev => new Set([...prev, currentActivity.id]));
+        setReviewedActivities((prev) => new Set([...prev, currentActivity.id]));
         onReviewSubmitted();
-        
+
         // Move to next activity or close
         const nextIndex = currentActivityIndex + 1;
         if (nextIndex < pendingReviewActivities.length) {
           setCurrentActivityIndex(nextIndex);
           setRating(0);
-          setComment('');
+          setComment("");
         } else {
           handleClosePrompt();
         }
       }
     } catch (error) {
-      console.error('Error submitting review:', error);
+      console.error("Error submitting review:", error);
       toast({
         title: "Error Submitting Review",
         description: "Please try again later.",
@@ -134,7 +147,7 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
     if (nextIndex < pendingReviewActivities.length) {
       setCurrentActivityIndex(nextIndex);
       setRating(0);
-      setComment('');
+      setComment("");
     } else {
       handleClosePrompt();
     }
@@ -143,18 +156,18 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
   const handleClosePrompt = () => {
     setShowPrompt(false);
     setRating(0);
-    setComment('');
+    setComment("");
     setCurrentActivityIndex(0);
   };
 
   if (!currentActivity) return null;
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -180,10 +193,12 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
             Rate Your Experience
           </DialogTitle>
           <DialogDescription>
-            How was "{currentActivity.title}" on {formatDate(currentActivity.date)}?
+            How was "{currentActivity.title}" on{" "}
+            {formatDate(currentActivity.date)}?
             <br />
             <span className="text-xs text-gray-500 mt-1 block">
-              Activity {currentActivityIndex + 1} of {pendingReviewActivities.length}
+              Activity {currentActivityIndex + 1} of{" "}
+              {pendingReviewActivities.length}
             </span>
           </DialogDescription>
         </DialogHeader>
@@ -191,7 +206,9 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
         <div className="space-y-4">
           {/* Star Rating */}
           <div className="text-center">
-            <p className="text-sm font-medium mb-3">Rate the organizer & activity:</p>
+            <p className="text-sm font-medium mb-3">
+              Rate the organizer & activity:
+            </p>
             <div className="flex justify-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -203,8 +220,8 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
                   <Star
                     className={`w-8 h-8 ${
                       star <= rating
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-gray-300 hover:text-yellow-200'
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "text-gray-300 hover:text-yellow-200"
                     }`}
                   />
                 </button>
@@ -238,8 +255,13 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
 
           {/* Activity Details */}
           <div className="bg-gray-50 p-3 rounded-lg text-sm">
-            <p><strong>Organizer:</strong> {currentActivity.organizer_name || 'Unknown'}</p>
-            <p><strong>Location:</strong> {currentActivity.location}</p>
+            <p>
+              <strong>Organizer:</strong>{" "}
+              {currentActivity.organizer_name || "Unknown"}
+            </p>
+            <p>
+              <strong>Location:</strong> {currentActivity.location}
+            </p>
           </div>
         </div>
 
@@ -262,7 +284,7 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
                 Submitting...
               </>
             ) : (
-              'Submit Review'
+              "Submit Review"
             )}
           </Button>
         </DialogFooter>

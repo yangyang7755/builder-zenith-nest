@@ -9,19 +9,19 @@ import ProfileScreen from "./screens/ProfileScreen";
 
 // Simple placeholder components for other tabs
 const ActivitiesScreen = () => (
-  <Text style={{ flex: 1, textAlign: 'center', marginTop: 100, fontSize: 18 }}>
+  <Text style={{ flex: 1, textAlign: "center", marginTop: 100, fontSize: 18 }}>
     Activities Screen Coming Soon!
   </Text>
 );
 
 const CreateScreen = () => (
-  <Text style={{ flex: 1, textAlign: 'center', marginTop: 100, fontSize: 18 }}>
+  <Text style={{ flex: 1, textAlign: "center", marginTop: 100, fontSize: 18 }}>
     Create Activity Coming Soon!
   </Text>
 );
 
 const ChatScreen = () => (
-  <Text style={{ flex: 1, textAlign: 'center', marginTop: 100, fontSize: 18 }}>
+  <Text style={{ flex: 1, textAlign: "center", marginTop: 100, fontSize: 18 }}>
     Chat Screen Coming Soon!
   </Text>
 );

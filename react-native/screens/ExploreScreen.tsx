@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,79 +7,82 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
-} from 'react-native';
+} from "react-native";
 
 const ExploreScreen: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("all");
 
   const categories = [
-    { id: 'all', name: 'All', emoji: '🎯' },
-    { id: 'climbing', name: 'Climbing', emoji: '🧗' },
-    { id: 'cycling', name: 'Cycling', emoji: '🚴' },
-    { id: 'running', name: 'Running', emoji: '👟' },
-    { id: 'hiking', name: 'Hiking', emoji: '🥾' },
-    { id: 'skiing', name: 'Skiing', emoji: '⛷️' },
-    { id: 'surfing', name: 'Surfing', emoji: '🌊' },
-    { id: 'tennis', name: 'Tennis', emoji: '🎾' },
+    { id: "all", name: "All", emoji: "🎯" },
+    { id: "climbing", name: "Climbing", emoji: "🧗" },
+    { id: "cycling", name: "Cycling", emoji: "🚴" },
+    { id: "running", name: "Running", emoji: "👟" },
+    { id: "hiking", name: "Hiking", emoji: "🥾" },
+    { id: "skiing", name: "Skiing", emoji: "⛷️" },
+    { id: "surfing", name: "Surfing", emoji: "🌊" },
+    { id: "tennis", name: "Tennis", emoji: "🎾" },
   ];
 
   const activities = [
     {
-      id: '1',
-      title: 'Westway Climbing Session',
-      type: 'climbing',
-      date: 'Feb 15',
-      time: '6:00 PM',
-      location: 'Westway Climbing Centre',
-      organizer: 'Holly Smith',
-      participants: '5/8',
-      price: '£15',
+      id: "1",
+      title: "Westway Climbing Session",
+      type: "climbing",
+      date: "Feb 15",
+      time: "6:00 PM",
+      location: "Westway Climbing Centre",
+      organizer: "Holly Smith",
+      participants: "5/8",
+      price: "£15",
     },
     {
-      id: '2',
-      title: 'Richmond Park Cycling',
-      type: 'cycling',
-      date: 'Feb 16',
-      time: '9:00 AM',
-      location: 'Richmond Park',
-      organizer: 'Marcus Rodriguez',
-      participants: '8/12',
-      price: 'Free',
+      id: "2",
+      title: "Richmond Park Cycling",
+      type: "cycling",
+      date: "Feb 16",
+      time: "9:00 AM",
+      location: "Richmond Park",
+      organizer: "Marcus Rodriguez",
+      participants: "8/12",
+      price: "Free",
     },
     {
-      id: '3',
-      title: 'Hyde Park Running Club',
-      type: 'running',
-      date: 'Feb 17',
-      time: '7:00 AM',
-      location: 'Hyde Park',
-      organizer: 'Sarah Johnson',
-      participants: '12/15',
-      price: 'Free',
+      id: "3",
+      title: "Hyde Park Running Club",
+      type: "running",
+      date: "Feb 17",
+      time: "7:00 AM",
+      location: "Hyde Park",
+      organizer: "Sarah Johnson",
+      participants: "12/15",
+      price: "Free",
     },
   ];
 
   const getFilteredActivities = () => {
     let filtered = activities;
-    
-    if (activeCategory !== 'all') {
-      filtered = filtered.filter(activity => activity.type === activeCategory);
-    }
-    
-    if (searchQuery) {
-      filtered = filtered.filter(activity =>
-        activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        activity.location.toLowerCase().includes(searchQuery.toLowerCase())
+
+    if (activeCategory !== "all") {
+      filtered = filtered.filter(
+        (activity) => activity.type === activeCategory,
       );
     }
-    
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (activity) =>
+          activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          activity.location.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+    }
+
     return filtered;
   };
 
   const getSportEmoji = (type: string) => {
-    const category = categories.find(c => c.id === type);
-    return category ? category.emoji : '⚡';
+    const category = categories.find((c) => c.id === type);
+    return category ? category.emoji : "⚡";
   };
 
   return (
@@ -87,7 +90,7 @@ const ExploreScreen: React.FC = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Explore</Text>
-        
+
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <Text style={styles.searchIcon}>🔍</Text>
@@ -99,18 +102,21 @@ const ExploreScreen: React.FC = () => {
             placeholderTextColor="#6B7280"
           />
           {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
               <Text style={styles.clearIcon}>✕</Text>
             </TouchableOpacity>
           )}
         </View>
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Categories */}
         <View style={styles.section}>
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.categoriesContainer}
           >
@@ -119,15 +125,17 @@ const ExploreScreen: React.FC = () => {
                 key={category.id}
                 style={[
                   styles.categoryCard,
-                  activeCategory === category.id && styles.activeCategoryCard
+                  activeCategory === category.id && styles.activeCategoryCard,
                 ]}
                 onPress={() => setActiveCategory(category.id)}
               >
                 <Text style={styles.categoryEmoji}>{category.emoji}</Text>
-                <Text style={[
-                  styles.categoryName,
-                  activeCategory === category.id && styles.activeCategoryName
-                ]}>
+                <Text
+                  style={[
+                    styles.categoryName,
+                    activeCategory === category.id && styles.activeCategoryName,
+                  ]}
+                >
                   {category.name}
                 </Text>
               </TouchableOpacity>
@@ -141,7 +149,9 @@ const ExploreScreen: React.FC = () => {
           <View style={styles.featuredCard}>
             <Text style={styles.featuredEmoji}>🧗</Text>
             <Text style={styles.featuredTitle}>Westway Climbing Session</Text>
-            <Text style={styles.featuredDetails}>Today • 6:00 PM • Westway Centre</Text>
+            <Text style={styles.featuredDetails}>
+              Today • 6:00 PM • Westway Centre
+            </Text>
             <TouchableOpacity style={styles.joinButton}>
               <Text style={styles.joinButtonText}>Join Activity</Text>
             </TouchableOpacity>
@@ -152,18 +162,22 @@ const ExploreScreen: React.FC = () => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>
-              {activeCategory === 'all' ? 'All Activities' : `${categories.find(c => c.id === activeCategory)?.name} Activities`}
+              {activeCategory === "all"
+                ? "All Activities"
+                : `${categories.find((c) => c.id === activeCategory)?.name} Activities`}
             </Text>
             <Text style={styles.sectionCount}>
               {getFilteredActivities().length} found
             </Text>
           </View>
-          
+
           {getFilteredActivities().length > 0 ? (
             getFilteredActivities().map((activity) => (
               <View key={activity.id} style={styles.activityCard}>
                 <View style={styles.activityHeader}>
-                  <Text style={styles.activityEmoji}>{getSportEmoji(activity.type)}</Text>
+                  <Text style={styles.activityEmoji}>
+                    {getSportEmoji(activity.type)}
+                  </Text>
                   <View style={styles.activityInfo}>
                     <Text style={styles.activityTitle}>{activity.title}</Text>
                     <Text style={styles.activityMeta}>
@@ -173,7 +187,8 @@ const ExploreScreen: React.FC = () => {
                       📍 {activity.location}
                     </Text>
                     <Text style={styles.activityMeta}>
-                      👥 {activity.participants} • Organized by {activity.organizer}
+                      👥 {activity.participants} • Organized by{" "}
+                      {activity.organizer}
                     </Text>
                   </View>
                   <View style={styles.activityPrice}>
@@ -189,10 +204,9 @@ const ExploreScreen: React.FC = () => {
             <View style={styles.emptyState}>
               <Text style={styles.emptyTitle}>No activities found</Text>
               <Text style={styles.emptySubtitle}>
-                {searchQuery 
+                {searchQuery
                   ? `No activities match "${searchQuery}"`
-                  : `No ${activeCategory === 'all' ? '' : activeCategory} activities available`
-                }
+                  : `No ${activeCategory === "all" ? "" : activeCategory} activities available`}
               </Text>
             </View>
           )}
@@ -201,15 +215,17 @@ const ExploreScreen: React.FC = () => {
         {/* Clubs Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Featured Clubs</Text>
-          
+
           <View style={styles.clubCard}>
             <Text style={styles.clubEmoji}>🧗</Text>
             <View style={styles.clubInfo}>
-              <Text style={styles.clubName}>Oxford University Climbing Club</Text>
+              <Text style={styles.clubName}>
+                Oxford University Climbing Club
+              </Text>
               <Text style={styles.clubMembers}>245 members</Text>
             </View>
           </View>
-          
+
           <View style={styles.clubCard}>
             <Text style={styles.clubEmoji}>🚴</Text>
             <View style={styles.clubInfo}>
@@ -228,23 +244,23 @@ const ExploreScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   header: {
     paddingHorizontal: 16,
     paddingBottom: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   headerTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#000000',
+    fontWeight: "bold",
+    color: "#000000",
     marginBottom: 16,
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F3F4F6',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F3F4F6",
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -256,11 +272,11 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#000000',
+    color: "#000000",
   },
   clearIcon: {
     fontSize: 16,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   scrollView: {
     flex: 1,
@@ -269,37 +285,37 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
     marginBottom: 12,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000000',
+    fontWeight: "bold",
+    color: "#000000",
     paddingHorizontal: 16,
     marginBottom: 12,
   },
   sectionCount: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   categoriesContainer: {
     paddingHorizontal: 16,
     gap: 12,
   },
   categoryCard: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: "#F3F4F6",
     minWidth: 80,
   },
   activeCategoryCard: {
-    backgroundColor: '#1F381F',
+    backgroundColor: "#1F381F",
   },
   categoryEmoji: {
     fontSize: 24,
@@ -307,18 +323,18 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 12,
-    fontWeight: '500',
-    color: '#6B7280',
+    fontWeight: "500",
+    color: "#6B7280",
   },
   activeCategoryName: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   featuredCard: {
-    backgroundColor: '#1F381F',
+    backgroundColor: "#1F381F",
     borderRadius: 16,
     padding: 20,
     marginHorizontal: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   featuredEmoji: {
     fontSize: 48,
@@ -326,40 +342,40 @@ const styles = StyleSheet.create({
   },
   featuredTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#FFFFFF",
     marginBottom: 4,
-    textAlign: 'center',
+    textAlign: "center",
   },
   featuredDetails: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     opacity: 0.9,
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   joinButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
   },
   joinButtonText: {
-    color: '#1F381F',
+    color: "#1F381F",
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   activityCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     marginHorizontal: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: "#E5E7EB",
   },
   activityHeader: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 12,
   },
   activityEmoji: {
@@ -371,40 +387,40 @@ const styles = StyleSheet.create({
   },
   activityTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000000',
+    fontWeight: "600",
+    color: "#000000",
     marginBottom: 4,
   },
   activityMeta: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginBottom: 2,
   },
   activityPrice: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   priceText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1F381F',
+    fontWeight: "bold",
+    color: "#1F381F",
   },
   viewButton: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: "#F3F4F6",
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 6,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   viewButtonText: {
-    color: '#374151',
+    color: "#374151",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   clubCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: "#F9FAFB",
     borderRadius: 12,
     marginHorizontal: 16,
     marginBottom: 8,
@@ -418,28 +434,28 @@ const styles = StyleSheet.create({
   },
   clubName: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000000',
+    fontWeight: "600",
+    color: "#000000",
     marginBottom: 2,
   },
   clubMembers: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   emptyState: {
     padding: 32,
-    alignItems: 'center',
+    alignItems: "center",
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#000000',
+    fontWeight: "600",
+    color: "#000000",
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#6B7280',
-    textAlign: 'center',
+    color: "#6B7280",
+    textAlign: "center",
   },
 });
 

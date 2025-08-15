@@ -30,19 +30,21 @@ export const handleGetReviews = async (req: Request, res: Response) => {
           reviewer: {
             id: "demo-user-1",
             full_name: "Demo Reviewer",
-            profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+            profile_image:
+              "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
           },
           reviewee: {
             id: req.query.user_id || "demo-organizer-1",
             full_name: "Demo Organizer",
-            profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+            profile_image:
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
           },
           activity: {
             id: req.query.activity_id || "demo-activity-1",
             title: "Demo Activity",
-            date: new Date(Date.now() - 86400000).toISOString()
-          }
-        }
+            date: new Date(Date.now() - 86400000).toISOString(),
+          },
+        },
       ];
       return res.json(demoReviews);
     }
@@ -51,12 +53,14 @@ export const handleGetReviews = async (req: Request, res: Response) => {
 
     let query = supabaseAdmin
       .from("activity_reviews")
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviewer_id(id, full_name, profile_image),
         reviewee:profiles!reviewee_id(id, full_name, profile_image),
         activity:activities(id, title, date_time)
-      `)
+      `,
+      )
       .order("created_at", { ascending: false });
 
     if (activity_id) {
@@ -71,7 +75,7 @@ export const handleGetReviews = async (req: Request, res: Response) => {
 
     if (error) {
       console.error("Database error:", error);
-      if (error.code === '42P01') {
+      if (error.code === "42P01") {
         console.log("Reviews table not found, returning empty array");
         return res.json([]);
       }
@@ -107,13 +111,15 @@ export const handleCreateReview = async (req: Request, res: Response) => {
         reviewer: {
           id: "demo-user-id",
           full_name: "Demo User",
-          profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+          profile_image:
+            "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
         },
         reviewee: {
           id: req.body.reviewee_id,
           full_name: "Demo Organizer",
-          profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-        }
+          profile_image:
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+        },
       };
       return res.status(201).json(demoReview);
     }
@@ -142,7 +148,9 @@ export const handleCreateReview = async (req: Request, res: Response) => {
     today.setHours(0, 0, 0, 0);
 
     if (activityDate >= today) {
-      return res.status(400).json({ error: "Cannot review activity before it has passed" });
+      return res
+        .status(400)
+        .json({ error: "Cannot review activity before it has passed" });
     }
 
     // Check if user participated in the activity
@@ -154,7 +162,12 @@ export const handleCreateReview = async (req: Request, res: Response) => {
       .single();
 
     if (!participation) {
-      return res.status(403).json({ error: "You must have participated in this activity to leave a review" });
+      return res
+        .status(403)
+        .json({
+          error:
+            "You must have participated in this activity to leave a review",
+        });
     }
 
     // Check if user already reviewed this activity
@@ -166,7 +179,9 @@ export const handleCreateReview = async (req: Request, res: Response) => {
       .single();
 
     if (existingReview) {
-      return res.status(400).json({ error: "You have already reviewed this activity" });
+      return res
+        .status(400)
+        .json({ error: "You have already reviewed this activity" });
     }
 
     // Create the review with proper persistence
@@ -176,13 +191,15 @@ export const handleCreateReview = async (req: Request, res: Response) => {
         ...validatedData,
         reviewer_id: user.id,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviewer_id(id, full_name, profile_image),
         reviewee:profiles!reviewee_id(id, full_name, profile_image)
-      `)
+      `,
+      )
       .single();
 
     if (error) {
@@ -195,7 +212,9 @@ export const handleCreateReview = async (req: Request, res: Response) => {
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error("Validation error:", error.errors);
-      res.status(400).json({ error: "Invalid review data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid review data", details: error.errors });
     } else {
       console.error("Server error:", error);
       res.status(500).json({ error: "Failed to create review" });
@@ -219,11 +238,13 @@ export const handleUpdateReview = async (req: Request, res: Response) => {
       .update(updates)
       .eq("id", id)
       .eq("reviewer_id", user.id) // Only allow updating own reviews
-      .select(`
+      .select(
+        `
         *,
         reviewer:profiles!reviewer_id(id, full_name, profile_image),
         reviewee:profiles!reviewee_id(id, full_name, profile_image)
-      `)
+      `,
+      )
       .single();
 
     if (error) {
@@ -232,13 +253,17 @@ export const handleUpdateReview = async (req: Request, res: Response) => {
     }
 
     if (!updatedReview) {
-      return res.status(404).json({ error: "Review not found or permission denied" });
+      return res
+        .status(404)
+        .json({ error: "Review not found or permission denied" });
     }
 
     res.json(updatedReview);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid update data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid update data", details: error.errors });
     } else {
       console.error("Server error:", error);
       res.status(500).json({ error: "Failed to update review" });

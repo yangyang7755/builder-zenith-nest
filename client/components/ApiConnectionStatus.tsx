@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { AlertTriangle, CheckCircle, RefreshCw, Server } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { AlertTriangle, CheckCircle, RefreshCw, Server } from "lucide-react";
 
 interface ApiConnectionStatus {
   isConnected: boolean;
@@ -19,23 +19,24 @@ export const ApiConnectionStatusBanner: React.FC = () => {
   const checkApiConnection = async () => {
     setIsChecking(true);
     try {
-      const response = await fetch('/api/health', {
-        method: 'GET',
-        cache: 'no-cache',
+      const response = await fetch("/api/health", {
+        method: "GET",
+        cache: "no-cache",
         signal: AbortSignal.timeout(5000),
       });
-      
+
       const isConnected = response.ok;
       setStatus({
         isConnected,
         lastChecked: new Date(),
         error: isConnected ? null : `HTTP ${response.status}`,
       });
-      
+
       // Only show banner if there are connection issues
       setShowBanner(!isConnected);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Connection failed';
+      const errorMessage =
+        error instanceof Error ? error.message : "Connection failed";
       setStatus({
         isConnected: false,
         lastChecked: new Date(),
@@ -50,10 +51,10 @@ export const ApiConnectionStatusBanner: React.FC = () => {
   useEffect(() => {
     // Initial check
     checkApiConnection();
-    
+
     // Check every 30 seconds
     const interval = setInterval(checkApiConnection, 30000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -71,28 +72,31 @@ export const ApiConnectionStatusBanner: React.FC = () => {
               Backend Server Unavailable
             </p>
             <p className="text-xs text-yellow-700">
-              Some features may not work properly. The app is running in demo mode.
+              Some features may not work properly. The app is running in demo
+              mode.
               {status.error && ` (${status.error})`}
             </p>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           {status.lastChecked && (
             <span className="text-xs text-yellow-600">
               Last checked: {status.lastChecked.toLocaleTimeString()}
             </span>
           )}
-          
+
           <button
             onClick={checkApiConnection}
             disabled={isChecking}
             className="inline-flex items-center px-3 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded hover:bg-yellow-200 disabled:opacity-50"
           >
-            <RefreshCw className={`h-3 w-3 mr-1 ${isChecking ? 'animate-spin' : ''}`} />
-            {isChecking ? 'Checking...' : 'Retry'}
+            <RefreshCw
+              className={`h-3 w-3 mr-1 ${isChecking ? "animate-spin" : ""}`}
+            />
+            {isChecking ? "Checking..." : "Retry"}
           </button>
-          
+
           <button
             onClick={() => setShowBanner(false)}
             className="text-yellow-600 hover:text-yellow-800"
@@ -116,12 +120,12 @@ export const ApiConnectionIndicator: React.FC = () => {
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        const response = await fetch('/api/health', {
-          method: 'HEAD',
-          cache: 'no-cache',
+        const response = await fetch("/api/health", {
+          method: "HEAD",
+          cache: "no-cache",
           signal: AbortSignal.timeout(3000),
         });
-        
+
         setStatus({
           isConnected: response.ok,
           lastChecked: new Date(),
@@ -131,35 +135,36 @@ export const ApiConnectionIndicator: React.FC = () => {
         setStatus({
           isConnected: false,
           lastChecked: new Date(),
-          error: error instanceof Error ? error.message : 'Connection failed',
+          error: error instanceof Error ? error.message : "Connection failed",
         });
       }
     };
 
     checkConnection();
     const interval = setInterval(checkConnection, 15000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
   const getStatusColor = () => {
-    return status.isConnected 
-      ? 'text-green-500' 
-      : 'text-red-500';
+    return status.isConnected ? "text-green-500" : "text-red-500";
   };
 
   const getStatusIcon = () => {
-    return status.isConnected 
-      ? <CheckCircle className="h-4 w-4" />
-      : <Server className="h-4 w-4" />;
+    return status.isConnected ? (
+      <CheckCircle className="h-4 w-4" />
+    ) : (
+      <Server className="h-4 w-4" />
+    );
   };
 
   return (
-    <div className={`inline-flex items-center space-x-1 ${getStatusColor()}`} title={status.error || 'API Connected'}>
+    <div
+      className={`inline-flex items-center space-x-1 ${getStatusColor()}`}
+      title={status.error || "API Connected"}
+    >
       {getStatusIcon()}
-      <span className="text-xs">
-        {status.isConnected ? 'API' : 'Demo'}
-      </span>
+      <span className="text-xs">{status.isConnected ? "API" : "Demo"}</span>
     </div>
   );
 };

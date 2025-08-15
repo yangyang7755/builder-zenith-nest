@@ -25,7 +25,8 @@ export default function Activities() {
     useActivityParticipation();
   const { currentUserProfile } = useUserProfile();
   const [selectedTab, setSelectedTab] = useState("Saved");
-  const [pastActivitiesNeedingReview, setPastActivitiesNeedingReview] = useState<Activity[]>([]);
+  const [pastActivitiesNeedingReview, setPastActivitiesNeedingReview] =
+    useState<Activity[]>([]);
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
 
   // Sort activities by date (future vs past)
@@ -83,22 +84,28 @@ export default function Activities() {
       const activitiesNeedingReview = [];
       for (const activity of pastActivities) {
         try {
-          const reviewsResponse = await apiService.getActivityReviews(activity.id);
-          const userReview = reviewsResponse.data?.find(
-            (review: any) => review.reviewer_id === user.id
+          const reviewsResponse = await apiService.getActivityReviews(
+            activity.id,
           );
-          
+          const userReview = reviewsResponse.data?.find(
+            (review: any) => review.reviewer_id === user.id,
+          );
+
           if (!userReview) {
             activitiesNeedingReview.push(activity);
           }
         } catch (error) {
-          console.error('Error checking reviews for activity:', activity.id, error);
+          console.error(
+            "Error checking reviews for activity:",
+            activity.id,
+            error,
+          );
         }
       }
 
       setPastActivitiesNeedingReview(activitiesNeedingReview);
     } catch (error) {
-      console.error('Error loading past activities needing review:', error);
+      console.error("Error loading past activities needing review:", error);
     } finally {
       setIsLoadingReviews(false);
     }
@@ -254,7 +261,8 @@ export default function Activities() {
               <span className="text-yellow-600">⭐</span>
               <div className="flex-1">
                 <p className="text-sm font-medium text-yellow-800">
-                  {pastActivitiesNeedingReview.length} activities need your review
+                  {pastActivitiesNeedingReview.length} activities need your
+                  review
                 </p>
                 <p className="text-xs text-yellow-600">
                   Help others by sharing your experience

@@ -7,13 +7,13 @@ export const designTokens = {
     accent: "#F59E0B", // orange
     purple: "#8B5CF6",
     success: "#10B981",
-    warning: "#F59E0B", 
+    warning: "#F59E0B",
     error: "#EF4444",
-    
+
     // Grays
     gray: {
       50: "#F9FAFB",
-      100: "#F3F4F6", 
+      100: "#F3F4F6",
       200: "#E5E7EB",
       300: "#D1D5DB",
       400: "#9CA3AF",
@@ -23,10 +23,10 @@ export const designTokens = {
       800: "#1F2937",
       900: "#111827",
     },
-    
+
     white: "#FFFFFF",
     black: "#000000",
-    
+
     // Semantic colors
     text: {
       primary: "#000000",
@@ -34,21 +34,21 @@ export const designTokens = {
       tertiary: "#9CA3AF",
       accent: "#10B981",
     },
-    
+
     background: {
       primary: "#FFFFFF",
       secondary: "#F9FAFB",
       tertiary: "#F3F4F6",
       accent: "#F0FDF4",
     },
-    
+
     border: {
       light: "#F3F4F6",
       medium: "#E5E7EB",
       dark: "#D1D5DB",
-    }
+    },
   },
-  
+
   // Typography - unified for both platforms
   typography: {
     h1: { fontSize: 32, fontWeight: "bold", lineHeight: 1.2 },
@@ -61,7 +61,7 @@ export const designTokens = {
     button: { fontSize: 16, fontWeight: "500", lineHeight: 1 },
     buttonSm: { fontSize: 14, fontWeight: "500", lineHeight: 1 },
   },
-  
+
   // Spacing - consistent spacing scale
   spacing: {
     xs: 4,
@@ -72,7 +72,7 @@ export const designTokens = {
     xxl: 48,
     xxxl: 64,
   },
-  
+
   // Border radius
   borderRadius: {
     sm: 4,
@@ -82,7 +82,7 @@ export const designTokens = {
     xxl: 24,
     round: 9999,
   },
-  
+
   // Shadows
   shadows: {
     sm: {
@@ -93,7 +93,7 @@ export const designTokens = {
       elevation: 1,
     },
     md: {
-      shadowColor: "#000000", 
+      shadowColor: "#000000",
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.1,
       shadowRadius: 6,
@@ -114,7 +114,7 @@ export const designTokens = {
       elevation: 8,
     },
   },
-  
+
   // Component specific tokens
   components: {
     header: {
@@ -122,31 +122,31 @@ export const designTokens = {
       paddingX: 24,
       paddingY: 16,
     },
-    
+
     tabBar: {
       height: 70,
       paddingX: 16,
       paddingY: 8,
     },
-    
+
     card: {
       padding: 16,
       borderRadius: 8,
       borderWidth: 1,
     },
-    
+
     button: {
       paddingX: 16,
       paddingY: 12,
       borderRadius: 8,
     },
-    
+
     buttonSm: {
       paddingX: 12,
       paddingY: 8,
       borderRadius: 6,
     },
-    
+
     input: {
       paddingX: 16,
       paddingY: 12,
@@ -154,7 +154,7 @@ export const designTokens = {
       borderWidth: 1,
     },
   },
-  
+
   // Animation and transitions
   animation: {
     duration: {
@@ -167,9 +167,9 @@ export const designTokens = {
       in: "cubic-bezier(0.4, 0, 1, 1)",
       out: "cubic-bezier(0, 0, 0.2, 1)",
       inOut: "cubic-bezier(0.4, 0, 0.2, 1)",
-    }
+    },
   },
-  
+
   // Breakpoints for responsive design
   breakpoints: {
     sm: 640,
@@ -177,25 +177,25 @@ export const designTokens = {
     lg: 1024,
     xl: 1280,
   },
-  
+
   // Layout constants
   layout: {
     maxWidth: 448, // max-w-md (matches mobile)
     containerPadding: 24,
     sectionSpacing: 32,
-  }
+  },
 };
 
 // Helper functions for consistent styling - EXACT same as web
 export const getColor = (path) => {
-  const keys = path.split('.');
+  const keys = path.split(".");
   let result = designTokens.colors;
-  
+
   for (const key of keys) {
     result = result[key];
     if (result === undefined) break;
   }
-  
+
   return result || path;
 };
 

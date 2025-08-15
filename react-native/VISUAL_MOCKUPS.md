@@ -5,6 +5,7 @@
 Your React Native app will look **exactly** like your current web app, but with native mobile interactions. Here's what each core screen will display:
 
 ## 📱 **Profile Screen**
+
 ```
 ┌─────────────────────────────────────┐
 │ 9:41                    📶 🔋       │
@@ -53,6 +54,7 @@ Your React Native app will look **exactly** like your current web app, but with 
 ```
 
 ## 📱 **Activities Screen**
+
 ```
 ┌─────────────────────────────────────┐
 │ 9:41                    📶 🔋       │
@@ -87,6 +89,7 @@ Your React Native app will look **exactly** like your current web app, but with 
 ```
 
 ## 📱 **Explore Screen**
+
 ```
 ┌─────────────────────────────────────┐
 │ 9:41                    📶 🔋       │
@@ -130,6 +133,7 @@ Your React Native app will look **exactly** like your current web app, but with 
 ```
 
 ## 📱 **Create Club Screen**
+
 ```
 ┌─────────────────────────────────────┐
 │ 9:41                    📶 🔋       │
@@ -175,6 +179,7 @@ Your React Native app will look **exactly** like your current web app, but with 
 Your Create Club functionality is **fully integrated** with the backend:
 
 ### **✅ Club Creation Process:**
+
 1. User fills out 4-step club creation form
 2. Data is validated and sent to `userService.createClub()`
 3. Backend creates club in Supabase database via `/api/clubs` endpoint
@@ -183,18 +188,21 @@ Your Create Club functionality is **fully integrated** with the backend:
 6. User is redirected to club management page
 
 ### **✅ Club Visibility in Explore:**
+
 - All created clubs appear in the "Featured Clubs" section
 - Clubs are searchable by name and type
 - Real-time data from Supabase database
 - Proper club icons and member counts displayed
 
 ### **✅ Club Search & Discovery:**
+
 - Clubs are indexed by name, type, and location
 - Filter by activity type (cycling, climbing, running, etc.)
 - Search functionality includes club names and descriptions
 - All clubs show accurate member counts and activity levels
 
 ## 🔄 **Real-Time Features Working:**
+
 - New clubs immediately appear in explore page
 - Member counts update when users join
 - Club data syncs across all screens

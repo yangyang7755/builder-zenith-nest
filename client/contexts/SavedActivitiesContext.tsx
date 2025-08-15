@@ -34,11 +34,11 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
 
   const loadFromLocalStorage = () => {
     try {
-      const localSaved = localStorage.getItem('savedActivities');
+      const localSaved = localStorage.getItem("savedActivities");
       if (localSaved) {
         const activities = JSON.parse(localSaved);
         // Only set if we don't already have saved activities (backend took priority)
-        setSavedActivities(prev => prev.length > 0 ? prev : activities);
+        setSavedActivities((prev) => (prev.length > 0 ? prev : activities));
       }
     } catch (error) {
       console.error("Error loading from localStorage:", error);
@@ -51,17 +51,17 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
 
       // Add timeout to prevent hanging requests
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout')), 8000)
+        setTimeout(() => reject(new Error("Request timeout")), 8000),
       );
 
       let response;
       try {
-        response = await Promise.race([
+        response = (await Promise.race([
           apiService.getSavedActivities?.() || Promise.resolve({ data: [] }),
-          timeoutPromise
-        ]) as any;
+          timeoutPromise,
+        ])) as any;
       } catch (timeoutError) {
-        console.log('API request timed out, using localStorage fallback');
+        console.log("API request timed out, using localStorage fallback");
         return; // Let it fall back to localStorage
       }
 
@@ -115,8 +115,10 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
       console.error("Error loading saved activities:", error);
       // On error, keep existing state but ensure we don't stay in loading state
       // Could be network error, timeout, or other connectivity issue
-      if (error instanceof Error && error.message === 'Request timeout') {
-        console.log("Saved activities request timed out, keeping current state");
+      if (error instanceof Error && error.message === "Request timeout") {
+        console.log(
+          "Saved activities request timed out, keeping current state",
+        );
       }
     } finally {
       setLoading(false);
@@ -140,9 +142,14 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
           // Backend unavailable - use localStorage fallback
           console.log("Backend unavailable, saving to localStorage");
           try {
-            const savedActivities = JSON.parse(localStorage.getItem('savedActivities') || '[]');
+            const savedActivities = JSON.parse(
+              localStorage.getItem("savedActivities") || "[]",
+            );
             const newSavedActivities = [...savedActivities, activity];
-            localStorage.setItem('savedActivities', JSON.stringify(newSavedActivities));
+            localStorage.setItem(
+              "savedActivities",
+              JSON.stringify(newSavedActivities),
+            );
             return true; // Keep optimistic update
           } catch (storageError) {
             console.error("Failed to save to localStorage:", storageError);
@@ -190,9 +197,16 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
           // Backend unavailable - use localStorage fallback
           console.log("Backend unavailable, removing from localStorage");
           try {
-            const savedActivities = JSON.parse(localStorage.getItem('savedActivities') || '[]');
-            const filteredActivities = savedActivities.filter((activity: Activity) => activity.id !== activityId);
-            localStorage.setItem('savedActivities', JSON.stringify(filteredActivities));
+            const savedActivities = JSON.parse(
+              localStorage.getItem("savedActivities") || "[]",
+            );
+            const filteredActivities = savedActivities.filter(
+              (activity: Activity) => activity.id !== activityId,
+            );
+            localStorage.setItem(
+              "savedActivities",
+              JSON.stringify(filteredActivities),
+            );
             return true; // Keep optimistic update
           } catch (storageError) {
             console.error("Failed to remove from localStorage:", storageError);

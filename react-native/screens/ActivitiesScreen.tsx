@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 // Import your exact design tokens
-import { designTokens } from '../styles/designTokens';
+import { designTokens } from "../styles/designTokens";
 
 // Placeholder for your exact contexts - will need to be converted
 // import { useSavedActivities } from "../contexts/SavedActivitiesContext";
@@ -34,8 +34,8 @@ const ActivitiesScreen: React.FC = () => {
       organizerName: "Holly Smith",
       maxParticipants: "8",
       current_participants: 5,
-      status: "upcoming"
-    }
+      status: "upcoming",
+    },
   ];
 
   const participatedActivities = [];
@@ -125,7 +125,9 @@ const ActivitiesScreen: React.FC = () => {
             <Text style={styles.activityTitle}>{activity.title}</Text>
             <Text style={styles.organizerText}>By {organizerName}</Text>
           </View>
-          <Text style={styles.activityIcon}>{getActivityIcon(activityType)}</Text>
+          <Text style={styles.activityIcon}>
+            {getActivityIcon(activityType)}
+          </Text>
         </View>
 
         <View style={styles.cardDetails}>
@@ -180,7 +182,10 @@ const ActivitiesScreen: React.FC = () => {
         </View>
       </View>
 
-      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Title - EXACT same styling */}
         <View style={styles.titleContainer}>
           <Text style={styles.title}>All Activities</Text>
@@ -190,29 +195,27 @@ const ActivitiesScreen: React.FC = () => {
         <View style={styles.tabContainer}>
           <TouchableOpacity
             onPress={() => setSelectedTab("Saved")}
-            style={[
-              styles.tab,
-              selectedTab === "Saved" && styles.activeTab
-            ]}
+            style={[styles.tab, selectedTab === "Saved" && styles.activeTab]}
           >
-            <Text style={[
-              styles.tabText,
-              selectedTab === "Saved" && styles.activeTabText
-            ]}>
+            <Text
+              style={[
+                styles.tabText,
+                selectedTab === "Saved" && styles.activeTabText,
+              ]}
+            >
               Saved Activities
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setSelectedTab("Joined")}
-            style={[
-              styles.tab,
-              selectedTab === "Joined" && styles.activeTab
-            ]}
+            style={[styles.tab, selectedTab === "Joined" && styles.activeTab]}
           >
-            <Text style={[
-              styles.tabText,
-              selectedTab === "Joined" && styles.activeTabText
-            ]}>
+            <Text
+              style={[
+                styles.tabText,
+                selectedTab === "Joined" && styles.activeTabText,
+              ]}
+            >
               Joined Activities
             </Text>
           </TouchableOpacity>
@@ -231,9 +234,15 @@ const ActivitiesScreen: React.FC = () => {
             ) : (
               <View style={styles.emptyState}>
                 <Text style={styles.bookmarkIcon}>🔖</Text>
-                <Text style={styles.emptyText}>No upcoming saved activities</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Explore')}>
-                  <Text style={styles.exploreLink}>Explore activities to save</Text>
+                <Text style={styles.emptyText}>
+                  No upcoming saved activities
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Explore")}
+                >
+                  <Text style={styles.exploreLink}>
+                    Explore activities to save
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -283,8 +292,12 @@ const ActivitiesScreen: React.FC = () => {
               <View style={styles.emptyState}>
                 <Text style={styles.checkIcon}>✅</Text>
                 <Text style={styles.emptyText}>No joined activities yet</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Explore')}>
-                  <Text style={styles.exploreLink}>Find activities to join</Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Explore")}
+                >
+                  <Text style={styles.exploreLink}>
+                    Find activities to join
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -311,22 +324,22 @@ const styles = StyleSheet.create({
   statusBar: {
     height: 44,
     backgroundColor: designTokens.colors.white,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 24,
   },
   statusTime: {
     color: designTokens.colors.black,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   statusIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   signalBars: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 2,
   },
   signalBar: {
@@ -336,8 +349,8 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   battery: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   batteryBody: {
     width: 22,
@@ -358,16 +371,16 @@ const styles = StyleSheet.create({
     paddingBottom: 96, // Account for bottom navigation
   },
   titleContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 24,
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: designTokens.colors.primary, // text-explore-green
   },
   tabContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: designTokens.colors.gray[100],
     borderRadius: 8,
     padding: 4,
@@ -378,7 +391,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 6,
-    alignItems: 'center',
+    alignItems: "center",
   },
   activeTab: {
     backgroundColor: designTokens.colors.white,
@@ -390,7 +403,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     color: designTokens.colors.gray[600],
   },
   activeTabText: {
@@ -398,7 +411,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: designTokens.colors.black,
     marginBottom: 16,
   },
@@ -411,9 +424,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 12,
   },
   cardContent: {
@@ -421,7 +434,7 @@ const styles = StyleSheet.create({
   },
   activityTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: designTokens.colors.black,
     marginBottom: 4,
   },
@@ -438,8 +451,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   detailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   clockIcon: {
@@ -457,8 +470,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
     marginTop: 12,
   },
@@ -467,12 +480,12 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     color: designTokens.colors.success,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
   },
   emptyState: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 32,
   },
   bookmarkIcon: {
@@ -493,7 +506,7 @@ const styles = StyleSheet.create({
   exploreLink: {
     fontSize: 16,
     color: designTokens.colors.primary,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   pastSection: {
     marginTop: 32,
@@ -510,7 +523,7 @@ const styles = StyleSheet.create({
   devText: {
     fontSize: 14,
     color: designTokens.colors.gray[500],
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 8,
   },
 });

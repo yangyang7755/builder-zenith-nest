@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { storageValidationService } from '../services/storageValidationService';
-import { useAuth } from '../contexts/AuthContext';
-import { AlertCircle, CheckCircle, RefreshCw, Database } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { storageValidationService } from "../services/storageValidationService";
+import { useAuth } from "../contexts/AuthContext";
+import { AlertCircle, CheckCircle, RefreshCw, Database } from "lucide-react";
 
 interface StorageStatus {
   isHealthy: boolean;
@@ -43,11 +43,12 @@ export const StorageStatusIndicator: React.FC = () => {
 
   const checkStorageHealth = async () => {
     if (!user?.id) return;
-    
+
     setIsChecking(true);
     try {
-      const validation = await storageValidationService.validateUserDataPersistence(user.id);
-      
+      const validation =
+        await storageValidationService.validateUserDataPersistence(user.id);
+
       setStorageStatus({
         isHealthy: validation.isValid,
         lastChecked: new Date(),
@@ -56,12 +57,12 @@ export const StorageStatusIndicator: React.FC = () => {
         warnings: validation.warnings,
       });
     } catch (error) {
-      console.error('Storage health check failed:', error);
-      setStorageStatus(prev => ({
+      console.error("Storage health check failed:", error);
+      setStorageStatus((prev) => ({
         ...prev,
         isHealthy: false,
         lastChecked: new Date(),
-        errors: ['Storage health check failed'],
+        errors: ["Storage health check failed"],
       }));
     } finally {
       setIsChecking(false);
@@ -70,22 +71,24 @@ export const StorageStatusIndicator: React.FC = () => {
 
   const generateReport = async () => {
     if (!user?.id) return;
-    
+
     try {
-      const report = await storageValidationService.generateStorageHealthReport(user.id);
-      
+      const report = await storageValidationService.generateStorageHealthReport(
+        user.id,
+      );
+
       // Create and download the report
-      const blob = new Blob([report], { type: 'text/plain' });
+      const blob = new Blob([report], { type: "text/plain" });
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `storage-health-report-${new Date().toISOString().split('T')[0]}.txt`;
+      a.download = `storage-health-report-${new Date().toISOString().split("T")[0]}.txt`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to generate report:', error);
+      console.error("Failed to generate report:", error);
     }
   };
 
@@ -105,36 +108,40 @@ export const StorageStatusIndicator: React.FC = () => {
             <AlertCircle className="h-4 w-4 text-red-500" />
           )}
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <button
             onClick={checkStorageHealth}
             disabled={isChecking}
             className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
           >
-            <RefreshCw className={`h-3 w-3 mr-1 ${isChecking ? 'animate-spin' : ''}`} />
-            {isChecking ? 'Checking...' : 'Check'}
+            <RefreshCw
+              className={`h-3 w-3 mr-1 ${isChecking ? "animate-spin" : ""}`}
+            />
+            {isChecking ? "Checking..." : "Check"}
           </button>
-          
+
           <button
             onClick={() => setShowDetails(!showDetails)}
             className="text-xs text-blue-600 hover:text-blue-800"
           >
-            {showDetails ? 'Hide' : 'Details'}
+            {showDetails ? "Hide" : "Details"}
           </button>
         </div>
       </div>
 
       <div className="mt-2">
         <div className="flex items-center space-x-4 text-xs text-gray-600">
-          <span className={`px-2 py-1 rounded-full ${
-            storageStatus.isHealthy 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-red-100 text-red-800'
-          }`}>
-            {storageStatus.isHealthy ? 'All Data Persistent' : 'Storage Issues'}
+          <span
+            className={`px-2 py-1 rounded-full ${
+              storageStatus.isHealthy
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {storageStatus.isHealthy ? "All Data Persistent" : "Storage Issues"}
           </span>
-          
+
           {storageStatus.lastChecked && (
             <span>
               Last checked: {storageStatus.lastChecked.toLocaleTimeString()}
@@ -152,11 +159,16 @@ export const StorageStatusIndicator: React.FC = () => {
                 <div>Reviews: {storageStatus.summary.reviewsCount}</div>
                 <div>Followers: {storageStatus.summary.followersCount}</div>
                 <div>Following: {storageStatus.summary.followingCount}</div>
-                <div>Saved Activities: {storageStatus.summary.savedActivitiesCount}</div>
-                <div>Chat Messages: {storageStatus.summary.chatMessagesValidated ? '✓' : '✗'}</div>
+                <div>
+                  Saved Activities: {storageStatus.summary.savedActivitiesCount}
+                </div>
+                <div>
+                  Chat Messages:{" "}
+                  {storageStatus.summary.chatMessagesValidated ? "✓" : "✗"}
+                </div>
               </div>
             </div>
-            
+
             <div className="space-y-1">
               <h4 className="text-xs font-medium text-gray-900">Status</h4>
               <div className="text-xs space-y-1">
@@ -170,9 +182,12 @@ export const StorageStatusIndicator: React.FC = () => {
                     {storageStatus.warnings.length} warning(s)
                   </div>
                 )}
-                {storageStatus.errors.length === 0 && storageStatus.warnings.length === 0 && (
-                  <div className="text-green-600">All systems operational</div>
-                )}
+                {storageStatus.errors.length === 0 &&
+                  storageStatus.warnings.length === 0 && (
+                    <div className="text-green-600">
+                      All systems operational
+                    </div>
+                  )}
               </div>
             </div>
           </div>
@@ -193,7 +208,9 @@ export const StorageStatusIndicator: React.FC = () => {
 
           {storageStatus.warnings.length > 0 && (
             <div className="mb-3">
-              <h5 className="text-xs font-medium text-yellow-900 mb-1">Warnings:</h5>
+              <h5 className="text-xs font-medium text-yellow-900 mb-1">
+                Warnings:
+              </h5>
               <ul className="text-xs text-yellow-700 space-y-1">
                 {storageStatus.warnings.map((warning, index) => (
                   <li key={index} className="flex items-start">

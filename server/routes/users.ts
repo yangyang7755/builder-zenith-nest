@@ -630,12 +630,27 @@ export const handleUpdateUser = async (req: Request, res: Response) => {
   return handleUpdateUserProfile(req, res);
 };
 
-export const handleGetUserActivityHistory = async (req: Request, res: Response) => {
+export const handleGetUserActivityHistory = async (
+  req: Request,
+  res: Response,
+) => {
   try {
-    const { user_id, status = 'completed', limit = 20, offset = 0, include_reviews } = req.query;
+    const {
+      user_id,
+      status = "completed",
+      limit = 20,
+      offset = 0,
+      include_reviews,
+    } = req.query;
 
     console.log("=== GET USER ACTIVITY HISTORY ===");
-    console.log("Query params:", { user_id, status, limit, offset, include_reviews });
+    console.log("Query params:", {
+      user_id,
+      status,
+      limit,
+      offset,
+      include_reviews,
+    });
 
     // Check if Supabase is configured
     if (!supabaseAdmin) {
@@ -665,7 +680,7 @@ export const handleGetUserActivityHistory = async (req: Request, res: Response) 
           status: "completed",
           average_rating: 4.8,
           total_reviews: 5,
-        }
+        },
       ];
 
       return res.json({
@@ -688,7 +703,10 @@ export const handleGetUserActivityHistory = async (req: Request, res: Response) 
   }
 };
 
-export const handleGetActivitiesNeedingReview = async (req: Request, res: Response) => {
+export const handleGetActivitiesNeedingReview = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     console.log("=== GET ACTIVITIES NEEDING REVIEW ===");
 
@@ -703,7 +721,7 @@ export const handleGetActivitiesNeedingReview = async (req: Request, res: Respon
           location: "Westway Climbing Centre",
           organizer_id: "demo-organizer-1",
           organizer_name: "Holly Smith",
-        }
+        },
       ];
 
       return res.json({

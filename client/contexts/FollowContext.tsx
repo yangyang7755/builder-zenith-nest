@@ -1,7 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuth } from './AuthContext';
-import { apiService } from '@/services/apiService';
-import { useToast } from '@/hooks/use-toast';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useAuth } from "./AuthContext";
+import { apiService } from "@/services/apiService";
+import { useToast } from "@/hooks/use-toast";
 
 interface Follower {
   id: string;
@@ -58,7 +64,10 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
   const { toast } = useToast();
   const [followers, setFollowers] = useState<Follower[]>([]);
   const [following, setFollowing] = useState<Following[]>([]);
-  const [followStats, setFollowStats] = useState<FollowStats>({ followers: 0, following: 0 });
+  const [followStats, setFollowStats] = useState<FollowStats>({
+    followers: 0,
+    following: 0,
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -78,48 +87,68 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
     setIsLoading(true);
     try {
       // Use Promise.allSettled to handle individual failures gracefully
-      const [followersResult, followingResult, statsResult] = await Promise.allSettled([
-        apiService.getUserFollowers(user.id),
-        apiService.getUserFollowing(user.id),
-        apiService.getFollowStats(user.id)
-      ]);
+      const [followersResult, followingResult, statsResult] =
+        await Promise.allSettled([
+          apiService.getUserFollowers(user.id),
+          apiService.getUserFollowing(user.id),
+          apiService.getFollowStats(user.id),
+        ]);
 
       // Handle followers response
-      if (followersResult.status === 'fulfilled' &&
-          followersResult.value.data &&
-          Array.isArray(followersResult.value.data)) {
+      if (
+        followersResult.status === "fulfilled" &&
+        followersResult.value.data &&
+        Array.isArray(followersResult.value.data)
+      ) {
         setFollowers(followersResult.value.data);
       } else {
-        console.warn('Failed to fetch followers:', followersResult.status === 'rejected' ? followersResult.reason : followersResult.value.error);
+        console.warn(
+          "Failed to fetch followers:",
+          followersResult.status === "rejected"
+            ? followersResult.reason
+            : followersResult.value.error,
+        );
         setFollowers([]);
       }
 
       // Handle following response
-      if (followingResult.status === 'fulfilled' &&
-          followingResult.value.data &&
-          Array.isArray(followingResult.value.data)) {
+      if (
+        followingResult.status === "fulfilled" &&
+        followingResult.value.data &&
+        Array.isArray(followingResult.value.data)
+      ) {
         setFollowing(followingResult.value.data);
       } else {
-        console.warn('Failed to fetch following:', followingResult.status === 'rejected' ? followingResult.reason : followingResult.value.error);
+        console.warn(
+          "Failed to fetch following:",
+          followingResult.status === "rejected"
+            ? followingResult.reason
+            : followingResult.value.error,
+        );
         setFollowing([]);
       }
 
       // Handle stats response
-      if (statsResult.status === 'fulfilled' && statsResult.value.data) {
+      if (statsResult.status === "fulfilled" && statsResult.value.data) {
         setFollowStats({
           followers: statsResult.value.data.followers || 0,
-          following: statsResult.value.data.following || 0
+          following: statsResult.value.data.following || 0,
         });
       } else {
-        console.warn('Failed to fetch follow stats:', statsResult.status === 'rejected' ? statsResult.reason : statsResult.value.error);
+        console.warn(
+          "Failed to fetch follow stats:",
+          statsResult.status === "rejected"
+            ? statsResult.reason
+            : statsResult.value.error,
+        );
         // Use local data count as fallback
         setFollowStats({
           followers: followers.length,
-          following: following.length
+          following: following.length,
         });
       }
     } catch (error) {
-      console.error('Error refreshing follow data:', error);
+      console.error("Error refreshing follow data:", error);
       // Set safe defaults on error
       setFollowers([]);
       setFollowing([]);
@@ -158,29 +187,29 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
 
       if (response.data) {
         // Update local state optimistically
-        setFollowing(prev => {
+        setFollowing((prev) => {
           const currentFollowing = Array.isArray(prev) ? prev : [];
           return [...currentFollowing, response.data];
         });
-        setFollowStats(prev => ({
+        setFollowStats((prev) => ({
           ...prev,
-          following: (prev?.following || 0) + 1
+          following: (prev?.following || 0) + 1,
         }));
 
         toast({
           title: "Following! 👥",
-          description: `You are now following ${response.data.following?.full_name || 'this user'}`,
+          description: `You are now following ${response.data.following?.full_name || "this user"}`,
         });
       } else {
-        throw new Error('No data returned from follow request');
+        throw new Error("No data returned from follow request");
       }
     } catch (error: any) {
-      console.error('Error following user:', error);
+      console.error("Error following user:", error);
 
       let errorMessage = "Please try again later.";
-      if (error.message?.includes('timeout')) {
+      if (error.message?.includes("timeout")) {
         errorMessage = "Request timed out. Please check your connection.";
-      } else if (error.message?.includes('Failed to fetch')) {
+      } else if (error.message?.includes("Failed to fetch")) {
         errorMessage = "Network error. Please check your connection.";
       } else if (error.message) {
         errorMessage = error.message;
@@ -208,13 +237,13 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
       }
 
       // Update local state optimistically
-      setFollowing(prev => {
+      setFollowing((prev) => {
         const currentFollowing = Array.isArray(prev) ? prev : [];
-        return currentFollowing.filter(f => f.following_id !== userId);
+        return currentFollowing.filter((f) => f.following_id !== userId);
       });
-      setFollowStats(prev => ({
+      setFollowStats((prev) => ({
         ...prev,
-        following: Math.max(0, (prev?.following || 0) - 1)
+        following: Math.max(0, (prev?.following || 0) - 1),
       }));
 
       toast({
@@ -222,12 +251,12 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
         description: "You have unfollowed this user.",
       });
     } catch (error: any) {
-      console.error('Error unfollowing user:', error);
+      console.error("Error unfollowing user:", error);
 
       let errorMessage = "Please try again later.";
-      if (error.message?.includes('timeout')) {
+      if (error.message?.includes("timeout")) {
         errorMessage = "Request timed out. Please check your connection.";
-      } else if (error.message?.includes('Failed to fetch')) {
+      } else if (error.message?.includes("Failed to fetch")) {
         errorMessage = "Network error. Please check your connection.";
       } else if (error.message) {
         errorMessage = error.message;
@@ -248,7 +277,7 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
     if (!Array.isArray(following)) {
       return false;
     }
-    return following.some(f => f.following_id === userId);
+    return following.some((f) => f.following_id === userId);
   };
 
   const getFollowerCount = (userId?: string): number => {
@@ -283,16 +312,14 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
   };
 
   return (
-    <FollowContext.Provider value={value}>
-      {children}
-    </FollowContext.Provider>
+    <FollowContext.Provider value={value}>{children}</FollowContext.Provider>
   );
 };
 
 export const useFollow = (): FollowContextType => {
   const context = useContext(FollowContext);
   if (context === undefined) {
-    throw new Error('useFollow must be used within a FollowProvider');
+    throw new Error("useFollow must be used within a FollowProvider");
   }
   return context;
 };
