@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { createServer } from "./index";
+import { createExpressApp } from "./index";
 import { setupSocketServer } from "./socketServer";
 import { databaseManager } from "./lib/database";
 
@@ -12,7 +12,7 @@ async function startServer() {
     await databaseManager.initializeDatabase();
 
     // Create Express app
-    const app = createServer();
+    const app = createExpressApp();
 
     // Setup Socket.IO server with Express app
     const server = setupSocketServer(app);
