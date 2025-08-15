@@ -613,3 +613,115 @@ export const handleGetUserClubs = async (req: Request, res: Response) => {
     });
   }
 };
+
+// Add missing functions that server index expects
+export const handleCreateUser = async (req: Request, res: Response) => {
+  // Alias to handleUserRegistration
+  return handleUserRegistration(req, res);
+};
+
+export const handleGetUser = async (req: Request, res: Response) => {
+  // Alias to handleGetUserProfile
+  return handleGetUserProfile(req, res);
+};
+
+export const handleUpdateUser = async (req: Request, res: Response) => {
+  // Alias to handleUpdateUserProfile
+  return handleUpdateUserProfile(req, res);
+};
+
+export const handleGetUserActivityHistory = async (req: Request, res: Response) => {
+  try {
+    const { user_id, status = 'completed', limit = 20, offset = 0, include_reviews } = req.query;
+
+    console.log("=== GET USER ACTIVITY HISTORY ===");
+    console.log("Query params:", { user_id, status, limit, offset, include_reviews });
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      const demoActivities = [
+        {
+          id: "demo-activity-1",
+          title: "Advanced Technique Workshop",
+          activity_type: "climbing",
+          date: "2025-01-15",
+          location: "Training Academy",
+          organizer_id: "demo-organizer-1",
+          organizer_name: "Training Academy",
+          participant_count: 8,
+          status: "completed",
+          average_rating: 5.0,
+          total_reviews: 1,
+        },
+        {
+          id: "demo-activity-2",
+          title: "Morning Cycle Ride",
+          activity_type: "cycling",
+          date: "2025-01-10",
+          location: "Richmond Park",
+          organizer_id: "demo-user-current",
+          organizer_name: "You",
+          participant_count: 12,
+          status: "completed",
+          average_rating: 4.8,
+          total_reviews: 5,
+        }
+      ];
+
+      return res.json({
+        success: true,
+        data: demoActivities,
+      });
+    }
+
+    // In real implementation, would query activity_participants table
+    return res.json({
+      success: true,
+      data: [],
+    });
+  } catch (error) {
+    console.error("Get user activity history error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch activity history",
+    });
+  }
+};
+
+export const handleGetActivitiesNeedingReview = async (req: Request, res: Response) => {
+  try {
+    console.log("=== GET ACTIVITIES NEEDING REVIEW ===");
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      const demoActivities = [
+        {
+          id: "demo-review-needed-1",
+          title: "Past Climbing Session",
+          activity_type: "climbing",
+          date: "2025-01-05",
+          location: "Westway Climbing Centre",
+          organizer_id: "demo-organizer-1",
+          organizer_name: "Holly Smith",
+        }
+      ];
+
+      return res.json({
+        success: true,
+        data: demoActivities,
+      });
+    }
+
+    // In real implementation, would query for past activities without reviews
+    return res.json({
+      success: true,
+      data: [],
+    });
+  } catch (error) {
+    console.error("Get activities needing review error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch activities needing review",
+    });
+  }
+};
