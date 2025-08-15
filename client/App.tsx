@@ -136,10 +136,11 @@ const App = () => {
                           <ActivityParticipationProvider>
                             <ActivityDraftProvider>
                               <ChatProvider>
-                                <Toaster />
-                                <Sonner />
-                                <ToastContainer />
-                                <BrowserRouter>
+                                <OnboardingProfileSync>
+                                  <Toaster />
+                                  <Sonner />
+                                  <ToastContainer />
+                                  <BrowserRouter>
                                   <div className="mobile-container">
                                     <Routes>
                                     {/* Public Routes */}
@@ -403,8 +404,9 @@ const App = () => {
                                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                                     <Route path="*" element={<NotFound />} />
                                     </Routes>
-                                  </div>
-                                </BrowserRouter>
+                                    </div>
+                                  </BrowserRouter>
+                                </OnboardingProfileSync>
                               </ChatProvider>
                             </ActivityDraftProvider>
                           </ActivityParticipationProvider>
