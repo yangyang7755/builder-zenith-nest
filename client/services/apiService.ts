@@ -1,3 +1,5 @@
+import { networkAwareFetch, networkService } from './networkService';
+
 const API_BASE_URL = "/api";
 
 interface ApiResponse<T> {
@@ -12,20 +14,24 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-// Utility function to make fetch with timeout
+// Utility function to make fetch with timeout and network awareness
 const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout: number = 8000): Promise<Response> => {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-
+  // Use network-aware fetch that handles offline scenarios
   try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-    return response;
+    return await networkAwareFetch(url, options, timeout);
   } catch (error) {
-    clearTimeout(timeoutId);
+    // Enhanced error handling with network context
+    const status = networkService.getStatus();
+
+    if (!status.isOnline) {
+      throw new Error('No internet connection - please check your network');
+    }
+
+    if (!status.isServerReachable) {
+      throw new Error('Server temporarily unavailable - using offline mode');
+    }
+
+    // Re-throw original error if network seems fine
     throw error;
   }
 };
