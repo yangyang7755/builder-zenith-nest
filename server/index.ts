@@ -149,6 +149,10 @@ export function createServer() {
   app.get("/api/users/:userId/profile", handleGetUserProfile);
   app.put("/api/users/:userId/profile", handleUpdateUserProfile);
 
+  // Onboarding-based Profile Creation routes
+  app.post("/api/profile/onboarding", handleCreateProfileFromOnboarding);
+  app.put("/api/profile/onboarding", handleUpdateProfileFromOnboarding);
+
   // User Management routes
   app.get("/api/users", handleGetUsers);
   app.get("/api/users/:userId/clubs", handleGetUserClubsNew);
