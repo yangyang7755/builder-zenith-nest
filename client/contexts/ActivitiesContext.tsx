@@ -506,11 +506,14 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       console.log("New activity from response:", newActivity);
 
       if (newActivity) {
+        console.log("Activity returned from backend:", newActivity);
+        console.log("Backend activity type:", newActivity.activity_type);
         const transformedActivity = transformActivity(newActivity);
-        console.log("Transformed activity:", transformedActivity);
+        console.log("Transformed activity for frontend:", transformedActivity);
+        console.log("Frontend activity type:", transformedActivity.type);
         setActivities((prev) => {
           const updatedActivities = [transformedActivity, ...prev];
-          console.log("Updated activities after creation:", updatedActivities);
+          console.log("Updated activities after creation:", updatedActivities.length);
           return updatedActivities;
         });
 
