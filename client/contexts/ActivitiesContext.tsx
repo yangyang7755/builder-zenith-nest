@@ -469,11 +469,29 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
   const createActivity = async (activityData: CreateActivityData) => {
     try {
       console.log("Creating activity with data:", activityData);
+
+      // Ensure profile exists before creating activity
+      try {
+        console.log("Ensuring profile exists before activity creation...");
+        await apiService.ensureProfileExists();
+      } catch (profileError) {
+        console.warn("Profile creation failed, continuing with activity creation:", profileError);
+      }
+
       const response = await apiService.createActivity(activityData);
       console.log("Create activity response:", response);
 
       if (response.error) {
         console.error("Create activity error:", response.error);
+
+        // If it's a backend unavailable error, provide a more helpful message
+        if (response.error === "BACKEND_UNAVAILABLE") {
+          return {
+            success: false,
+            error: "Unable to connect to the server. Please check if the backend is running and try again."
+          };
+        }
+
         return { success: false, error: response.error };
       }
 
