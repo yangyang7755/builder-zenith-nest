@@ -56,9 +56,9 @@ interface RegularActivity {
 
 const CLUB_TYPES = [
   { value: "cycling", label: "🚴‍♂️ Cycling", icon: "🚴‍♂️" },
-  { value: "running", label: "🏃‍♂️ Running", icon: "🏃‍♂️" },
+  { value: "running", label: "👟 Running", icon: "👟" },
   { value: "climbing", label: "🧗‍♀️ Climbing", icon: "🧗‍♀️" },
-  { value: "hiking", label: "🥾 Hiking", icon: "🥾" },
+  { value: "hiking", label: "��� Hiking", icon: "🥾" },
   { value: "swimming", label: "🏊‍♂️ Swimming", icon: "🏊‍♂️" },
   { value: "tennis", label: "🎾 Tennis", icon: "🎾" },
   { value: "football", label: "⚽ Football", icon: "⚽" },
