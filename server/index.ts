@@ -74,6 +74,10 @@ import {
 } from "./routes/notifications";
 import uploadsRouter from "./routes/uploads";
 import healthRouter from "./routes/health";
+import {
+  handleCreateProfileFromOnboarding,
+  handleUpdateProfileFromOnboarding,
+} from "./routes/profile-onboarding";
 import { supabaseAdmin } from "./lib/supabase";
 
 export function createServer() {
