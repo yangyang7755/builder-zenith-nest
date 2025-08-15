@@ -165,12 +165,30 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
       const response = await apiService.unsaveActivity(activityId);
 
       if (response.error) {
-        // Revert optimistic update
-        if (removedActivity) {
-          setSavedActivities((prev) => [...prev, removedActivity]);
+        if (response.error === "BACKEND_UNAVAILABLE") {
+          // Backend unavailable - use localStorage fallback
+          console.log("Backend unavailable, removing from localStorage");
+          try {
+            const savedActivities = JSON.parse(localStorage.getItem('savedActivities') || '[]');
+            const filteredActivities = savedActivities.filter((activity: Activity) => activity.id !== activityId);
+            localStorage.setItem('savedActivities', JSON.stringify(filteredActivities));
+            return true; // Keep optimistic update
+          } catch (storageError) {
+            console.error("Failed to remove from localStorage:", storageError);
+            // Revert optimistic update
+            if (removedActivity) {
+              setSavedActivities((prev) => [...prev, removedActivity]);
+            }
+            return false;
+          }
+        } else {
+          // Other error - revert optimistic update
+          if (removedActivity) {
+            setSavedActivities((prev) => [...prev, removedActivity]);
+          }
+          console.error("Failed to unsave activity:", response.error);
+          return false;
         }
-        console.error("Failed to unsave activity:", response.error);
-        return false;
       }
 
       return true;
