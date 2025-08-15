@@ -61,6 +61,16 @@ export default function Profile() {
   // Use the profile hook to get real data when user is logged in
   const { profile: userProfileData, followStats, loading, refetch } = useProfile(user?.id);
 
+  // Get onboarding profile information
+  const {
+    onboardingProfile,
+    isOnboardingComplete,
+    onboardingDataExists,
+    profileIsFromOnboarding,
+    shouldUseOnboardingData,
+    currentProfile,
+  } = useOnboardingProfileInfo();
+
   // Use activities and reviews hook
   const {
     completedActivities,
