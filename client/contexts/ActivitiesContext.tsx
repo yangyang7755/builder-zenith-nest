@@ -172,77 +172,7 @@ const ActivitiesContext = createContext<ActivitiesContextType | undefined>(
   undefined,
 );
 
-// Demo data as fallback when backend isn't available
-const demoActivities: Activity[] = [
-  {
-    id: "westway-womens-climb",
-    type: "climbing",
-    title: "Westway women's+ climbing morning",
-    date: "2025-08-06",
-    time: "10:00",
-    location: "Westway Climbing Centre",
-    meetupLocation: "Westway Climbing Centre",
-    organizer: "Coach Holly Peristiani",
-    maxParticipants: "12",
-    difficulty: "Intermediate",
-    specialComments:
-      "This session is perfect for meeting fellow climbers and boosting your confidence. Holly can provide expert tips on top-roping, lead climbing, abseiling, fall practice and more.",
-    imageSrc:
-      "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=80&h=80&fit=crop&crop=face",
-    climbingLevel: "Intermediate",
-    gender: "Female only",
-    visibility: "All",
-    club: "westway",
-    createdAt: new Date(),
-  },
-  {
-    id: "sunday-morning-ride",
-    type: "cycling",
-    title: "Sunday Morning Social Ride",
-    date: "2025-08-10",
-    time: "08:00",
-    location: "Richmond Park",
-    meetupLocation: "Richmond Park Main Gate",
-    organizer: "Richmond Cycling Club",
-    distance: "25",
-    distanceUnit: "km",
-    pace: "20",
-    paceUnit: "kph",
-    elevation: "150",
-    elevationUnit: "m",
-    maxParticipants: "15",
-    difficulty: "Beginner",
-    specialComments:
-      "Join us for a friendly social ride through Richmond Park and surrounding areas. Perfect for cyclists looking to meet new people and explore beautiful routes. Coffee stop included at Roehampton Cafe.",
-    imageSrc:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-    cafeStop: "Roehampton Cafe",
-    gender: "All genders",
-    visibility: "All",
-    club: "oucc",
-    createdAt: new Date(),
-  },
-  {
-    id: "mens-football-training",
-    type: "running",
-    title: "Men's Football Training Session",
-    date: "2025-08-12",
-    time: "19:00",
-    location: "Hampstead Heath",
-    meetupLocation: "Hampstead Heath Athletics Track",
-    organizer: "London FC Training",
-    maxParticipants: "20",
-    difficulty: "Intermediate",
-    specialComments:
-      "High-intensity football training session focusing on fitness, technique, and team play. All skill levels welcome.",
-    imageSrc:
-      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=40&h=40&fit=crop&crop=face",
-    gender: "Male only",
-    visibility: "All",
-    club: null,
-    createdAt: new Date(),
-  },
-];
+// No demo data - fully backend dependent
 
 export function ActivitiesProvider({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Activity[]>([]);
