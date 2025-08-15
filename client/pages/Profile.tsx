@@ -118,6 +118,10 @@ export default function Profile() {
     currentProfile,
   } = useOnboardingProfileInfo();
 
+  // Get user clubs
+  const { getUserClubs } = useClub();
+  const userClubs = getUserClubs();
+
   // Use activities and reviews hook
   const {
     completedActivities,
