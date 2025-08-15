@@ -545,55 +545,123 @@ export default function Profile() {
 
             {/* Sports Content */}
             <div className="space-y-4">
-              {activeSportTab === "climbing" && (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold text-black">Rock Climbing</h4>
-                    <span className="px-3 py-1 bg-explore-green text-white rounded-full text-xs font-medium">
-                      Expert
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div>
-                      <span className="text-gray-600">Experience:</span>
-                      <div className="font-medium text-black">5 years</div>
+              {displayProfile.sports && Array.isArray(displayProfile.sports) && displayProfile.sports.map((sport, index) => {
+                const sportName = typeof sport === 'string' ? sport : sport.sport;
+                const sportKey = sportName.toLowerCase();
+                const sportData = getSportData(sportName);
+
+                if (activeSportTab !== sportKey) return null;
+
+                return (
+                  <div key={index} className="bg-gray-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-semibold text-black">{sportName}</h4>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        sportData?.level === 'Expert' || sportData?.level === 'Professional' ? 'bg-explore-green text-white' :
+                        sportData?.level === 'Advanced' ? 'bg-orange-500 text-white' :
+                        sportData?.level === 'Intermediate' ? 'bg-yellow-500 text-white' :
+                        'bg-blue-500 text-white'
+                      }`}>
+                        {sportData?.level || 'Beginner'}
+                      </span>
                     </div>
-                    <div>
-                      <span className="text-gray-600">Max Grade:</span>
-                      <div className="font-medium text-black">V6 / 6c+</div>
+
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      {sportData?.experience && (
+                        <div>
+                          <span className="text-gray-600">Experience:</span>
+                          <div className="font-medium text-black">{sportData.experience}</div>
+                        </div>
+                      )}
+
+                      {/* Climbing specific fields */}
+                      {sportKey === 'climbing' && (
+                        <>
+                          {sportData?.maxGrade && (
+                            <div>
+                              <span className="text-gray-600">Max Grade:</span>
+                              <div className="font-medium text-black">{sportData.maxGrade}</div>
+                            </div>
+                          )}
+                          {sportData?.certifications && sportData.certifications.length > 0 && (
+                            <div>
+                              <span className="text-gray-600">Certifications:</span>
+                              <div className="font-medium text-black">
+                                {sportData.certifications.join(", ")}
+                              </div>
+                            </div>
+                          )}
+                          {sportData?.specialties && sportData.specialties.length > 0 && (
+                            <div>
+                              <span className="text-gray-600">Specialties:</span>
+                              <div className="font-medium text-black">
+                                {sportData.specialties.join(", ")}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {/* Cycling specific fields */}
+                      {sportKey === 'cycling' && (
+                        <>
+                          {sportData?.distance && (
+                            <div>
+                              <span className="text-gray-600">Avg Distance:</span>
+                              <div className="font-medium text-black">{sportData.distance}</div>
+                            </div>
+                          )}
+                          {sportData?.pace && (
+                            <div>
+                              <span className="text-gray-600">Preferred Pace:</span>
+                              <div className="font-medium text-black">{sportData.pace}</div>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {/* Running specific fields */}
+                      {sportKey === 'running' && (
+                        <>
+                          {sportData?.distance && (
+                            <div>
+                              <span className="text-gray-600">Avg Distance:</span>
+                              <div className="font-medium text-black">{sportData.distance}</div>
+                            </div>
+                          )}
+                          {sportData?.pace && (
+                            <div>
+                              <span className="text-gray-600">Best Pace:</span>
+                              <div className="font-medium text-black">{sportData.pace}</div>
+                            </div>
+                          )}
+                          {sportData?.goals && (
+                            <div>
+                              <span className="text-gray-600">Goals:</span>
+                              <div className="font-medium text-black">{sportData.goals}</div>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
-                    <div>
-                      <span className="text-gray-600">Certifications:</span>
-                      <div className="font-medium text-black">
-                        Lead Climbing
+
+                    {/* Skills/Preferences tags */}
+                    {((sportKey === 'climbing' && sportData?.skills) ||
+                      (sportKey === 'cycling' && sportData?.preferences) ||
+                      (sportKey === 'running' && sportData?.preferences)) && (
+                      <div className="mt-3 pt-3 border-t border-gray-200">
+                        <div className="flex flex-wrap gap-2">
+                          {(sportData?.skills || sportData?.preferences || []).map((skill, skillIndex) => (
+                            <span key={skillIndex} className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Specialties:</span>
-                      <div className="font-medium text-black">Coaching</div>
-                    </div>
+                    )}
                   </div>
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
-                        Indoor
-                      </span>
-                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
-                        Outdoor
-                      </span>
-                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
-                        Top Rope
-                      </span>
-                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
-                        Lead
-                      </span>
-                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
-                        Bouldering
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
+                );
+              })}
 
               {activeSportTab === "cycling" && (
                 <div className="bg-gray-50 rounded-lg p-4">
