@@ -879,7 +879,7 @@ function MixedActivitiesSection({
         )}
 
         <div className="flex gap-2 overflow-x-auto pb-2">
-          {/* Show mixed activities or search results */}
+          {/* Show search results or backend activities */}
           {isSearching ? (
             filteredActivities.length === 0 ? (
               <div className="text-center py-8 text-gray-500 w-full">
@@ -912,74 +912,43 @@ function MixedActivitiesSection({
                 />
               ))
             )
+          ) : activities.length === 0 ? (
+            <div className="text-center py-8 text-gray-500 w-full">
+              <p className="mb-4">No activities yet</p>
+              <Link
+                to="/create-activity"
+                className="bg-explore-green text-white px-4 py-2 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
+              >
+                Create Activity
+              </Link>
+            </div>
           ) : (
-            <>
-              {/* Mixed default activities */}
-              {mixedActivities
-                .filter((activity) =>
-                  filters.activityType.some(
-                    (type) =>
-                      type.toLowerCase() === activity.type ||
-                      (type === "Cycling" && activity.type === "cycling") ||
-                      (type === "Climbing" && activity.type === "climbing") ||
-                      (type === "Running" && activity.type === "running"),
-                  ),
-                )
-                .map((activity, index) => (
-                  <ActivityCard
-                    key={index}
-                    title={activity.title}
-                    date={activity.date}
-                    location={activity.location}
-                    imageSrc={activity.imageSrc}
-                    organizer={
-                      activity.organizer?.full_name ||
-                      activity.organizerName ||
-                      "Community"
-                    }
-                    type={activity.type}
-                    distance={activity.distance}
-                    pace={activity.pace}
-                    elevation={activity.elevation}
-                    difficulty={activity.difficulty}
-                    isFirstCard={activity.isFirstCard}
-                    activityId={
-                      activity.type === "climbing"
-                        ? "westway-womens-climb"
-                        : activity.type === "cycling"
-                          ? "sunday-morning-ride"
-                          : "westway-womens-climb"
-                    }
-                  />
-                ))}
-
-              {/* User created activities */}
-              {activities.slice(0, 2).map((activity) => (
-                <ActivityCard
-                  key={activity.id}
-                  title={activity.title}
-                  date={`📅 ${formatActivityDate(activity.date)}`}
-                  location={`📍 ${activity.location}`}
-                  imageSrc={
-                    activity.imageSrc ||
-                    "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
-                  }
-                  organizer={
-                    activity.organizer?.full_name ||
-                    activity.organizerName ||
-                    "Community"
-                  }
-                  type={activity.type}
-                  distance={activity.distance}
-                  pace={activity.pace}
-                  elevation={activity.elevation}
-                  difficulty={activity.difficulty || activity.difficulty_level || "Intermediate"}
-                  activityId={activity.id}
-                  isOrganizerFollowed={isOrganizerFollowed(activity)}
-                  isFromUserClub={isFromUserClub(activity)}
-                />
-              ))}
-            </>
+            /* Backend activities */
+            activities.map((activity) => (
+              <ActivityCard
+                key={activity.id}
+                title={activity.title}
+                date={`📅 ${formatActivityDate(activity.date)}`}
+                location={`📍 ${activity.location}`}
+                imageSrc={
+                  activity.imageSrc ||
+                  "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+                }
+                organizer={
+                  activity.organizer?.full_name ||
+                  activity.organizerName ||
+                  "Community"
+                }
+                type={activity.type}
+                distance={activity.distance}
+                pace={activity.pace}
+                elevation={activity.elevation}
+                difficulty={activity.difficulty || activity.difficulty_level || "Intermediate"}
+                activityId={activity.id}
+                isOrganizerFollowed={isOrganizerFollowed(activity)}
+                isFromUserClub={isFromUserClub(activity)}
+              />
+            ))
           )}
         </div>
       </div>
@@ -1061,7 +1030,7 @@ function MixedActivitiesSection({
                 </div>
                 <ActivityCard
                   title={activity.title}
-                  date={`��� ${formatActivityDate(activity.date)}`}
+                  date={`📅 ${formatActivityDate(activity.date)}`}
                   location={`📍 ${activity.location}`}
                   imageSrc={
                     activity.imageSrc ||
