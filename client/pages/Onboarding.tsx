@@ -110,7 +110,7 @@ export default function Onboarding() {
     "United States", "Canada", "Australia", "Portugal", "Belgium", "Switzerland"
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     // Update profile with current step data
     if (currentStep === 1 && tempData.name.trim()) {
       updateProfile({ name: tempData.name });
@@ -144,8 +144,14 @@ export default function Onboarding() {
     }
 
     if (currentStep === totalSteps) {
-      completeOnboarding();
-      navigate("/explore");
+      try {
+        await completeOnboarding();
+        navigate("/explore");
+      } catch (error) {
+        console.error("Error completing onboarding:", error);
+        // Still navigate even if backend profile creation fails
+        navigate("/explore");
+      }
     } else {
       nextStep();
     }
