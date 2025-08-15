@@ -482,29 +482,7 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       const response = await apiService.getActivities(filters);
 
       if (response.error) {
-        // Check if backend is unavailable - this is not an error, just use demo mode
-        if (response.error === "BACKEND_UNAVAILABLE") {
-          console.log("Backend unavailable, seamlessly using demo data");
-          const transformedDemoActivities = demoActivities.map((activity) => ({
-            ...activity,
-            activity_type: activity.type as any,
-            date_time: `${activity.date}T${activity.time}:00Z`,
-            max_participants: parseInt(activity.maxParticipants),
-            current_participants: Math.floor(
-              Math.random() * parseInt(activity.maxParticipants),
-            ),
-            difficulty_level: (activity.difficulty?.toLowerCase() ||
-              "beginner") as any,
-            price_per_person: 0,
-            status: "upcoming" as any,
-            organizer_id: "demo-user-id",
-            created_at: activity.createdAt.toISOString(),
-            updated_at: activity.createdAt.toISOString(),
-          }));
-          setActivities(transformedDemoActivities);
-          setLoading(false);
-          return;
-        }
+        // Backend error - show actual error to user
         throw new Error(response.error);
       }
 
