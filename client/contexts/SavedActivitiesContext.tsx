@@ -115,12 +115,30 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
       const response = await apiService.saveActivity(activity.id);
 
       if (response.error) {
-        // Revert optimistic update
-        setSavedActivities((prev) =>
-          prev.filter((saved) => saved.id !== activity.id),
-        );
-        console.error("Failed to save activity:", response.error);
-        return false;
+        if (response.error === "BACKEND_UNAVAILABLE") {
+          // Backend unavailable - use localStorage fallback
+          console.log("Backend unavailable, saving to localStorage");
+          try {
+            const savedActivities = JSON.parse(localStorage.getItem('savedActivities') || '[]');
+            const newSavedActivities = [...savedActivities, activity];
+            localStorage.setItem('savedActivities', JSON.stringify(newSavedActivities));
+            return true; // Keep optimistic update
+          } catch (storageError) {
+            console.error("Failed to save to localStorage:", storageError);
+            // Revert optimistic update
+            setSavedActivities((prev) =>
+              prev.filter((saved) => saved.id !== activity.id),
+            );
+            return false;
+          }
+        } else {
+          // Other error - revert optimistic update
+          setSavedActivities((prev) =>
+            prev.filter((saved) => saved.id !== activity.id),
+          );
+          console.error("Failed to save activity:", response.error);
+          return false;
+        }
       }
 
       return true;
