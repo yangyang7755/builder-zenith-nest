@@ -515,21 +515,18 @@ export default function Index() {
         />
 
         {/* All Activities Section */}
-        {(
-          /* Mixed Activities Section */
-          <MixedActivitiesSection
-            filters={filters}
-            filteredActivities={filteredActivities}
-            isSearching={isSearching}
-            searchQuery={searchQuery}
-            activities={activities}
-            formatActivityDate={formatActivityDate}
-            activitiesFromFollowedUsers={activitiesFromFollowedUsers}
-            activitiesFromUserClubs={activitiesFromUserClubs}
-            isOrganizerFollowed={isOrganizerFollowed}
-            isFromUserClub={isFromUserClub}
-          />
-        )}
+        <MixedActivitiesSection
+          filters={filters}
+          filteredActivities={filteredActivities}
+          isSearching={isSearching}
+          searchQuery={searchQuery}
+          activities={activities}
+          formatActivityDate={formatActivityDate}
+          activitiesFromFollowedUsers={activitiesFromFollowedUsers}
+          activitiesFromUserClubs={activitiesFromUserClubs}
+          isOrganizerFollowed={isOrganizerFollowed}
+          isFromUserClub={isFromUserClub}
+        />
 
         {/* Partner Requests Section */}
         <div className="mb-8">
