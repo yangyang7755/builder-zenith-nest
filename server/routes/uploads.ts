@@ -152,14 +152,28 @@ router.post('/profile-image', upload.single('image'), async (req, res) => {
 // POST /api/uploads/club-image - Upload club image
 router.post('/club-image', upload.single('image'), async (req, res) => {
   try {
+    console.log('Club image upload request received');
+    console.log('Auth header present:', !!req.headers.authorization);
+    console.log('Request body:', req.body);
+
     const user = await getAuthenticatedUser(req);
+    console.log('Authenticated user:', user?.id);
+
     if (!user) {
+      console.log('No authenticated user found');
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 
     if (!req.file) {
+      console.log('No file in request');
       return res.status(400).json({ success: false, message: 'No image file provided' });
     }
+
+    console.log('File received:', {
+      name: req.file.originalname,
+      size: req.file.size,
+      type: req.file.mimetype
+    });
 
     const { clubId } = uploadClubImageSchema.parse(req.body);
 
