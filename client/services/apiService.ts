@@ -17,25 +17,54 @@ const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> =>
   try {
     const contentType = response.headers.get('content-type');
     let data: any;
-    
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      data = await response.text();
+
+    // Check if response body has already been consumed
+    if (response.bodyUsed) {
+      console.warn('Response body already consumed, returning error');
+      return {
+        error: 'Response body already consumed',
+        status: response.status
+      };
+    }
+
+    // Clone the response to avoid body stream conflicts
+    const responseClone = response.clone();
+
+    try {
+      if (contentType && contentType.includes('application/json')) {
+        data = await responseClone.json();
+      } else {
+        data = await responseClone.text();
+      }
+    } catch (parseError) {
+      // If parsing fails, try with original response as fallback
+      console.warn('Failed to parse cloned response, trying original:', parseError);
+      try {
+        if (contentType && contentType.includes('application/json')) {
+          data = await response.json();
+        } else {
+          data = await response.text();
+        }
+      } catch (fallbackError) {
+        return {
+          error: `Failed to parse response: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`,
+          status: response.status
+        };
+      }
     }
 
     if (response.ok) {
       return { data, status: response.status };
     } else {
-      return { 
-        error: data?.error || data?.message || `HTTP ${response.status}`, 
-        status: response.status 
+      return {
+        error: data?.error || data?.message || `HTTP ${response.status}`,
+        status: response.status
       };
     }
   } catch (error) {
-    return { 
+    return {
       error: error instanceof Error ? error.message : 'Network error',
-      status: response.status 
+      status: response.status
     };
   }
 };
