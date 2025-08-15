@@ -48,7 +48,7 @@ interface OnboardingContextType {
   currentStep: number;
   totalSteps: number;
   updateProfile: (data: Partial<UserProfile>) => void;
-  completeOnboarding: () => void;
+  completeOnboarding: () => Promise<void>;
   resetOnboarding: () => void;
   setCurrentStep: (step: number) => void;
   nextStep: () => void;
