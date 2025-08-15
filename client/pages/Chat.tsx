@@ -27,7 +27,7 @@ export default function Chat() {
       lastMessage: "Training ride tomorrow! Meet at Radcliffe Camera 7am",
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
       avatar:
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60&h=60&fit=crop",
+        "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=60",
       unread: false,
       type: "club",
     },
