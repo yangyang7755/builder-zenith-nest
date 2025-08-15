@@ -304,10 +304,10 @@ export default function Profile() {
     const emojis: { [key: string]: string } = {
       cycling: "🚴",
       climbing: "🧗",
-      running: "🏃",
+      running: "👟",
       hiking: "🥾",
       skiing: "⛷️",
-      surfing: "🏄",
+      surfing: "🌊",
       tennis: "🎾",
       general: "⚡",
     };
