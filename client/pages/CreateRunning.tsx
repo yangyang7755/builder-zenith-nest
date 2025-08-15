@@ -105,7 +105,7 @@ export default function CreateRunning() {
       activityTitle = `${formData.raceCategory} ${activityTitle}`;
     }
 
-    addActivity({
+    const result = await addActivity({
       type: "running",
       title: activityTitle,
       date: formData.date,
@@ -141,8 +141,12 @@ export default function CreateRunning() {
         "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=40&h=40&fit=crop&crop=face",
     });
 
-    showToast("Running activity created successfully!", "success");
-    navigate("/explore");
+    if (result) {
+      showToast("Running activity created successfully!", "success");
+      navigate("/explore");
+    } else {
+      showToast("Failed to create activity. Please try again.", "error");
+    }
   };
 
   return (
