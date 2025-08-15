@@ -1,667 +1,327 @@
-import { getAuthHeader } from "../lib/supabase";
-
-// API base URL - backend is served from same port as client via Vite middleware
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
-
-// Store original fetch to avoid third-party interference (like FullStory analytics)
-const originalFetch = window.fetch;
-
-// Fallback fetch function that tries multiple approaches
-const safeFetch = async (url: string, options?: RequestInit) => {
-  // Try original fetch first
-  if (originalFetch && typeof originalFetch === 'function') {
-    try {
-      return await originalFetch(url, options);
-    } catch (error) {
-      console.log("Original fetch failed, trying current fetch:", error);
-    }
-  }
-
-  // Fallback to current fetch (which might be wrapped by analytics)
-  try {
-    return await window.fetch(url, options);
-  } catch (error) {
-    console.log("Window fetch also failed:", error);
-    throw error;
-  }
-};
-
-// Check if backend is available
-let backendAvailable: boolean | null = null;
-let backendCheckPromise: Promise<boolean> | null = null;
-
-const checkBackendAvailability = async (): Promise<boolean> => {
-  // Return cached result if already checked
-  if (backendAvailable !== null) {
-    return backendAvailable;
-  }
-
-  // If there's already a check in progress, wait for it
-  if (backendCheckPromise) {
-    return backendCheckPromise;
-  }
-
-  // Start the check
-  backendCheckPromise = (async () => {
-    try {
-      // Create a cross-browser compatible timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
-
-      try {
-        // Try a simple ping to check if backend is available
-    console.log("Checking backend availability at:", `${API_BASE_URL}/ping`);
-    const response = await safeFetch(`${API_BASE_URL}/ping`, {
-      method: "GET",
-      signal: controller.signal,
-    });
-    console.log("Backend ping response:", response.status, response.statusText);
-
-        clearTimeout(timeoutId);
-
-        // Treat 503 (Service Unavailable) and other server errors as backend unavailable
-        backendAvailable = response.ok && response.status !== 503;
-        console.log(
-          `Backend availability check: ${backendAvailable ? "Available" : "Unavailable"} (Status: ${response.status})`,
-        );
-        return backendAvailable;
-      } catch (fetchError) {
-        clearTimeout(timeoutId);
-        throw fetchError;
-      }
-    } catch (error) {
-      console.log(
-        "Backend not available (network error), using demo mode:",
-        error instanceof Error ? error.message : String(error),
-      );
-      backendAvailable = false;
-      return false;
-    } finally {
-      backendCheckPromise = null;
-    }
-  })();
-
-  return backendCheckPromise;
-};
+const API_BASE_URL = "/api";
 
 interface ApiResponse<T> {
   data?: T;
   error?: string;
+  status?: number;
 }
 
-class ApiService {
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {},
-    retryCount: number = 0,
-  ): Promise<ApiResponse<T>> {
-    // Check if backend is available first (except for ping endpoint)
-    if (endpoint !== "/ping") {
-      const isBackendAvailable = await checkBackendAvailability();
-      if (!isBackendAvailable) {
-        console.log("Backend unavailable, returning demo mode indicator");
-        return { error: "BACKEND_UNAVAILABLE" };
-      }
+// Utility function to get auth headers
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('auth_token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// Utility function to handle API responses
+const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
+  try {
+    const contentType = response.headers.get('content-type');
+    let data: any;
+    
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      data = await response.text();
     }
 
-    // Execute request directly without caching to avoid body stream issues
-    return this.executeRequest<T>(endpoint, options, retryCount);
-  }
-
-  private async executeRequest<T>(
-    endpoint: string,
-    options: RequestInit = {},
-    retryCount: number = 0,
-  ): Promise<ApiResponse<T>> {
-    const maxRetries = 2;
-
-    try {
-      const authHeader = await getAuthHeader();
-
-      // Create a completely fresh fetch request each time to avoid any shared state
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => {
-        controller.abort();
-      }, 10000); // 10 second timeout
-
-      const response = await safeFetch(`${API_BASE_URL}${endpoint}`, {
-        headers: {
-          "Content-Type": "application/json",
-          ...(authHeader && { Authorization: authHeader }),
-          ...options.headers,
-        },
-        signal: controller.signal,
-        ...options,
-      });
-
-      clearTimeout(timeoutId);
-
-      // Immediately check if response is ok and handle errors before trying to read body
-      const status = response.status;
-      const statusOk = response.ok;
-
-      let responseData;
-
-      try {
-        // Check if response body is readable before attempting any operations
-        const bodyUsed = response.bodyUsed;
-
-        if (bodyUsed || response.body === null) {
-          // If body is already used or null, create a response based on status
-          if (statusOk) {
-            responseData = { success: true };
-          } else {
-            responseData = {
-              success: false,
-              error: `HTTP ${status}`,
-              message: `Request failed with status ${status}`,
-            };
-          }
-        } else {
-          // Try to read the response body using a simple approach
-          try {
-            const responseText = await response.text();
-
-            if (responseText.trim()) {
-              try {
-                responseData = JSON.parse(responseText);
-              } catch (jsonError) {
-                responseData = { message: responseText };
-              }
-            } else {
-              responseData = statusOk
-                ? { success: true }
-                : { success: false, error: `HTTP ${status}` };
-            }
-          } catch (textError) {
-            // If we can't read the text, fall back to status-based response
-            console.warn(
-              "Could not read response text, using status-based response:",
-              textError.message,
-            );
-            responseData = statusOk
-              ? { success: true }
-              : { success: false, error: `HTTP ${status}` };
-          }
-        }
-      } catch (readError) {
-        console.error("Failed to read response:", readError);
-
-        // If we can't read at all, check if we should retry
-        if (
-          retryCount < maxRetries &&
-          (readError.message.includes("body stream already read") ||
-            readError.message.includes("Response body is already used") ||
-            readError.message.includes("clone"))
-        ) {
-          console.log(
-            `Retrying request due to read error (attempt ${retryCount + 1}/${maxRetries + 1})...`,
-          );
-          await new Promise((resolve) =>
-            setTimeout(resolve, 300 * (retryCount + 1)),
-          );
-          return this.executeRequest(endpoint, options, retryCount + 1);
-        }
-
-        // Final fallback: return a response based on HTTP status
-        responseData = statusOk
-          ? { success: true }
-          : {
-              success: false,
-              error: `Failed to read response: ${readError instanceof Error ? readError.message : String(readError)}`,
-            };
-      }
-
-      if (!statusOk) {
-        // Handle 503 Service Unavailable immediately without logging as error
-        if (status === 503) {
-          console.log(
-            "Backend service unavailable (503), switching to demo mode",
-          );
-          return {
-            error: "BACKEND_UNAVAILABLE",
-          };
-        }
-
-        // Handle 400 Bad Request - could be validation errors or missing data
-        if (status === 400) {
-          console.log(
-            "Bad request (400) - validation error or missing data:",
-            responseData,
-          );
-
-          // Return the actual error message instead of BACKEND_UNAVAILABLE
-          const errorMessage = responseData?.message || responseData?.error || "Bad request";
-          return {
-            error: errorMessage,
-            data: responseData,
-          };
-        }
-
-        // Handle 401 Unauthorized - authentication issues
-        if (status === 401) {
-          console.log(
-            "Unauthorized (401) - authentication required, falling back to demo mode",
-          );
-          return {
-            error: "BACKEND_UNAVAILABLE",
-          };
-        }
-
-        // Log other server errors but still try to work in demo mode
-        console.log(
-          `Server error ${status}, falling back to demo mode:`,
-          responseData?.error || responseData?.message || "Unknown error",
-        );
-
-        return {
-          error: "BACKEND_UNAVAILABLE",
-          data: responseData,
-        };
-      }
-
-      return { data: responseData };
-    } catch (error) {
-      console.error(`API request failed:`, error);
-
-      // Retry on network errors if we haven't exceeded max retries
-      if (
-        retryCount < maxRetries &&
-        error instanceof Error &&
-        (error.message.includes("body stream already read") ||
-          error.message.includes("Failed to fetch"))
-      ) {
-        console.log(
-          `Retrying request (attempt ${retryCount + 1}/${maxRetries + 1})...`,
-        );
-        await new Promise((resolve) =>
-          setTimeout(resolve, 100 * (retryCount + 1)),
-        ); // exponential backoff
-        return this.executeRequest(endpoint, options, retryCount + 1);
-      }
-
-      return {
-        error: error instanceof Error ? error.message : "Unknown error",
+    if (response.ok) {
+      return { data, status: response.status };
+    } else {
+      return { 
+        error: data?.error || data?.message || `HTTP ${response.status}`, 
+        status: response.status 
       };
     }
+  } catch (error) {
+    return { 
+      error: error instanceof Error ? error.message : 'Network error',
+      status: response.status 
+    };
   }
+};
 
-  // Activity methods
-  async getActivities(filters?: {
-    club_id?: string;
-    activity_type?: string;
-    location?: string;
-    difficulty_level?: string;
-    date_from?: string;
-    date_to?: string;
-    status?: string;
-    limit?: number;
-    offset?: number;
-  }) {
-    const params = new URLSearchParams();
-    if (filters?.club_id) params.append("club_id", filters.club_id);
-    if (filters?.activity_type) params.append("activity_type", filters.activity_type);
-    if (filters?.location) params.append("location", filters.location);
-    if (filters?.difficulty_level) params.append("difficulty_level", filters.difficulty_level);
-    if (filters?.date_from) params.append("date_from", filters.date_from);
-    if (filters?.date_to) params.append("date_to", filters.date_to);
-    if (filters?.status) params.append("status", filters.status);
-    if (filters?.limit) params.append("limit", filters.limit.toString());
-    if (filters?.offset) params.append("offset", filters.offset.toString());
+// Activity API methods
+export const apiService = {
+  // Activity Reviews
+  async getActivityReviews(activityId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews?activity_id=${activityId}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch reviews' };
+    }
+  },
 
-    const query = params.toString() ? `?${params.toString()}` : "";
-    return this.request<any[]>(`/activities${query}`);
-  }
+  async createActivityReview(reviewData: {
+    activity_id: string;
+    reviewee_id: string;
+    rating: number;
+    comment?: string;
+  }): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify(reviewData),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to create review' };
+    }
+  },
 
-  async getActivity(id: string) {
-    return this.request<any>(`/activities/${id}`);
-  }
+  async getUserReviews(userId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews?user_id=${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch user reviews' };
+    }
+  },
 
-  async createActivity(activity: any) {
-    console.log("API: Creating activity with data:", activity);
-    const result = await this.request<any>("/activities", {
-      method: "POST",
-      body: JSON.stringify(activity),
-    });
-    console.log("API: Create activity result:", result);
-    return result;
-  }
+  // Followers/Following API methods
+  async getUserFollowers(userId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/followers/${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch followers' };
+    }
+  },
 
-  async updateActivity(id: string, updates: any) {
-    return this.request<any>(`/activities/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(updates),
-    });
-  }
+  async getUserFollowing(userId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/following/${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch following' };
+    }
+  },
 
-  async deleteActivity(id: string) {
-    return this.request<void>(`/activities/${id}`, {
-      method: "DELETE",
-    });
-  }
+  async followUser(userId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/follow`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify({ following_id: userId }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to follow user' };
+    }
+  },
 
-  // Club methods
-  async getClubs(userId?: string) {
-    const query = userId ? `?userId=${userId}` : "";
-    return this.request<any[]>(`/clubs${query}`);
-  }
+  async unfollowUser(userId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/unfollow/${userId}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to unfollow user' };
+    }
+  },
 
-  async getClub(id: string) {
-    return this.request<any>(`/clubs/${id}`);
-  }
-
-  async updateClub(id: string, updates: any, userId: string) {
-    return this.request<any>(`/clubs/${id}`, {
-      method: "PUT",
-      body: JSON.stringify({ ...updates, userId }),
-    });
-  }
-
-  async requestToJoinClub(clubId: string, requestData: any) {
-    return this.request<any>(`/clubs/${clubId}/join`, {
-      method: "POST",
-      body: JSON.stringify(requestData),
-    });
-  }
-
-  async approveClubRequest(
-    clubId: string,
-    requestId: string,
-    managerId: string,
-  ) {
-    return this.request<void>(
-      `/clubs/${clubId}/requests/${requestId}/approve`,
-      {
-        method: "POST",
-        body: JSON.stringify({ managerId }),
-      },
-    );
-  }
-
-  async denyClubRequest(clubId: string, requestId: string, managerId: string) {
-    return this.request<void>(`/clubs/${clubId}/requests/${requestId}`, {
-      method: "DELETE",
-      body: JSON.stringify({ managerId }),
-    });
-  }
-
-  // User/Profile methods
-  async getProfile() {
-    return this.request<any>("/profile");
-  }
-
-  async updateProfile(updates: any) {
-    return this.request<any>("/profile", {
-      method: "PUT",
-      body: JSON.stringify(updates),
-    });
-  }
-
-  async getUserClubs() {
-    return this.request<any[]>("/user/clubs");
-  }
-
-  async createClub(clubData: any) {
-    return this.request<any>("/clubs", {
-      method: "POST",
-      body: JSON.stringify(clubData),
-    });
-  }
-
-  // Reviews methods
-  async getReviews(filters?: { activity_id?: string; user_id?: string }) {
-    const params = new URLSearchParams();
-    if (filters?.activity_id) params.append("activity_id", filters.activity_id);
-    if (filters?.user_id) params.append("user_id", filters.user_id);
-
-    const query = params.toString() ? `?${params.toString()}` : "";
-    return this.request<any[]>(`/reviews${query}`);
-  }
-
-  async createReview(review: any) {
-    return this.request<any>("/reviews", {
-      method: "POST",
-      body: JSON.stringify(review),
-    });
-  }
-
-  async updateReview(id: string, updates: any) {
-    return this.request<any>(`/reviews/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(updates),
-    });
-  }
-
-  async deleteReview(id: string) {
-    return this.request<void>(`/reviews/${id}`, {
-      method: "DELETE",
-    });
-  }
-
-  // Followers methods
-  async getFollowers(userId: string) {
-    return this.request<any[]>(`/users/${userId}/followers`);
-  }
-
-  async getFollowing(userId: string) {
-    return this.request<any[]>(`/users/${userId}/following`);
-  }
-
-  async getFollowStats(userId: string) {
-    return this.request<{ followers: number; following: number }>(
-      `/users/${userId}/follow-stats`,
-    );
-  }
-
-  async followUser(userId: string) {
-    return this.request<any>("/follow", {
-      method: "POST",
-      body: JSON.stringify({ following_id: userId }),
-    });
-  }
-
-  async unfollowUser(userId: string) {
-    return this.request<void>(`/follow/${userId}`, {
-      method: "DELETE",
-    });
-  }
-
-  // Chat methods
-  async getClubMessages(
-    clubId: string,
-    limit: number = 50,
-    offset: number = 0,
-  ) {
-    const params = new URLSearchParams();
-    params.append("limit", limit.toString());
-    params.append("offset", offset.toString());
-
-    return this.request<any[]>(
-      `/clubs/${clubId}/messages?${params.toString()}`,
-    );
-  }
-
-  async sendClubMessage(clubId: string, message: string) {
-    return this.request<any>(`/clubs/${clubId}/messages`, {
-      method: "POST",
-      body: JSON.stringify({ message }),
-    });
-  }
-
-  async getClubOnlineUsers(clubId: string) {
-    return this.request<any[]>(`/clubs/${clubId}/online-users`);
-  }
-
-  async getDirectMessages(
-    otherUserId: string,
-    limit: number = 50,
-    offset: number = 0,
-  ) {
-    const params = new URLSearchParams();
-    params.append("limit", limit.toString());
-    params.append("offset", offset.toString());
-
-    return this.request<any[]>(`/messages/${otherUserId}?${params.toString()}`);
-  }
-
-  async sendDirectMessage(receiverId: string, message: string) {
-    return this.request<any>("/messages", {
-      method: "POST",
-      body: JSON.stringify({ receiver_id: receiverId, message }),
-    });
-  }
-
-  async markMessagesAsRead(senderId: string) {
-    return this.request<void>("/messages/mark-read", {
-      method: "POST",
-      body: JSON.stringify({ sender_id: senderId }),
-    });
-  }
+  async getFollowStats(userId: string): Promise<ApiResponse<{ followers: number; following: number }>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/follow-stats/${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch follow stats' };
+    }
+  },
 
   // Activity participation methods
-  async joinActivity(activityId: string) {
-    return this.request<any>(`/activities/${activityId}/join`, {
-      method: "POST",
-    });
-  }
-
-  async leaveActivity(activityId: string) {
-    return this.request<any>(`/activities/${activityId}/leave`, {
-      method: "DELETE",
-    });
-  }
-
-  async getActivityParticipants(activityId: string) {
-    return this.request<any[]>(`/activities/${activityId}/participants`);
-  }
-
-  // Get user's activity history (past activities)
-  async getUserActivityHistory(filters?: {
-    status?: string;
+  async getUserActivityHistory(params: {
+    status?: 'completed' | 'upcoming';
     limit?: number;
     offset?: number;
-  }) {
-    const params = new URLSearchParams();
+  } = {}): Promise<ApiResponse<any[]>> {
+    try {
+      const queryParams = new URLSearchParams();
+      if (params.status) queryParams.append('status', params.status);
+      if (params.limit) queryParams.append('limit', params.limit.toString());
+      if (params.offset) queryParams.append('offset', params.offset.toString());
 
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          params.append(key, value.toString());
-        }
+      const response = await fetch(`${API_BASE_URL}/user/activities?${queryParams}`, {
+        headers: getAuthHeaders(),
       });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch activity history' };
     }
+  },
 
-    const queryString = params.toString();
-    return this.request<any>(
-      `/activities/user/history${queryString ? `?${queryString}` : ""}`,
-    );
-  }
+  async getActivitiesNeedingReview(): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/activities/pending-reviews`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch activities needing review' };
+    }
+  },
 
-  // Convenience methods for common use cases
-  async getUserActivities(userId?: string, status?: string) {
-    const filters: any = {};
-    if (status) filters.status = status;
+  // Activity creation and management
+  async createActivity(activityData: any): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/activities`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify(activityData),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to create activity' };
+    }
+  },
 
-    // If userId is provided, this would need a separate endpoint
-    // For now, we'll get all activities and filter client-side if needed
-    return this.getActivities(filters);
-  }
+  async joinActivity(activityId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/activities/${activityId}/join`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to join activity' };
+    }
+  },
 
-  async getClubActivities(clubId: string, status?: string) {
-    const filters: any = { club_id: clubId };
-    if (status) filters.status = status;
+  async leaveActivity(activityId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/activities/${activityId}/leave`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to leave activity' };
+    }
+  },
 
-    return this.getActivities(filters);
-  }
+  // Club management
+  async createClub(clubData: any): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/clubs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify(clubData),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to create club' };
+    }
+  },
 
-  async searchActivities(
-    searchTerm: string,
-    filters?: {
-      activity_type?: string;
-      difficulty_level?: string;
-      date_from?: string;
-      date_to?: string;
-    },
-  ) {
-    const searchFilters = {
-      location: searchTerm, // Search by location for now
-      ...filters,
-    };
+  async getClubs(): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/clubs`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch clubs' };
+    }
+  },
 
-    return this.getActivities(searchFilters);
-  }
+  async getUserClubs(userId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/clubs?userId=${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch user clubs' };
+    }
+  },
 
-  // Saved Activities methods
-  async getSavedActivities() {
-    return this.request<any>("/saved-activities");
-  }
+  // Profile and user data
+  async getUserProfile(userId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/${userId}/profile`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to fetch user profile' };
+    }
+  },
 
-  async saveActivity(activityId: string) {
-    return this.request<any>("/saved-activities", {
-      method: "POST",
-      body: JSON.stringify({ activity_id: activityId }),
-    });
-  }
+  async updateUserProfile(profileData: any): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify(profileData),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to update profile' };
+    }
+  },
 
-  async unsaveActivity(activityId: string) {
-    return this.request<void>(`/saved-activities/${activityId}`, {
-      method: "DELETE",
-    });
-  }
+  // Search functionality
+  async searchUsers(query: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/search/users?q=${encodeURIComponent(query)}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to search users' };
+    }
+  },
 
-  async checkActivitySaved(activityId: string) {
-    return this.request<{ is_saved: boolean }>(
-      `/saved-activities/check/${activityId}`,
-    );
-  }
+  async searchActivities(query: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/search/activities?q=${encodeURIComponent(query)}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to search activities' };
+    }
+  },
 
-  // User Authentication methods
-  async registerUser(userData: {
-    email: string;
-    password: string;
-    full_name: string;
-    university?: string;
-    bio?: string;
-  }) {
-    return this.request<any>("/users/register", {
-      method: "POST",
-      body: JSON.stringify(userData),
-    });
-  }
-
-  async loginUser(credentials: { email: string; password: string }) {
-    return this.request<any>("/users/login", {
-      method: "POST",
-      body: JSON.stringify(credentials),
-    });
-  }
-
-  async getUserProfile(userId: string) {
-    return this.request<any>(`/users/${userId}/profile`);
-  }
-
-  async updateUserProfile(userId: string, updates: any) {
-    return this.request<any>(`/users/${userId}/profile`, {
-      method: "PUT",
-      body: JSON.stringify(updates),
-    });
-  }
-
-  // Health check
-  async ping() {
-    return this.request<{ message: string }>("/ping");
-  }
-}
-
-export const apiService = new ApiService();
-
-// Example usage in your contexts:
-/*
-// Replace localStorage operations with API calls
-const { data: activities, error } = await apiService.getActivities();
-if (error) {
-  console.error('Failed to load activities:', error);
-  return;
-}
-setActivities(activities || []);
-*/
+  async searchClubs(query: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/search/clubs?q=${encodeURIComponent(query)}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to search clubs' };
+    }
+  },
+};
