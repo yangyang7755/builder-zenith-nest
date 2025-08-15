@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useChat } from "../contexts/ChatContext";
 import BottomNavigation from "../components/BottomNavigation";
+import { hasUserJoinedClubs, hasUserSentMessages, isUserInDemoMode } from "../utils/chatUtils";
 
 export default function Chat() {
   const {
