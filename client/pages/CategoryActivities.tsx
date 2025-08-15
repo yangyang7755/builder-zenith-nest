@@ -249,9 +249,15 @@ export default function CategoryActivities() {
         );
         break;
       case "popularity":
-        filtered = filtered.sort(
-          (a, b) => (b.participants || 0) - (a.participants || 0),
-        );
+        filtered = filtered.sort((a, b) => {
+          const aParticipants = typeof a.participants === 'number'
+            ? a.participants
+            : (a.participants?.count || a.current_participants || 0);
+          const bParticipants = typeof b.participants === 'number'
+            ? b.participants
+            : (b.participants?.count || b.current_participants || 0);
+          return bParticipants - aParticipants;
+        });
         break;
       case "distance":
         filtered = filtered.sort((a, b) => {
