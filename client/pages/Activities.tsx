@@ -73,13 +73,13 @@ export default function Activities() {
       case "climbing":
         return "🧗";
       case "running":
-        return "🏃";
+        return "👟";
       case "hiking":
         return "🥾";
       case "skiing":
         return "🎿";
       case "surfing":
-        return "🏄";
+        return "🌊";
       case "tennis":
         return "🎾";
       default:
