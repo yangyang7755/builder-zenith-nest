@@ -708,10 +708,7 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
     // Check if activity exists and get current participants
     const { data: activity, error: activityError } = await supabaseAdmin
       .from("activities")
-      .select(`
-        *,
-        current_participants:activity_participants!inner(count)
-      `)
+      .select(`*`)
       .eq("id", id)
       .eq("status", "upcoming")
       .single();
