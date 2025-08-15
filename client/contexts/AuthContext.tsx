@@ -8,6 +8,12 @@ import {
   signOut,
   getCurrentUser,
 } from "../lib/supabase";
+import {
+  createProfileFromOnboarding,
+  hasOnboardingData,
+  getOnboardingCompletionSummary
+} from "../services/onboardingService";
+import { UserProfile } from "./OnboardingContext";
 
 // Store original fetch to avoid third-party interference (like FullStory analytics)
 const originalFetch = window.fetch;
