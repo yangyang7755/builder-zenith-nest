@@ -299,10 +299,10 @@ export default function ActivityCard({
           {/* Participant count */}
           <div className="flex justify-between items-center mb-2 text-xs text-gray-600">
             <span>
-              {participationStats.current_participants}/
-              {participationStats.max_participants} participants
+              {participationStats?.current_participants ?? 0}/
+              {participationStats?.max_participants ?? activity.max_participants ?? 10} participants
             </span>
-            {participationStats.is_full && (
+            {participationStats?.is_full && (
               <span className="text-red-600 font-medium">Full</span>
             )}
           </div>
