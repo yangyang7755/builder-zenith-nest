@@ -472,19 +472,13 @@ export default function Index() {
               </>
             ) : error ? (
               <>
-                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                <span className="text-gray-600">Using demo data</span>
+                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                <span className="text-red-600">Backend connection failed</span>
                 <button
                   onClick={refreshActivities}
                   className="text-explore-green hover:underline ml-2"
                 >
                   Retry
-                </button>
-                <button
-                  onClick={testCreateActivity}
-                  className="text-blue-600 hover:underline ml-2"
-                >
-                  Test Create
                 </button>
               </>
             ) : (
