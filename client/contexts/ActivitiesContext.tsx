@@ -793,7 +793,8 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         },
       };
 
-      console.log("Transformed activity data:", newActivityData);
+      console.log("Transformed activity data for backend:", newActivityData);
+      console.log("Activity type set to:", newActivityData.activity_type);
 
       const result = await createActivity(newActivityData);
       console.log("Activity creation result:", result);
