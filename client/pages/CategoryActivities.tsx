@@ -761,8 +761,8 @@ export default function CategoryActivities() {
                               {activity.maxParticipants && activity.participants
                                 ? Math.max(
                                     0,
-                                    activity.maxParticipants -
-                                      activity.participants,
+                                    (typeof activity.maxParticipants === 'number' ? activity.maxParticipants : parseInt(activity.maxParticipants || '0')) -
+                                      (typeof activity.participants === 'number' ? activity.participants : 0),
                                   )
                                 : "~"}{" "}
                               spots left
