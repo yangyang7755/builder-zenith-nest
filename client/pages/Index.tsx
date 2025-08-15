@@ -391,6 +391,7 @@ export default function Index() {
       });
     }
 
+    console.log("Final filtered activities:", filtered.length, filtered);
     setFilteredActivities(filtered);
   }, [searchQuery, activities, searchActivities, filters]);
 
