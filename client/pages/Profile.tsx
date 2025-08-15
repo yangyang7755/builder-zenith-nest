@@ -15,6 +15,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useProfileVisibility } from "@/hooks/useProfileVisibility";
 import { useFollow } from "@/contexts/FollowContext";
 import { useOnboardingProfileInfo } from "@/components/OnboardingProfileSync";
+import { useClub } from "@/contexts/ClubContext";
 import { maddieWeiProfile } from "../data/demoProfiles";
 import BottomNavigation from "../components/BottomNavigation";
 import { ProfileEdit } from "../components/ProfileEdit";
