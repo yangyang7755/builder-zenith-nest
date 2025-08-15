@@ -780,14 +780,17 @@ export default function CategoryActivities() {
                                 </div>
                               )}
                             <span className="text-xs text-gray-500">
-                              {activity.maxParticipants && activity.participants
-                                ? Math.max(
-                                    0,
-                                    (typeof activity.maxParticipants === 'number' ? activity.maxParticipants : parseInt(activity.maxParticipants || '0')) -
-                                      (typeof activity.participants === 'number' ? activity.participants : 0),
-                                  )
-                                : "~"}{" "}
-                              spots left
+                              {(() => {
+                                const maxParticipants = typeof activity.maxParticipants === 'number'
+                                  ? activity.maxParticipants
+                                  : parseInt(activity.maxParticipants || '20');
+                                const participants = typeof activity.participants === 'number'
+                                  ? activity.participants
+                                  : (activity.participants?.count || activity.current_participants || 0);
+                                return maxParticipants && (participants || participants === 0)
+                                  ? Math.max(0, maxParticipants - participants)
+                                  : "~";
+                              })()} spots left
                             </span>
                           </div>
                           <button
