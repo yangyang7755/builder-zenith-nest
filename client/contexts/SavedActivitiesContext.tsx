@@ -51,7 +51,7 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
 
       // Add timeout to prevent hanging requests
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout')), 10000)
+        setTimeout(() => reject(new Error('Request timeout')), 8000)
       );
 
       let response;
