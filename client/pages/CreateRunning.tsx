@@ -85,7 +85,7 @@ export default function CreateRunning() {
     "Parkrun",
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
       !formData.maxRunners ||
       !formData.meetupLocation ||

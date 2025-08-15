@@ -129,7 +129,7 @@ export default function CreateCycling() {
     navigate("/create");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
       !formData.maxRiders ||
       !formData.meetupLocation ||
