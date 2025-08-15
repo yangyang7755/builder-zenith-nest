@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#1F381F"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.wildpals.app"
