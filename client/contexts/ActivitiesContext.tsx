@@ -465,18 +465,34 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 
   const createActivity = async (activityData: CreateActivityData) => {
     try {
+      console.log("Creating activity with data:", activityData);
       const response = await apiService.createActivity(activityData);
+      console.log("Create activity response:", response);
 
       if (response.error) {
+        console.error("Create activity error:", response.error);
         return { success: false, error: response.error };
       }
 
       const newActivity = response.data?.success
         ? response.data.data
         : response.data;
+      console.log("New activity from response:", newActivity);
+
       if (newActivity) {
         const transformedActivity = transformActivity(newActivity);
-        setActivities((prev) => [transformedActivity, ...prev]);
+        console.log("Transformed activity:", transformedActivity);
+        setActivities((prev) => {
+          const updatedActivities = [transformedActivity, ...prev];
+          console.log("Updated activities after creation:", updatedActivities);
+          return updatedActivities;
+        });
+
+        // Also refresh activities from backend to ensure sync
+        setTimeout(() => {
+          console.log("Refreshing activities after creation...");
+          getActivities();
+        }, 100);
       }
 
       return {
