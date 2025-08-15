@@ -103,7 +103,14 @@ export const createProfileFromOnboarding = async (
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      console.error("Profile creation failed:", {
+        status: response.status,
+        statusText: response.statusText,
+        errorData,
+        profileData,
+        headers
+      });
+      throw new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status} - ${response.statusText}`);
     }
 
     const result = await response.json();
@@ -143,7 +150,14 @@ export const updateProfileFromOnboarding = async (
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      console.error("Profile update failed:", {
+        status: response.status,
+        statusText: response.statusText,
+        errorData,
+        profileData,
+        headers
+      });
+      throw new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status} - ${response.statusText}`);
     }
 
     const result = await response.json();
