@@ -266,8 +266,8 @@ export default function Profile() {
           languages: onboardingProfile.languages || [],
         } : {}),
         // Add stats from real follow system
-        followers: followStats.followers || profileFollowStats?.followers || 0,
-        following: followStats.following || profileFollowStats?.following || 0,
+        followers: safeFollowStats.followers || profileFollowStats?.followers || 0,
+        following: safeFollowStats.following || profileFollowStats?.following || 0,
         rating: averageRating || userProfileData?.average_rating || 0,
         reviews: totalReviews || userProfileData?.total_reviews || 0,
       }
