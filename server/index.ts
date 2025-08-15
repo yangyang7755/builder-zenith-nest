@@ -47,6 +47,12 @@ import {
 } from "./routes/users";
 import { handleFileUpload } from "./routes/uploads";
 import { handleNotifications, handleMarkNotificationRead } from "./routes/notifications";
+import {
+  handleGetSavedActivities,
+  handleSaveActivity,
+  handleUnsaveActivity,
+  handleCheckActivitySaved
+} from "./routes/saved_activities";
 
 const app = express();
 const httpServer = createServer(app);
@@ -115,6 +121,12 @@ app.post("/api/upload", handleFileUpload);
 // Notification routes
 app.get("/api/notifications", handleNotifications);
 app.put("/api/notifications/:id/read", handleMarkNotificationRead);
+
+// Saved activities routes
+app.get("/api/saved-activities", handleGetSavedActivities);
+app.post("/api/saved-activities", handleSaveActivity);
+app.delete("/api/saved-activities/:activityId", handleUnsaveActivity);
+app.get("/api/saved-activities/check/:activityId", handleCheckActivitySaved);
 
 // Socket.IO for real-time features
 io.on("connection", (socket) => {
