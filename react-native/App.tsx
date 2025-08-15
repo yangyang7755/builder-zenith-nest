@@ -35,47 +35,53 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconText;
+    <AuthProvider>
+      <FollowProvider>
+        <ActivitiesProvider>
+          <NavigationContainer>
+            <Tab.Navigator
+              screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                  let iconText;
 
-            switch (route.name) {
-              case "Explore":
-                iconText = "🏠";
-                break;
-              case "Activities":
-                iconText = "⏰";
-                break;
-              case "Create":
-                iconText = "➕";
-                break;
-              case "Chat":
-                iconText = "💬";
-                break;
-              case "Profile":
-                iconText = "👤";
-                break;
-              default:
-                iconText = "🏠";
-            }
+                  switch (route.name) {
+                    case "Explore":
+                      iconText = "🏠";
+                      break;
+                    case "Activities":
+                      iconText = "⏰";
+                      break;
+                    case "Create":
+                      iconText = "➕";
+                      break;
+                    case "Chat":
+                      iconText = "💬";
+                      break;
+                    case "Profile":
+                      iconText = "👤";
+                      break;
+                    default:
+                      iconText = "🏠";
+                  }
 
-            return <Text style={{ fontSize: size }}>{iconText}</Text>;
-          },
-          tabBarActiveTintColor: "#1F381F",
-          tabBarInactiveTintColor: "#6B7280",
-          tabBarStyle: styles.tabBar,
-          headerShown: false,
-        })}
-      >
-        <Tab.Screen name="Explore" component={ExploreScreen} />
-        <Tab.Screen name="Activities" component={ActivitiesScreen} />
-        <Tab.Screen name="Create" component={CreateScreen} />
-        <Tab.Screen name="Chat" component={ChatScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+                  return <Text style={{ fontSize: size }}>{iconText}</Text>;
+                },
+                tabBarActiveTintColor: "#1F381F",
+                tabBarInactiveTintColor: "#6B7280",
+                tabBarStyle: styles.tabBar,
+                headerShown: false,
+              })}
+            >
+              <Tab.Screen name="Explore" component={ExploreScreen} />
+              <Tab.Screen name="Activities" component={ActivitiesScreen} />
+              <Tab.Screen name="Create" component={CreateScreen} />
+              <Tab.Screen name="Chat" component={ChatScreen} />
+              <Tab.Screen name="Profile" component={ProfileScreen} />
+            </Tab.Navigator>
+          </NavigationContainer>
+        </ActivitiesProvider>
+      </FollowProvider>
+    </AuthProvider>
   );
 }
 
