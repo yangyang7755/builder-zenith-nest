@@ -734,9 +734,11 @@ export default function Profile() {
                           <div className="text-2xl">
                             {activity.activity_type === 'climbing' && '🧗'}
                             {activity.activity_type === 'cycling' && '🚴'}
-                            {activity.activity_type === 'running' && '🏃'}
+                            {activity.activity_type === 'running' && '👟'}
                             {activity.activity_type === 'hiking' && '🥾'}
-                            {!['climbing', 'cycling', 'running', 'hiking'].includes(activity.activity_type) && '🏃'}
+                            {activity.activity_type === 'surfing' && '🌊'}
+                            {activity.activity_type === 'tennis' && '🎾'}
+                            {!['climbing', 'cycling', 'running', 'hiking', 'surfing', 'tennis'].includes(activity.activity_type) && '⚡'}
                           </div>
                           <div className="flex-1">
                             <h4 className="font-medium text-black">
@@ -789,9 +791,11 @@ export default function Profile() {
                           <div className="text-2xl">
                             {activity.activity_type === 'climbing' && '🧗'}
                             {activity.activity_type === 'cycling' && '🚴'}
-                            {activity.activity_type === 'running' && '🏃'}
+                            {activity.activity_type === 'running' && '👟'}
                             {activity.activity_type === 'hiking' && '🥾'}
-                            {!['climbing', 'cycling', 'running', 'hiking'].includes(activity.activity_type) && '🏃'}
+                            {activity.activity_type === 'surfing' && '🌊'}
+                            {activity.activity_type === 'tennis' && '🎾'}
+                            {!['climbing', 'cycling', 'running', 'hiking', 'surfing', 'tennis'].includes(activity.activity_type) && '⚡'}
                           </div>
                           <div className="flex-1">
                             <h4 className="font-medium text-black">
