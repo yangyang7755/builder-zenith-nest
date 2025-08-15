@@ -61,22 +61,42 @@ export const handleCreateProfileFromOnboarding = async (req: Request, res: Respo
       
       // Map onboarding data to profile format for demo
       const onboardingData = req.body;
+      const age = onboardingData.birthday ? calculateAge(onboardingData.birthday) : null;
       const demoProfile = {
         id: "demo-user-onboarded",
         email: onboardingData.email || "demo@example.com",
         full_name: onboardingData.full_name || onboardingData.name || "Demo User",
-        bio: onboardingData.bio || `${onboardingData.profession || "Outdoor enthusiast"} from ${onboardingData.country || "Unknown"}`,
+        bio: onboardingData.bio || createBioFromOnboarding(onboardingData),
         profile_image: null,
+        university: !onboardingData.hideUniversity ? onboardingData.university : null,
+        // Extended fields (may not exist in all setups)
         phone: null,
         gender: onboardingData.gender || null,
-        age: onboardingData.birthday ? calculateAge(onboardingData.birthday) : null,
+        age: age,
         date_of_birth: onboardingData.birthday || null,
         nationality: onboardingData.country || null,
         institution: !onboardingData.hideUniversity ? onboardingData.university : null,
         occupation: onboardingData.profession || null,
         location: onboardingData.location || onboardingData.country || null,
         visibility_settings: {
-          institution: !onboardingData.hideUniversity
+          institution: !onboardingData.hideUniversity,
+          profile_image: true,
+          full_name: true,
+          bio: true,
+          email: false,
+          phone: true,
+          gender: true,
+          age: true,
+          date_of_birth: false,
+          nationality: true,
+          occupation: true,
+          location: true,
+          sports: true,
+          achievements: true,
+          activities: true,
+          reviews: true,
+          followers: true,
+          following: true,
         },
         sports: mapOnboardingSportsToProfile(onboardingData),
         achievements: [],
