@@ -480,38 +480,36 @@ export default function Profile() {
             </h3>
 
             {/* Sports Tab Navigation */}
-            <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
-              <button
-                onClick={() => setActiveSportTab("climbing")}
-                className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                  activeSportTab === "climbing"
-                    ? "bg-white text-explore-green shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                🧗 Climbing
-              </button>
-              <button
-                onClick={() => setActiveSportTab("cycling")}
-                className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                  activeSportTab === "cycling"
-                    ? "bg-white text-explore-green shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                🚴 Cycling
-              </button>
-              <button
-                onClick={() => setActiveSportTab("running")}
-                className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                  activeSportTab === "running"
-                    ? "bg-white text-explore-green shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                🏃 Running
-              </button>
-            </div>
+            {displayProfile.sports && Array.isArray(displayProfile.sports) && displayProfile.sports.length > 0 && (
+              <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+                {displayProfile.sports.map((sport, index) => {
+                  const sportName = typeof sport === 'string' ? sport : sport.sport;
+                  const sportKey = sportName.toLowerCase();
+                  const sportEmojis = {
+                    climbing: "🧗",
+                    cycling: "🚴",
+                    running: "🏃",
+                    hiking: "🥾",
+                    skiing: "⛷️",
+                    surfing: "🏄",
+                    tennis: "🎾"
+                  };
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => setActiveSportTab(sportKey as any)}
+                      className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                        activeSportTab === sportKey
+                          ? "bg-white text-explore-green shadow-sm"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      {sportEmojis[sportKey] || "⚡"} {sportName}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Sports Content */}
             <div className="space-y-4">
