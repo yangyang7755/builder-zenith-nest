@@ -13,40 +13,43 @@ import {
   handleDenyRequest,
   handleCreateClub 
 } from "./routes/clubs";
-import { handleHealth } from "./routes/health";
-import { 
-  handleGetActivities, 
-  handleCreateActivity, 
+import healthRouter from "./routes/health";
+import {
+  handleGetActivities,
+  handleCreateActivity,
   handleGetActivity,
   handleJoinActivity,
   handleLeaveActivity,
   handleUpdateActivity,
-  handleDeleteActivity 
+  handleDeleteActivity
 } from "./routes/activities";
-import { 
-  handleGetReviews, 
-  handleCreateReview, 
-  handleUpdateReview, 
-  handleDeleteReview 
+import {
+  handleGetReviews,
+  handleCreateReview,
+  handleUpdateReview,
+  handleDeleteReview
 } from "./routes/reviews";
-import { 
-  handleGetFollowers, 
-  handleGetFollowing, 
-  handleFollowUser, 
-  handleUnfollowUser, 
-  handleGetFollowStats 
+import {
+  handleGetFollowers,
+  handleGetFollowing,
+  handleFollowUser,
+  handleUnfollowUser,
+  handleGetFollowStats
 } from "./routes/followers";
-import { 
-  handleCreateUser, 
-  handleGetUser, 
+import {
+  handleCreateUser,
+  handleGetUser,
   handleUpdateUser,
   handleGetUserProfile,
   handleUpdateUserProfile,
   handleGetUserActivityHistory,
-  handleGetActivitiesNeedingReview 
+  handleGetActivitiesNeedingReview
 } from "./routes/users";
-import { handleFileUpload } from "./routes/uploads";
-import { handleNotifications, handleMarkNotificationRead } from "./routes/notifications";
+import uploadsRouter from "./routes/uploads";
+import {
+  handleGetNotifications,
+  handleMarkNotificationRead
+} from "./routes/notifications";
 import {
   handleGetSavedActivities,
   handleSaveActivity,
@@ -73,7 +76,7 @@ app.use(cors({
 }));
 
 // Health check
-app.get("/api/health", handleHealth);
+app.use("/api/health", healthRouter);
 
 // Club routes
 app.get("/api/clubs", handleGetClubs);
@@ -116,10 +119,10 @@ app.get("/api/user/activities", handleGetUserActivityHistory);
 app.get("/api/user/activities/pending-reviews", handleGetActivitiesNeedingReview);
 
 // Upload routes
-app.post("/api/upload", handleFileUpload);
+app.use("/api/uploads", uploadsRouter);
 
 // Notification routes
-app.get("/api/notifications", handleNotifications);
+app.get("/api/notifications", handleGetNotifications);
 app.put("/api/notifications/:id/read", handleMarkNotificationRead);
 
 // Saved activities routes
