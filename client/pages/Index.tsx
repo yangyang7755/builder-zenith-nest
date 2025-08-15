@@ -262,7 +262,11 @@ export default function Index() {
   };
 
   useEffect(() => {
-    console.log("Filtering activities. Total activities:", activities.length);
+    console.log("=== Filtering activities ===");
+    console.log("Total activities loaded:", activities.length);
+    activities.forEach(activity => {
+      console.log(`- "${activity.title}" (type: ${activity.type || activity.activity_type})`);
+    });
     console.log("Current filters:", filters);
     let filtered = activities;
 
