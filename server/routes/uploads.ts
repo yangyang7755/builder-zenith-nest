@@ -175,6 +175,19 @@ router.post('/club-image', upload.single('image'), async (req, res) => {
       });
     }
 
+    // Also check if we're in demo user mode
+    if (user.id === "demo-user-id") {
+      console.log('Demo user detected, using demo mode for club image upload');
+      const base64 = req.file.buffer.toString('base64');
+      const dataUrl = `data:${req.file.mimetype};base64,${base64}`;
+
+      return res.json({
+        success: true,
+        data: { url: dataUrl },
+        message: 'Club image uploaded successfully (demo mode)'
+      });
+    }
+
     // Check if user is club manager (with fallback for demo mode)
     try {
       const { data: membership, error: membershipError } = await supabaseAdmin
