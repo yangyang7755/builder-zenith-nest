@@ -791,7 +791,7 @@ export default function Index() {
                   �� <strong>Discover</strong> activities that match your
                   interests
                   <br />
-                  🤝 <strong>Connect</strong> with like-minded people
+                  ��� <strong>Connect</strong> with like-minded people
                   <br />
                   🏆 <strong>Join</strong> clubs and events near you
                 </p>
@@ -905,7 +905,7 @@ function MixedActivitiesSection({
             <div className="text-center py-8 text-gray-500 w-full">
               <p className="mb-4">No activities yet</p>
               <Link
-                to="/create-activity"
+                to="/create"
                 className="bg-explore-green text-white px-4 py-2 rounded-lg font-cabin font-medium hover:bg-explore-green-dark transition-colors"
               >
                 Create Activity
