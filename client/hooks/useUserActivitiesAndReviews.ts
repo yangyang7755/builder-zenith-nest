@@ -59,37 +59,61 @@ export function useUserActivitiesAndReviews(userId?: string) {
         return;
       }
 
-      // Fetch user's activities
-      let activitiesResponse;
-      try {
-        activitiesResponse = await apiService.getUserActivityHistory({
+      // Use Promise.allSettled to handle individual failures gracefully
+      const [activitiesResult, reviewsResult] = await Promise.allSettled([
+        apiService.getUserActivityHistory({
           user_id: userId,
           include_reviews: true,
-        });
-      } catch (activitiesError) {
-        console.error('Error fetching activities:', activitiesError);
+        }),
+        apiService.getReviews({
+          user_id: userId,
+        })
+      ]);
+
+      // Handle activities response
+      let activitiesResponse;
+      if (activitiesResult.status === 'fulfilled') {
+        activitiesResponse = activitiesResult.value;
+      } else {
+        console.error('Error fetching activities:', activitiesResult.reason);
         activitiesResponse = { error: 'Failed to fetch activities', data: [] };
       }
 
-      // Fetch user's reviews (as reviewee)
+      // Handle reviews response
       let reviewsResponse;
-      try {
-        reviewsResponse = await apiService.getReviews({
-          user_id: userId,
-        });
-      } catch (reviewsError) {
-        console.error('Error fetching reviews:', reviewsError);
+      if (reviewsResult.status === 'fulfilled') {
+        reviewsResponse = reviewsResult.value;
+      } else {
+        console.error('Error fetching reviews:', reviewsResult.reason);
         reviewsResponse = { error: 'Failed to fetch reviews', data: [] };
       }
 
-      if (activitiesResponse.error === 'BACKEND_UNAVAILABLE' || reviewsResponse.error === 'BACKEND_UNAVAILABLE') {
+      // Check for specific error conditions
+      const isNetworkError = (error: string) =>
+        error.includes('Failed to fetch') ||
+        error.includes('timeout') ||
+        error.includes('Network error');
+
+      const hasNetworkErrors =
+        (activitiesResponse.error && isNetworkError(activitiesResponse.error)) ||
+        (reviewsResponse.error && isNetworkError(reviewsResponse.error));
+
+      if (hasNetworkErrors ||
+          activitiesResponse.error === 'BACKEND_UNAVAILABLE' ||
+          reviewsResponse.error === 'BACKEND_UNAVAILABLE') {
+        console.warn('Network issues detected, falling back to demo data');
         setData(getDemoActivitiesAndReviews());
         setLoading(false);
         return;
       }
 
-      if (activitiesResponse.error || reviewsResponse.error) {
-        throw new Error(activitiesResponse.error || reviewsResponse.error || 'Failed to fetch data');
+      // Only throw if it's not a network error (could be permission/auth issues)
+      if (activitiesResponse.error && !isNetworkError(activitiesResponse.error)) {
+        console.warn('Activities fetch error (non-network):', activitiesResponse.error);
+      }
+
+      if (reviewsResponse.error && !isNetworkError(reviewsResponse.error)) {
+        console.warn('Reviews fetch error (non-network):', reviewsResponse.error);
       }
 
       const activities = activitiesResponse.data || [];
