@@ -218,17 +218,29 @@ export const handleCreateProfileFromOnboarding = async (req: Request, res: Respo
       await createSportsProfiles(user.id, onboardingData);
     }
 
-    // Return the created profile with sports data
+    // Return the created profile with sports data and extended info
     const sportsData = mapOnboardingSportsToProfile(onboardingData);
+
+    // Add extended data to response even if not stored in database
+    const enrichedProfile = {
+      ...profile,
+      // Add onboarding data that might not be in the database
+      sports: sportsData,
+      achievements: [],
+      languages: onboardingData.languages || [],
+      // Add calculated/derived fields
+      age: onboardingData.birthday ? calculateAge(onboardingData.birthday) : null,
+      gender: onboardingData.gender || null,
+      nationality: onboardingData.country || null,
+      occupation: onboardingData.profession || null,
+      location: onboardingData.location || onboardingData.country || null,
+      visibility_settings: extendedData.visibility_settings,
+    };
+
     const response = {
       success: true,
       message: "Profile created successfully from onboarding data",
-      profile: {
-        ...profile,
-        sports: sportsData,
-        achievements: [],
-        languages: onboardingData.languages || [],
-      },
+      profile: enrichedProfile,
     };
 
     res.json(response);
