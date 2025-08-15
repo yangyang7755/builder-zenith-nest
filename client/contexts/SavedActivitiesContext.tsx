@@ -28,7 +28,22 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
   // Load saved activities from backend on mount
   useEffect(() => {
     loadSavedActivities();
+    // Also load from localStorage as fallback
+    loadFromLocalStorage();
   }, []);
+
+  const loadFromLocalStorage = () => {
+    try {
+      const localSaved = localStorage.getItem('savedActivities');
+      if (localSaved) {
+        const activities = JSON.parse(localSaved);
+        // Only set if we don't already have saved activities (backend took priority)
+        setSavedActivities(prev => prev.length > 0 ? prev : activities);
+      }
+    } catch (error) {
+      console.error("Error loading from localStorage:", error);
+    }
+  };
 
   const loadSavedActivities = async () => {
     try {
