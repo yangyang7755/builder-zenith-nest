@@ -51,6 +51,14 @@ export function useUserActivitiesAndReviews(userId?: string) {
     setError(null);
 
     try {
+      // Check if API service methods are available
+      if (!apiService.getUserActivityHistory || !apiService.getReviews) {
+        console.warn('API service methods not available, using demo data');
+        setData(getDemoActivitiesAndReviews());
+        setLoading(false);
+        return;
+      }
+
       // Fetch user's activities
       let activitiesResponse;
       try {
