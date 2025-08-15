@@ -722,7 +722,12 @@ export default function Profile() {
               {activeTab === "completed" ? (
                 <>
                   {/* Completed Activities with Reviews */}
-                  {completedActivities.length > 0 ? (
+                  {activitiesLoading ? (
+                    <div className="text-center py-8">
+                      <div className="w-6 h-6 border-2 border-explore-green border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                      <p className="text-gray-500 text-sm">Loading...</p>
+                    </div>
+                  ) : completedActivities.length > 0 ? (
                     completedActivities.map((activity) => (
                       <div key={activity.id} className="bg-gray-50 rounded-lg p-4">
                         <div className="flex items-start gap-3 mb-3">
