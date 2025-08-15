@@ -293,7 +293,13 @@ export default function CategoryActivities() {
       return activityDate <= weekFromNow && activityDate >= new Date();
     }).length,
     spots: filteredActivities.reduce(
-      (sum, a) => sum + ((a.maxParticipants || 20) - (a.participants || 0)),
+      (sum, a) => {
+        const maxParticipants = typeof a.maxParticipants === 'number' ? a.maxParticipants : parseInt(a.maxParticipants || '20');
+        const participants = typeof a.participants === 'number'
+          ? a.participants
+          : (a.participants?.count || a.current_participants || 0);
+        return sum + Math.max(0, maxParticipants - participants);
+      },
       0,
     ),
     avgDifficulty:
