@@ -475,16 +475,21 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 
       if (response.error) {
         console.error("Create activity error:", response.error);
+        console.error("Response data:", response.data);
 
         // If it's a backend unavailable error, provide a more helpful message
         if (response.error === "BACKEND_UNAVAILABLE") {
           return {
             success: false,
-            error: "Unable to connect to the server. Please check if the backend is running and try again."
+            error: "Unable to connect to the server. The backend may not be running or there may be a network issue."
           };
         }
 
-        return { success: false, error: response.error };
+        // Return the actual error message
+        return {
+          success: false,
+          error: response.error || "Failed to create activity"
+        };
       }
 
       const newActivity = response.data?.success
