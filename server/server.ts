@@ -3,12 +3,12 @@ import { createExpressApp } from "./index";
 import { setupSocketServer } from "./socketServer";
 import { databaseManager } from "./lib/database";
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.SERVER_PORT || process.env.PORT || 3001;
 
 async function startServer() {
   try {
     // Initialize database connection
-    console.log("🔄 Initializing database connection...");
+    console.log('🔄 Initializing database connection...');
     await databaseManager.initializeDatabase();
 
     // Create Express app
@@ -16,7 +16,7 @@ async function startServer() {
 
     // Setup Socket.IO server with Express app
     const server = setupSocketServer(app);
-
+    
     // Start the server
     server.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
@@ -25,21 +25,22 @@ async function startServer() {
     });
 
     // Graceful shutdown
-    process.on("SIGTERM", () => {
-      console.log("SIGTERM received, shutting down gracefully");
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM received, shutting down gracefully');
       server.close(() => {
-        console.log("Process terminated");
+        console.log('Process terminated');
       });
     });
 
-    process.on("SIGINT", () => {
-      console.log("SIGINT received, shutting down gracefully");
+    process.on('SIGINT', () => {
+      console.log('SIGINT received, shutting down gracefully');
       server.close(() => {
-        console.log("Process terminated");
+        console.log('Process terminated');
       });
     });
+
   } catch (error) {
-    console.error("❌ Failed to start server:", error);
+    console.error('❌ Failed to start server:', error);
     process.exit(1);
   }
 }
