@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useState, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import {
   MapPin,
@@ -774,7 +773,7 @@ export default function ActivityDetails() {
                   </ul>
                   {(activity.requirements || activity.activity_data?.requirements)?.warning && (
                     <div className="flex items-start gap-2 bg-yellow-500 bg-opacity-20 p-2 rounded">
-                      <span className="text-yellow-300 font-bold">⚠</span>
+                      <span className="text-yellow-300 font-bold">���</span>
                       <div className="text-sm">
                         {(activity.requirements || activity.activity_data?.requirements)?.warning}
                       </div>
