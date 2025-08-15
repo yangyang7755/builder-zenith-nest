@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,33 +8,80 @@ import {
   StyleSheet,
   SafeAreaView,
   Modal,
+  ActivityIndicator,
 } from "react-native";
+import { useAuth } from '../contexts/AuthContext';
+import { useFollow } from '../contexts/FollowContext';
+import { apiService } from '../services/apiService';
 
 const ProfileScreen: React.FC = () => {
+  const { user, profile } = useAuth();
+  const { followStats, isLoading: followLoading, refreshFollowData } = useFollow();
+
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<"completed" | "organized">(
     "completed",
   );
   const [activeSportTab, setActiveSportTab] = useState<string>("climbing");
+  const [userActivities, setUserActivities] = useState<any[]>([]);
+  const [userReviews, setUserReviews] = useState<any[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
-  // Demo profile data
+  // Use actual profile data when available, fallback to demo data
   const profileData = {
-    full_name: "Maddie Wei",
-    profile_image:
+    full_name: profile?.full_name || user?.full_name || "Maddie Wei",
+    profile_image: profile?.profile_image || user?.profile_image ||
       "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fb4460a1279a84ad1b10626393196b1cf?format=webp&width=800",
-    bio: "Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!",
-    age: 22,
-    gender: "Female",
-    nationality: "British",
-    institution: "Oxford University",
-    occupation: "Student",
-    location: "Oxford, UK",
-    sports: ["Climbing", "Cycling"],
-    followers: 152,
-    following: 87,
+    bio: profile?.bio || "Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!",
+    age: profile?.age || 22,
+    gender: profile?.gender || "Female",
+    nationality: profile?.nationality || "British",
+    institution: profile?.institution || "Oxford University",
+    occupation: profile?.occupation || "Student",
+    location: profile?.location || "Oxford, UK",
+    sports: profile?.sports || ["Climbing", "Cycling"],
+    followers: followStats.followers || 152,
+    following: followStats.following || 87,
     rating: 4.8,
-    reviews: 23,
+    reviews: userReviews.length || 23,
+  };
+
+  useEffect(() => {
+    loadUserData();
+  }, [user]);
+
+  const loadUserData = async () => {
+    if (!user) {
+      setIsLoadingData(false);
+      return;
+    }
+
+    try {
+      setIsLoadingData(true);
+
+      // Load user activities and reviews in parallel
+      const [activitiesResponse, reviewsResponse] = await Promise.allSettled([
+        apiService.getUserActivityHistory({ user_id: user.id }),
+        apiService.getUserReviews(user.id)
+      ]);
+
+      if (activitiesResponse.status === 'fulfilled' && activitiesResponse.value.data) {
+        setUserActivities(activitiesResponse.value.data);
+      }
+
+      if (reviewsResponse.status === 'fulfilled' && reviewsResponse.value.data) {
+        setUserReviews(reviewsResponse.value.data);
+      }
+
+      // Refresh follow data
+      await refreshFollowData();
+
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    } finally {
+      setIsLoadingData(false);
+    }
   };
 
   const getSportEmoji = (sport: string) => {
@@ -93,13 +140,21 @@ const ProfileScreen: React.FC = () => {
               <View style={styles.statsContainer}>
                 <TouchableOpacity onPress={() => setShowFollowers(true)}>
                   <Text style={styles.statText}>
-                    {profileData.followers} Followers
+                    {followLoading ? (
+                      <ActivityIndicator size="small" color="#6B7280" />
+                    ) : (
+                      `${profileData.followers} Followers`
+                    )}
                   </Text>
                 </TouchableOpacity>
                 <Text style={styles.statDivider}>•</Text>
                 <TouchableOpacity onPress={() => setShowFollowing(true)}>
                   <Text style={styles.statText}>
-                    {profileData.following} Following
+                    {followLoading ? (
+                      <ActivityIndicator size="small" color="#6B7280" />
+                    ) : (
+                      `${profileData.following} Following`
+                    )}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -206,21 +261,41 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Recent Activities</Text>
 
-          <View style={styles.activityCard}>
-            <Text style={styles.activityTitle}>
-              🧗 Westway Climbing Session
-            </Text>
-            <Text style={styles.activitySubtitle}>
-              Completed • Jan 15, 2024
-            </Text>
-          </View>
+          {isLoadingData ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color="#6B7280" />
+              <Text style={styles.loadingText}>Loading activities...</Text>
+            </View>
+          ) : userActivities.length > 0 ? (
+            userActivities.slice(0, 3).map((activity, index) => (
+              <View key={activity.id || index} style={styles.activityCard}>
+                <Text style={styles.activityTitle}>
+                  {getSportEmoji(activity.activity_type)} {activity.title}
+                </Text>
+                <Text style={styles.activitySubtitle}>
+                  {activity.status} • {new Date(activity.date).toLocaleDateString()}
+                </Text>
+              </View>
+            ))
+          ) : (
+            <>
+              <View style={styles.activityCard}>
+                <Text style={styles.activityTitle}>
+                  🧗 Westway Climbing Session
+                </Text>
+                <Text style={styles.activitySubtitle}>
+                  Completed • Jan 15, 2024
+                </Text>
+              </View>
 
-          <View style={styles.activityCard}>
-            <Text style={styles.activityTitle}>🚴 Richmond Park Cycling</Text>
-            <Text style={styles.activitySubtitle}>
-              Completed • Jan 10, 2024
-            </Text>
-          </View>
+              <View style={styles.activityCard}>
+                <Text style={styles.activityTitle}>🚴 Richmond Park Cycling</Text>
+                <Text style={styles.activitySubtitle}>
+                  Completed • Jan 10, 2024
+                </Text>
+              </View>
+            </>
+          )}
         </View>
 
         {/* Location */}
@@ -499,6 +574,18 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
+    color: "#6B7280",
+  },
+  loadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    backgroundColor: "#F9FAFB",
+    borderRadius: 8,
+  },
+  loadingText: {
+    marginLeft: 8,
+    fontSize: 14,
     color: "#6B7280",
   },
 });
