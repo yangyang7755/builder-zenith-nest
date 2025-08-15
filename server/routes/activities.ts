@@ -326,13 +326,13 @@ export const handleGetActivity = async (req: Request, res: Response) => {
 
     // Add current participants count
     if (activity) {
-      const { data: participantCount } = await supabaseAdmin
+      const { count: participantCount } = await supabaseAdmin
         .from("activity_participants")
         .select("*", { count: 'exact' })
         .eq("activity_id", activity.id)
         .eq("status", "joined");
 
-      activity.current_participants = participantCount?.length || 0;
+      activity.current_participants = participantCount || 0;
     }
 
     if (error) {
