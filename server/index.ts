@@ -195,15 +195,15 @@ app.use((req: express.Request, res: express.Response) => {
 const PORT = process.env.PORT || 3001;
 
 export const createServer = () => {
-  return httpServer;
+  return app;
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  httpServer.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📱 Client URL: ${process.env.CLIENT_URL || "http://localhost:5173"}`);
-    console.log(`🔗 API Base: http://localhost:${PORT}/api`);
-  });
-}
+const PORT = process.env.PORT || 3001;
+
+httpServer.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📱 Client URL: ${process.env.CLIENT_URL || "http://localhost:5173"}`);
+  console.log(`🔗 API Base: http://localhost:${PORT}/api`);
+});
 
 export { io, app, httpServer };
