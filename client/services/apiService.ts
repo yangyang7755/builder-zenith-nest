@@ -205,15 +205,19 @@ export const apiService = {
 
   // Activity participation methods
   async getUserActivityHistory(params: {
+    user_id?: string;
     status?: 'completed' | 'upcoming';
     limit?: number;
     offset?: number;
+    include_reviews?: boolean;
   } = {}): Promise<ApiResponse<any[]>> {
     try {
       const queryParams = new URLSearchParams();
+      if (params.user_id) queryParams.append('user_id', params.user_id);
       if (params.status) queryParams.append('status', params.status);
       if (params.limit) queryParams.append('limit', params.limit.toString());
       if (params.offset) queryParams.append('offset', params.offset.toString());
+      if (params.include_reviews) queryParams.append('include_reviews', 'true');
 
       const response = await fetch(`${API_BASE_URL}/user/activities?${queryParams}`, {
         headers: getAuthHeaders(),
