@@ -38,37 +38,35 @@ const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> =>
 
     // Check if response body has already been consumed
     if (response.bodyUsed) {
-      console.warn('Response body already consumed, returning error');
+      console.warn('Response body already consumed, creating fallback response');
       return {
-        error: 'Response body already consumed',
+        error: response.ok ? 'Response processed successfully but body already consumed' : `HTTP ${response.status}`,
         status: response.status
       };
     }
 
-    // Clone the response to avoid body stream conflicts
-    const responseClone = response.clone();
-
     try {
       if (contentType && contentType.includes('application/json')) {
-        data = await responseClone.json();
+        data = await response.json();
       } else {
-        data = await responseClone.text();
+        const textData = await response.text();
+        // Try to parse as JSON if text looks like JSON
+        if (textData.trim().startsWith('{') || textData.trim().startsWith('[')) {
+          try {
+            data = JSON.parse(textData);
+          } catch {
+            data = textData;
+          }
+        } else {
+          data = textData;
+        }
       }
     } catch (parseError) {
-      // If parsing fails, try with original response as fallback
-      console.warn('Failed to parse cloned response, trying original:', parseError);
-      try {
-        if (contentType && contentType.includes('application/json')) {
-          data = await response.json();
-        } else {
-          data = await response.text();
-        }
-      } catch (fallbackError) {
-        return {
-          error: `Failed to parse response: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`,
-          status: response.status
-        };
-      }
+      console.error('Failed to parse response:', parseError);
+      return {
+        error: `Failed to parse response: ${parseError instanceof Error ? parseError.message : 'Unknown parsing error'}`,
+        status: response.status
+      };
     }
 
     if (response.ok) {
@@ -80,9 +78,10 @@ const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> =>
       };
     }
   } catch (error) {
+    console.error('Response handling error:', error);
     return {
       error: error instanceof Error ? error.message : 'Network error',
-      status: response.status
+      status: response?.status || 0
     };
   }
 };
@@ -92,11 +91,15 @@ export const apiService = {
   // Activity Reviews
   async getActivityReviews(activityId: string): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/reviews?activity_id=${activityId}`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/reviews?activity_id=${activityId}`, {
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      console.error('Failed to fetch activity reviews:', error);
       return { error: 'Failed to fetch reviews' };
     }
   },
@@ -154,29 +157,37 @@ export const apiService = {
   // Followers/Following API methods
   async getUserFollowers(userId: string): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/followers/${userId}`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/followers/${userId}`, {
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      console.error('Failed to fetch followers:', error);
       return { error: 'Failed to fetch followers' };
     }
   },
 
   async getUserFollowing(userId: string): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/following/${userId}`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/following/${userId}`, {
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      console.error('Failed to fetch following:', error);
       return { error: 'Failed to fetch following' };
     }
   },
 
   async followUser(userId: string): Promise<ApiResponse<any>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/follow`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/follow`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -186,29 +197,41 @@ export const apiService = {
       });
       return await handleResponse(response);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      console.error('Failed to follow user:', error);
       return { error: 'Failed to follow user' };
     }
   },
 
   async unfollowUser(userId: string): Promise<ApiResponse<any>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/unfollow/${userId}`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/unfollow/${userId}`, {
         method: 'DELETE',
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      console.error('Failed to unfollow user:', error);
       return { error: 'Failed to unfollow user' };
     }
   },
 
   async getFollowStats(userId: string): Promise<ApiResponse<{ followers: number; following: number }>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/follow-stats/${userId}`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/follow-stats/${userId}`, {
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      console.error('Failed to fetch follow stats:', error);
       return { error: 'Failed to fetch follow stats' };
     }
   },
