@@ -427,33 +427,35 @@ export default function Profile() {
             </h3>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
-              {isVisible("gender") && (
+              {isVisible("gender") && displayProfile.gender && (
                 <div>
                   <span className="text-gray-600">Gender:</span>
-                  <div className="font-medium text-black">Female</div>
+                  <div className="font-medium text-black">{displayProfile.gender}</div>
                 </div>
               )}
-              {isVisible("age") && (
+              {isVisible("age") && displayProfile.age && (
                 <div>
                   <span className="text-gray-600">Age:</span>
-                  <div className="font-medium text-black">28 years old</div>
+                  <div className="font-medium text-black">{displayProfile.age} years old</div>
                 </div>
               )}
-              {isVisible("nationality") && (
+              {isVisible("nationality") && displayProfile.nationality && (
                 <div>
                   <span className="text-gray-600">Nationality:</span>
-                  <div className="font-medium text-black">British</div>
+                  <div className="font-medium text-black">{displayProfile.nationality}</div>
                 </div>
               )}
-              <div>
-                <span className="text-gray-600">Experience:</span>
-                <div className="font-medium text-black">5 years</div>
-              </div>
-              {isVisible("institution") && (
+              {displayProfile.occupation && (
+                <div>
+                  <span className="text-gray-600">Profession:</span>
+                  <div className="font-medium text-black">{displayProfile.occupation}</div>
+                </div>
+              )}
+              {isVisible("institution") && displayProfile.institution && (
                 <div className="col-span-2">
                   <span className="text-gray-600">Institution:</span>
                   <div className="font-medium text-black">
-                    London School of Economics
+                    {displayProfile.institution}
                   </div>
                 </div>
               )}
