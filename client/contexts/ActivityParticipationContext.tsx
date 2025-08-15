@@ -355,7 +355,9 @@ export function ActivityParticipationProvider({
   const getParticipationStats = (
     activityId: string,
     maxParticipants: number = 10,
-  ): ActivityParticipationStats => {
+  ): ActivityParticipationStats | null => {
+    if (!activityId) return null;
+
     const participants = getParticipants(activityId);
     const current_participants = participants.length;
 
