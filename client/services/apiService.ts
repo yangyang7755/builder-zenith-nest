@@ -224,10 +224,15 @@ class ApiService {
         // Handle 400 Bad Request - could be validation errors or missing data
         if (status === 400) {
           console.log(
-            "Bad request (400) - possibly missing data or validation error, falling back to demo mode",
+            "Bad request (400) - validation error or missing data:",
+            responseData,
           );
+
+          // Return the actual error message instead of BACKEND_UNAVAILABLE
+          const errorMessage = responseData?.message || responseData?.error || "Bad request";
           return {
-            error: "BACKEND_UNAVAILABLE",
+            error: errorMessage,
+            data: responseData,
           };
         }
 
