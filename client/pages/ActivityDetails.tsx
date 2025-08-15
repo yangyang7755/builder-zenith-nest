@@ -21,8 +21,8 @@ import { useActivityParticipation } from "../contexts/ActivityParticipationConte
 import { useUserProfile } from "../contexts/UserProfileContext";
 import ReviewModal from "../components/ReviewModal";
 
-// Comprehensive activity data structure
-const activitiesData = {
+// No static data - fully backend dependent
+const staticActivitiesData = {
   "westway-womens-climb": {
     id: "westway-womens-climb",
     type: "climbing",
