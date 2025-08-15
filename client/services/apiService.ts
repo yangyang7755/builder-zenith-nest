@@ -12,6 +12,24 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+// Utility function to make fetch with timeout
+const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout: number = 8000): Promise<Response> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+};
+
 // Utility function to handle API responses
 const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
   try {
