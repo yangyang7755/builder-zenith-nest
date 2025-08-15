@@ -850,60 +850,6 @@ function MixedActivitiesSection({
   isOrganizerFollowed: (activity: any) => boolean;
   isFromUserClub: (activity: any) => boolean;
 }) {
-  // Mixed activities with alternating cycling and climbing
-  const mixedActivities = [
-    // Climbing activity (UPCOMING - 3 months from now)
-    {
-      title: "Westway women's+ climbing morning",
-      date: `📅 ${formatActivityDate("2025-04-26")}`,
-      location: "📍 London, UK",
-      imageSrc:
-        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
-      type: "climbing",
-      organizer: "Coach Holly Peristiani",
-      difficulty: "Intermediate",
-      isFirstCard: true,
-    },
-    // Cycling activity (UPCOMING - 3 months from now)
-    {
-      title: "Sunday Morning Social Ride",
-      date: `📅 ${formatActivityDate("2025-05-02")}`,
-      location: "📍 Richmond Park, London",
-      imageSrc:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-      organizer: "Richmond Running Club",
-      type: "running",
-      distance: "25km",
-      pace: "20 kph",
-      elevation: "150m",
-      difficulty: "Beginner",
-    },
-    // Climbing activity
-    {
-      title: "Sport climbing trip",
-      date: `📅 ${formatActivityDate("2025-02-15")}`,
-      location: "📍 Malham Cove, UK",
-      imageSrc:
-        "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
-      type: "climbing",
-      organizer: "Peak Adventures",
-      difficulty: "Advanced",
-    },
-    // Cycling activity
-    {
-      title: "Intermediate Chaingang",
-      date: `📅 ${formatActivityDate("2025-01-28")}`,
-      location: "📍 Box Hill, Surrey",
-      imageSrc:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-      type: "cycling",
-      organizer: "Surrey Road Cycling",
-      distance: "40km",
-      pace: "32 kph",
-      elevation: "420m",
-      difficulty: "Intermediate",
-    },
-  ];
 
   return (
     <div className="space-y-8">
@@ -1115,7 +1061,7 @@ function MixedActivitiesSection({
                 </div>
                 <ActivityCard
                   title={activity.title}
-                  date={`📅 ${formatActivityDate(activity.date)}`}
+                  date={`��� ${formatActivityDate(activity.date)}`}
                   location={`📍 ${activity.location}`}
                   imageSrc={
                     activity.imageSrc ||
