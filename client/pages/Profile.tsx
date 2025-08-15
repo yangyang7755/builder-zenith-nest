@@ -839,7 +839,7 @@ export default function Profile() {
                 <Link key={club.id} to={`/club/${club.id}`} className="block">
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors touchable native-button-press">
                     <img
-                      src={club.profile_image || getClubProfileImage(club.name)}
+                      src={club.profileImage || getClubProfileImage(club.name)}
                       alt={club.name}
                       className="w-10 h-10 rounded-full object-cover"
                     />
@@ -848,7 +848,7 @@ export default function Profile() {
                         {club.name}
                       </h4>
                       <p className="text-sm text-gray-600">
-                        {club.member_count || 0} members
+                        {club.memberCount || 0} members
                       </p>
                     </div>
                   </div>
