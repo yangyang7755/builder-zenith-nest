@@ -820,6 +820,7 @@ export default function Profile() {
                   ) : (
                     <div className="text-center py-8 text-gray-500">
                       <p>No organized activities yet</p>
+                      <p className="text-sm mt-2">Create activities to help others discover new adventures!</p>
                     </div>
                   )}
                 </>
