@@ -269,11 +269,14 @@ export const apiService = {
       if (params.offset) queryParams.append('offset', params.offset.toString());
       if (params.include_reviews) queryParams.append('include_reviews', 'true');
 
-      const response = await fetch(`${API_BASE_URL}/user/activities?${queryParams}`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/user/activities?${queryParams}`, {
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
       return { error: 'Failed to fetch activity history' };
     }
   },
