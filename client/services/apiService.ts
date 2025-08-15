@@ -310,6 +310,35 @@ class ApiService {
     return this.request<any>(`/activities/${id}`);
   }
 
+  async ensureProfileExists() {
+    try {
+      // First try to get the current profile
+      const profileResponse = await this.request<any>("/profiles/me");
+
+      if (profileResponse.data) {
+        console.log("Profile already exists");
+        return profileResponse;
+      }
+
+      // If profile doesn't exist, create one
+      console.log("Profile doesn't exist, creating one...");
+      const createResponse = await this.request<any>("/profiles", {
+        method: "POST",
+        body: JSON.stringify({
+          full_name: "User",
+          bio: "New user",
+          university: "",
+        }),
+      });
+
+      console.log("Profile creation response:", createResponse);
+      return createResponse;
+    } catch (error) {
+      console.error("Error ensuring profile exists:", error);
+      throw error;
+    }
+  }
+
   async createActivity(activity: any) {
     return this.request<any>("/activities", {
       method: "POST",
