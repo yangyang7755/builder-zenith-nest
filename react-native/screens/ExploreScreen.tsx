@@ -1,538 +1,650 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  TextInput,
-  SafeAreaView,
-  StatusBar,
+  Image,
   StyleSheet,
+  SafeAreaView,
+  TextInput,
+  FlatList,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import { designTokens, commonStyles } from '../styles/designTokens';
+import { useNavigation } from '@react-navigation/native';
+import { designTokens } from '../styles/designTokens';
+import { useActivities } from '../contexts/ActivitiesContext';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
+import Avatar from '../components/ui/Avatar';
 
-export default function ExploreScreen() {
-  const [searchText, setSearchText] = useState('');
+const { width } = Dimensions.get('window');
+
+interface Activity {
+  id: string;
+  title: string;
+  description: string;
+  activity_type: string;
+  date: string;
+  time: string;
+  location: string;
+  max_participants: number;
+  current_participants: number;
+  organizer_name: string;
+  organizer_image?: string;
+  skill_level: string;
+  price?: number;
+  images?: string[];
+  average_rating?: number;
+  total_reviews?: number;
+}
+
+interface Club {
+  id: string;
+  name: string;
+  description: string;
+  members: number;
+  activity_type: string;
+  image: string;
+}
+
+const ExploreScreen: React.FC = () => {
+  const navigation = useNavigation();
+  const { activities, isLoading, fetchActivities } = useActivities();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [featuredActivities, setFeaturedActivities] = useState<Activity[]>([]);
+  const [featuredClubs] = useState<Club[]>([
+    {
+      id: '1',
+      name: 'Oxford University Climbing Club',
+      description: 'Premier climbing community at Oxford',
+      members: 245,
+      activity_type: 'climbing',
+      image: 'https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c',
+    },
+    {
+      id: '2',
+      name: 'London Cycling Network',
+      description: 'Explore London on two wheels',
+      members: 432,
+      activity_type: 'cycling',
+      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
+    },
+  ]);
+
+  const categories = [
+    { id: 'all', name: 'All', icon: 'grid', emoji: '🎯' },
+    { id: 'climbing', name: 'Climbing', icon: 'mountain', emoji: '🧗' },
+    { id: 'cycling', name: 'Cycling', icon: 'circle', emoji: '🚴' },
+    { id: 'running', name: 'Running', icon: 'zap', emoji: '👟' },
+    { id: 'hiking', name: 'Hiking', icon: 'map', emoji: '🥾' },
+    { id: 'skiing', name: 'Skiing', icon: 'triangle', emoji: '⛷️' },
+    { id: 'surfing', name: 'Surfing', icon: 'waves', emoji: '🌊' },
+    { id: 'tennis', name: 'Tennis', icon: 'circle', emoji: '🎾' },
+  ];
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  useEffect(() => {
+    // Set featured activities (first 3)
+    setFeaturedActivities(activities.slice(0, 3));
+  }, [activities]);
+
+  const getFilteredActivities = () => {
+    let filtered = activities;
+    
+    if (activeCategory !== 'all') {
+      filtered = filtered.filter(activity => 
+        activity.activity_type.toLowerCase() === activeCategory.toLowerCase()
+      );
+    }
+    
+    if (searchQuery) {
+      filtered = filtered.filter(activity =>
+        activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        activity.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        activity.organizer_name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  const renderFeaturedActivity = ({ item: activity }: { item: Activity }) => (
+    <TouchableOpacity
+      style={styles.featuredCard}
+      onPress={() => navigation.navigate('ActivityDetail' as never, { activityId: activity.id } as never)}
+    >
+      <Image
+        source={{ 
+          uri: activity.images?.[0] || 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400'
+        }}
+        style={styles.featuredImage}
+      />
+      <View style={styles.featuredOverlay}>
+        <View style={styles.featuredContent}>
+          <Text style={styles.featuredCategory}>
+            {categories.find(c => c.id === activity.activity_type)?.emoji} {activity.activity_type}
+          </Text>
+          <Text style={styles.featuredTitle}>{activity.title}</Text>
+          <View style={styles.featuredDetails}>
+            <View style={styles.featuredDetail}>
+              <Icon name="calendar" size={12} color="#FFFFFF" />
+              <Text style={styles.featuredDetailText}>{formatDate(activity.date)}</Text>
+            </View>
+            <View style={styles.featuredDetail}>
+              <Icon name="map-pin" size={12} color="#FFFFFF" />
+              <Text style={styles.featuredDetailText}>{activity.location.split(',')[0]}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderActivityCard = ({ item: activity }: { item: Activity }) => (
+    <TouchableOpacity
+      style={styles.activityCard}
+      onPress={() => navigation.navigate('ActivityDetail' as never, { activityId: activity.id } as never)}
+    >
+      <Image
+        source={{ 
+          uri: activity.images?.[0] || 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400'
+        }}
+        style={styles.activityImage}
+      />
+      <View style={styles.activityContent}>
+        <View style={styles.activityHeader}>
+          <Text style={styles.activityTitle}>{activity.title}</Text>
+          {activity.price && (
+            <Text style={styles.activityPrice}>£{activity.price}</Text>
+          )}
+        </View>
+        
+        <View style={styles.activityMeta}>
+          <View style={styles.activityDetail}>
+            <Icon name="calendar" size={14} color={designTokens.colors.text.secondary} />
+            <Text style={styles.activityDetailText}>
+              {formatDate(activity.date)} • {activity.time}
+            </Text>
+          </View>
+          <View style={styles.activityDetail}>
+            <Icon name="map-pin" size={14} color={designTokens.colors.text.secondary} />
+            <Text style={styles.activityDetailText}>{activity.location}</Text>
+          </View>
+          <View style={styles.activityDetail}>
+            <Icon name="users" size={14} color={designTokens.colors.text.secondary} />
+            <Text style={styles.activityDetailText}>
+              {activity.current_participants}/{activity.max_participants} joined
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.activityFooter}>
+          <View style={styles.organizerInfo}>
+            <Avatar 
+              uri={activity.organizer_image} 
+              name={activity.organizer_name} 
+              size="sm" 
+            />
+            <Text style={styles.organizerName}>{activity.organizer_name}</Text>
+          </View>
+          {activity.average_rating && (
+            <View style={styles.rating}>
+              <Icon name="star" size={12} color="#FBBF24" />
+              <Text style={styles.ratingText}>{activity.average_rating.toFixed(1)}</Text>
+            </View>
+          )}
+        </View>
+
+        <Badge 
+          variant="primary" 
+          size="sm" 
+          style={styles.skillBadge}
+        >
+          {activity.skill_level}
+        </Badge>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderClubCard = ({ item: club }: { item: Club }) => (
+    <TouchableOpacity
+      style={styles.clubCard}
+      onPress={() => navigation.navigate('ClubDetail' as never, { clubId: club.id } as never)}
+    >
+      <Image source={{ uri: club.image }} style={styles.clubImage} />
+      <View style={styles.clubContent}>
+        <Text style={styles.clubName}>{club.name}</Text>
+        <Text style={styles.clubDescription}>{club.description}</Text>
+        <View style={styles.clubMeta}>
+          <Icon name="users" size={14} color={designTokens.colors.text.secondary} />
+          <Text style={styles.clubMembers}>{club.members} members</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-      
-      {/* Mobile Status Bar */}
-      <View style={styles.statusBar}>
-        <Text style={styles.statusTime}>9:41</Text>
-        <View style={styles.statusRight}>
-          <View style={styles.signalBars}>
-            {[1,2,3,4].map(i => (
-              <View key={i} style={styles.signalBar} />
-            ))}
-          </View>
-          <View style={styles.battery} />
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerTop}>
+          <Text style={styles.headerTitle}>Explore</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Notifications' as never)}>
+            <Icon name="bell" size={24} color={designTokens.colors.text.secondary} />
+          </TouchableOpacity>
+        </View>
+        
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <Icon name="search" size={20} color={designTokens.colors.text.secondary} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search activities, locations..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor={designTokens.colors.text.secondary}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Icon name="x" size={20} color={designTokens.colors.text.secondary} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.title}>Explore!</Text>
-            <View style={styles.connectionStatus}>
-              <View style={styles.connectionDot} />
-              <Text style={styles.connectionText}>Connected to backend</Text>
-            </View>
-          </View>
-
-          {/* Location Selector */}
-          <TouchableOpacity style={styles.locationButton}>
-            <Icon name="map-pin" size={24} color="#000000" />
-            <View style={styles.locationInfo}>
-              <Text style={styles.locationLabel}>Chosen location</Text>
-              <Text style={styles.locationValue}>Notting hill, London</Text>
-            </View>
-            <Icon name="chevron-down" size={24} color="#000000" />
-          </TouchableOpacity>
-
-          {/* Search and Filter */}
-          <View style={styles.searchSection}>
-            <View style={styles.searchContainer}>
-              <Icon name="search" size={20} color="#000000" style={styles.searchIcon} />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search activities..."
-                value={searchText}
-                onChangeText={setSearchText}
-                placeholderTextColor="#6B7280"
-              />
-            </View>
-            <TouchableOpacity style={styles.filterButton}>
-              <Icon name="filter" size={16} color="#000000" />
-              <Text style={styles.filterText}>Filter</Text>
-              <View style={styles.filterBadge}>
-                <Text style={styles.filterBadgeText}>1</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.mapButton}>
-              <Icon name="map-pin" size={16} color="#ffffff" />
-              <Text style={styles.mapText}>Map</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Active Filters */}
-          <View style={styles.activeFilters}>
-            <View style={styles.filterChip}>
-              <Text style={styles.filterChipText}>Cycling</Text>
-              <TouchableOpacity style={styles.filterRemove}>
-                <Icon name="x" size={12} color="#ffffff" />
+        {/* Categories */}
+        <View style={styles.section}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoriesContainer}
+          >
+            {categories.map((category) => (
+              <TouchableOpacity
+                key={category.id}
+                style={[
+                  styles.categoryCard,
+                  activeCategory === category.id && styles.activeCategoryCard
+                ]}
+                onPress={() => setActiveCategory(category.id)}
+              >
+                <Text style={[
+                  styles.categoryEmoji,
+                  activeCategory === category.id && styles.activeCategoryEmoji
+                ]}>
+                  {category.emoji}
+                </Text>
+                <Text style={[
+                  styles.categoryName,
+                  activeCategory === category.id && styles.activeCategoryName
+                ]}>
+                  {category.name}
+                </Text>
               </TouchableOpacity>
-            </View>
-            <View style={styles.filterChip}>
-              <Text style={styles.filterChipText}>Climbing</Text>
-              <TouchableOpacity style={styles.filterRemove}>
-                <Icon name="x" size={12} color="#ffffff" />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity>
-              <Text style={styles.clearAllText}>Clear all</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Recent Activities Section */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Recent activities nearby</Text>
-              <TouchableOpacity>
-                <Text style={styles.seeAllText}>See all</Text>
-              </TouchableOpacity>
-            </View>
-            
-            <Text style={styles.emptyMessage}>Change filters to see more activities...</Text>
-            
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.activitiesScroll}>
-              {/* Activity Card 1 */}
-              <View style={styles.activityCard}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.activityTitle}>Westway women's+ climbing morning</Text>
-                  <View style={styles.difficultyBadge}>
-                    <Text style={styles.difficultyText}>Intermediate</Text>
-                  </View>
-                </View>
-                <View style={styles.organizerSection}>
-                  <View style={styles.avatar} />
-                  <Text style={styles.organizerText}>By Community</Text>
-                </View>
-                <View style={styles.activityDetails}>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailEmoji}>📅</Text>
-                    <Text style={styles.detailText}>26 January 2025</Text>
-                  </View>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailEmoji}>📍</Text>
-                    <Text style={styles.detailText}>London, UK</Text>
-                  </View>
-                </View>
-                <TouchableOpacity style={styles.joinButton}>
-                  <Text style={styles.joinButtonText}>Request to join</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Activity Card 2 */}
-              <View style={styles.activityCard}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.activityTitle}>Sport climbing trip</Text>
-                  <View style={[styles.difficultyBadge, styles.advancedBadge]}>
-                    <Text style={styles.difficultyText}>Advanced</Text>
-                  </View>
-                </View>
-                <View style={styles.organizerSection}>
-                  <View style={styles.avatar} />
-                  <Text style={styles.organizerText}>By Community</Text>
-                </View>
-                <View style={styles.activityDetails}>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailEmoji}>📅</Text>
-                    <Text style={styles.detailText}>15 February 2025</Text>
-                  </View>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailEmoji}>📍</Text>
-                    <Text style={styles.detailText}>Malham Cove, UK</Text>
-                  </View>
-                </View>
-                <TouchableOpacity style={styles.joinButton}>
-                  <Text style={styles.joinButtonText}>Request to join</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </View>
+            ))}
+          </ScrollView>
         </View>
+
+        {/* Featured Activities */}
+        {featuredActivities.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Featured Activities</Text>
+            <FlatList
+              data={featuredActivities}
+              renderItem={renderFeaturedActivity}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.featuredContainer}
+            />
+          </View>
+        )}
+
+        {/* Activities */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>
+              {activeCategory === 'all' ? 'All Activities' : `${categories.find(c => c.id === activeCategory)?.name} Activities`}
+            </Text>
+            <Text style={styles.sectionCount}>
+              {getFilteredActivities().length} found
+            </Text>
+          </View>
+          
+          {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>Loading activities...</Text>
+            </View>
+          ) : getFilteredActivities().length > 0 ? (
+            <FlatList
+              data={getFilteredActivities()}
+              renderItem={renderActivityCard}
+              keyExtractor={(item) => item.id}
+              scrollEnabled={false}
+              contentContainerStyle={styles.activitiesContainer}
+            />
+          ) : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyTitle}>No activities found</Text>
+              <Text style={styles.emptySubtitle}>
+                {searchQuery 
+                  ? `No activities match "${searchQuery}"`
+                  : `No ${activeCategory === 'all' ? '' : activeCategory} activities available`
+                }
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Featured Clubs */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Featured Clubs</Text>
+          <FlatList
+            data={featuredClubs}
+            renderItem={renderClubCard}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.clubsContainer}
+          />
+        </View>
+
+        <View style={{ height: 100 }} />
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: designTokens.colors.white,
+    backgroundColor: designTokens.colors.background,
   },
-  
-  statusBar: {
-    height: 44,
-    backgroundColor: designTokens.colors.white,
+  header: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    backgroundColor: designTokens.colors.background,
+  },
+  headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    marginBottom: 16,
   },
-  
-  statusTime: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: designTokens.colors.black,
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: designTokens.colors.text.primary,
   },
-  
-  statusRight: {
+  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    backgroundColor: designTokens.colors.gray[100],
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 12,
   },
-  
-  signalBars: {
-    flexDirection: 'row',
-    gap: 2,
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: designTokens.colors.text.primary,
   },
-  
-  signalBar: {
-    width: 4,
-    height: 12,
-    backgroundColor: designTokens.colors.black,
-    borderRadius: 1,
-  },
-  
-  battery: {
-    width: 24,
-    height: 16,
-    borderWidth: 1,
-    borderColor: designTokens.colors.black,
-    borderRadius: 2,
-    marginLeft: 4,
-  },
-  
   scrollView: {
     flex: 1,
   },
-  
-  content: {
-    paddingHorizontal: 12,
-    paddingBottom: 80,
-  },
-  
-  header: {
-    alignItems: 'center',
-    paddingVertical: 16,
-  },
-  
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: designTokens.colors.primary,
-    fontFamily: 'Cabin',
-  },
-  
-  connectionStatus: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 8,
-  },
-  
-  connectionDot: {
-    width: 8,
-    height: 8,
-    backgroundColor: '#22C55E',
-    borderRadius: 4,
-  },
-  
-  connectionText: {
-    fontSize: 14,
-    color: designTokens.colors.text.secondary,
-    fontFamily: 'Cabin',
-  },
-  
-  locationButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    padding: 8,
-    marginBottom: 24,
-    borderRadius: 8,
-  },
-  
-  locationInfo: {
-    flex: 1,
-  },
-  
-  locationLabel: {
-    fontSize: 12,
-    color: designTokens.colors.black,
-    fontFamily: 'Poppins',
-  },
-  
-  locationValue: {
-    fontSize: 14,
-    color: designTokens.colors.text.secondary,
-    fontFamily: 'Poppins',
-  },
-  
-  searchSection: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 24,
-  },
-  
-  searchContainer: {
-    flex: 1,
-    position: 'relative',
-  },
-  
-  searchInput: {
-    backgroundColor: designTokens.colors.white,
-    borderWidth: 2,
-    borderColor: designTokens.colors.black,
-    borderRadius: 24,
-    height: 48,
-    paddingHorizontal: 16,
-    paddingLeft: 44,
-    fontFamily: 'Cabin',
-    fontSize: 16,
-  },
-  
-  searchIcon: {
-    position: 'absolute',
-    left: 16,
-    top: 14,
-    zIndex: 1,
-  },
-  
-  filterButton: {
-    backgroundColor: designTokens.colors.gray[200],
-    borderRadius: 24,
-    height: 48,
-    paddingHorizontal: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    position: 'relative',
-  },
-  
-  filterText: {
-    fontSize: 14,
-    color: designTokens.colors.black,
-    fontFamily: 'Cabin',
-  },
-  
-  filterBadge: {
-    position: 'absolute',
-    top: -4,
-    right: -4,
-    backgroundColor: designTokens.colors.primary,
-    borderRadius: 10,
-    width: 20,
-    height: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  
-  filterBadgeText: {
-    fontSize: 12,
-    color: designTokens.colors.white,
-    fontWeight: 'bold',
-  },
-  
-  mapButton: {
-    backgroundColor: designTokens.colors.primary,
-    borderRadius: 24,
-    height: 48,
-    paddingHorizontal: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  
-  mapText: {
-    fontSize: 14,
-    color: designTokens.colors.white,
-    fontFamily: 'Cabin',
-  },
-  
-  activeFilters: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 24,
-    alignItems: 'center',
-  },
-  
-  filterChip: {
-    backgroundColor: designTokens.colors.primary,
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  
-  filterChipText: {
-    fontSize: 14,
-    color: designTokens.colors.white,
-    fontFamily: 'Cabin',
-  },
-  
-  filterRemove: {
-    marginLeft: 4,
-  },
-  
-  clearAllText: {
-    fontSize: 14,
-    color: designTokens.colors.primary,
-    textDecorationLine: 'underline',
-    fontFamily: 'Cabin',
-  },
-  
   section: {
-    marginBottom: 32,
+    marginBottom: 24,
   },
-  
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    paddingHorizontal: 16,
+    marginBottom: 12,
   },
-  
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: designTokens.colors.black,
-    fontFamily: 'Poppins',
+    color: designTokens.colors.text.primary,
   },
-  
-  seeAllText: {
+  sectionCount: {
     fontSize: 14,
-    color: designTokens.colors.black,
-    textDecorationLine: 'underline',
-    fontFamily: 'Poppins',
-  },
-  
-  emptyMessage: {
-    textAlign: 'center',
     color: designTokens.colors.text.secondary,
-    fontFamily: 'Cabin',
-    paddingVertical: 16,
   },
-  
-  activitiesScroll: {
-    marginBottom: 16,
+  categoriesContainer: {
+    paddingHorizontal: 16,
+    gap: 12,
   },
-  
-  activityCard: {
-    width: 288,
-    borderWidth: 2,
-    borderColor: designTokens.colors.primary,
-    borderRadius: 8,
+  categoryCard: {
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: designTokens.colors.gray[100],
+    minWidth: 80,
+  },
+  activeCategoryCard: {
+    backgroundColor: designTokens.colors.primary,
+  },
+  categoryEmoji: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  activeCategoryEmoji: {
+    // No change needed for emoji
+  },
+  categoryName: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: designTokens.colors.text.secondary,
+  },
+  activeCategoryName: {
+    color: designTokens.colors.white,
+  },
+  featuredContainer: {
+    paddingHorizontal: 16,
+    gap: 16,
+  },
+  featuredCard: {
+    width: width * 0.8,
+    height: 200,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  featuredImage: {
+    width: '100%',
+    height: '100%',
+  },
+  featuredOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'flex-end',
+  },
+  featuredContent: {
     padding: 16,
-    backgroundColor: designTokens.colors.white,
-    marginRight: 8,
   },
-  
-  cardHeader: {
+  featuredCategory: {
+    fontSize: 12,
+    color: designTokens.colors.white,
+    opacity: 0.9,
+    marginBottom: 4,
+  },
+  featuredTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: designTokens.colors.white,
+    marginBottom: 8,
+  },
+  featuredDetails: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  featuredDetail: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  featuredDetailText: {
+    fontSize: 12,
+    color: designTokens.colors.white,
+    opacity: 0.9,
+  },
+  activitiesContainer: {
+    paddingHorizontal: 16,
+    gap: 16,
+  },
+  activityCard: {
+    backgroundColor: designTokens.colors.white,
+    borderRadius: 12,
+    overflow: 'hidden',
+    ...designTokens.shadows.md,
+  },
+  activityImage: {
+    width: '100%',
+    height: 160,
+  },
+  activityContent: {
+    padding: 16,
+  },
+  activityHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 16,
+    marginBottom: 8,
   },
-  
   activityTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: designTokens.colors.black,
-    fontFamily: 'Cabin',
+    fontSize: 16,
+    fontWeight: '600',
+    color: designTokens.colors.text.primary,
     flex: 1,
     marginRight: 8,
   },
-  
-  difficultyBadge: {
-    backgroundColor: '#FEF3C7',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+  activityPrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: designTokens.colors.primary,
   },
-  
-  advancedBadge: {
-    backgroundColor: '#FEE2E2',
+  activityMeta: {
+    gap: 6,
+    marginBottom: 12,
   },
-  
-  difficultyText: {
-    fontSize: 12,
-    color: '#92400E',
-    fontWeight: '500',
-    fontFamily: 'Cabin',
-  },
-  
-  organizerSection: {
+  activityDetail: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginBottom: 16,
+    gap: 6,
   },
-  
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: designTokens.colors.gray[200],
-    borderWidth: 1,
-    borderColor: designTokens.colors.black,
-  },
-  
-  organizerText: {
+  activityDetailText: {
     fontSize: 14,
     color: designTokens.colors.text.secondary,
-    fontFamily: 'Cabin',
   },
-  
-  activityDetails: {
-    gap: 8,
-    marginBottom: 16,
+  activityFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
   },
-  
-  detailRow: {
+  organizerInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  
-  detailEmoji: {
-    fontSize: 16,
-  },
-  
-  detailText: {
+  organizerName: {
     fontSize: 14,
-    color: designTokens.colors.black,
-    fontFamily: 'Cabin',
+    color: designTokens.colors.text.secondary,
   },
-  
-  joinButton: {
-    backgroundColor: designTokens.colors.primary,
-    borderRadius: 8,
-    paddingVertical: 12,
+  rating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  ratingText: {
+    fontSize: 12,
+    color: designTokens.colors.text.secondary,
+  },
+  skillBadge: {
+    alignSelf: 'flex-start',
+  },
+  clubsContainer: {
+    paddingHorizontal: 16,
+    gap: 16,
+  },
+  clubCard: {
+    width: width * 0.7,
+    backgroundColor: designTokens.colors.white,
+    borderRadius: 12,
+    overflow: 'hidden',
+    ...designTokens.shadows.md,
+  },
+  clubImage: {
+    width: '100%',
+    height: 120,
+  },
+  clubContent: {
+    padding: 16,
+  },
+  clubName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: designTokens.colors.text.primary,
+    marginBottom: 4,
+  },
+  clubDescription: {
+    fontSize: 14,
+    color: designTokens.colors.text.secondary,
+    marginBottom: 8,
+  },
+  clubMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  clubMembers: {
+    fontSize: 12,
+    color: designTokens.colors.text.secondary,
+  },
+  loadingContainer: {
+    padding: 32,
     alignItems: 'center',
   },
-  
-  joinButtonText: {
+  loadingText: {
+    fontSize: 16,
+    color: designTokens.colors.text.secondary,
+  },
+  emptyState: {
+    padding: 32,
+    alignItems: 'center',
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: designTokens.colors.text.primary,
+    marginBottom: 8,
+  },
+  emptySubtitle: {
     fontSize: 14,
-    color: designTokens.colors.white,
-    fontWeight: '500',
-    fontFamily: 'Cabin',
+    color: designTokens.colors.text.secondary,
+    textAlign: 'center',
   },
 });
+
+export default ExploreScreen;
