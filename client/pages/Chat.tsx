@@ -66,9 +66,9 @@ export default function Chat() {
 
   // For new users, only show clubs they've actually joined
   // Check if user has joined any clubs or if this is demo mode
-  const isNewUser = !localStorage.getItem('hasJoinedClubs') && clubChats.length === 0;
+  const userHasJoinedClubs = hasUserJoinedClubs() || isUserInDemoMode();
 
-  const displayClubChats = isNewUser ? [] : (clubChats.length > 0 ? clubChats.map(club => ({
+  const displayClubChats = (!userHasJoinedClubs && clubChats.length === 0) ? [] : (clubChats.length > 0 ? clubChats.map(club => ({
     id: club.id,
     name: club.name,
     lastMessage: club.lastMessage || "No messages yet",
