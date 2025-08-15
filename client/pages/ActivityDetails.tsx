@@ -373,7 +373,7 @@ export default function ActivityDetails() {
               </h4>
             </div>
             <p className="text-sm text-black font-cabin ml-6">
-              {participationStats?.participantCount ||
+              {participationStats?.current_participants ||
                 activity.current_participants ||
                 activity.currentParticipants ||
                 "0"}
