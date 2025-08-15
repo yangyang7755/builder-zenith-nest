@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bookmark, Clock, MapPin, Users, CheckCircle } from "lucide-react";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
 import { Activity, useActivities } from "../contexts/ActivitiesContext";
 import { useActivityParticipation } from "../contexts/ActivityParticipationContext";
 import { useUserProfile } from "../contexts/UserProfileContext";
+import { useAuth } from "../contexts/AuthContext";
 import BackendTest from "../components/BackendTest";
 import DemoAuth from "../components/DemoAuth";
 import UserNav from "../components/UserNav";
 import BottomNavigation from "../components/BottomNavigation";
+import ReviewPrompt from "../components/ReviewPrompt";
+import { apiService } from "../services/apiService";
 
 export default function Activities() {
+  const { user } = useAuth();
   const { savedActivities, unsaveActivity } = useSavedActivities();
   const {
     activities,
@@ -21,6 +25,8 @@ export default function Activities() {
     useActivityParticipation();
   const { currentUserProfile } = useUserProfile();
   const [selectedTab, setSelectedTab] = useState("Saved");
+  const [pastActivitiesNeedingReview, setPastActivitiesNeedingReview] = useState<Activity[]>([]);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(false);
 
   // Sort activities by date (future vs past)
   const now = new Date();
@@ -54,6 +60,55 @@ export default function Activities() {
 
   const navigate = useNavigate();
 
+  // Load past activities that need reviews
+  useEffect(() => {
+    if (user && selectedTab === "Joined") {
+      loadPastActivitiesNeedingReview();
+    }
+  }, [user, selectedTab, participatedActivities]);
+
+  const loadPastActivitiesNeedingReview = async () => {
+    if (!user) return;
+
+    setIsLoadingReviews(true);
+    try {
+      // Get past participated activities
+      const pastActivities = participatedActivities.filter((activity) => {
+        const activityDate = new Date(activity.date || activity.date_time);
+        const now = new Date();
+        return activityDate < now;
+      });
+
+      // Check which ones need reviews
+      const activitiesNeedingReview = [];
+      for (const activity of pastActivities) {
+        try {
+          const reviewsResponse = await apiService.getActivityReviews(activity.id);
+          const userReview = reviewsResponse.data?.find(
+            (review: any) => review.reviewer_id === user.id
+          );
+          
+          if (!userReview) {
+            activitiesNeedingReview.push(activity);
+          }
+        } catch (error) {
+          console.error('Error checking reviews for activity:', activity.id, error);
+        }
+      }
+
+      setPastActivitiesNeedingReview(activitiesNeedingReview);
+    } catch (error) {
+      console.error('Error loading past activities needing review:', error);
+    } finally {
+      setIsLoadingReviews(false);
+    }
+  };
+
+  const handleReviewSubmitted = () => {
+    // Refresh the activities needing review
+    loadPastActivitiesNeedingReview();
+  };
+
   const handleActivityClick = (activity: Activity) => {
     if (activity.type === "cycling") {
       navigate("/activity/sunday-morning-ride");
@@ -73,7 +128,7 @@ export default function Activities() {
       case "climbing":
         return "🧗";
       case "running":
-        return "👟";
+        return "����";
       case "hiking":
         return "🥾";
       case "skiing":
@@ -192,6 +247,23 @@ export default function Activities() {
           </h1>
         </div>
 
+        {/* Review Prompt Badge */}
+        {user && pastActivitiesNeedingReview.length > 0 && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="flex items-center gap-2">
+              <span className="text-yellow-600">⭐</span>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-yellow-800">
+                  {pastActivitiesNeedingReview.length} activities need your review
+                </p>
+                <p className="text-xs text-yellow-600">
+                  Help others by sharing your experience
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Tab Navigation */}
         <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
           <button
@@ -213,6 +285,11 @@ export default function Activities() {
             }`}
           >
             Joined Activities
+            {pastActivitiesNeedingReview.length > 0 && (
+              <span className="ml-1 bg-yellow-500 text-white text-xs rounded-full px-1">
+                {pastActivitiesNeedingReview.length}
+              </span>
+            )}
           </button>
         </div>
 
@@ -299,6 +376,12 @@ export default function Activities() {
           </div>
         )}
       </div>
+
+      {/* Review Prompt Modal */}
+      <ReviewPrompt
+        pastActivities={pastActivitiesNeedingReview}
+        onReviewSubmitted={handleReviewSubmitted}
+      />
 
       {/* Development Tools */}
       <div className="px-6 pb-6">
