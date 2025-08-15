@@ -72,6 +72,38 @@ export default function Profile() {
     return age;
   };
 
+  // Helper function to get sport-specific data from onboarding
+  const getSportData = (sport: string) => {
+    if (!shouldUseOnboardingData) return null;
+
+    const sportLower = sport.toLowerCase();
+    const levelKey = `${sportLower}Level`;
+    const experienceKey = `${sportLower}Experience`;
+
+    return {
+      level: onboardingProfile[levelKey] || "Beginner",
+      experience: onboardingProfile[experienceKey] || "",
+      // Sport-specific fields
+      ...(sportLower === "climbing" && {
+        maxGrade: onboardingProfile.climbingMaxGrade || "",
+        certifications: onboardingProfile.climbingCertifications || [],
+        specialties: onboardingProfile.climbingSpecialties || [],
+        skills: onboardingProfile.climbingSkills || [],
+      }),
+      ...(sportLower === "cycling" && {
+        distance: onboardingProfile.cyclingDistance || "",
+        pace: onboardingProfile.cyclingPace || "",
+        preferences: onboardingProfile.cyclingPreferences || [],
+      }),
+      ...(sportLower === "running" && {
+        distance: onboardingProfile.runningDistance || "",
+        pace: onboardingProfile.runningPace || "",
+        goals: onboardingProfile.runningGoals || "",
+        preferences: onboardingProfile.runningPreferences || [],
+      }),
+    };
+  };
+
   // Use the profile hook to get real data when user is logged in
   const { profile: userProfileData, followStats, loading, refetch } = useProfile(user?.id);
 
