@@ -290,13 +290,15 @@ export default function Index() {
         const matches = filters.activityType.some(
           (type) =>
             activityType === type.toLowerCase() ||
+            activityType === type ||
             (type === "Cycling" && activityType === "cycling") ||
             (type === "Climbing" && activityType === "climbing") ||
             (type === "Running" && activityType === "running") ||
             (type === "Hiking" && activityType === "hiking") ||
             (type === "Skiing" && activityType === "skiing") ||
             (type === "Surfing" && activityType === "surfing") ||
-            (type === "Tennis" && activityType === "tennis"),
+            (type === "Tennis" && activityType === "tennis") ||
+            (type === "General" && activityType === "general"),
         );
         if (!matches) {
           console.log(`Activity "${activity.title}" (type: ${activityType}) filtered out by type filter. Available types:`, filters.activityType);
@@ -812,7 +814,7 @@ export default function Index() {
                   �� <strong>Discover</strong> activities that match your
                   interests
                   <br />
-                  ���� <strong>Connect</strong> with like-minded people
+                  ��� <strong>Connect</strong> with like-minded people
                   <br />
                   🏆 <strong>Join</strong> clubs and events near you
                 </p>
@@ -1473,7 +1475,7 @@ function CyclingExploreSection() {
     },
     {
       title: "Intermediate Chaingang",
-      date: "������ Tuesday, 6:30 PM",
+      date: "���� Tuesday, 6:30 PM",
       location: "📍Box Hill, Surrey",
       organizer: "Surrey Road Cycling",
       distance: "40km",
@@ -1711,7 +1713,7 @@ function CyclingActivityCard({ activity }: { activity: any }) {
           </div>
           <div className="text-center">
             <div className="text-gray-500">Pace</div>
-            <div className="font-medium text-black">����� {activity.pace}</div>
+            <div className="font-medium text-black">��� {activity.pace}</div>
           </div>
           <div className="text-center">
             <div className="text-gray-500">Elevation</div>
