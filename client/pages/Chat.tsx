@@ -136,10 +136,10 @@ export default function Chat() {
   const getFilteredMessages = () => {
     // For new users, start with empty direct messages
     // Only show messages if they have actually sent messages or have real backend data
-    const isNewUser = chatMessages.length === 0 ||
-                     (!localStorage.getItem('hasSentMessages') && chatMessages.every(msg => msg.id.startsWith('demo')));
+    const userHasSentAnyMessages = hasUserSentMessages() || isUserInDemoMode();
+    const hasRealMessages = chatMessages.length > 0 && !chatMessages.every(msg => msg.id.startsWith('demo'));
 
-    if (isNewUser) {
+    if (!userHasSentAnyMessages && !hasRealMessages) {
       return []; // New users start with no direct messages
     }
 
