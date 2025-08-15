@@ -51,13 +51,19 @@ export function SavedActivitiesProvider({ children }: { children: ReactNode }) {
 
       // Add timeout to prevent hanging requests
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout')), 5000)
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
       );
 
-      const response = await Promise.race([
-        apiService.getSavedActivities(),
-        timeoutPromise
-      ]) as any;
+      let response;
+      try {
+        response = await Promise.race([
+          apiService.getSavedActivities?.() || Promise.resolve({ data: [] }),
+          timeoutPromise
+        ]) as any;
+      } catch (timeoutError) {
+        console.log('API request timed out, using localStorage fallback');
+        return; // Let it fall back to localStorage
+      }
 
       if (response.error) {
         if (response.error === "BACKEND_UNAVAILABLE") {
