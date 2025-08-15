@@ -45,7 +45,7 @@ interface ActivityParticipationContextType {
   getParticipationStats: (
     activityId: string,
     maxParticipants?: number,
-  ) => ActivityParticipationStats;
+  ) => ActivityParticipationStats | null;
   isUserParticipating: (activityId: string) => boolean;
   canJoinActivity: (activityId: string, maxParticipants?: number) => boolean;
   refreshParticipation: () => Promise<void>;
