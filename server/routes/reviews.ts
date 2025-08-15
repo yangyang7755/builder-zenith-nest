@@ -12,6 +12,41 @@ const ReviewSchema = z.object({
 
 export const handleGetReviews = async (req: Request, res: Response) => {
   try {
+    console.log("=== GET REVIEWS REQUEST ===");
+    console.log("Query params:", req.query);
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      console.log("Supabase not configured, returning demo reviews");
+      const demoReviews = [
+        {
+          id: "demo-review-1",
+          activity_id: req.query.activity_id || "demo-activity-1",
+          reviewer_id: "demo-user-1",
+          reviewee_id: req.query.user_id || "demo-organizer-1",
+          rating: 5,
+          comment: "Excellent activity! Well organized and fun.",
+          created_at: new Date(Date.now() - 86400000).toISOString(),
+          reviewer: {
+            id: "demo-user-1",
+            full_name: "Demo Reviewer",
+            profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+          },
+          reviewee: {
+            id: req.query.user_id || "demo-organizer-1",
+            full_name: "Demo Organizer",
+            profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+          },
+          activity: {
+            id: req.query.activity_id || "demo-activity-1",
+            title: "Demo Activity",
+            date: new Date(Date.now() - 86400000).toISOString()
+          }
+        }
+      ];
+      return res.json(demoReviews);
+    }
+
     const { activity_id, user_id } = req.query;
 
     let query = supabaseAdmin
@@ -20,7 +55,7 @@ export const handleGetReviews = async (req: Request, res: Response) => {
         *,
         reviewer:profiles!reviewer_id(id, full_name, profile_image),
         reviewee:profiles!reviewee_id(id, full_name, profile_image),
-        activity:activities(id, title, date)
+        activity:activities(id, title, date_time)
       `)
       .order("created_at", { ascending: false });
 
@@ -37,11 +72,13 @@ export const handleGetReviews = async (req: Request, res: Response) => {
     if (error) {
       console.error("Database error:", error);
       if (error.code === '42P01') {
+        console.log("Reviews table not found, returning empty array");
         return res.json([]);
       }
       return res.status(500).json({ error: "Failed to fetch reviews" });
     }
 
+    console.log(`Found ${reviews?.length || 0} reviews`);
     res.json(reviews || []);
   } catch (error) {
     console.error("Server error:", error);
@@ -51,8 +88,12 @@ export const handleGetReviews = async (req: Request, res: Response) => {
 
 export const handleCreateReview = async (req: Request, res: Response) => {
   try {
+    console.log("=== CREATE REVIEW REQUEST ===");
+    console.log("Request body:", JSON.stringify(req.body, null, 2));
+
     // Check if Supabase is configured
     if (!supabaseAdmin) {
+      console.log("Supabase not configured, returning demo success");
       // Return demo success response for development
       const demoReview = {
         id: "demo-review-" + Date.now(),
@@ -62,10 +103,16 @@ export const handleCreateReview = async (req: Request, res: Response) => {
         rating: req.body.rating,
         comment: req.body.comment,
         created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         reviewer: {
           id: "demo-user-id",
           full_name: "Demo User",
-          profile_image: null
+          profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+        },
+        reviewee: {
+          id: req.body.reviewee_id,
+          full_name: "Demo Organizer",
+          profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
         }
       };
       return res.status(201).json(demoReview);
@@ -77,11 +124,12 @@ export const handleCreateReview = async (req: Request, res: Response) => {
     }
 
     const validatedData = ReviewSchema.parse(req.body);
+    console.log("Validated review data:", validatedData);
 
     // Check if activity exists and has passed
     const { data: activity } = await supabaseAdmin
       .from("activities")
-      .select("id, date, organizer_id")
+      .select("id, date_time, organizer_id")
       .eq("id", validatedData.activity_id)
       .single();
 
@@ -89,7 +137,7 @@ export const handleCreateReview = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Activity not found" });
     }
 
-    const activityDate = new Date(activity.date);
+    const activityDate = new Date(activity.date_time);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -121,11 +169,14 @@ export const handleCreateReview = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "You have already reviewed this activity" });
     }
 
+    // Create the review with proper persistence
     const { data: newReview, error } = await supabaseAdmin
       .from("activity_reviews")
       .insert({
         ...validatedData,
         reviewer_id: user.id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       })
       .select(`
         *,
@@ -135,13 +186,15 @@ export const handleCreateReview = async (req: Request, res: Response) => {
       .single();
 
     if (error) {
-      console.error("Database error:", error);
+      console.error("Database error creating review:", error);
       return res.status(500).json({ error: "Failed to create review" });
     }
 
+    console.log("Review created successfully:", newReview.id);
     res.status(201).json(newReview);
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error("Validation error:", error.errors);
       res.status(400).json({ error: "Invalid review data", details: error.errors });
     } else {
       console.error("Server error:", error);
