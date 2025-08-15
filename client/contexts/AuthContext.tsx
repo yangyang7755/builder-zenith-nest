@@ -55,6 +55,8 @@ interface AuthContextType {
   signOut: () => Promise<{ error: any }>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
+  createProfileFromOnboardingData: (onboardingProfile: UserProfile) => Promise<void>;
+  hasOnboardingBasedProfile: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
