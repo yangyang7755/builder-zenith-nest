@@ -38,16 +38,18 @@ class UploadService {
   ): Promise<ApiResponse<UploadResponse>> {
     try {
       const authHeader = await getAuthHeader();
-      
+
       const formData = new FormData();
       formData.append("image", file);
-      
+
       // Add any additional data
       if (additionalData) {
         Object.entries(additionalData).forEach(([key, value]) => {
           formData.append(key, value);
         });
       }
+
+      console.log(`Uploading to ${endpoint} with auth:`, !!authHeader);
 
       const response = await safeFetch(`${this.baseUrl}${endpoint}`, {
         method: "POST",
@@ -58,7 +60,21 @@ class UploadService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch (parseError) {
+          // Fallback to status-based message
+          if (response.status === 403) {
+            errorMessage = 'You do not have permission to upload images for this item. You may need to be a club manager.';
+          } else if (response.status === 401) {
+            errorMessage = 'You must be logged in to upload images.';
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
