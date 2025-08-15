@@ -63,8 +63,11 @@ export default function Chat() {
     },
   ];
 
-  // Use real club chats if available, otherwise fall back to static data
-  const displayClubChats = clubChats.length > 0 ? clubChats.map(club => ({
+  // For new users, only show clubs they've actually joined
+  // Check if user has joined any clubs or if this is demo mode
+  const isNewUser = !localStorage.getItem('hasJoinedClubs') && clubChats.length === 0;
+
+  const displayClubChats = isNewUser ? [] : (clubChats.length > 0 ? clubChats.map(club => ({
     id: club.id,
     name: club.name,
     lastMessage: club.lastMessage || "No messages yet",
@@ -72,7 +75,7 @@ export default function Chat() {
     avatar: club.avatar || "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60&h=60&fit=crop",
     unread: club.unreadCount > 0,
     type: "club" as const,
-  })) : staticClubChats;
+  })) : staticClubChats);
 
   const getTimeAgo = (timestamp: Date) => {
     const now = new Date();
