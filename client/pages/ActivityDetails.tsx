@@ -518,7 +518,6 @@ export default function ActivityDetails() {
         {(activity.fee ||
           activity.accommodation ||
           activity.transport ||
-          contextActivity?.cafeStop ||
           activity.cafeStop ||
           activity.route ||
           activity.trainingFocus ||
