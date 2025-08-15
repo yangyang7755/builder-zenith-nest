@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { createServer } from "http";
+import { createServer as createHttpServer } from "http";
 import { Server } from "socket.io";
 
 // Import route handlers
@@ -58,7 +58,7 @@ import {
 } from "./routes/saved_activities";
 
 const app = express();
-const httpServer = createServer(app);
+const httpServer = createHttpServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: process.env.CLIENT_URL || "http://localhost:5173",
@@ -194,7 +194,7 @@ app.use((req: express.Request, res: express.Response) => {
 
 const PORT = process.env.PORT || 3001;
 
-export const createServer = () => {
+export const createExpressApp = () => {
   return app;
 };
 
