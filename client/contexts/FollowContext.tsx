@@ -160,10 +160,13 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
       await apiService.unfollowUser(userId);
       
       // Update local state optimistically
-      setFollowing(prev => prev.filter(f => f.following_id !== userId));
+      setFollowing(prev => {
+        const currentFollowing = Array.isArray(prev) ? prev : [];
+        return currentFollowing.filter(f => f.following_id !== userId);
+      });
       setFollowStats(prev => ({
         ...prev,
-        following: Math.max(0, prev.following - 1)
+        following: Math.max(0, (prev?.following || 0) - 1)
       }));
 
       toast({
