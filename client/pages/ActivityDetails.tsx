@@ -340,14 +340,8 @@ export default function ActivityDetails() {
 
   const { activities } = useActivities();
 
-  // Get activity data from context first, then fallback to static data
-  const contextActivity = activities.find((a) => a.id === activityId);
-  const staticActivity = activityId
-    ? activitiesData[activityId as keyof typeof activitiesData]
-    : null;
-
-  // Prefer context activity data (user-created activities) over static data
-  const activity = contextActivity || staticActivity;
+  // Get activity data from backend activities only
+  const activity = activities.find((a) => a.id === activityId);
 
   // Get participation status for the current activity
   const currentActivityId = activityId || activity?.id;
