@@ -83,19 +83,35 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
         apiService.getFollowStats(user.id)
       ]);
 
-      if (followersResponse.data) {
+      // Ensure followers is always an array
+      if (followersResponse.data && Array.isArray(followersResponse.data)) {
         setFollowers(followersResponse.data);
+      } else {
+        setFollowers([]);
       }
 
-      if (followingResponse.data) {
+      // Ensure following is always an array
+      if (followingResponse.data && Array.isArray(followingResponse.data)) {
         setFollowing(followingResponse.data);
+      } else {
+        setFollowing([]);
       }
 
+      // Ensure stats have default values
       if (statsResponse.data) {
-        setFollowStats(statsResponse.data);
+        setFollowStats({
+          followers: statsResponse.data.followers || 0,
+          following: statsResponse.data.following || 0
+        });
+      } else {
+        setFollowStats({ followers: 0, following: 0 });
       }
     } catch (error) {
       console.error('Error refreshing follow data:', error);
+      // Set safe defaults on error
+      setFollowers([]);
+      setFollowing([]);
+      setFollowStats({ followers: 0, following: 0 });
     } finally {
       setIsLoading(false);
     }
