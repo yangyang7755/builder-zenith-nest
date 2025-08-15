@@ -514,16 +514,8 @@ export default function Index() {
           currentFilters={filters}
         />
 
-        {/* Cycling-Focused Activities Section */}
-        {!isSearching &&
-        filters.activityType.length === 1 &&
-        filters.activityType.includes("Cycling") ? (
-          <CyclingExploreSection />
-        ) : !isSearching &&
-          filters.activityType.length === 1 &&
-          filters.activityType.includes("Climbing") ? (
-          <ClimbingExploreSection />
-        ) : (
+        {/* All Activities Section */}
+        {(
           /* Mixed Activities Section */
           <MixedActivitiesSection
             filters={filters}
