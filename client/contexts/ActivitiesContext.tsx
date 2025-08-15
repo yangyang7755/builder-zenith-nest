@@ -410,15 +410,17 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
 
       console.log("Loading activities from backend...", filters);
       const response = await apiService.getActivities(filters);
+      console.log("Raw response from getActivities:", response);
 
       if (response.error) {
         // Backend error - show actual error to user
+        console.error("Backend error in getActivities:", response.error);
         throw new Error(response.error);
       }
 
       if (response.data?.success && response.data.data) {
         const transformedActivities = response.data.data.map(transformActivity);
-        console.log("Loaded activities from backend:", transformedActivities);
+        console.log("Loaded activities from backend (success format):", transformedActivities);
         setActivities(transformedActivities);
         setPagination(
           response.data.pagination || { total: 0, limit: 20, offset: 0 },
@@ -426,10 +428,11 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       } else if (response.data && Array.isArray(response.data)) {
         // Handle legacy response format
         const transformedActivities = response.data.map(transformActivity);
+        console.log("Loaded activities from backend (legacy format):", transformedActivities);
         setActivities(transformedActivities);
       } else {
         // No backend data - set empty activities array
-        console.log("No activities found in backend");
+        console.log("No activities found in backend - response.data:", response.data);
         setActivities([]);
       }
     } catch (err) {
