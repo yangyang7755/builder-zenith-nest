@@ -50,10 +50,12 @@ const checkBackendAvailability = async (): Promise<boolean> => {
 
       try {
         // Try a simple ping to check if backend is available
-        const response = await safeFetch(`${API_BASE_URL}/ping`, {
-          method: "GET",
-          signal: controller.signal,
-        });
+    console.log("Checking backend availability at:", `${API_BASE_URL}/ping`);
+    const response = await safeFetch(`${API_BASE_URL}/ping`, {
+      method: "GET",
+      signal: controller.signal,
+    });
+    console.log("Backend ping response:", response.status, response.statusText);
 
         clearTimeout(timeoutId);
 
