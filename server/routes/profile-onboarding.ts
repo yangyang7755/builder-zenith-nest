@@ -108,13 +108,20 @@ export const handleCreateProfileFromOnboarding = async (req: Request, res: Respo
     // Calculate age from birthday
     const age = onboardingData.birthday ? calculateAge(onboardingData.birthday) : null;
     
-    // Map onboarding data to profile structure
+    // Map onboarding data to profile structure (using only core fields)
     const profileData = {
       id: user.id,
       email: onboardingData.email,
       full_name: onboardingData.full_name,
       bio: onboardingData.bio || createBioFromOnboarding(onboardingData),
       profile_image: null,
+      university: !onboardingData.hideUniversity ? onboardingData.university : null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    // Extended fields to try - these might not exist in all database setups
+    const extendedData = {
       phone: null,
       gender: onboardingData.gender || null,
       age: age,
@@ -143,8 +150,6 @@ export const handleCreateProfileFromOnboarding = async (req: Request, res: Respo
         followers: true,
         following: true,
       },
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
     };
 
     console.log("Profile data to create:", profileData);
