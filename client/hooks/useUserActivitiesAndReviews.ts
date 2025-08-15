@@ -52,15 +52,27 @@ export function useUserActivitiesAndReviews(userId?: string) {
 
     try {
       // Fetch user's activities
-      const activitiesResponse = await apiService.getUserActivityHistory({
-        user_id: userId,
-        include_reviews: true,
-      });
+      let activitiesResponse;
+      try {
+        activitiesResponse = await apiService.getUserActivityHistory({
+          user_id: userId,
+          include_reviews: true,
+        });
+      } catch (activitiesError) {
+        console.error('Error fetching activities:', activitiesError);
+        activitiesResponse = { error: 'Failed to fetch activities', data: [] };
+      }
 
       // Fetch user's reviews (as reviewee)
-      const reviewsResponse = await apiService.getReviews({
-        user_id: userId,
-      });
+      let reviewsResponse;
+      try {
+        reviewsResponse = await apiService.getReviews({
+          user_id: userId,
+        });
+      } catch (reviewsError) {
+        console.error('Error fetching reviews:', reviewsError);
+        reviewsResponse = { error: 'Failed to fetch reviews', data: [] };
+      }
 
       if (activitiesResponse.error === 'BACKEND_UNAVAILABLE' || reviewsResponse.error === 'BACKEND_UNAVAILABLE') {
         setData(getDemoActivitiesAndReviews());
