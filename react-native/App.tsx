@@ -3,6 +3,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet, Text } from "react-native";
 
+// Import contexts
+import { AuthProvider } from "./contexts/AuthContext";
+import { ActivitiesProvider } from "./contexts/ActivitiesContext";
+import { FollowProvider } from "./contexts/FollowContext";
+
 // Import screens
 import ExploreScreen from "./screens/ExploreScreen";
 import ProfileScreen from "./screens/ProfileScreen";
