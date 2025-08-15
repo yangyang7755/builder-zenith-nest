@@ -719,7 +719,12 @@ export default function Profile() {
 
             {/* Tab Content */}
             <div className="space-y-3">
-              {activeTab === "completed" ? (
+              {activitiesLoading ? (
+                <div className="text-center py-8">
+                  <div className="w-8 h-8 border-2 border-explore-green border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-gray-500">Loading activities...</p>
+                </div>
+              ) : activeTab === "completed" ? (
                 <>
                   {/* Completed Activities with Reviews */}
                   {completedActivities.length > 0 ? (
