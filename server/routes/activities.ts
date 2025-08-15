@@ -219,7 +219,7 @@ export const handleGetActivities = async (req: Request, res: Response) => {
     // Add participant counts to activities
     const activitiesWithCounts = await Promise.all(
       (activities || []).map(async (activity) => {
-        const { data: participantCount } = await supabaseAdmin
+        const { count: participantCount } = await supabaseAdmin
           .from("activity_participants")
           .select("*", { count: 'exact' })
           .eq("activity_id", activity.id)
@@ -227,7 +227,7 @@ export const handleGetActivities = async (req: Request, res: Response) => {
 
         return {
           ...activity,
-          current_participants: participantCount?.length || 0
+          current_participants: participantCount || 0
         };
       })
     );
