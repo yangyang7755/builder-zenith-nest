@@ -180,6 +180,10 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
   };
 
   const isFollowing = (userId: string): boolean => {
+    // Ensure following is an array before using array methods
+    if (!Array.isArray(following)) {
+      return false;
+    }
     return following.some(f => f.following_id === userId);
   };
 
@@ -189,7 +193,7 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
       // For now, return 0 or implement a separate API call
       return 0;
     }
-    return followStats.followers;
+    return followStats?.followers || 0;
   };
 
   const getFollowingCount = (userId?: string): number => {
@@ -198,7 +202,7 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
       // For now, return 0 or implement a separate API call
       return 0;
     }
-    return followStats.following;
+    return followStats?.following || 0;
   };
 
   const value: FollowContextType = {
