@@ -36,7 +36,7 @@ export default function Profile() {
     "completed",
   );
   const [activeSportTab, setActiveSportTab] = useState<
-    "climbing" | "cycling" | "running"
+    "climbing" | "cycling" | "running" | "hiking" | "skiing" | "surfing" | "tennis"
   >("climbing");
   const [localProfileData, setLocalProfileData] = useState<any>(null);
   const [activityHistory, setActivityHistory] = useState<any[]>([]);
