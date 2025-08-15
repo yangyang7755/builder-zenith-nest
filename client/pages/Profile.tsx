@@ -59,7 +59,7 @@ export default function Profile() {
 
   // For demo purposes, use Maddie Wei's user ID
   const currentUserId = "user_maddie_wei";
-  const isFollowingUser = isFollowing(currentUserId);
+  const isFollowingUser = user ? isFollowing(currentUserId) : false;
 
   // Helper function to calculate age from birthday
   const calculateAge = (birthday: string): number => {
