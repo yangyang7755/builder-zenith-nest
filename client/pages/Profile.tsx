@@ -457,11 +457,11 @@ export default function Profile() {
           )}
 
           {/* Bio */}
-          <p className="text-gray-700 mb-6 leading-relaxed text-sm">
-            Weekend warrior and outdoor enthusiast. Love helping people reach
-            new heights! Always looking to share knowledge and create a safe,
-            fun climbing environment.
-          </p>
+          {displayProfile.bio && (
+            <p className="text-gray-700 mb-6 leading-relaxed text-sm">
+              {displayProfile.bio}
+            </p>
+          )}
         </div>
 
 
