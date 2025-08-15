@@ -109,7 +109,7 @@ export default function Index() {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
-    activityType: ["Cycling", "Climbing", "Running", "Hiking", "Skiing", "Surfing", "Tennis"],
+    activityType: ["Cycling", "Climbing", "Running", "Hiking", "Skiing", "Surfing", "Tennis", "General"],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     date: { start: "", end: "" },
@@ -812,7 +812,7 @@ export default function Index() {
                   �� <strong>Discover</strong> activities that match your
                   interests
                   <br />
-                  ��� <strong>Connect</strong> with like-minded people
+                  ���� <strong>Connect</strong> with like-minded people
                   <br />
                   🏆 <strong>Join</strong> clubs and events near you
                 </p>
@@ -1473,7 +1473,7 @@ function CyclingExploreSection() {
     },
     {
       title: "Intermediate Chaingang",
-      date: "���� Tuesday, 6:30 PM",
+      date: "������ Tuesday, 6:30 PM",
       location: "📍Box Hill, Surrey",
       organizer: "Surrey Road Cycling",
       distance: "40km",
@@ -1711,7 +1711,7 @@ function CyclingActivityCard({ activity }: { activity: any }) {
           </div>
           <div className="text-center">
             <div className="text-gray-500">Pace</div>
-            <div className="font-medium text-black">��� {activity.pace}</div>
+            <div className="font-medium text-black">����� {activity.pace}</div>
           </div>
           <div className="text-center">
             <div className="text-gray-500">Elevation</div>
