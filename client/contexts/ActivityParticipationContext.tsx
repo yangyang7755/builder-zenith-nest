@@ -378,6 +378,7 @@ export function ActivityParticipationProvider({
     maxParticipants: number = 10,
   ): boolean => {
     const stats = getParticipationStats(activityId, maxParticipants);
+    if (!stats) return false;
     return !stats.is_full && !isUserParticipating(activityId);
   };
 
