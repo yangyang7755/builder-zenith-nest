@@ -126,10 +126,13 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
       
       if (response.data) {
         // Update local state optimistically
-        setFollowing(prev => [...prev, response.data]);
+        setFollowing(prev => {
+          const currentFollowing = Array.isArray(prev) ? prev : [];
+          return [...currentFollowing, response.data];
+        });
         setFollowStats(prev => ({
           ...prev,
-          following: prev.following + 1
+          following: (prev?.following || 0) + 1
         }));
 
         toast({
