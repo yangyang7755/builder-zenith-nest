@@ -498,25 +498,9 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
         const transformedActivities = response.data.map(transformActivity);
         setActivities(transformedActivities);
       } else {
-        // No backend data, use demo data
-        console.log("No backend data found, using demo activities");
-        const transformedDemoActivities = demoActivities.map((activity) => ({
-          ...activity,
-          activity_type: activity.type as any,
-          date_time: `${activity.date}T${activity.time}:00Z`,
-          max_participants: parseInt(activity.maxParticipants),
-          current_participants: Math.floor(
-            Math.random() * parseInt(activity.maxParticipants),
-          ),
-          difficulty_level: (activity.difficulty?.toLowerCase() ||
-            "beginner") as any,
-          price_per_person: 0,
-          status: "upcoming" as any,
-          organizer_id: "demo-user-id",
-          created_at: activity.createdAt.toISOString(),
-          updated_at: activity.createdAt.toISOString(),
-        }));
-        setActivities(transformedDemoActivities);
+        // No backend data - set empty activities array
+        console.log("No activities found in backend");
+        setActivities([]);
       }
     } catch (err) {
       console.error("Failed to load activities from backend:", err);
