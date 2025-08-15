@@ -403,6 +403,92 @@ export const apiService = {
     }
   },
 
+  // Chat message methods
+  async getClubMessages(clubId: string, limit: number = 50, offset: number = 0): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/chat/club/${clubId}/messages?limit=${limit}&offset=${offset}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      return { error: 'Failed to fetch club messages' };
+    }
+  },
+
+  async sendClubMessage(clubId: string, message: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/chat/club/${clubId}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify({ message }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      return { error: 'Failed to send club message' };
+    }
+  },
+
+  async getDirectMessages(otherUserId: string, limit: number = 50, offset: number = 0): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/chat/direct/${otherUserId}?limit=${limit}&offset=${offset}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      return { error: 'Failed to fetch direct messages' };
+    }
+  },
+
+  async sendDirectMessage(receiverId: string, message: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/chat/direct`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify({ receiver_id: receiverId, message }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      return { error: 'Failed to send direct message' };
+    }
+  },
+
+  async markMessagesAsRead(senderId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/chat/mark-read`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify({ sender_id: senderId }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return { error: 'Request timeout' };
+      }
+      return { error: 'Failed to mark messages as read' };
+    }
+  },
+
   // Search functionality
   async searchUsers(query: string): Promise<ApiResponse<any[]>> {
     try {
