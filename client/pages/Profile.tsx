@@ -760,61 +760,9 @@ export default function Profile() {
                   ) : (
                     <div className="text-center py-8 text-gray-500">
                       <p>No completed activities yet</p>
+                      <p className="text-sm mt-2">Join activities from the explore page to see them here!</p>
                     </div>
                   )}
-
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="text-2xl">🚴</div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-black">
-                          Sunday Morning Social Ride
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          Richmond Running Club • Feb 2, 2025
-                        </p>
-                        <div className="flex items-center gap-1 mt-1">
-                          {[1, 2, 3, 4].map((star) => (
-                            <Star
-                              key={star}
-                              className="w-3 h-3 fill-yellow-400 text-yellow-400"
-                            />
-                          ))}
-                          <Star className="w-3 h-3 text-gray-300" />
-                          <span className="text-xs text-gray-500 ml-1">
-                            Your review: "Great route, friendly group"
-                          </span>
-                        </div>
-                      </div>
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="text-2xl">🏃</div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-black">
-                          Richmond Park Morning Run
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          Run Club London • Jan 28, 2025
-                        </p>
-                        <div className="flex items-center gap-1 mt-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className="w-3 h-3 fill-yellow-400 text-yellow-400"
-                            />
-                          ))}
-                          <span className="text-xs text-gray-500 ml-1">
-                            Your review: "Perfect pace for beginners"
-                          </span>
-                        </div>
-                      </div>
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                    </div>
-                  </div>
                 </>
               ) : (
                 <>
