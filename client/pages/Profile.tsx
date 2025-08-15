@@ -397,14 +397,23 @@ export default function Profile() {
           </div>
 
           {/* Activity Tags */}
-          <div className="flex gap-2 mb-4">
-            <span className="px-3 py-1 bg-explore-green text-white rounded-full text-sm font-medium">
-              Climbing • Expert
-            </span>
-            <span className="px-3 py-1 border border-orange-300 bg-orange-50 text-orange-700 rounded-full text-sm font-medium">
-              Coach • Certified
-            </span>
-          </div>
+          {displayProfile.sports && Array.isArray(displayProfile.sports) && displayProfile.sports.length > 0 && (
+            <div className="flex gap-2 mb-4 flex-wrap">
+              {displayProfile.sports.slice(0, 3).map((sport, index) => {
+                const sportName = typeof sport === 'string' ? sport : sport.sport;
+                return (
+                  <span key={index} className="px-3 py-1 bg-explore-green text-white rounded-full text-sm font-medium">
+                    {sportName}
+                  </span>
+                );
+              })}
+              {displayProfile.occupation && (
+                <span className="px-3 py-1 border border-orange-300 bg-orange-50 text-orange-700 rounded-full text-sm font-medium">
+                  {displayProfile.occupation}
+                </span>
+              )}
+            </div>
+          )}
 
           {/* Bio */}
           <p className="text-gray-700 mb-6 leading-relaxed text-sm">
