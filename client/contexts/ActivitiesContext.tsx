@@ -504,27 +504,8 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       }
     } catch (err) {
       console.error("Failed to load activities from backend:", err);
-      console.log("Using demo activities as fallback");
-      setError("Failed to load activities from backend, using demo data");
-
-      // Transform demo activities to new format
-      const transformedDemoActivities = demoActivities.map((activity) => ({
-        ...activity,
-        activity_type: activity.type as any,
-        date_time: `${activity.date}T${activity.time}:00Z`,
-        max_participants: parseInt(activity.maxParticipants),
-        current_participants: Math.floor(
-          Math.random() * parseInt(activity.maxParticipants),
-        ),
-        difficulty_level: (activity.difficulty?.toLowerCase() ||
-          "beginner") as any,
-        price_per_person: 0,
-        status: "upcoming" as any,
-        organizer_id: "demo-user-id",
-        created_at: activity.createdAt.toISOString(),
-        updated_at: activity.createdAt.toISOString(),
-      }));
-      setActivities(transformedDemoActivities);
+      setError(err instanceof Error ? err.message : "Failed to load activities");
+      setActivities([]);
     } finally {
       setLoading(false);
     }
