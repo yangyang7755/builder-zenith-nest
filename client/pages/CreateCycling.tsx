@@ -173,10 +173,14 @@ export default function CreateCycling() {
       imageSrc: formData.activityImage || "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
     });
 
-    // Delete draft on successful creation
-    deleteDraft("cycling");
-    showToast("Cycling activity created successfully!", "success");
-    navigate("/explore");
+    if (result) {
+      // Delete draft on successful creation
+      deleteDraft("cycling");
+      showToast("Cycling activity created successfully!", "success");
+      navigate("/explore");
+    } else {
+      showToast("Failed to create activity. Please try again.", "error");
+    }
   };
 
   return (
