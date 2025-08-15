@@ -107,6 +107,13 @@ const App = () => {
     };
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      // Check if it's a known timeout error that we want to suppress
+      if (event.reason?.message === 'Request timeout') {
+        console.log('Request timeout caught and handled gracefully');
+        event.preventDefault(); // Prevent the error from propagating
+        return;
+      }
+
       console.error('Unhandled promise rejection:', event.reason);
     };
 
