@@ -1,4 +1,6 @@
 // Network Service - Monitors connection status and provides fallbacks
+import { robustFetch } from "../utils/robustFetch";
+
 export interface NetworkStatus {
   isOnline: boolean;
   isServerReachable: boolean;
@@ -88,7 +90,7 @@ class NetworkService {
 
     try {
       const startTime = Date.now();
-      const response = await fetch("/api/health", {
+      const response = await robustFetch("/api/health", {
         method: "GET",
         cache: "no-cache",
         signal: AbortSignal.timeout(5000), // 5 second timeout
@@ -124,7 +126,7 @@ class NetworkService {
 
   public async isApiEndpointReachable(endpoint: string): Promise<boolean> {
     try {
-      const response = await fetch(endpoint, {
+      const response = await robustFetch(endpoint, {
         method: "HEAD",
         cache: "no-cache",
         signal: AbortSignal.timeout(3000),
@@ -194,7 +196,7 @@ export const networkAwareFetch = async (
   const timeoutId = setTimeout(() => controller.abort(), adjustedTimeout);
 
   try {
-    const response = await fetch(url, {
+    const response = await robustFetch(url, {
       ...options,
       signal: controller.signal,
     });
