@@ -88,8 +88,9 @@ const authMiddleware = async (req: any, res: any, next: any) => {
         req.user = user;
       }
     } catch (error) {
-      console.log("Auth middleware error:", error);
-      // Continue without user context
+      console.log("Auth middleware error (continuing without auth):", error.message);
+      // In demo mode or when Supabase isn't configured, continue without user context
+      // This allows the app to work in development without proper Supabase setup
     }
   }
 
