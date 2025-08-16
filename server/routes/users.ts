@@ -751,11 +751,15 @@ export const handleProfileOnboarding = async (req: Request, res: Response) => {
 
     const userId = req.user?.id;
 
-    // In demo mode (when Supabase is not configured), create a demo user ID
-    if (!userId && !supabaseAdmin) {
-      const demoUserId = `demo-user-${Date.now()}`;
-      console.log("Creating/updating profile from onboarding for demo user:", demoUserId);
+    console.log("Supabase admin configured:", !!supabaseAdmin);
+    console.log("User ID from request:", userId);
+
+    // Check authentication requirements based on Supabase configuration
+    if (!supabaseAdmin) {
+      // Demo mode - no authentication required
+      console.log("Running in demo mode - no authentication required");
     } else if (!userId) {
+      // Production mode - authentication required
       return res.status(400).json({
         success: false,
         error: "User ID is required",
