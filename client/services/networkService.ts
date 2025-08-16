@@ -10,9 +10,9 @@ class NetworkService {
   private static instance: NetworkService;
   private status: NetworkStatus = {
     isOnline: navigator.onLine,
-    isServerReachable: false,
+    isServerReachable: true, // Start optimistic, check immediately
     lastChecked: new Date(),
-    connectionQuality: "offline",
+    connectionQuality: navigator.onLine ? "good" : "offline",
   };
   private listeners: Array<(status: NetworkStatus) => void> = [];
   private checkInterval: number | null = null;
