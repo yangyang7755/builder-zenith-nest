@@ -751,19 +751,24 @@ export const handleProfileOnboarding = async (req: Request, res: Response) => {
 
     const userId = req.user?.id;
 
-    if (!userId) {
+    // In demo mode (when Supabase is not configured), create a demo user ID
+    if (!userId && !supabaseAdmin) {
+      const demoUserId = `demo-user-${Date.now()}`;
+      console.log("Creating/updating profile from onboarding for demo user:", demoUserId);
+    } else if (!userId) {
       return res.status(400).json({
         success: false,
         error: "User ID is required",
       });
+    } else {
+      console.log("Creating/updating profile from onboarding for user:", userId);
     }
-
-    console.log("Creating/updating profile from onboarding for user:", userId);
 
     // Check if Supabase is configured
     if (!supabaseAdmin) {
+      const demoUserId = userId || `demo-user-${Date.now()}`;
       const profileData = {
-        id: userId,
+        id: demoUserId,
         email: req.body.email || "demo@example.com",
         full_name: req.body.full_name || req.body.name || "Demo User",
         university: req.body.university || null,
@@ -779,6 +784,8 @@ export const handleProfileOnboarding = async (req: Request, res: Response) => {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
+
+      console.log("Demo profile onboarding successful:", profileData);
 
       return res.json({
         success: true,
