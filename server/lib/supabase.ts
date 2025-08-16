@@ -3,12 +3,25 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// Validate URL format
+// Validate URL format and exclude placeholder URLs
 const isValidUrl = (url: string | undefined) => {
   if (!url) return false;
+
+  // Exclude placeholder or example URLs
+  const placeholderUrls = [
+    "https://example.supabase.co",
+    "https://your-project.supabase.co",
+    "https://placeholder.supabase.co",
+  ];
+
+  if (placeholderUrls.includes(url)) {
+    return false;
+  }
+
   try {
-    new URL(url);
-    return true;
+    const parsedUrl = new URL(url);
+    // Check if it's a real supabase.co URL or localhost for development
+    return parsedUrl.hostname.endsWith('.supabase.co') || parsedUrl.hostname === 'localhost';
   } catch {
     return false;
   }
