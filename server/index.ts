@@ -43,7 +43,8 @@ import {
   handleGetUserProfile,
   handleUpdateUserProfile,
   handleGetUserActivityHistory,
-  handleGetActivitiesNeedingReview
+  handleGetActivitiesNeedingReview,
+  handleProfileOnboarding
 } from "./routes/users";
 import uploadsRouter from "./routes/uploads";
 import {
@@ -119,8 +120,8 @@ app.get("/api/user/activities", handleGetUserActivityHistory);
 app.get("/api/user/activities/pending-reviews", handleGetActivitiesNeedingReview);
 
 // Profile/onboarding routes
-app.post("/api/profile/onboarding", handleUpdateUserProfile);
-app.put("/api/profile/onboarding", handleUpdateUserProfile);
+app.post("/api/profile/onboarding", handleProfileOnboarding);
+app.put("/api/profile/onboarding", handleProfileOnboarding);
 
 // Upload routes
 app.use("/api/uploads", uploadsRouter);
