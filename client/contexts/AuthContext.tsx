@@ -14,43 +14,10 @@ import {
   getOnboardingCompletionSummary
 } from "../services/onboardingService";
 import { UserProfile } from "./OnboardingContext";
+import { robustFetch } from "../utils/robustFetch";
 
-// Store original fetch to avoid third-party interference (like FullStory analytics)
-const originalFetch = globalThis.fetch || window.fetch;
-
-// Robust fetch function that handles third-party interference
-const safeFetch = async (url: string, options?: RequestInit) => {
-  const fetchOptions = {
-    ...options,
-    // Add timeout to prevent hanging requests
-    signal: options?.signal || AbortSignal.timeout(10000),
-  };
-
-  // Try multiple fetch sources
-  const fetchSources = [
-    () => originalFetch(url, fetchOptions),
-    () => window.fetch(url, fetchOptions),
-    () => globalThis.fetch(url, fetchOptions),
-  ];
-
-  let lastError;
-
-  for (const fetchFn of fetchSources) {
-    try {
-      if (typeof fetchFn === 'function') {
-        const result = await fetchFn();
-        return result;
-      }
-    } catch (error) {
-      console.log("Fetch attempt failed, trying next option:", error.message);
-      lastError = error;
-      // Continue to next fetch option
-    }
-  }
-
-  // If all fetch options failed, throw the last error
-  throw lastError || new Error("All fetch methods failed");
-};
+// Use the robust fetch implementation to handle third-party interference
+const safeFetch = robustFetch;
 
 interface AuthContextType {
   user: User | null;
