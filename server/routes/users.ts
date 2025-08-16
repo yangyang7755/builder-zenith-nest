@@ -743,3 +743,96 @@ export const handleGetActivitiesNeedingReview = async (
     });
   }
 };
+
+export const handleProfileOnboarding = async (req: Request, res: Response) => {
+  try {
+    console.log("=== PROFILE ONBOARDING REQUEST ===");
+    console.log("Request body:", JSON.stringify(req.body, null, 2));
+
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID is required",
+      });
+    }
+
+    console.log("Creating/updating profile from onboarding for user:", userId);
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      const profileData = {
+        id: userId,
+        email: req.body.email || "demo@example.com",
+        full_name: req.body.full_name || req.body.name || "Demo User",
+        university: req.body.university || null,
+        bio: req.body.bio || null,
+        birthday: req.body.birthday || null,
+        gender: req.body.gender || null,
+        sports: req.body.sports || [],
+        languages: req.body.languages || [],
+        country: req.body.country || null,
+        profession: req.body.profession || null,
+        location: req.body.location || null,
+        gear: req.body.gear || [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      return res.json({
+        success: true,
+        message: "Demo profile created/updated from onboarding",
+        profile: profileData,
+      });
+    }
+
+    // Prepare extended profile data
+    const profileData = {
+      full_name: req.body.full_name || req.body.name,
+      email: req.body.email,
+      university: req.body.university || null,
+      bio: req.body.bio || null,
+      updated_at: new Date().toISOString(),
+    };
+
+    // Update profile in database
+    const { data: updatedProfile, error: updateError } = await supabaseAdmin
+      .from("profiles")
+      .upsert(
+        {
+          id: userId,
+          ...profileData,
+        },
+        {
+          onConflict: "id",
+        },
+      )
+      .select("*")
+      .single();
+
+    if (updateError) {
+      console.error("Profile onboarding error:", updateError);
+      return res.status(500).json({
+        success: false,
+        error: "Failed to create/update profile",
+        details: updateError,
+      });
+    }
+
+    console.log("Profile onboarding successful:", updatedProfile);
+
+    res.json({
+      success: true,
+      message: "Profile created/updated successfully",
+      profile: updatedProfile,
+    });
+  } catch (error) {
+    console.error("Profile onboarding error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to process onboarding",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
