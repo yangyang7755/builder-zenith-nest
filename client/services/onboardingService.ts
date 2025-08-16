@@ -1,27 +1,8 @@
 import { UserProfile } from "../contexts/OnboardingContext";
+import { robustFetch } from "../utils/robustFetch";
 
-// Store original fetch to avoid third-party interference
-const originalFetch = window.fetch;
-
-// Fallback fetch function that tries multiple approaches
-const safeFetch = async (url: string, options?: RequestInit) => {
-  // Try original fetch first
-  if (originalFetch && typeof originalFetch === 'function') {
-    try {
-      return await originalFetch(url, options);
-    } catch (error) {
-      console.log("Original fetch failed in onboardingService, trying current fetch:", error);
-    }
-  }
-
-  // Fallback to current fetch (which might be wrapped by analytics)
-  try {
-    return await window.fetch(url, options);
-  } catch (error) {
-    console.log("Window fetch also failed in onboardingService:", error);
-    throw error;
-  }
-};
+// Use the robust fetch implementation to handle third-party interference
+const safeFetch = robustFetch;
 
 // Transform onboarding data to backend format
 export const transformOnboardingToProfileData = (
