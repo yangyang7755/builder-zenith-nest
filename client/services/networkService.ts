@@ -179,9 +179,11 @@ export const networkAwareFetch = async (
     throw new Error("No internet connection");
   }
 
-  // If server is known to be unreachable, throw server error
+  // If server is known to be unreachable, still attempt the request but with shorter timeout
+  // This allows for recovery and better handling of temporary network issues
   if (!status.isServerReachable && url.startsWith("/api/")) {
-    throw new Error("Server unreachable");
+    console.log("Server marked as unreachable, attempting with reduced timeout");
+    timeout = Math.min(timeout, 3000); // Reduce timeout but still attempt
   }
 
   // Adjust timeout based on connection quality
@@ -200,15 +202,23 @@ export const networkAwareFetch = async (
 
     // Update server reachability based on response
     if (url.startsWith("/api/")) {
-      networkService.updateStatus({ isServerReachable: response.ok });
+      // Consider server reachable if we get any response (even error responses)
+      // Only mark as unreachable if we get network-level failures
+      networkService.updateStatus({ isServerReachable: true });
     }
 
     return response;
   } catch (error) {
     clearTimeout(timeoutId);
 
-    // Update server status on API failures
-    if (url.startsWith("/api/")) {
+    // Only mark server as unreachable for network-level errors, not HTTP errors
+    if (url.startsWith("/api/") && (
+      error.name === "AbortError" ||
+      error.message.includes("fetch") ||
+      error.message.includes("network") ||
+      error.message.includes("connection")
+    )) {
+      console.log("Network-level error detected, marking server unreachable:", error.message);
       networkService.updateStatus({ isServerReachable: false });
     }
 
