@@ -102,15 +102,22 @@ export const createProfileFromOnboarding = async (
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error("Profile creation failed:", {
-        status: response.status,
-        statusText: response.statusText,
-        errorData,
-        profileData,
-        headers
-      });
-      throw new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status} - ${response.statusText}`);
+      let errorMessage;
+      try {
+        const errorData = await response.json();
+        console.error("Profile creation failed:", {
+          status: response.status,
+          statusText: response.statusText,
+          errorData,
+          profileData,
+          headers
+        });
+        errorMessage = errorData.error || errorData.message || `HTTP error! status: ${response.status} - ${response.statusText}`;
+      } catch (parseError) {
+        console.error("Failed to parse error response:", parseError);
+        errorMessage = `HTTP error! status: ${response.status} - ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
     }
 
     const result = await response.json();
