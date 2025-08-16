@@ -1,4 +1,5 @@
 import { networkAwareFetch, networkService } from "./networkService";
+import { fetchWithTimeout as robustFetchWithTimeout } from "../utils/robustFetch";
 
 const API_BASE_URL = "/api";
 
@@ -20,23 +21,28 @@ const fetchWithTimeout = async (
   options: RequestInit = {},
   timeout: number = 8000,
 ): Promise<Response> => {
-  // Use network-aware fetch that handles offline scenarios
+  // First try robust fetch directly to bypass FullStory issues
   try {
-    return await networkAwareFetch(url, options, timeout);
+    return await robustFetchWithTimeout(url, options, timeout);
   } catch (error) {
-    // Enhanced error handling with network context
-    const status = networkService.getStatus();
+    // If robust fetch fails, try network-aware fetch as fallback
+    try {
+      return await networkAwareFetch(url, options, timeout);
+    } catch (networkError) {
+      // Enhanced error handling with network context
+      const status = networkService.getStatus();
 
-    if (!status.isOnline) {
-      throw new Error("No internet connection - please check your network");
+      if (!status.isOnline) {
+        throw new Error("No internet connection - please check your network");
+      }
+
+      if (!status.isServerReachable) {
+        throw new Error("Server temporarily unavailable - using offline mode");
+      }
+
+      // Re-throw original error if network seems fine
+      throw networkError;
     }
-
-    if (!status.isServerReachable) {
-      throw new Error("Server temporarily unavailable - using offline mode");
-    }
-
-    // Re-throw original error if network seems fine
-    throw error;
   }
 };
 
