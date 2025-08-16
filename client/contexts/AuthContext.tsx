@@ -193,18 +193,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         session.access_token
       );
 
-      if (result.success && result.profile) {
+      // Handle different response formats
+      if (result && result.profile) {
         setProfile(result.profile);
 
         // Persist updated profile to localStorage
         localStorage.setItem("userProfile", JSON.stringify(result.profile));
         console.log("Profile created and updated from onboarding data");
+      } else if (result && result.success === false) {
+        const errorMessage = result.error || result.message || "Failed to create profile from onboarding";
+        throw new Error(errorMessage);
       } else {
-        throw new Error(result.error || "Failed to create profile from onboarding");
+        // If result is the profile itself
+        setProfile(result);
+        localStorage.setItem("userProfile", JSON.stringify(result));
+        console.log("Profile created and updated from onboarding data");
       }
     } catch (error) {
       console.error("Error creating profile from onboarding:", error);
-      throw error;
+
+      // Improve error message handling
+      let errorMessage = "Failed to create profile";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error && typeof error === 'object') {
+        errorMessage = JSON.stringify(error);
+      }
+
+      throw new Error(errorMessage);
     }
   };
 
