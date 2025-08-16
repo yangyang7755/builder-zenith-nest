@@ -118,6 +118,10 @@ app.put("/api/users/profile", handleUpdateUserProfile);
 app.get("/api/user/activities", handleGetUserActivityHistory);
 app.get("/api/user/activities/pending-reviews", handleGetActivitiesNeedingReview);
 
+// Profile/onboarding routes
+app.post("/api/profile/onboarding", handleUpdateUserProfile);
+app.put("/api/profile/onboarding", handleUpdateUserProfile);
+
 // Upload routes
 app.use("/api/uploads", uploadsRouter);
 

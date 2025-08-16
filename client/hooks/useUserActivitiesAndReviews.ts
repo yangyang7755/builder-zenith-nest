@@ -128,8 +128,16 @@ export function useUserActivitiesAndReviews(userId?: string) {
         );
       }
 
-      const activities = activitiesResponse.data || [];
-      const reviews = reviewsResponse.data || [];
+      const activities = Array.isArray(activitiesResponse.data) ? activitiesResponse.data : [];
+      const reviews = Array.isArray(reviewsResponse.data) ? reviewsResponse.data : [];
+
+      // Ensure activities is an array before filtering
+      if (!Array.isArray(activities)) {
+        console.error("Activities data is not an array:", activities);
+        setData(getDemoActivitiesAndReviews());
+        setLoading(false);
+        return;
+      }
 
       // Separate completed and organized activities
       const completedActivities = activities.filter(
