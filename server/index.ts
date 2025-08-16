@@ -4,16 +4,17 @@ import { createServer as createHttpServer } from "http";
 import { Server } from "socket.io";
 
 // Import route handlers
-import { 
-  handleGetClubs, 
-  handleGetClub, 
-  handleUpdateClub, 
-  handleJoinRequest, 
-  handleApproveRequest, 
+import {
+  handleGetClubs,
+  handleGetClub,
+  handleUpdateClub,
+  handleJoinRequest,
+  handleApproveRequest,
   handleDenyRequest,
-  handleCreateClub 
+  handleCreateClub
 } from "./routes/clubs";
 import healthRouter from "./routes/health";
+import { getUserFromToken } from "./lib/supabase";
 import {
   handleGetActivities,
   handleCreateActivity,
@@ -75,6 +76,28 @@ app.use(cors({
   origin: process.env.CLIENT_URL || "http://localhost:5173",
   credentials: true,
 }));
+
+// Auth middleware to extract user from JWT token
+const authMiddleware = async (req: any, res: any, next: any) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    try {
+      const user = await getUserFromToken(authHeader);
+      if (user) {
+        req.user = user;
+      }
+    } catch (error) {
+      console.log("Auth middleware error:", error);
+      // Continue without user context
+    }
+  }
+
+  next();
+};
+
+// Apply auth middleware to API routes
+app.use("/api", authMiddleware);
 
 // Health check
 app.use("/api/health", healthRouter);
