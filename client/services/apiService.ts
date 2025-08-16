@@ -642,4 +642,20 @@ export const apiService = {
       return { error: "Failed to search clubs" };
     }
   },
+
+  // Health check and server ping
+  async ping(): Promise<ApiResponse<{ message: string }>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/health`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return { error: "Request timeout" };
+      }
+      console.error("Failed to ping server:", error);
+      return { error: "Failed to ping server" };
+    }
+  },
 };
