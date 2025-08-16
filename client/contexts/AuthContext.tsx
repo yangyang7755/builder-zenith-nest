@@ -220,7 +220,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } else if (typeof error === 'string') {
         errorMessage = error;
       } else if (error && typeof error === 'object') {
-        errorMessage = JSON.stringify(error);
+        // Handle error objects properly to avoid "[object Object]"
+        errorMessage = error.message || error.error || error.description || 'Unknown error occurred';
       }
 
       throw new Error(errorMessage);
