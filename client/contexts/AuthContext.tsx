@@ -16,26 +16,40 @@ import {
 import { UserProfile } from "./OnboardingContext";
 
 // Store original fetch to avoid third-party interference (like FullStory analytics)
-const originalFetch = window.fetch;
+const originalFetch = globalThis.fetch || window.fetch;
 
-// Fallback fetch function that tries multiple approaches
+// Robust fetch function that handles third-party interference
 const safeFetch = async (url: string, options?: RequestInit) => {
-  // Try original fetch first
-  if (originalFetch && typeof originalFetch === 'function') {
+  const fetchOptions = {
+    ...options,
+    // Add timeout to prevent hanging requests
+    signal: options?.signal || AbortSignal.timeout(10000),
+  };
+
+  // Try multiple fetch sources
+  const fetchSources = [
+    () => originalFetch(url, fetchOptions),
+    () => window.fetch(url, fetchOptions),
+    () => globalThis.fetch(url, fetchOptions),
+  ];
+
+  let lastError;
+
+  for (const fetchFn of fetchSources) {
     try {
-      return await originalFetch(url, options);
+      if (typeof fetchFn === 'function') {
+        const result = await fetchFn();
+        return result;
+      }
     } catch (error) {
-      console.log("Original fetch failed in AuthContext, trying current fetch:", error);
+      console.log("Fetch attempt failed, trying next option:", error.message);
+      lastError = error;
+      // Continue to next fetch option
     }
   }
 
-  // Fallback to current fetch (which might be wrapped by analytics)
-  try {
-    return await window.fetch(url, options);
-  } catch (error) {
-    console.log("Window fetch also failed in AuthContext:", error);
-    throw error;
-  }
+  // If all fetch options failed, throw the last error
+  throw lastError || new Error("All fetch methods failed");
 };
 
 interface AuthContextType {
