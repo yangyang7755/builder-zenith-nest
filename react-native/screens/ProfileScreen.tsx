@@ -9,14 +9,26 @@ import {
   SafeAreaView,
   Modal,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import { useAuth } from '../contexts/AuthContext';
 import { useFollow } from '../contexts/FollowContext';
+import { useUserActivitiesAndReviews } from '../hooks/useUserActivitiesAndReviews';
 import { apiService } from '../services/apiService';
 
 const ProfileScreen: React.FC = () => {
   const { user, profile } = useAuth();
   const { followStats, isLoading: followLoading, refreshFollowData } = useFollow();
+  const {
+    completedActivities,
+    organizedActivities,
+    totalActivities,
+    averageRating,
+    totalReviews,
+    loading: activitiesLoading,
+    error: activitiesError,
+    refetch: refetchActivities,
+  } = useUserActivitiesAndReviews(user?.id);
 
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
@@ -24,27 +36,46 @@ const ProfileScreen: React.FC = () => {
     "completed",
   );
   const [activeSportTab, setActiveSportTab] = useState<string>("climbing");
-  const [userActivities, setUserActivities] = useState<any[]>([]);
-  const [userReviews, setUserReviews] = useState<any[]>([]);
+  const [activeClubTab, setActiveClubTab] = useState<string>("clubs");
   const [isLoadingData, setIsLoadingData] = useState(true);
 
-  // Use actual profile data when available, fallback to demo data
+  // Calculate age from birthday if available
+  const calculateAge = (birthday: string): number => {
+    if (!birthday) return 22;
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  // Use actual profile data when available, fallback to demo data matching web exactly
   const profileData = {
-    full_name: profile?.full_name || user?.full_name || "Maddie Wei",
-    profile_image: profile?.profile_image || user?.profile_image ||
-      "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fb4460a1279a84ad1b10626393196b1cf?format=webp&width=800",
+    full_name: profile?.full_name || user?.full_name || "KOKO",
+    profile_image: profile?.profile_image || user?.profile_image || null,
     bio: profile?.bio || "Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!",
-    age: profile?.age || 22,
+    age: profile?.birthday ? calculateAge(profile.birthday) : 15,
     gender: profile?.gender || "Female",
-    nationality: profile?.nationality || "British",
-    institution: profile?.institution || "Oxford University",
-    occupation: profile?.occupation || "Student",
+    nationality: profile?.country || "United Kingdom",
+    profession: profile?.profession || "STUDENT",
+    university: profile?.university || "",
     location: profile?.location || "Oxford, UK",
-    sports: profile?.sports || ["Climbing", "Cycling"],
-    followers: followStats.followers || 152,
-    following: followStats.following || 87,
-    rating: 4.8,
-    reviews: userReviews.length || 23,
+    sports: profile?.sports || ["Cycling", "Climbing", "Running"],
+    languages: profile?.languages || ["🇪🇸", "🇬🇧", "🇨🇳"],
+    followers: followStats?.followers || 125,
+    following: followStats?.following || 87,
+    rating: averageRating || 5.0,
+    reviews: totalReviews || 1,
+    // Sport-specific data
+    climbingLevel: profile?.climbingLevel || "Advanced",
+    climbingExperience: profile?.climbingExperience || "3+ years",
+    cyclingLevel: profile?.cyclingLevel || "Intermediate",
+    cyclingExperience: profile?.cyclingExperience || "2+ years",
+    runningLevel: profile?.runningLevel || "Beginner",
+    runningExperience: profile?.runningExperience || "1+ year",
   };
 
   useEffect(() => {
