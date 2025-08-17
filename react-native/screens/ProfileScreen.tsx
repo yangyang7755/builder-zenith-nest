@@ -148,26 +148,44 @@ const ProfileScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
+      {/* Header with back arrow, title, and settings */}
       <View style={styles.header}>
+        <TouchableOpacity style={styles.headerButton}>
+          <Text style={styles.headerIcon}>←</Text>
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>Profile</Text>
+        <TouchableOpacity style={styles.headerButton}>
+          <Text style={styles.headerIcon}>⚙</Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Profile Header */}
+        {/* Profile Header Section */}
         <View style={styles.profileHeader}>
           <View style={styles.profileTop}>
-            <Image
-              source={{ uri: profileData.profile_image }}
-              style={styles.profileImage}
-            />
+            {/* Avatar with initial */}
+            <View style={styles.avatarContainer}>
+              {profileData.profile_image ? (
+                <Image
+                  source={{ uri: profileData.profile_image }}
+                  style={styles.profileImage}
+                />
+              ) : (
+                <View style={styles.profileImagePlaceholder}>
+                  <Text style={styles.profileInitial}>
+                    {profileData.full_name.charAt(0)}
+                  </Text>
+                </View>
+              )}
+            </View>
+
             <View style={styles.profileInfo}>
               <Text style={styles.profileName}>{profileData.full_name}</Text>
 
-              {/* Stats */}
+              {/* Followers/Following Stats */}
               <View style={styles.statsContainer}>
                 <TouchableOpacity onPress={() => setShowFollowers(true)}>
                   <Text style={styles.statText}>
@@ -190,18 +208,17 @@ const ProfileScreen: React.FC = () => {
                 </TouchableOpacity>
               </View>
 
-              {/* Rating */}
-              <TouchableOpacity style={styles.ratingContainer}>
+              {/* Rating Stars */}
+              <View style={styles.ratingContainer}>
                 {renderStars(profileData.rating)}
                 <Text style={styles.ratingText}>
-                  {profileData.rating.toFixed(1)} ({profileData.reviews}{" "}
-                  reviews)
+                  {profileData.rating.toFixed(1)} ({profileData.reviews} review{profileData.reviews !== 1 ? 's' : ''})
                 </Text>
-              </TouchableOpacity>
+              </View>
             </View>
           </View>
 
-          {/* Activity Tags */}
+          {/* Sport Tags and Profession */}
           <View style={styles.tagsContainer}>
             {profileData.sports.map((sport, index) => (
               <View key={index} style={styles.sportTag}>
@@ -210,18 +227,25 @@ const ProfileScreen: React.FC = () => {
                 </Text>
               </View>
             ))}
-            <View style={styles.occupationTag}>
-              <Text style={styles.occupationTagText}>
-                {profileData.occupation}
+            <View style={styles.professionTag}>
+              <Text style={styles.professionTagText}>
+                {profileData.profession}
               </Text>
             </View>
           </View>
 
-          {/* Bio */}
+          {/* Languages */}
+          <View style={styles.languagesContainer}>
+            {profileData.languages.map((lang, index) => (
+              <Text key={index} style={styles.languageFlag}>{lang}</Text>
+            ))}
+          </View>
+
+          {/* Bio/Description */}
           <Text style={styles.bio}>{profileData.bio}</Text>
         </View>
 
-        {/* Personal Details */}
+        {/* Personal Details Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal Details</Text>
           <View style={styles.detailsGrid}>
@@ -241,18 +265,14 @@ const ProfileScreen: React.FC = () => {
             </View>
             <View style={styles.detailItem}>
               <Text style={styles.detailLabel}>Profession:</Text>
-              <Text style={styles.detailValue}>{profileData.occupation}</Text>
-            </View>
-            <View style={[styles.detailItem, styles.fullWidth]}>
-              <Text style={styles.detailLabel}>Institution:</Text>
-              <Text style={styles.detailValue}>{profileData.institution}</Text>
+              <Text style={styles.detailValue}>{profileData.profession}</Text>
             </View>
           </View>
         </View>
 
-        {/* Sports Section */}
+        {/* Sports & Licensing Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Sports & Experience</Text>
+          <Text style={styles.sectionTitle}>Sports & Licensing</Text>
 
           {/* Sport Tabs */}
           <View style={styles.tabContainer}>
@@ -278,67 +298,170 @@ const ProfileScreen: React.FC = () => {
             ))}
           </View>
 
+          {/* Sport Details */}
           <View style={styles.sportCard}>
-            <Text style={styles.sportName}>{activeSportTab}</Text>
-            <Text style={styles.sportDescription}>
-              {activeSportTab === "climbing"
-                ? "Advanced climber with 3 years experience. Specializes in bouldering and sport climbing."
-                : "Intermediate cyclist who enjoys scenic routes and group rides."}
-            </Text>
+            <View style={styles.sportDetailRow}>
+              <Text style={styles.sportDetailLabel}>Level:</Text>
+              <Text style={styles.sportDetailValue}>
+                {activeSportTab === "climbing" ? profileData.climbingLevel :
+                 activeSportTab === "cycling" ? profileData.cyclingLevel :
+                 activeSportTab === "running" ? profileData.runningLevel : "Intermediate"}
+              </Text>
+            </View>
+            <View style={styles.sportDetailRow}>
+              <Text style={styles.sportDetailLabel}>Experience:</Text>
+              <Text style={styles.sportDetailValue}>
+                {activeSportTab === "climbing" ? profileData.climbingExperience :
+                 activeSportTab === "cycling" ? profileData.cyclingExperience :
+                 activeSportTab === "running" ? profileData.runningExperience : "2+ years"}
+              </Text>
+            </View>
           </View>
         </View>
 
-        {/* Activities Section */}
+        {/* Activities & Reviews Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Activities</Text>
+          <Text style={styles.sectionTitle}>Activities & Reviews</Text>
 
-          {isLoadingData ? (
+          {/* Activity Tabs */}
+          <View style={styles.activityTabContainer}>
+            <TouchableOpacity
+              style={[
+                styles.activityTab,
+                activeTab === "completed" && styles.activeActivityTab,
+              ]}
+              onPress={() => setActiveTab("completed")}
+            >
+              <Text
+                style={[
+                  styles.activityTabText,
+                  activeTab === "completed" && styles.activeActivityTabText,
+                ]}
+              >
+                Completed Activities
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.activityTab,
+                activeTab === "organized" && styles.activeActivityTab,
+              ]}
+              onPress={() => setActiveTab("organized")}
+            >
+              <Text
+                style={[
+                  styles.activityTabText,
+                  activeTab === "organized" && styles.activeActivityTabText,
+                ]}
+              >
+                Organized Activities
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Activity Content */}
+          {activitiesLoading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="small" color="#6B7280" />
               <Text style={styles.loadingText}>Loading activities...</Text>
             </View>
-          ) : userActivities.length > 0 ? (
-            userActivities.slice(0, 3).map((activity, index) => (
-              <View key={activity.id || index} style={styles.activityCard}>
-                <Text style={styles.activityTitle}>
-                  {getSportEmoji(activity.activity_type)} {activity.title}
-                </Text>
-                <Text style={styles.activitySubtitle}>
-                  {activity.status} • {new Date(activity.date).toLocaleDateString()}
-                </Text>
-              </View>
-            ))
           ) : (
-            <>
-              <View style={styles.activityCard}>
-                <Text style={styles.activityTitle}>
-                  🧗 Westway Climbing Session
-                </Text>
-                <Text style={styles.activitySubtitle}>
-                  Completed • Jan 15, 2024
-                </Text>
-              </View>
-
-              <View style={styles.activityCard}>
-                <Text style={styles.activityTitle}>🚴 Richmond Park Cycling</Text>
-                <Text style={styles.activitySubtitle}>
-                  Completed • Jan 10, 2024
-                </Text>
-              </View>
-            </>
+            <View style={styles.activitiesContent}>
+              {activeTab === "completed" ? (
+                completedActivities.length > 0 ? (
+                  completedActivities.slice(0, 3).map((activity, index) => (
+                    <View key={activity.id || index} style={styles.activityCard}>
+                      <Text style={styles.activityTitle}>
+                        {getSportEmoji(activity.activity_type)} {activity.title}
+                      </Text>
+                      <Text style={styles.activitySubtitle}>
+                        {new Date(activity.date).toLocaleDateString()} • {activity.location}
+                      </Text>
+                      {activity.recent_review && (
+                        <View style={styles.reviewContainer}>
+                          <Text style={styles.reviewText}>"{activity.recent_review.comment}"</Text>
+                          <Text style={styles.reviewRating}>
+                            {renderStars(activity.recent_review.rating)} {activity.recent_review.rating}/5
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  ))
+                ) : (
+                  <Text style={styles.emptyText}>No completed activities yet</Text>
+                )
+              ) : (
+                organizedActivities.length > 0 ? (
+                  organizedActivities.slice(0, 3).map((activity, index) => (
+                    <View key={activity.id || index} style={styles.activityCard}>
+                      <Text style={styles.activityTitle}>
+                        {getSportEmoji(activity.activity_type)} {activity.title}
+                      </Text>
+                      <Text style={styles.activitySubtitle}>
+                        {new Date(activity.date).toLocaleDateString()} • {activity.location}
+                      </Text>
+                      {activity.total_reviews > 0 && (
+                        <View style={styles.reviewContainer}>
+                          <Text style={styles.reviewText}>
+                            Average rating: {activity.average_rating?.toFixed(1)}/5 ({activity.total_reviews} reviews)
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  ))
+                ) : (
+                  <Text style={styles.emptyText}>No organized activities yet</Text>
+                )
+              )}
+            </View>
           )}
         </View>
 
-        {/* Location */}
+        {/* Clubs Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Clubs</Text>
+          <View style={styles.clubCard}>
+            <Text style={styles.clubName}>🧗 Westway Climbing Centre</Text>
+            <Text style={styles.clubDetails}>1,250 members • London, UK</Text>
+            <Text style={styles.clubRole}>Member since 2023</Text>
+          </View>
+        </View>
+
+        {/* Location Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Location</Text>
           <Text style={styles.locationText}>📍 {profileData.location}</Text>
         </View>
 
+        {/* Bottom padding for navigation */}
         <View style={{ height: 100 }} />
       </ScrollView>
 
-      {/* Simple Modal for Followers */}
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem}>
+          <Text style={styles.navIcon}>🏠</Text>
+          <Text style={styles.navLabel}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Text style={styles.navIcon}>🔍</Text>
+          <Text style={styles.navLabel}>Explore</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Text style={styles.navIcon}>📅</Text>
+          <Text style={styles.navLabel}>Activities</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Text style={styles.navIcon}>💬</Text>
+          <Text style={styles.navLabel}>Chat</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
+          <Text style={[styles.navIcon, styles.activeNavIcon]}>👤</Text>
+          <Text style={[styles.navLabel, styles.activeNavLabel]}>Profile</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Followers Modal */}
       <Modal visible={showFollowers} animationType="slide">
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalHeader}>
@@ -353,7 +476,7 @@ const ProfileScreen: React.FC = () => {
         </SafeAreaView>
       </Modal>
 
-      {/* Simple Modal for Following */}
+      {/* Following Modal */}
       <Modal visible={showFollowing} animationType="slide">
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalHeader}>
