@@ -499,11 +499,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
+  // Header with navigation
   header: {
+    flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 16,
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#E5E7EB",
+  },
+  headerButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerIcon: {
+    fontSize: 20,
+    color: "#374151",
   },
   headerTitle: {
     fontSize: 18,
@@ -513,25 +527,44 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
+  // Profile Header Section
   profileHeader: {
     padding: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
   },
   profileTop: {
     flexDirection: "row",
     alignItems: "flex-start",
     marginBottom: 16,
   },
+  avatarContainer: {
+    marginRight: 16,
+  },
   profileImage: {
     width: 96,
     height: 96,
     borderRadius: 48,
-    marginRight: 16,
+  },
+  profileImagePlaceholder: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: "#1F381F",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  profileInitial: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
   profileInfo: {
     flex: 1,
+    paddingTop: 8,
   },
   profileName: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#000000",
     marginBottom: 8,
@@ -544,10 +577,12 @@ const styles = StyleSheet.create({
   statText: {
     fontSize: 14,
     color: "#6B7280",
+    fontWeight: "500",
   },
   statDivider: {
     marginHorizontal: 8,
     color: "#6B7280",
+    fontSize: 14,
   },
   ratingContainer: {
     flexDirection: "row",
@@ -574,131 +609,264 @@ const styles = StyleSheet.create({
   tagsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
+    marginBottom: 12,
     gap: 8,
-    marginBottom: 16,
   },
   sportTag: {
     backgroundColor: "#1F381F",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 24,
   },
   sportTagText: {
     color: "#FFFFFF",
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: "600",
   },
-  occupationTag: {
+  professionTag: {
     backgroundColor: "#FEF3C7",
     borderWidth: 1,
     borderColor: "#FCD34D",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 24,
   },
-  occupationTagText: {
+  professionTagText: {
     color: "#D97706",
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: "600",
+  },
+  languagesContainer: {
+    flexDirection: "row",
+    marginBottom: 16,
+    gap: 8,
+  },
+  languageFlag: {
+    fontSize: 20,
   },
   bio: {
     fontSize: 14,
     color: "#374151",
     lineHeight: 20,
   },
+  // Section styles
   section: {
     paddingHorizontal: 24,
-    paddingBottom: 24,
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#000000",
     marginBottom: 16,
   },
+  // Personal Details
   detailsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 16,
   },
   detailItem: {
-    width: "45%",
-  },
-  fullWidth: {
-    width: "100%",
+    width: "47%",
   },
   detailLabel: {
     fontSize: 14,
     color: "#6B7280",
     marginBottom: 4,
+    fontWeight: "500",
   },
   detailValue: {
-    fontSize: 14,
-    fontWeight: "500",
+    fontSize: 16,
+    fontWeight: "600",
     color: "#000000",
   },
+  // Sports tabs
   tabContainer: {
     backgroundColor: "#F3F4F6",
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 4,
     marginBottom: 16,
     flexDirection: "row",
   },
   tab: {
     flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 8,
     alignItems: "center",
   },
   activeTab: {
     backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   tabText: {
-    fontSize: 14,
-    fontWeight: "500",
+    fontSize: 13,
+    fontWeight: "600",
     color: "#6B7280",
+    textAlign: "center",
   },
   activeTabText: {
     color: "#1F381F",
   },
   sportCard: {
     backgroundColor: "#F9FAFB",
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 16,
   },
-  sportName: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000000",
+  sportDetailRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 8,
-    textTransform: "capitalize",
   },
-  sportDescription: {
+  sportDetailLabel: {
     fontSize: 14,
     color: "#6B7280",
-    lineHeight: 20,
+    fontWeight: "500",
+  },
+  sportDetailValue: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#000000",
+  },
+  // Activities section
+  activityTabContainer: {
+    flexDirection: "row",
+    backgroundColor: "#F3F4F6",
+    borderRadius: 12,
+    padding: 4,
+    marginBottom: 16,
+  },
+  activityTab: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  activeActivityTab: {
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  activityTabText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#6B7280",
+    textAlign: "center",
+  },
+  activeActivityTabText: {
+    color: "#1F381F",
+  },
+  activitiesContent: {
+    gap: 12,
   },
   activityCard: {
     backgroundColor: "#F9FAFB",
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 16,
-    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
   activityTitle: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
     color: "#000000",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   activitySubtitle: {
     fontSize: 14,
     color: "#6B7280",
+    marginBottom: 8,
   },
-  locationText: {
-    fontSize: 14,
+  reviewContainer: {
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#E5E7EB",
+  },
+  reviewText: {
+    fontSize: 13,
+    color: "#374151",
+    fontStyle: "italic",
+    marginBottom: 4,
+  },
+  reviewRating: {
+    fontSize: 12,
     color: "#6B7280",
   },
+  // Clubs section
+  clubCard: {
+    backgroundColor: "#F9FAFB",
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+  },
+  clubName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000000",
+    marginBottom: 4,
+  },
+  clubDetails: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginBottom: 4,
+  },
+  clubRole: {
+    fontSize: 13,
+    color: "#6B7280",
+    fontStyle: "italic",
+  },
+  locationText: {
+    fontSize: 16,
+    color: "#374151",
+    fontWeight: "500",
+  },
+  // Bottom Navigation
+  bottomNav: {
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
+    borderTopWidth: 1,
+    borderTopColor: "#E5E7EB",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  navItem: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  activeNavItem: {
+    opacity: 1,
+  },
+  navIcon: {
+    fontSize: 20,
+    marginBottom: 4,
+    opacity: 0.6,
+  },
+  activeNavIcon: {
+    opacity: 1,
+  },
+  navLabel: {
+    fontSize: 12,
+    color: "#6B7280",
+    fontWeight: "500",
+  },
+  activeNavLabel: {
+    color: "#1F381F",
+    fontWeight: "600",
+  },
+  // Modal styles
   modalContainer: {
     flex: 1,
     backgroundColor: "#FFFFFF",
@@ -715,10 +883,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1F381F",
     marginRight: 16,
+    fontWeight: "600",
   },
   modalTitle: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
     color: "#374151",
   },
   modalContent: {
@@ -729,13 +898,14 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     color: "#6B7280",
+    textAlign: "center",
   },
   loadingContainer: {
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
     backgroundColor: "#F9FAFB",
-    borderRadius: 8,
+    borderRadius: 12,
   },
   loadingText: {
     marginLeft: 8,
