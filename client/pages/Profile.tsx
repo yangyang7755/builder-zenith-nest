@@ -68,9 +68,9 @@ export default function Profile() {
   const safeFollowStats = followStats || { followers: 0, following: 0 };
   const haptic = useHaptic();
 
-  // For demo purposes, use Maddie Wei's user ID
-  const currentUserId = "user_maddie_wei";
-  const isFollowingUser = user ? isFollowing(currentUserId) : false;
+  // Use real authenticated user data
+  const currentUserId = user?.id || "demo-user";
+  const isFollowingUser = false; // This would be used for viewing other users' profiles
 
   // Helper function to calculate age from birthday
   const calculateAge = (birthday: string): number => {
