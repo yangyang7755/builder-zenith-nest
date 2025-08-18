@@ -1,65 +1,142 @@
-// Robust fetch implementation that bypasses third-party interference (like FullStory)
+// Robust fetch implementation that completely bypasses third-party interference (like FullStory)
 
-// Store the original fetch before any third-party libraries can wrap it
+// Try to capture the original fetch before FullStory wraps it
 const originalFetch = (() => {
-  // Try to get the original fetch from multiple sources
-  if (typeof globalThis !== 'undefined' && globalThis.fetch) {
-    return globalThis.fetch.bind(globalThis);
+  // FullStory typically wraps fetch after the page loads, so let's try to get the original
+  // Check if we can access the native fetch through iframe or other means
+  try {
+    // Method 1: Try to get fetch from a clean iframe
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    const iframeFetch = iframe.contentWindow?.fetch;
+    document.body.removeChild(iframe);
+
+    if (iframeFetch) {
+      return iframeFetch.bind(iframe.contentWindow);
+    }
+  } catch (error) {
+    console.log('Could not get iframe fetch:', error);
   }
+
+  // Method 2: Try to access the original fetch descriptor
+  try {
+    const descriptor = Object.getOwnPropertyDescriptor(window, 'fetch') ||
+                     Object.getOwnPropertyDescriptor(Window.prototype, 'fetch') ||
+                     Object.getOwnPropertyDescriptor(globalThis, 'fetch');
+
+    if (descriptor && descriptor.value && typeof descriptor.value === 'function') {
+      return descriptor.value.bind(window);
+    }
+  } catch (error) {
+    console.log('Could not get original fetch descriptor:', error);
+  }
+
+  // Method 3: Fallback to current fetch (might be wrapped)
   if (typeof window !== 'undefined' && window.fetch) {
     return window.fetch.bind(window);
   }
-  if (typeof self !== 'undefined' && self.fetch) {
-    return self.fetch.bind(self);
-  }
-  return fetch; // Fallback
+
+  return fetch; // Last resort
 })();
 
 // Create XMLHttpRequest-based fetch fallback for when native fetch fails
 const xmlHttpRequestFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
   return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    const method = options.method || 'GET';
-    
-    xhr.open(method, url, true);
-    
-    // Set headers
-    if (options.headers) {
-      const headers = options.headers instanceof Headers 
-        ? Object.fromEntries(headers.entries())
-        : options.headers as Record<string, string>;
-        
-      Object.entries(headers).forEach(([key, value]) => {
-        xhr.setRequestHeader(key, value);
-      });
-    }
-    
-    // Handle timeout
-    xhr.timeout = 10000; // 10 second timeout
-    
-    xhr.onload = () => {
-      const response = new Response(xhr.responseText, {
-        status: xhr.status,
-        statusText: xhr.statusText,
-        headers: new Headers(xhr.getAllResponseHeaders().split('\r\n').reduce((headers, line) => {
-          const [key, value] = line.split(': ');
-          if (key && value) {
-            headers[key] = value;
+    try {
+      const xhr = new XMLHttpRequest();
+      const method = (options.method || 'GET').toUpperCase();
+
+      // Handle AbortSignal
+      if (options.signal) {
+        options.signal.addEventListener('abort', () => {
+          xhr.abort();
+          reject(new Error('Request aborted'));
+        });
+      }
+
+      xhr.open(method, url, true);
+
+      // Set default headers
+      xhr.setRequestHeader('Accept', 'application/json, text/plain, */*');
+
+      // Set custom headers
+      if (options.headers) {
+        const headers = options.headers instanceof Headers
+          ? Object.fromEntries(headers.entries())
+          : options.headers as Record<string, string>;
+
+        Object.entries(headers).forEach(([key, value]) => {
+          if (value && typeof value === 'string') {
+            xhr.setRequestHeader(key, value);
           }
-          return headers;
-        }, {} as Record<string, string>))
-      });
-      resolve(response);
-    };
-    
-    xhr.onerror = () => reject(new Error('XHR request failed'));
-    xhr.ontimeout = () => reject(new Error('XHR request timeout'));
-    
-    // Send request
-    if (options.body) {
-      xhr.send(options.body as string);
-    } else {
-      xhr.send();
+        });
+      }
+
+      // Handle timeout
+      xhr.timeout = 15000; // 15 second timeout
+
+      xhr.onload = () => {
+        try {
+          // Parse response headers
+          const responseHeaders: Record<string, string> = {};
+          const headerLines = xhr.getAllResponseHeaders().split('\r\n');
+
+          headerLines.forEach(line => {
+            const colonIndex = line.indexOf(': ');
+            if (colonIndex > 0) {
+              const key = line.substring(0, colonIndex).toLowerCase();
+              const value = line.substring(colonIndex + 2);
+              responseHeaders[key] = value;
+            }
+          });
+
+          // Create response object
+          const response = new Response(xhr.responseText, {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            headers: new Headers(responseHeaders)
+          });
+
+          console.log(`XHR fetch successful: ${method} ${url} -> ${xhr.status}`);
+          resolve(response);
+        } catch (error) {
+          console.error('Error creating XHR response:', error);
+          reject(new Error('Failed to create response from XHR'));
+        }
+      };
+
+      xhr.onerror = () => {
+        console.error(`XHR request failed: ${method} ${url}`);
+        reject(new Error(`XHR request failed: ${xhr.status} ${xhr.statusText}`));
+      };
+
+      xhr.ontimeout = () => {
+        console.error(`XHR request timeout: ${method} ${url}`);
+        reject(new Error('XHR request timeout'));
+      };
+
+      xhr.onabort = () => {
+        reject(new Error('XHR request aborted'));
+      };
+
+      // Send request
+      try {
+        if (options.body) {
+          if (typeof options.body === 'string') {
+            xhr.send(options.body);
+          } else {
+            xhr.send(JSON.stringify(options.body));
+          }
+        } else {
+          xhr.send();
+        }
+      } catch (error) {
+        reject(new Error(`Failed to send XHR request: ${error}`));
+      }
+
+    } catch (error) {
+      reject(new Error(`XMLHttpRequest setup failed: ${error}`));
     }
   });
 };
