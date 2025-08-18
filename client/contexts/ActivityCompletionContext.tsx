@@ -6,6 +6,9 @@ import {
   useEffect,
 } from "react";
 import { useActivities } from "./ActivitiesContext";
+import { useAuth } from "./AuthContext";
+import { apiService } from "@/services/apiService";
+import { useToast } from "@/hooks/use-toast";
 import { showNativeAlert } from "../utils/mobileUtils";
 
 export interface ActivityCompletion {
