@@ -1,4 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { useAuth } from "./AuthContext";
+import { apiService } from "@/services/apiService";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Club {
   id: string;
@@ -60,7 +63,9 @@ const CLUBS_STORAGE_KEY = "explore_app_clubs";
 const USER_CLUBS_STORAGE_KEY = "explore_app_user_clubs";
 
 export function ClubProvider({ children }: { children: ReactNode }) {
-  const [currentUserId] = useState("current-user"); // In real app, this would come from auth
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const currentUserId = user?.id || "demo-user";
 
   // Listen for club membership changes
   useEffect(() => {
@@ -96,111 +101,104 @@ export function ClubProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const [clubs, setClubs] = useState<Club[]>(() => {
-    try {
-      const saved = localStorage.getItem(CLUBS_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return parsed.map((club: any) => ({
-          ...club,
-          createdAt: new Date(club.createdAt),
-          pendingRequests: club.pendingRequests?.map((req: any) => ({
-            ...req,
-            requestedAt: new Date(req.requestedAt),
-          })) || [],
-        }));
-      }
-    } catch (error) {
-      console.error("Error loading clubs:", error);
-    }
-    
-    // Default clubs
-    return [
-      {
-        id: "oucc",
-        name: "Oxford University Cycling Club (OUCC)",
-        description: "The premier cycling club at Oxford University. We organize regular rides, training sessions, and social events for cyclists of all levels.",
-        profileImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800",
-        coverImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800",
-        type: "cycling",
-        location: "Oxford, UK",
-        memberCount: 156,
-        managerId: "current-user",
-        managers: ["current-user"],
-        members: ["current-user", "user2", "user3"],
-        pendingRequests: [
-          {
-            id: "req1",
-            userId: "user4",
-            userName: "Sarah Chen",
-            userEmail: "sarah.chen@oxford.ac.uk",
-            message: "Hi! I'm a keen cyclist and would love to join the club for weekend rides.",
-            requestedAt: new Date("2025-01-10"),
-            status: "pending",
-          },
-          {
-            id: "req2",
-            userId: "user5",
-            userName: "Mike Johnson",
-            userEmail: "mike.j@oxford.ac.uk",
-            requestedAt: new Date("2025-01-12"),
-            status: "pending",
-          },
-        ],
-        isPrivate: false,
-        website: "https://oucc.co.uk",
-        contactEmail: "info@oucc.co.uk",
-        createdAt: new Date("2020-01-01"),
-      },
-      {
-        id: "westway",
-        name: "Westway Climbing Centre",
-        description: "London's premier climbing facility offering indoor climbing, coaching, and community events for climbers of all abilities.",
-        profileImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800",
-        coverImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800",
-        type: "climbing",
-        location: "London, UK",
-        memberCount: 342,
-        managerId: "coach-holly",
-        managers: ["coach-holly"],
-        members: ["coach-holly", "current-user", "user6", "user7"],
-        pendingRequests: [],
-        isPrivate: false,
-        website: "https://westway.org",
-        contactEmail: "info@westway.org",
-        createdAt: new Date("2019-03-15"),
-      },
-    ];
-  });
+  const [clubs, setClubs] = useState<Club[]>([]);
+  const [userClubs, setUserClubs] = useState<UserClubInfo[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const [userClubs, setUserClubs] = useState<UserClubInfo[]>(() => {
+  // Load clubs and user memberships from backend
+  const loadClubData = async () => {
+    if (!user) return;
+
+    setLoading(true);
     try {
-      const saved = localStorage.getItem(USER_CLUBS_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return parsed.map((info: any) => ({
-          ...info,
-          joinedAt: new Date(info.joinedAt),
-        }));
+      const [clubsResponse, userClubsResponse] = await Promise.allSettled([
+        apiService.getClubs(),
+        apiService.getClubMemberships(),
+      ]);
+
+      // Handle clubs response
+      if (clubsResponse.status === 'fulfilled' && clubsResponse.value.data) {
+        setClubs(clubsResponse.value.data);
+      } else {
+        console.warn('Failed to load clubs, using demo data');
+        // Use demo clubs as fallback
+        setClubs([
+          {
+            id: "oucc",
+            name: "Oxford University Cycling Club",
+            description: "The premier cycling club at Oxford University.",
+            profileImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800",
+            type: "cycling",
+            location: "Oxford, UK",
+            memberCount: 156,
+            managerId: currentUserId,
+            managers: [currentUserId],
+            members: [currentUserId],
+            pendingRequests: [],
+            isPrivate: false,
+            website: "https://oucc.co.uk",
+            contactEmail: "info@oucc.co.uk",
+            createdAt: new Date("2020-01-01"),
+          },
+          {
+            id: "westway",
+            name: "Westway Climbing Centre",
+            description: "London's premier climbing facility.",
+            profileImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800",
+            type: "climbing",
+            location: "London, UK",
+            memberCount: 342,
+            managerId: "coach-holly",
+            managers: ["coach-holly"],
+            members: ["coach-holly", currentUserId],
+            pendingRequests: [],
+            isPrivate: false,
+            website: "https://westway.org",
+            contactEmail: "info@westway.org",
+            createdAt: new Date("2019-03-15"),
+          },
+        ]);
+      }
+
+      // Handle user clubs response
+      if (userClubsResponse.status === 'fulfilled' && userClubsResponse.value.data) {
+        setUserClubs(userClubsResponse.value.data.map((club: any) => ({
+          clubId: club.id,
+          role: club.role || 'member',
+          joinedAt: new Date(club.joined_at || Date.now()),
+        })));
+      } else {
+        console.warn('Failed to load user clubs, using demo data');
+        // Use demo memberships as fallback
+        setUserClubs([
+          {
+            clubId: "oucc",
+            role: "manager" as UserClubRole,
+            joinedAt: new Date("2024-09-01"),
+          },
+          {
+            clubId: "westway",
+            role: "member" as UserClubRole,
+            joinedAt: new Date("2024-10-15"),
+          },
+        ]);
       }
     } catch (error) {
-      console.error("Error loading user clubs:", error);
+      console.error('Error loading club data:', error);
+    } finally {
+      setLoading(false);
     }
-    
-    // Default user club memberships
-    return [
-      {
-        clubId: "oucc",
-        role: "manager" as UserClubRole,
-        joinedAt: new Date("2024-09-01"),
-      },
-      {
-        clubId: "westway",
-        role: "member" as UserClubRole,
-        joinedAt: new Date("2024-10-15"),
-      },
-    ];
-  });
+  };
+
+  // Load data when user changes
+  useEffect(() => {
+    if (user) {
+      loadClubData();
+    } else {
+      setClubs([]);
+      setUserClubs([]);
+    }
+  }, [user]);
 
   // Save to localStorage when data changes
   useEffect(() => {
