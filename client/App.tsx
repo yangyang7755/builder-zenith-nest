@@ -1,5 +1,6 @@
 import "./global.css";
-import React from "react";
+import React, { useEffect } from "react";
+import { initializeFetchProtection } from "./utils/fullstoryOverride";
 
 import { Toaster } from "@/components/ui/toaster";
 import ErrorBoundary from "@/components/ErrorBoundary";
