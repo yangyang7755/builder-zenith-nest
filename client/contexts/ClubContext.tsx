@@ -231,25 +231,58 @@ export function ClubProvider({ children }: { children: ReactNode }) {
     return clubs.find(c => c.id === clubId);
   };
 
-  const requestToJoinClub = (clubId: string, message?: string) => {
+  const requestToJoinClub = async (clubId: string, message?: string) => {
     const club = getClubById(clubId);
-    if (!club) return;
+    if (!club || !user) return;
 
-    const newRequest: ClubRequest = {
-      id: Date.now().toString(),
-      userId: currentUserId,
-      userName: "You", // In real app, get from user profile
-      userEmail: "you@example.com", // In real app, get from user profile
-      message,
-      requestedAt: new Date(),
-      status: "pending",
-    };
+    try {
+      setLoading(true);
+      const response = await apiService.joinClub(clubId);
 
-    setClubs(prev => prev.map(c => 
-      c.id === clubId 
-        ? { ...c, pendingRequests: [...c.pendingRequests, newRequest] }
-        : c
-    ));
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      // Update local state optimistically
+      setUserClubs(prev => [
+        ...prev.filter(uc => uc.clubId !== clubId),
+        {
+          clubId,
+          role: "member",
+          joinedAt: new Date(),
+        },
+      ]);
+
+      setClubs(prev => prev.map(c =>
+        c.id === clubId
+          ? {
+              ...c,
+              members: [...c.members, currentUserId],
+              memberCount: c.memberCount + 1
+            }
+          : c
+      ));
+
+      toast({
+        title: "Joined Club! 🎉",
+        description: `You are now a member of ${club.name}`,
+      });
+
+      // Dispatch event for other components
+      window.dispatchEvent(new CustomEvent('clubMembershipChanged', {
+        detail: { action: 'joined', clubId, userId: currentUserId }
+      }));
+
+    } catch (error: any) {
+      console.error('Error joining club:', error);
+      toast({
+        title: "Error Joining Club",
+        description: error.message || "Failed to join club. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const approveClubRequest = (clubId: string, requestId: string) => {
@@ -292,22 +325,53 @@ export function ClubProvider({ children }: { children: ReactNode }) {
     ));
   };
 
-  const removeMember = (clubId: string, memberId: string) => {
-    if (!isClubManager(clubId)) return;
+  const removeMember = async (clubId: string, memberId: string) => {
+    if (!isClubManager(clubId) && memberId !== currentUserId) return;
 
-    setClubs(prev => prev.map(c => 
-      c.id === clubId 
-        ? { 
-            ...c, 
-            members: c.members.filter(m => m !== memberId),
-            memberCount: Math.max(0, c.memberCount - 1)
-          }
-        : c
-    ));
+    try {
+      setLoading(true);
+      const response = await apiService.leaveClub(clubId);
 
-    // Remove club from user's clubs if it's the current user
-    if (memberId === currentUserId) {
-      setUserClubs(prev => prev.filter(uc => uc.clubId !== clubId));
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      // Update local state
+      setClubs(prev => prev.map(c =>
+        c.id === clubId
+          ? {
+              ...c,
+              members: c.members.filter(m => m !== memberId),
+              memberCount: Math.max(0, c.memberCount - 1)
+            }
+          : c
+      ));
+
+      // Remove club from user's clubs if it's the current user
+      if (memberId === currentUserId) {
+        setUserClubs(prev => prev.filter(uc => uc.clubId !== clubId));
+
+        const club = getClubById(clubId);
+        toast({
+          title: "Left Club",
+          description: `You have left ${club?.name}`,
+        });
+
+        // Dispatch event for other components
+        window.dispatchEvent(new CustomEvent('clubMembershipChanged', {
+          detail: { action: 'left', clubId, userId: currentUserId }
+        }));
+      }
+
+    } catch (error: any) {
+      console.error('Error leaving club:', error);
+      toast({
+        title: "Error Leaving Club",
+        description: error.message || "Failed to leave club. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
