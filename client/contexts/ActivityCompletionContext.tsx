@@ -60,6 +60,8 @@ export function ActivityCompletionProvider({
 }: {
   children: ReactNode;
 }) {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [completions, setCompletions] = useState<ActivityCompletion[]>([]);
   const [reviews, setReviews] = useState<ActivityReview[]>([]);
   const [checkedActivities, setCheckedActivities] = useState<Set<string>>(
