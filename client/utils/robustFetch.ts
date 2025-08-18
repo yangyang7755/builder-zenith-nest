@@ -141,39 +141,93 @@ const xmlHttpRequestFetch = async (url: string, options: RequestInit = {}): Prom
   });
 };
 
+// FullStory detection and bypass
+const isFullStoryActive = () => {
+  try {
+    return !!(window as any).FS || !!(window as any)._fs_initialized;
+  } catch {
+    return false;
+  }
+};
+
+// Detect if fetch has been wrapped by checking its string representation
+const isFetchWrapped = (fetchFn: any) => {
+  try {
+    const fnString = fetchFn.toString();
+    return fnString.includes('FullStory') ||
+           fnString.includes('_fs') ||
+           fnString.includes('eval') ||
+           fnString.length > 100; // Native fetch has a short string representation
+  } catch {
+    return true; // Assume wrapped if we can't check
+  }
+};
+
 // Main robust fetch function
 export const robustFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
   const fetchOptions = {
     ...options,
-    // Add timeout signal if not provided
-    signal: options.signal || AbortSignal.timeout(10000),
+    // Add timeout signal if not provided (but don't override existing)
+    signal: options.signal || AbortSignal.timeout(12000),
   };
 
-  // Try different fetch methods in order of preference
-  const fetchMethods = [
-    // 1. Try original fetch (before FullStory wrapping)
-    () => originalFetch(url, fetchOptions),
-    // 2. Try current window.fetch (might be wrapped)
-    () => window.fetch(url, fetchOptions),
-    // 3. Try XMLHttpRequest fallback
-    () => xmlHttpRequestFetch(url, options),
+  // If FullStory is detected, prioritize XMLHttpRequest
+  const fetchMethods = isFullStoryActive() ? [
+    // 1. XMLHttpRequest first when FullStory is active
+    { name: 'XMLHttpRequest', fn: () => xmlHttpRequestFetch(url, options) },
+    // 2. Try iframe fetch if available
+    { name: 'Original', fn: () => originalFetch(url, fetchOptions) },
+    // 3. Last resort: wrapped fetch
+    { name: 'Window', fn: () => window.fetch(url, fetchOptions) },
+  ] : [
+    // 1. Try original fetch (hopefully unwrapped)
+    { name: 'Original', fn: () => originalFetch(url, fetchOptions) },
+    // 2. Try current window.fetch
+    { name: 'Window', fn: () => window.fetch(url, fetchOptions) },
+    // 3. XMLHttpRequest fallback
+    { name: 'XMLHttpRequest', fn: () => xmlHttpRequestFetch(url, options) },
   ];
 
   let lastError: Error | null = null;
+  let attemptCount = 0;
 
-  for (const fetchMethod of fetchMethods) {
+  for (const method of fetchMethods) {
+    attemptCount++;
     try {
-      const response = await fetchMethod();
-      console.log(`Fetch successful using method: ${fetchMethod.name || 'anonymous'}`);
+      // Check if this fetch method looks wrapped
+      if (method.name === 'Window' && isFetchWrapped(window.fetch)) {
+        console.log(`Skipping ${method.name} fetch - appears to be wrapped by FullStory`);
+        continue;
+      }
+
+      console.log(`Attempting fetch with ${method.name} (attempt ${attemptCount})`);
+      const response = await method.fn();
+      console.log(`✅ Fetch successful using ${method.name}: ${response.status} ${response.statusText}`);
       return response;
     } catch (error) {
       lastError = error as Error;
-      console.log(`Fetch method failed: ${error.message}, trying next method...`);
+      console.log(`❌ ${method.name} fetch failed: ${error.message}`);
+
+      // If this was a FullStory-related error, skip to XMLHttpRequest
+      if (error.message.includes('FullStory') || error.message.includes('eval')) {
+        console.log('FullStory interference detected, skipping to XMLHttpRequest');
+        try {
+          const response = await xmlHttpRequestFetch(url, options);
+          console.log(`✅ XMLHttpRequest bypass successful: ${response.status}`);
+          return response;
+        } catch (xhrError) {
+          lastError = xhrError as Error;
+          console.log(`❌ XMLHttpRequest bypass failed: ${xhrError.message}`);
+        }
+        break; // Don't continue with other methods
+      }
     }
   }
 
   // If all methods failed, throw the last error
-  throw lastError || new Error('All fetch methods failed');
+  const finalError = lastError || new Error('All fetch methods failed');
+  console.error('🚨 All fetch methods exhausted:', finalError.message);
+  throw finalError;
 };
 
 // Create a fetch with timeout wrapper
