@@ -91,6 +91,11 @@ import OnboardingProfileSync from "./components/OnboardingProfileSync";
 const queryClient = new QueryClient();
 
 const App = () => {
+  // Initialize FullStory fetch protection
+  React.useEffect(() => {
+    initializeFetchProtection();
+  }, []);
+
   // Global error handler for uncaught errors
   React.useEffect(() => {
     const handleError = (event: ErrorEvent) => {
