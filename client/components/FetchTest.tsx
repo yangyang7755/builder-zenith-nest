@@ -13,13 +13,27 @@ export const FetchTest: React.FC = () => {
     setTestResults([]);
     const results: typeof testResults = [];
 
+    // Test 0: Environment check
+    const isFullStoryActive = !!(window as any).FS || !!(window as any)._fs_initialized;
+    const fetchString = window.fetch.toString();
+    const isFetchWrapped = fetchString.includes('FullStory') ||
+                          fetchString.includes('_fs') ||
+                          fetchString.includes('eval') ||
+                          fetchString.length > 100;
+
+    results.push({
+      method: 'Environment Check',
+      status: 'success',
+      message: `FullStory: ${isFullStoryActive ? 'Active' : 'Inactive'}, Fetch Wrapped: ${isFetchWrapped ? 'Yes' : 'No'}`,
+    });
+
     // Test 1: Health endpoint with robust fetch
     try {
       const startTime = Date.now();
       const response = await robustFetch('/api/health');
       const data = await response.json();
       const responseTime = Date.now() - startTime;
-      
+
       results.push({
         method: 'Robust Fetch (/api/health)',
         status: 'success',
@@ -34,13 +48,13 @@ export const FetchTest: React.FC = () => {
       });
     }
 
-    // Test 2: Try with regular fetch (might fail with FullStory)
+    // Test 2: Try with regular fetch (likely to fail with FullStory)
     try {
       const startTime = Date.now();
       const response = await window.fetch('/api/health');
       const data = await response.json();
       const responseTime = Date.now() - startTime;
-      
+
       results.push({
         method: 'Window Fetch (/api/health)',
         status: 'success',
@@ -61,16 +75,46 @@ export const FetchTest: React.FC = () => {
       const response = await robustFetch('/api/followers/demo-user-123');
       const data = await response.json();
       const responseTime = Date.now() - startTime;
-      
+
       results.push({
         method: 'Robust Fetch (/api/followers)',
         status: 'success',
-        message: `Found ${data.length} followers`,
+        message: `Found ${Array.isArray(data) ? data.length : 'N/A'} followers`,
         responseTime
       });
     } catch (error) {
       results.push({
         method: 'Robust Fetch (/api/followers)',
+        status: 'error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+
+    // Test 4: Test profile onboarding (POST request)
+    try {
+      const startTime = Date.now();
+      const response = await robustFetch('/api/profile/onboarding', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          full_name: 'Test User',
+          email: 'test@example.com',
+        }),
+      });
+      const data = await response.json();
+      const responseTime = Date.now() - startTime;
+
+      results.push({
+        method: 'Robust Fetch POST (/api/profile/onboarding)',
+        status: 'success',
+        message: `Profile created: ${data.success ? 'Success' : 'Failed'}`,
+        responseTime
+      });
+    } catch (error) {
+      results.push({
+        method: 'Robust Fetch POST (/api/profile/onboarding)',
         status: 'error',
         message: error instanceof Error ? error.message : 'Unknown error'
       });
