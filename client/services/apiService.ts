@@ -430,7 +430,7 @@ export const apiService = {
   // Club management
   async createClub(clubData: any): Promise<ApiResponse<any>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/clubs`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/clubs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -446,7 +446,7 @@ export const apiService = {
 
   async getClubs(): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/clubs`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/clubs`, {
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
@@ -457,12 +457,50 @@ export const apiService = {
 
   async getUserClubs(userId: string): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/clubs?userId=${userId}`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/clubs?userId=${userId}`, {
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to fetch user clubs" };
+    }
+  },
+
+  async joinClub(clubId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/clubs/${clubId}/join`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeaders(),
+        },
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to join club" };
+    }
+  },
+
+  async leaveClub(clubId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/clubs/${clubId}/leave`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to leave club" };
+    }
+  },
+
+  async getClubMemberships(): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/user/club-memberships`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to fetch club memberships" };
     }
   },
 
