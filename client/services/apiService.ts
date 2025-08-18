@@ -139,7 +139,7 @@ export const apiService = {
     comment?: string;
   }): Promise<ApiResponse<any>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/reviews`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -150,6 +150,32 @@ export const apiService = {
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to create review" };
+    }
+  },
+
+  async markActivityCompleted(activityId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}/complete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeaders(),
+        },
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to mark activity as completed" };
+    }
+  },
+
+  async getCompletedActivities(): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/user/completed-activities`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to fetch completed activities" };
     }
   },
 
