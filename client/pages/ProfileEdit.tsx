@@ -1,29 +1,64 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, MapPin, Calendar } from "lucide-react";
-import BottomNavigation from "../components/BottomNavigation";
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Save, User, Mail, Calendar, MapPin, Briefcase, GraduationCap, FileText } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { apiService } from '@/services/apiService';
 
 export default function ProfileEdit() {
+  const { user, profile, updateProfile } = useAuth();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: "Maddie Wei",
-    bio: "",
-    location: "Notting Hill, London",
-    age: "25",
-    nationality: "Spanish",
-    profession: "Student",
-    institution: "Oxford University",
-    languages: ["🇬🇧", "🇪🇸", "🇫🇷"],
-    skillLevels: {
-      climbing: "Intermediate",
-      cycling: "Advanced", 
-      running: "Beginner",
-    },
+    full_name: '',
+    email: '',
+    bio: '',
+    birthday: '',
+    gender: '',
+    country: '',
+    profession: '',
+    university: '',
+    location: '',
+    sports: [] as string[],
+    languages: [] as string[],
   });
 
-  const [showLanguagePicker, setShowLanguagePicker] = useState(false);
-  const availableLanguages = ["🇬🇧", "🇺🇸", "🇪🇸", "🇫🇷", "🇩🇪", "🇮🇹", "🇵🇹", "🇳🇱"];
+  // Available options
+  const sportsOptions = ['Cycling', 'Climbing', 'Running', 'Hiking', 'Skiing', 'Surfing', 'Tennis'];
+  const languageOptions = [
+    { code: '🇬🇧', name: 'English' },
+    { code: '🇪🇸', name: 'Spanish' },
+    { code: '🇨🇳', name: 'Chinese' },
+    { code: '🇫🇷', name: 'French' },
+    { code: '🇩🇪', name: 'German' },
+    { code: '🇮🇹', name: 'Italian' },
+    { code: '🇯🇵', name: 'Japanese' },
+  ];
+
+  // Load profile data on mount
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        full_name: profile.full_name || '',
+        email: profile.email || user?.email || '',
+        bio: profile.bio || '',
+        birthday: profile.birthday || '',
+        gender: profile.gender || '',
+        country: profile.country || '',
+        profession: profile.profession || '',
+        university: profile.university || '',
+        location: profile.location || '',
+        sports: profile.sports || [],
+        languages: profile.languages || [],
+      });
+    }
+  }, [profile, user]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -32,261 +67,288 @@ export default function ProfileEdit() {
     }));
   };
 
-  const handleSkillLevelChange = (activity: string, level: string) => {
+  const handleSportsChange = (sport: string, checked: boolean) => {
     setFormData(prev => ({
       ...prev,
-      skillLevels: {
-        ...prev.skillLevels,
-        [activity]: level
+      sports: checked 
+        ? [...prev.sports, sport]
+        : prev.sports.filter(s => s !== sport)
+    }));
+  };
+
+  const handleLanguagesChange = (language: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      languages: checked 
+        ? [...prev.languages, language]
+        : prev.languages.filter(l => l !== language)
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.full_name.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Name is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Update profile via backend API
+      const response = await apiService.updateUserProfile(formData);
+      
+      if (response.error) {
+        throw new Error(response.error);
       }
-    }));
-  };
 
-  const handleLanguageToggle = (language: string) => {
-    setFormData(prev => ({
-      ...prev,
-      languages: prev.languages.includes(language)
-        ? prev.languages.filter(l => l !== language)
-        : [...prev.languages, language]
-    }));
-  };
+      // Update local profile context
+      await updateProfile(formData);
 
-  const handleSave = () => {
-    // Here you would normally save to backend/context
-    console.log("Saving profile data:", formData);
-    navigate("/profile");
+      toast({
+        title: 'Profile Updated! ✅',
+        description: 'Your profile has been successfully updated.',
+      });
+
+      // Navigate back to profile
+      navigate('/profile');
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: 'Update Failed',
+        description: error.message || 'Failed to update profile. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-white font-cabin max-w-md mx-auto relative">
-      {/* Status Bar */}
-      <div className="h-11 bg-white flex items-center justify-between px-6 text-black font-medium">
-        <span>9:41</span>
-        <div className="flex items-center gap-1">
-          <div className="flex gap-0.5">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="w-1 h-3 bg-black rounded-sm"></div>
-            ))}
-          </div>
-          <svg className="w-6 h-4" viewBox="0 0 24 16" fill="none">
-            <rect
-              x="1"
-              y="3"
-              width="22"
-              height="10"
-              rx="2"
-              stroke="black"
-              strokeWidth="1"
-              fill="none"
-            />
-            <rect x="23" y="6" width="2" height="4" rx="1" fill="black" />
-          </svg>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-gray-50 font-cabin max-w-md mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-        <button
-          onClick={() => navigate("/profile")}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-        >
+      <div className="bg-white flex items-center justify-between p-6 border-b border-gray-200">
+        <Link to="/profile">
           <ArrowLeft className="w-6 h-6 text-black" />
-        </button>
-        <h1 className="text-lg font-bold text-black font-cabin">Edit Profile</h1>
-        <button
-          onClick={handleSave}
-          className="p-2 bg-explore-green rounded-full hover:bg-green-600 transition-colors"
-        >
-          <Save className="w-5 h-5 text-white" />
-        </button>
+        </Link>
+        <h1 className="text-xl font-bold text-black">Edit Profile</h1>
+        <div className="w-6"></div>
       </div>
 
-      {/* Scrollable Content */}
-      <div className="overflow-y-auto pb-20">
-        <div className="px-6 py-6 space-y-6">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        {/* Basic Information */}
+        <div className="bg-white rounded-lg p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-black mb-4">Basic Information</h2>
           
-          {/* Profile Picture */}
-          <div className="text-center">
-            <div className="w-24 h-24 rounded-full border border-black overflow-hidden mx-auto mb-4">
-              <img
-                src="https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&crop=face"
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <button className="text-explore-green font-cabin text-sm underline">
-              Change Photo
-            </button>
+          <div>
+            <Label htmlFor="full_name" className="text-gray-700 font-medium">
+              <User className="w-4 h-4 inline mr-2" />
+              Full Name *
+            </Label>
+            <Input
+              id="full_name"
+              value={formData.full_name}
+              onChange={(e) => handleInputChange('full_name', e.target.value)}
+              placeholder="Enter your full name"
+              className="mt-1"
+              required
+            />
           </div>
 
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black font-cabin">Basic Information</h3>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 font-cabin focus:outline-none focus:border-explore-green"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-              <textarea
-                value={formData.bio}
-                onChange={(e) => handleInputChange("bio", e.target.value)}
-                placeholder="Tell others about yourself..."
-                rows={3}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 font-cabin focus:outline-none focus:border-explore-green resize-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => handleInputChange("location", e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 font-cabin focus:outline-none focus:border-explore-green"
-                />
-              </div>
-            </div>
+          <div>
+            <Label htmlFor="email" className="text-gray-700 font-medium">
+              <Mail className="w-4 h-4 inline mr-2" />
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              placeholder="Enter your email"
+              className="mt-1"
+              disabled
+            />
+            <p className="text-xs text-gray-500 mt-1">Email cannot be changed here</p>
           </div>
 
-          {/* Personal Details */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black font-cabin">Personal Details</h3>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
-              <input
-                type="number"
-                value={formData.age}
-                onChange={(e) => handleInputChange("age", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 font-cabin focus:outline-none focus:border-explore-green"
-                min="16"
-                max="100"
-              />
-            </div>
+          <div>
+            <Label htmlFor="bio" className="text-gray-700 font-medium">
+              <FileText className="w-4 h-4 inline mr-2" />
+              Bio
+            </Label>
+            <Textarea
+              id="bio"
+              value={formData.bio}
+              onChange={(e) => handleInputChange('bio', e.target.value)}
+              placeholder="Tell us about yourself..."
+              className="mt-1"
+              rows={3}
+            />
+          </div>
+        </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nationality</label>
-              <input
-                type="text"
-                value={formData.nationality}
-                onChange={(e) => handleInputChange("nationality", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 font-cabin focus:outline-none focus:border-explore-green"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Profession</label>
-              <input
-                type="text"
-                value={formData.profession}
-                onChange={(e) => handleInputChange("profession", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 font-cabin focus:outline-none focus:border-explore-green"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Institution/Company</label>
-              <input
-                type="text"
-                value={formData.institution}
-                onChange={(e) => handleInputChange("institution", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 font-cabin focus:outline-none focus:border-explore-green"
-              />
-            </div>
+        {/* Personal Details */}
+        <div className="bg-white rounded-lg p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-black mb-4">Personal Details</h2>
+          
+          <div>
+            <Label htmlFor="birthday" className="text-gray-700 font-medium">
+              <Calendar className="w-4 h-4 inline mr-2" />
+              Birthday
+            </Label>
+            <Input
+              id="birthday"
+              type="date"
+              value={formData.birthday}
+              onChange={(e) => handleInputChange('birthday', e.target.value)}
+              className="mt-1"
+            />
           </div>
 
-          {/* Languages */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black font-cabin">Languages</h3>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {formData.languages.map((language) => (
-                <button
-                  key={language}
-                  onClick={() => handleLanguageToggle(language)}
-                  className="text-2xl p-2 bg-gray-100 border border-gray-300 rounded-lg hover:bg-red-100 transition-colors"
-                >
-                  {language}
-                </button>
+          <div>
+            <Label htmlFor="gender" className="text-gray-700 font-medium">
+              Gender
+            </Label>
+            <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Female">Female</SelectItem>
+                <SelectItem value="Male">Male</SelectItem>
+                <SelectItem value="Non-binary">Non-binary</SelectItem>
+                <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="country" className="text-gray-700 font-medium">
+              Country
+            </Label>
+            <Input
+              id="country"
+              value={formData.country}
+              onChange={(e) => handleInputChange('country', e.target.value)}
+              placeholder="e.g., United Kingdom"
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="location" className="text-gray-700 font-medium">
+              <MapPin className="w-4 h-4 inline mr-2" />
+              Location
+            </Label>
+            <Input
+              id="location"
+              value={formData.location}
+              onChange={(e) => handleInputChange('location', e.target.value)}
+              placeholder="e.g., Oxford, UK"
+              className="mt-1"
+            />
+          </div>
+        </div>
+
+        {/* Professional Information */}
+        <div className="bg-white rounded-lg p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-black mb-4">Professional Information</h2>
+          
+          <div>
+            <Label htmlFor="profession" className="text-gray-700 font-medium">
+              <Briefcase className="w-4 h-4 inline mr-2" />
+              Profession
+            </Label>
+            <Input
+              id="profession"
+              value={formData.profession}
+              onChange={(e) => handleInputChange('profession', e.target.value)}
+              placeholder="e.g., Student, Engineer, Teacher"
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="university" className="text-gray-700 font-medium">
+              <GraduationCap className="w-4 h-4 inline mr-2" />
+              University/Institution
+            </Label>
+            <Input
+              id="university"
+              value={formData.university}
+              onChange={(e) => handleInputChange('university', e.target.value)}
+              placeholder="e.g., Oxford University"
+              className="mt-1"
+            />
+          </div>
+        </div>
+
+        {/* Sports & Interests */}
+        <div className="bg-white rounded-lg p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-black mb-4">Sports & Interests</h2>
+          
+          <div>
+            <Label className="text-gray-700 font-medium mb-3 block">Sports</Label>
+            <div className="grid grid-cols-2 gap-3">
+              {sportsOptions.map((sport) => (
+                <label key={sport} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.sports.includes(sport)}
+                    onChange={(e) => handleSportsChange(sport, e.target.checked)}
+                    className="rounded border-gray-300 text-explore-green focus:ring-explore-green"
+                  />
+                  <span className="text-sm">{sport}</span>
+                </label>
               ))}
             </div>
-            <button
-              onClick={() => setShowLanguagePicker(!showLanguagePicker)}
-              className="text-sm text-explore-green font-cabin underline"
-            >
-              Add Language
-            </button>
-            
-            {showLanguagePicker && (
-              <div className="grid grid-cols-4 gap-2 p-3 bg-gray-50 rounded-lg">
-                {availableLanguages.map((language) => (
-                  <button
-                    key={language}
-                    onClick={() => handleLanguageToggle(language)}
-                    className={`text-2xl p-2 rounded-lg transition-colors ${
-                      formData.languages.includes(language)
-                        ? "bg-explore-green text-white"
-                        : "bg-white border border-gray-300 hover:bg-gray-100"
-                    }`}
-                  >
-                    {language}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
-          {/* Skill Levels */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black font-cabin">Skill Levels</h3>
-            
-            {Object.entries(formData.skillLevels).map(([activity, level]) => (
-              <div key={activity}>
-                <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
-                  {activity}
+          <div>
+            <Label className="text-gray-700 font-medium mb-3 block">Languages</Label>
+            <div className="grid grid-cols-2 gap-3">
+              {languageOptions.map((lang) => (
+                <label key={lang.code} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.languages.includes(lang.code)}
+                    onChange={(e) => handleLanguagesChange(lang.code, e.target.checked)}
+                    className="rounded border-gray-300 text-explore-green focus:ring-explore-green"
+                  />
+                  <span className="text-sm">{lang.code} {lang.name}</span>
                 </label>
-                <div className="flex gap-2">
-                  {["Beginner", "Intermediate", "Advanced", "Expert"].map((skillLevel) => (
-                    <button
-                      key={skillLevel}
-                      onClick={() => handleSkillLevelChange(activity, skillLevel)}
-                      className={`px-3 py-1 rounded-lg text-sm font-cabin border transition-colors ${
-                        level === skillLevel
-                          ? "bg-explore-green text-white border-explore-green"
-                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                      }`}
-                    >
-                      {skillLevel}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Save Button */}
-          <div className="pt-6">
-            <button
-              onClick={handleSave}
-              className="w-full bg-explore-green text-white py-3 rounded-lg font-cabin font-medium hover:bg-green-600 transition-colors"
-            >
-              Save Changes
-            </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom Navigation */}
-      <BottomNavigation />
+        {/* Save Button */}
+        <div className="pt-4">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-explore-green hover:bg-explore-green/90 text-white py-3"
+          >
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                Saving...
+              </div>
+            ) : (
+              <div className="flex items-center justify-center">
+                <Save className="w-4 h-4 mr-2" />
+                Save Profile
+              </div>
+            )}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }
