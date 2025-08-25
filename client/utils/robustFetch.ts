@@ -229,10 +229,13 @@ export const robustFetch = async (url: string, options: RequestInit = {}): Promi
 export const fetchWithTimeout = async (
   url: string,
   options: RequestInit = {},
-  timeout: number = 8000
+  timeout: number = 10000
 ): Promise<Response> => {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  const timeoutId = setTimeout(() => {
+    console.log(`⏰ Request timeout after ${timeout}ms for ${url}`);
+    controller.abort();
+  }, timeout);
 
   try {
     const response = await robustFetch(url, {
@@ -243,6 +246,15 @@ export const fetchWithTimeout = async (
     return response;
   } catch (error) {
     clearTimeout(timeoutId);
+
+    // Add more context to timeout errors
+    if (error.name === 'AbortError') {
+      const timeoutError = new Error(`Request timeout after ${timeout}ms for ${url}`);
+      timeoutError.name = 'TimeoutError';
+      throw timeoutError;
+    }
+
+    console.error(`Fetch error for ${url}:`, error.message);
     throw error;
   }
 };
