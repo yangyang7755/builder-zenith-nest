@@ -29,21 +29,25 @@ export default function Activities() {
     useState<Activity[]>([]);
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
 
-  // Sort activities by date (future vs past)
-  const now = new Date();
-  const today = now.toISOString().split("T")[0];
+  // Sort activities by date (future vs past) - memoized to prevent unnecessary recalculations
+  const { upcomingSavedActivities, pastSavedActivities } = useMemo(() => {
+    const now = new Date();
+    const today = now.toISOString().split("T")[0];
 
-  const upcomingSavedActivities = savedActivities.filter((activity) => {
-    const activityDate = new Date(activity.date);
-    const activityDateString = activityDate.toISOString().split("T")[0];
-    return activityDateString >= today;
-  });
+    const upcoming = savedActivities.filter((activity) => {
+      const activityDate = new Date(activity.date);
+      const activityDateString = activityDate.toISOString().split("T")[0];
+      return activityDateString >= today;
+    });
 
-  const pastSavedActivities = savedActivities.filter((activity) => {
-    const activityDate = new Date(activity.date);
-    const activityDateString = activityDate.toISOString().split("T")[0];
-    return activityDateString < today;
-  });
+    const past = savedActivities.filter((activity) => {
+      const activityDate = new Date(activity.date);
+      const activityDateString = activityDate.toISOString().split("T")[0];
+      return activityDateString < today;
+    });
+
+    return { upcomingSavedActivities: upcoming, pastSavedActivities: past };
+  }, [savedActivities]);
 
   // Get activities user has joined using participation context (memoized to prevent infinite loops)
   const participatedActivities = useMemo(() => {
