@@ -72,13 +72,7 @@ export default function Activities() {
   const navigate = useNavigate();
 
   // Load past activities that need reviews
-  useEffect(() => {
-    if (user && selectedTab === "Joined") {
-      loadPastActivitiesNeedingReview();
-    }
-  }, [user, selectedTab, participatedActivities]);
-
-  const loadPastActivitiesNeedingReview = async () => {
+  const loadPastActivitiesNeedingReview = useCallback(async () => {
     if (!user) return;
 
     setIsLoadingReviews(true);
@@ -119,7 +113,13 @@ export default function Activities() {
     } finally {
       setIsLoadingReviews(false);
     }
-  };
+  }, [user, participatedActivities]);
+
+  useEffect(() => {
+    if (user && selectedTab === "Joined") {
+      loadPastActivitiesNeedingReview();
+    }
+  }, [user, selectedTab, loadPastActivitiesNeedingReview]);
 
   const handleReviewSubmitted = () => {
     // Refresh the activities needing review
