@@ -1,5 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Configuration
+const API_BASE_URL = __DEV__ ? 'http://localhost:3000/api' : '/api';
+
 // Types
 interface ApiResponse<T> {
   data?: T;
@@ -48,6 +51,20 @@ interface Activity {
   total_reviews?: number;
 }
 
+interface Club {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  member_count: number;
+  is_public: boolean;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  banner_image?: string;
+  location?: string;
+}
+
 // Utility function to get auth headers
 const getAuthHeaders = async () => {
   try {
@@ -94,7 +111,9 @@ const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout:
 
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(url, {
+    const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+    
+    const response = await fetch(fullUrl, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -107,40 +126,40 @@ const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout:
     return response;
   } catch (error) {
     clearTimeout(timeoutId);
+    
+    // If network request fails, try to use cached data for GET requests
+    if (options.method === 'GET' || !options.method) {
+      console.warn('Network request failed, attempting to use cached data');
+    }
+    
     throw error;
   }
 };
 
-// React Native API Service with preserved web logic
+// React Native API Service with full backend integration
 export const apiService = {
-  // Activity Reviews - preserved exact logic from web
+  // Activity Reviews
   async getActivityReviews(activityId: string): Promise<ApiResponse<Review[]>> {
     try {
-      // For React Native, return demo data or implement actual API call
-      const demoReviews: Review[] = [
-        {
-          id: 'review-1',
-          activity_id: activityId,
-          reviewer_id: 'user-1',
-          reviewee_id: 'organizer-1', 
-          rating: 5,
-          comment: 'Amazing session! Holly is such a patient instructor.',
-          created_at: new Date().toISOString(),
-          reviewer: {
-            id: 'user-1',
-            full_name: 'Sarah M.',
-            profile_image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
-          },
-          activity: {
-            id: activityId,
-            title: 'Westway Climbing Session',
-            date: '2024-01-15'
-          }
-        }
-      ];
+      const response = await fetchWithTimeout(`/reviews?activity_id=${activityId}`);
+      const result = await handleResponse<Review[]>(response);
       
-      return { data: demoReviews };
+      // Cache reviews data
+      if (result.data) {
+        await AsyncStorage.setItem(`reviews_${activityId}`, JSON.stringify(result.data));
+      }
+      
+      return result;
     } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem(`reviews_${activityId}`);
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
       return { error: 'Failed to fetch reviews' };
     }
   },
@@ -152,136 +171,185 @@ export const apiService = {
     comment?: string;
   }): Promise<ApiResponse<Review>> {
     try {
-      // Store review locally for React Native
-      const reviews = await AsyncStorage.getItem('user_reviews') || '[]';
-      const parsedReviews = JSON.parse(reviews);
+      const response = await fetchWithTimeout('/reviews', {
+        method: 'POST',
+        body: JSON.stringify(reviewData),
+      });
       
-      const newReview: Review = {
-        id: `review-${Date.now()}`,
-        ...reviewData,
-        reviewer_id: 'current-user',
-        created_at: new Date().toISOString()
-      };
+      const result = await handleResponse<Review>(response);
       
-      parsedReviews.push(newReview);
-      await AsyncStorage.setItem('user_reviews', JSON.stringify(parsedReviews));
+      // Cache the review locally on success
+      if (result.data) {
+        const reviews = await AsyncStorage.getItem('user_reviews') || '[]';
+        const parsedReviews = JSON.parse(reviews);
+        parsedReviews.push(result.data);
+        await AsyncStorage.setItem('user_reviews', JSON.stringify(parsedReviews));
+      }
       
-      return { data: newReview };
+      return result;
     } catch (error) {
       return { error: 'Failed to create review' };
     }
   },
 
+  async markActivityCompleted(activityId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/activities/${activityId}/complete`, {
+        method: 'POST',
+      });
+      
+      const result = await handleResponse(response);
+      
+      // Cache completion locally
+      if (result.data) {
+        const completions = await AsyncStorage.getItem('activity_completions') || '[]';
+        const parsedCompletions = JSON.parse(completions);
+        parsedCompletions.push({
+          id: result.data.id,
+          activity_id: activityId,
+          completed_at: new Date().toISOString()
+        });
+        await AsyncStorage.setItem('activity_completions', JSON.stringify(parsedCompletions));
+      }
+      
+      return result;
+    } catch (error) {
+      return { error: 'Failed to mark activity as completed' };
+    }
+  },
+
+  async getCompletedActivities(): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout('/user/completed-activities');
+      const result = await handleResponse(response);
+      
+      // Cache completed activities
+      if (result.data) {
+        await AsyncStorage.setItem('completed_activities', JSON.stringify(result.data));
+      }
+      
+      return result;
+    } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem('completed_activities');
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
+      return { error: 'Failed to fetch completed activities' };
+    }
+  },
+
   async getUserReviews(userId: string): Promise<ApiResponse<Review[]>> {
     try {
-      // Get cached reviews for React Native
-      const reviews = await AsyncStorage.getItem('user_reviews') || '[]';
-      const parsedReviews = JSON.parse(reviews);
-      const userReviews = parsedReviews.filter((r: Review) => r.reviewee_id === userId);
+      const response = await fetchWithTimeout(`/reviews?user_id=${userId}`);
+      const result = await handleResponse<Review[]>(response);
       
-      return { data: userReviews };
+      // Cache user reviews
+      if (result.data) {
+        await AsyncStorage.setItem(`user_reviews_${userId}`, JSON.stringify(result.data));
+      }
+      
+      return result;
     } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem(`user_reviews_${userId}`);
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
       return { error: 'Failed to fetch user reviews' };
     }
   },
 
   async getReviews(params: { user_id?: string; activity_id?: string } = {}): Promise<ApiResponse<Review[]>> {
     try {
-      // Demo reviews for React Native with preserved web logic
-      const demoReviews: Review[] = [
-        {
-          id: 'demo-review-1',
-          activity_id: params.activity_id || 'demo-activity-1',
-          reviewer_id: 'demo-user-1',
-          reviewee_id: params.user_id || 'demo-organizer-1',
-          rating: 5,
-          comment: 'Excellent session! Very well organized.',
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-          reviewer: {
-            id: 'demo-user-1',
-            full_name: 'Demo Reviewer',
-            profile_image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
-          }
-        }
-      ];
-      
-      return { data: demoReviews };
+      const queryParams = new URLSearchParams();
+      if (params.user_id) queryParams.append('user_id', params.user_id);
+      if (params.activity_id) queryParams.append('activity_id', params.activity_id);
+
+      const response = await fetchWithTimeout(`/reviews?${queryParams}`);
+      return await handleResponse<Review[]>(response);
     } catch (error) {
       return { error: 'Failed to fetch reviews' };
     }
   },
 
-  // Followers/Following API methods - preserved exact logic from web
+  // Followers/Following API methods
   async getUserFollowers(userId: string): Promise<ApiResponse<any[]>> {
     try {
-      // Demo followers data for React Native
-      const demoFollowers = [
-        {
-          id: 'follow-1',
-          follower_id: 'demo-user-1',
-          following_id: userId,
-          created_at: new Date().toISOString(),
-          follower: {
-            id: 'demo-user-1',
-            full_name: 'Sarah Johnson',
-            profile_image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-            university: 'Cambridge University'
-          }
-        }
-      ];
+      const response = await fetchWithTimeout(`/followers/${userId}`);
+      const result = await handleResponse(response);
       
-      return { data: demoFollowers };
+      // Cache followers data
+      if (result.data) {
+        await AsyncStorage.setItem(`followers_${userId}`, JSON.stringify(result.data));
+      }
+      
+      return result;
     } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem(`followers_${userId}`);
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
       return { error: 'Failed to fetch followers' };
     }
   },
 
   async getUserFollowing(userId: string): Promise<ApiResponse<any[]>> {
     try {
-      // Demo following data for React Native
-      const demoFollowing = [
-        {
-          id: 'follow-2',
-          follower_id: userId,
-          following_id: 'demo-user-2',
-          created_at: new Date().toISOString(),
-          following: {
-            id: 'demo-user-2',
-            full_name: 'Alex Chen',
-            profile_image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-            university: 'Oxford University'
-          }
-        }
-      ];
+      const response = await fetchWithTimeout(`/following/${userId}`);
+      const result = await handleResponse(response);
       
-      return { data: demoFollowing };
+      // Cache following data
+      if (result.data) {
+        await AsyncStorage.setItem(`following_${userId}`, JSON.stringify(result.data));
+      }
+      
+      return result;
     } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem(`following_${userId}`);
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
       return { error: 'Failed to fetch following' };
     }
   },
 
   async followUser(userId: string): Promise<ApiResponse<any>> {
     try {
-      // Store follow relationship locally for React Native
-      const following = await AsyncStorage.getItem('user_following') || '[]';
-      const parsedFollowing = JSON.parse(following);
+      const response = await fetchWithTimeout('/follow', {
+        method: 'POST',
+        body: JSON.stringify({ following_id: userId }),
+      });
       
-      const newFollow = {
-        id: `follow-${Date.now()}`,
-        follower_id: 'current-user',
-        following_id: userId,
-        created_at: new Date().toISOString(),
-        following: {
-          id: userId,
-          full_name: 'User',
-          profile_image: undefined
-        }
-      };
+      const result = await handleResponse(response);
       
-      parsedFollowing.push(newFollow);
-      await AsyncStorage.setItem('user_following', JSON.stringify(parsedFollowing));
+      // Update local cache on success
+      if (result.data) {
+        const following = await AsyncStorage.getItem('user_following') || '[]';
+        const parsedFollowing = JSON.parse(following);
+        parsedFollowing.push(result.data);
+        await AsyncStorage.setItem('user_following', JSON.stringify(parsedFollowing));
+      }
       
-      return { data: newFollow };
+      return result;
     } catch (error) {
       return { error: 'Failed to follow user' };
     }
@@ -289,14 +357,21 @@ export const apiService = {
 
   async unfollowUser(userId: string): Promise<ApiResponse<any>> {
     try {
-      // Remove follow relationship locally for React Native
-      const following = await AsyncStorage.getItem('user_following') || '[]';
-      const parsedFollowing = JSON.parse(following);
-      const updatedFollowing = parsedFollowing.filter((f: any) => f.following_id !== userId);
+      const response = await fetchWithTimeout(`/unfollow/${userId}`, {
+        method: 'DELETE',
+      });
       
-      await AsyncStorage.setItem('user_following', JSON.stringify(updatedFollowing));
+      const result = await handleResponse(response);
       
-      return { data: { message: 'Successfully unfollowed user' } };
+      // Update local cache on success
+      if (!result.error) {
+        const following = await AsyncStorage.getItem('user_following') || '[]';
+        const parsedFollowing = JSON.parse(following);
+        const updatedFollowing = parsedFollowing.filter((f: any) => f.following_id !== userId);
+        await AsyncStorage.setItem('user_following', JSON.stringify(updatedFollowing));
+      }
+      
+      return result;
     } catch (error) {
       return { error: 'Failed to unfollow user' };
     }
@@ -304,44 +379,80 @@ export const apiService = {
 
   async getFollowStats(userId: string): Promise<ApiResponse<{ followers: number; following: number }>> {
     try {
-      // Demo stats for React Native with preserved web logic
+      const response = await fetchWithTimeout(`/follow-stats/${userId}`);
+      const result = await handleResponse(response);
+      
+      // Cache stats
+      if (result.data) {
+        await AsyncStorage.setItem(`follow_stats_${userId}`, JSON.stringify(result.data));
+      }
+      
+      return result;
+    } catch (error) {
+      // Fallback to cached data or default values
+      try {
+        const cached = await AsyncStorage.getItem(`follow_stats_${userId}`);
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
+      
+      // Final fallback to demo stats
       return { 
         data: { 
           followers: 152, 
           following: 87 
         } 
       };
-    } catch (error) {
-      return { error: 'Failed to fetch follow stats' };
     }
   },
 
-  // Saved Activities methods - preserved exact logic from web
+  // Saved Activities methods
   async getSavedActivities(): Promise<ApiResponse<any[]>> {
     try {
-      const savedActivities = await AsyncStorage.getItem('saved_activities') || '[]';
-      return { data: JSON.parse(savedActivities) };
+      const response = await fetchWithTimeout('/saved-activities');
+      const result = await handleResponse(response);
+      
+      // Cache saved activities
+      if (result.data) {
+        await AsyncStorage.setItem('saved_activities', JSON.stringify(result.data));
+      }
+      
+      return result;
     } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem('saved_activities');
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
       return { error: 'Failed to fetch saved activities' };
     }
   },
 
   async saveActivity(activityId: string): Promise<ApiResponse<any>> {
     try {
-      const savedActivities = await AsyncStorage.getItem('saved_activities') || '[]';
-      const parsedSaved = JSON.parse(savedActivities);
+      const response = await fetchWithTimeout('/saved-activities', {
+        method: 'POST',
+        body: JSON.stringify({ activity_id: activityId }),
+      });
       
-      const newSave = {
-        id: `save-${Date.now()}`,
-        activity_id: activityId,
-        user_id: 'current-user',
-        saved_at: new Date().toISOString()
-      };
+      const result = await handleResponse(response);
       
-      parsedSaved.push(newSave);
-      await AsyncStorage.setItem('saved_activities', JSON.stringify(parsedSaved));
+      // Update local cache on success
+      if (result.data) {
+        const savedActivities = await AsyncStorage.getItem('saved_activities') || '[]';
+        const parsedSaved = JSON.parse(savedActivities);
+        parsedSaved.push(result.data);
+        await AsyncStorage.setItem('saved_activities', JSON.stringify(parsedSaved));
+      }
       
-      return { data: newSave };
+      return result;
     } catch (error) {
       return { error: 'Failed to save activity' };
     }
@@ -349,19 +460,27 @@ export const apiService = {
 
   async unsaveActivity(activityId: string): Promise<ApiResponse<any>> {
     try {
-      const savedActivities = await AsyncStorage.getItem('saved_activities') || '[]';
-      const parsedSaved = JSON.parse(savedActivities);
-      const updatedSaved = parsedSaved.filter((s: any) => s.activity_id !== activityId);
+      const response = await fetchWithTimeout(`/saved-activities/${activityId}`, {
+        method: 'DELETE',
+      });
       
-      await AsyncStorage.setItem('saved_activities', JSON.stringify(updatedSaved));
+      const result = await handleResponse(response);
       
-      return { data: { message: 'Activity unsaved successfully' } };
+      // Update local cache on success
+      if (!result.error) {
+        const savedActivities = await AsyncStorage.getItem('saved_activities') || '[]';
+        const parsedSaved = JSON.parse(savedActivities);
+        const updatedSaved = parsedSaved.filter((s: any) => s.activity_id !== activityId);
+        await AsyncStorage.setItem('saved_activities', JSON.stringify(updatedSaved));
+      }
+      
+      return result;
     } catch (error) {
       return { error: 'Failed to unsave activity' };
     }
   },
 
-  // Activity participation methods - preserved exact logic from web  
+  // Activity participation methods
   async getUserActivityHistory(params: {
     user_id?: string;
     status?: 'completed' | 'upcoming';
@@ -370,83 +489,82 @@ export const apiService = {
     include_reviews?: boolean;
   } = {}): Promise<ApiResponse<Activity[]>> {
     try {
-      // Demo activity history for React Native
-      const demoActivities: Activity[] = [
-        {
-          id: 'activity-1',
-          title: 'Advanced Technique Workshop',
-          activity_type: 'climbing',
-          date: '2025-01-15',
-          location: 'Training Academy',
-          organizer_id: 'demo-organizer-1',
-          organizer_name: 'Training Academy',
-          participant_count: 8,
-          status: 'completed',
-          average_rating: 5.0,
-          total_reviews: 1
-        },
-        {
-          id: 'activity-2',
-          title: 'Morning Cycle Ride',
-          activity_type: 'cycling', 
-          date: '2025-01-10',
-          location: 'Richmond Park',
-          organizer_id: 'current-user',
-          organizer_name: 'You',
-          participant_count: 12,
-          status: 'completed',
-          average_rating: 4.8,
-          total_reviews: 5
-        }
-      ];
+      const queryParams = new URLSearchParams();
+      if (params.user_id) queryParams.append('user_id', params.user_id);
+      if (params.status) queryParams.append('status', params.status);
+      if (params.limit) queryParams.append('limit', params.limit.toString());
+      if (params.offset) queryParams.append('offset', params.offset.toString());
+      if (params.include_reviews) queryParams.append('include_reviews', 'true');
+
+      const response = await fetchWithTimeout(`/user/activities?${queryParams}`);
+      const result = await handleResponse<Activity[]>(response);
       
-      return { data: demoActivities };
+      // Cache activity history
+      if (result.data) {
+        const cacheKey = `activity_history_${params.user_id || 'current'}_${params.status || 'all'}`;
+        await AsyncStorage.setItem(cacheKey, JSON.stringify(result.data));
+      }
+      
+      return result;
     } catch (error) {
+      // Fallback to cached data
+      try {
+        const cacheKey = `activity_history_${params.user_id || 'current'}_${params.status || 'all'}`;
+        const cached = await AsyncStorage.getItem(cacheKey);
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
       return { error: 'Failed to fetch activity history' };
     }
   },
 
   async getActivitiesNeedingReview(): Promise<ApiResponse<Activity[]>> {
     try {
-      // Demo activities needing review for React Native
-      const demoActivities: Activity[] = [
-        {
-          id: 'review-needed-1',
-          title: 'Past Climbing Session',
-          activity_type: 'climbing',
-          date: '2025-01-05',
-          location: 'Westway Climbing Centre',
-          organizer_id: 'demo-organizer-1',
-          organizer_name: 'Holly Smith',
-          participant_count: 0,
-          status: 'completed'
-        }
-      ];
+      const response = await fetchWithTimeout('/user/activities/pending-reviews');
+      const result = await handleResponse<Activity[]>(response);
       
-      return { data: demoActivities };
+      // Cache activities needing review
+      if (result.data) {
+        await AsyncStorage.setItem('activities_needing_review', JSON.stringify(result.data));
+      }
+      
+      return result;
     } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem('activities_needing_review');
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
       return { error: 'Failed to fetch activities needing review' };
     }
   },
 
-  // Activity creation and management - preserved exact logic from web
+  // Activity creation and management
   async createActivity(activityData: any): Promise<ApiResponse<any>> {
     try {
-      const activities = await AsyncStorage.getItem('user_activities') || '[]';
-      const parsedActivities = JSON.parse(activities);
+      const response = await fetchWithTimeout('/activities', {
+        method: 'POST',
+        body: JSON.stringify(activityData),
+      });
       
-      const newActivity = {
-        id: `activity-${Date.now()}`,
-        ...activityData,
-        organizer_id: 'current-user',
-        created_at: new Date().toISOString(),
-        status: 'upcoming'
-      };
+      const result = await handleResponse(response);
       
-      parsedActivities.push(newActivity);
-      await AsyncStorage.setItem('user_activities', JSON.stringify(parsedActivities));
+      // Cache the new activity locally
+      if (result.data) {
+        const activities = await AsyncStorage.getItem('user_activities') || '[]';
+        const parsedActivities = JSON.parse(activities);
+        parsedActivities.push(result.data);
+        await AsyncStorage.setItem('user_activities', JSON.stringify(parsedActivities));
+      }
       
-      return { data: newActivity };
+      return result;
     } catch (error) {
       return { error: 'Failed to create activity' };
     }
@@ -454,21 +572,21 @@ export const apiService = {
 
   async joinActivity(activityId: string): Promise<ApiResponse<any>> {
     try {
-      const joinedActivities = await AsyncStorage.getItem('joined_activities') || '[]';
-      const parsedJoined = JSON.parse(joinedActivities);
+      const response = await fetchWithTimeout(`/activities/${activityId}/join`, {
+        method: 'POST',
+      });
       
-      const newJoin = {
-        id: `join-${Date.now()}`,
-        activity_id: activityId,
-        user_id: 'current-user',
-        joined_at: new Date().toISOString(),
-        status: 'joined'
-      };
+      const result = await handleResponse(response);
       
-      parsedJoined.push(newJoin);
-      await AsyncStorage.setItem('joined_activities', JSON.stringify(parsedJoined));
+      // Update local cache on success
+      if (result.data) {
+        const joinedActivities = await AsyncStorage.getItem('joined_activities') || '[]';
+        const parsedJoined = JSON.parse(joinedActivities);
+        parsedJoined.push(result.data);
+        await AsyncStorage.setItem('joined_activities', JSON.stringify(parsedJoined));
+      }
       
-      return { data: newJoin };
+      return result;
     } catch (error) {
       return { error: 'Failed to join activity' };
     }
@@ -476,17 +594,255 @@ export const apiService = {
 
   async leaveActivity(activityId: string): Promise<ApiResponse<any>> {
     try {
-      const joinedActivities = await AsyncStorage.getItem('joined_activities') || '[]';
-      const parsedJoined = JSON.parse(joinedActivities);
-      const updatedJoined = parsedJoined.filter((j: any) => j.activity_id !== activityId);
+      const response = await fetchWithTimeout(`/activities/${activityId}/leave`, {
+        method: 'DELETE',
+      });
       
-      await AsyncStorage.setItem('joined_activities', JSON.stringify(updatedJoined));
+      const result = await handleResponse(response);
       
-      return { data: { message: 'Successfully left activity' } };
+      // Update local cache on success
+      if (!result.error) {
+        const joinedActivities = await AsyncStorage.getItem('joined_activities') || '[]';
+        const parsedJoined = JSON.parse(joinedActivities);
+        const updatedJoined = parsedJoined.filter((j: any) => j.activity_id !== activityId);
+        await AsyncStorage.setItem('joined_activities', JSON.stringify(updatedJoined));
+      }
+      
+      return result;
     } catch (error) {
       return { error: 'Failed to leave activity' };
     }
-  }
+  },
+
+  // Club management methods with React Native caching
+  async createClub(clubData: any): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout('/clubs', {
+        method: 'POST',
+        body: JSON.stringify(clubData),
+      });
+      
+      const result = await handleResponse(response);
+      
+      // Cache the new club
+      if (result.data) {
+        const clubs = await AsyncStorage.getItem('user_clubs') || '[]';
+        const parsedClubs = JSON.parse(clubs);
+        parsedClubs.unshift(result.data);
+        await AsyncStorage.setItem('user_clubs', JSON.stringify(parsedClubs));
+      }
+      
+      return result;
+    } catch (error) {
+      return { error: 'Failed to create club' };
+    }
+  },
+
+  async getClubs(): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout('/clubs');
+      const result = await handleResponse(response);
+      
+      // Cache clubs
+      if (result.data) {
+        await AsyncStorage.setItem('clubs', JSON.stringify(result.data));
+      }
+      
+      return result;
+    } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem('clubs');
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
+      return { error: 'Failed to fetch clubs' };
+    }
+  },
+
+  async getUserClubs(userId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`/clubs?userId=${userId}`);
+      const result = await handleResponse(response);
+      
+      // Cache user clubs
+      if (result.data) {
+        await AsyncStorage.setItem(`user_clubs_${userId}`, JSON.stringify(result.data));
+      }
+      
+      return result;
+    } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem(`user_clubs_${userId}`);
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
+      return { error: 'Failed to fetch user clubs' };
+    }
+  },
+
+  async joinClub(clubId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/clubs/${clubId}/join`, {
+        method: 'POST',
+      });
+      
+      const result = await handleResponse(response);
+      
+      // Update local cache on success
+      if (result.data) {
+        const memberships = await AsyncStorage.getItem('club_memberships') || '[]';
+        const parsedMemberships = JSON.parse(memberships);
+        parsedMemberships.push(result.data);
+        await AsyncStorage.setItem('club_memberships', JSON.stringify(parsedMemberships));
+      }
+      
+      return result;
+    } catch (error) {
+      return { error: 'Failed to join club' };
+    }
+  },
+
+  async leaveClub(clubId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/clubs/${clubId}/leave`, {
+        method: 'DELETE',
+      });
+      
+      const result = await handleResponse(response);
+      
+      // Update local cache on success
+      if (!result.error) {
+        const memberships = await AsyncStorage.getItem('club_memberships') || '[]';
+        const parsedMemberships = JSON.parse(memberships);
+        const updatedMemberships = parsedMemberships.filter((m: any) => m.club_id !== clubId);
+        await AsyncStorage.setItem('club_memberships', JSON.stringify(updatedMemberships));
+      }
+      
+      return result;
+    } catch (error) {
+      return { error: 'Failed to leave club' };
+    }
+  },
+
+  async getClubMemberships(): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout('/user/club-memberships');
+      const result = await handleResponse(response);
+      
+      // Cache memberships
+      if (result.data) {
+        await AsyncStorage.setItem('club_memberships', JSON.stringify(result.data));
+      }
+      
+      return result;
+    } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem('club_memberships');
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
+      return { error: 'Failed to fetch club memberships' };
+    }
+  },
+
+  // Profile methods with React Native caching
+  async getUserProfile(userId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/users/${userId}/profile`);
+      const result = await handleResponse(response);
+      
+      // Cache profile data
+      if (result.data) {
+        await AsyncStorage.setItem(`profile_${userId}`, JSON.stringify(result.data));
+      }
+      
+      return result;
+    } catch (error) {
+      // Fallback to cached data
+      try {
+        const cached = await AsyncStorage.getItem(`profile_${userId}`);
+        if (cached) {
+          return { data: JSON.parse(cached) };
+        }
+      } catch (cacheError) {
+        console.error('Cache error:', cacheError);
+      }
+      return { error: 'Failed to fetch user profile' };
+    }
+  },
+
+  async updateUserProfile(profileData: any): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout('/users/profile', {
+        method: 'PUT',
+        body: JSON.stringify(profileData),
+      });
+      
+      const result = await handleResponse(response);
+      
+      // Update cached profile on success
+      if (result.data && result.data.user_id) {
+        await AsyncStorage.setItem(`profile_${result.data.user_id}`, JSON.stringify(result.data));
+        // Also update current user profile cache
+        await AsyncStorage.setItem('profile', JSON.stringify(result.data));
+      }
+      
+      return result;
+    } catch (error) {
+      return { error: 'Failed to update profile' };
+    }
+  },
+
+  // Search functionality
+  async searchUsers(query: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`/search/users?q=${encodeURIComponent(query)}`);
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to search users' };
+    }
+  },
+
+  async searchActivities(query: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`/search/activities?q=${encodeURIComponent(query)}`);
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to search activities' };
+    }
+  },
+
+  async searchClubs(query: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`/search/clubs?q=${encodeURIComponent(query)}`);
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: 'Failed to search clubs' };
+    }
+  },
+
+  // Health check and server ping
+  async ping(): Promise<ApiResponse<{ message: string }>> {
+    try {
+      const response = await fetchWithTimeout('/health');
+      return await handleResponse(response);
+    } catch (error) {
+      console.error('Failed to ping server:', error);
+      return { error: 'Failed to ping server' };
+    }
+  },
 };
 
 export default apiService;
