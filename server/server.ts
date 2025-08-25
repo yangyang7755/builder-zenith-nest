@@ -1,6 +1,5 @@
 import "dotenv/config";
-import { createExpressApp } from "./index";
-import { setupSocketServer } from "./socketServer";
+import { httpServer } from "./index";
 import { databaseManager } from "./lib/database";
 
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3002;
@@ -11,14 +10,8 @@ async function startServer() {
     console.log('🔄 Initializing database connection...');
     await databaseManager.initializeDatabase();
 
-    // Create Express app
-    const app = createExpressApp();
-
-    // Setup Socket.IO server with Express app
-    const server = setupSocketServer(app);
-    
-    // Start the server
-    server.listen(PORT, () => {
+    // Start the server (httpServer already has Express app and Socket.IO configured)
+    httpServer.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📡 Socket.IO server ready for real-time connections`);
       console.log(`🔗 API available at http://localhost:${PORT}/api`);
