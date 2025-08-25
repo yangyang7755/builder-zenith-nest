@@ -45,8 +45,10 @@ export default function Activities() {
     return activityDateString < today;
   });
 
-  // Get activities user has joined using participation context
-  const participatedActivities = getUserParticipatedActivities();
+  // Get activities user has joined using participation context (memoized to prevent infinite loops)
+  const participatedActivities = useMemo(() => {
+    return getUserParticipatedActivities();
+  }, [getUserParticipatedActivities]);
 
   // Get activities user has organized
   const organizedActivities = getUserOrganizedActivities();
