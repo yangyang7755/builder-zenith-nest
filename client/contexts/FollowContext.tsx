@@ -8,6 +8,7 @@ import React, {
 import { useAuth } from "./AuthContext";
 import { apiService } from "@/services/apiService";
 import { useToast } from "@/hooks/use-toast";
+import { useFollowSocket } from "@/hooks/useSocket";
 
 interface Follower {
   id: string;
@@ -80,6 +81,65 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
       setFollowStats({ followers: 0, following: 0 });
     }
   }, [user]);
+
+  // Subscribe to real-time follow events
+  useEffect(() => {
+    if (!user) return;
+
+    const unsubscribe = subscribeToFollowEvents({
+      onNewFollower: (data) => {
+        // Someone followed the current user
+        if (data.followedUserId === user.id) {
+          const newFollower: Follower = {
+            id: `realtime-${Date.now()}`,
+            follower_id: data.followerId,
+            following_id: user.id,
+            created_at: data.timestamp,
+            follower: data.followerData || {
+              id: data.followerId,
+              full_name: 'New Follower',
+              profile_image: undefined,
+            }
+          };
+
+          setFollowers(prev => [newFollower, ...prev]);
+          setFollowStats(prev => ({ ...prev, followers: prev.followers + 1 }));
+
+          toast({
+            title: "New Follower!",
+            description: `${newFollower.follower.full_name} started following you`,
+            duration: 5000,
+          });
+        }
+      },
+
+      onFollowerRemoved: (data) => {
+        // Someone unfollowed the current user
+        if (data.unfollowedUserId === user.id) {
+          setFollowers(prev => prev.filter(f => f.follower_id !== data.unfollowerId));
+          setFollowStats(prev => ({ ...prev, followers: Math.max(0, prev.followers - 1) }));
+
+          toast({
+            title: "Follower Update",
+            description: "Someone unfollowed you",
+          });
+        }
+      },
+
+      onFollowingUpdate: (data) => {
+        // Current user's following list changed
+        if (data.followerId === user.id && data.type === 'following_added') {
+          // User started following someone
+          setFollowStats(prev => ({ ...prev, following: prev.following + 1 }));
+        } else if (data.unfollowerId === user.id && data.type === 'following_removed') {
+          // User unfollowed someone
+          setFollowStats(prev => ({ ...prev, following: Math.max(0, prev.following - 1) }));
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, [user, subscribeToFollowEvents, toast]);
 
   const refreshFollowData = async () => {
     if (!user) return;

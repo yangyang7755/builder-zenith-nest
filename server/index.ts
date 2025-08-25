@@ -190,8 +190,35 @@ io.on("connection", (socket) => {
 
   // Handle real-time follow events
   socket.on("user-followed", (data) => {
-    // Notify the followed user
-    socket.to(`user-${data.followedUserId}`).emit("new-follower", data);
+    console.log(`📝 User ${data.followerId} followed ${data.followedUserId}`);
+
+    // Notify the followed user about new follower
+    socket.to(`user-${data.followedUserId}`).emit("new-follower", {
+      ...data,
+      type: 'new_follower'
+    });
+
+    // Notify all followers of the follower about following update
+    socket.to(`user-${data.followerId}`).emit("following-updated", {
+      ...data,
+      type: 'following_added'
+    });
+  });
+
+  socket.on("user-unfollowed", (data) => {
+    console.log(`📝 User ${data.unfollowerId} unfollowed ${data.unfollowedUserId}`);
+
+    // Notify the unfollowed user about follower removal
+    socket.to(`user-${data.unfollowedUserId}`).emit("follower-removed", {
+      ...data,
+      type: 'follower_removed'
+    });
+
+    // Notify unfollower about following update
+    socket.to(`user-${data.unfollowerId}`).emit("following-updated", {
+      ...data,
+      type: 'following_removed'
+    });
   });
 
   // Handle real-time activity updates

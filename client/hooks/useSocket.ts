@@ -1,157 +1,173 @@
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 
-interface ChatMessage {
-  id: string;
-  user_id: string;
-  user_name: string;
-  user_avatar?: string;
-  message: string;
-  created_at: string;
-  is_system?: boolean;
-}
-
-interface DirectMessage {
-  id: string;
-  sender_id: string;
-  receiver_id: string;
-  sender_name: string;
-  sender_avatar?: string;
-  receiver_name: string;
-  receiver_avatar?: string;
-  message: string;
-  created_at: string;
-  read_at?: string;
-  is_sent_by_me: boolean;
-}
-
-interface UseSocketReturn {
+interface SocketContextType {
   socket: Socket | null;
-  connected: boolean;
-  joinClub: (clubId: string) => void;
-  leaveClub: (clubId: string) => void;
-  sendClubMessage: (clubId: string, message: string) => void;
-  sendDirectMessage: (receiverId: string, message: string) => void;
-  onClubMessage: (callback: (message: ChatMessage) => void) => void;
-  onDirectMessage: (callback: (message: DirectMessage) => void) => void;
-  onActivityUpdate: (callback: (data: any) => void) => void;
-  disconnect: () => void;
+  isConnected: boolean;
+  joinUserRoom: (userId: string) => void;
+  leaveUserRoom: (userId: string) => void;
 }
 
-export function useSocket(): UseSocketReturn {
-  const { user } = useAuth();
-  const socketRef = useRef<Socket | null>(null);
-  const [connected, setConnected] = useState(false);
+let globalSocket: Socket | null = null;
 
-  // Initialize socket connection
+export const useSocket = (): SocketContextType => {
+  const { user } = useAuth();
+  const [isConnected, setIsConnected] = useState(false);
+  const socketRef = useRef<Socket | null>(null);
+
   useEffect(() => {
-    if (user && !socketRef.current) {
-      // For development, connect to the Vite dev server port
-      const socketUrl = import.meta.env.VITE_SOCKET_URL || window.location.origin;
-      
-      socketRef.current = io(socketUrl, {
+    if (!user) {
+      // Disconnect when user logs out
+      if (globalSocket) {
+        globalSocket.disconnect();
+        globalSocket = null;
+        socketRef.current = null;
+        setIsConnected(false);
+      }
+      return;
+    }
+
+    // Create socket connection if it doesn't exist
+    if (!globalSocket) {
+      const socketUrl = process.env.NODE_ENV === 'production' 
+        ? window.location.origin 
+        : 'http://localhost:3002';
+
+      globalSocket = io(socketUrl, {
         transports: ['websocket', 'polling'],
-        autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
       });
 
-      socketRef.current.on('connect', () => {
-        console.log('Connected to Socket.IO server');
-        setConnected(true);
+      // Connection event handlers
+      globalSocket.on('connect', () => {
+        console.log('✅ Socket connected:', globalSocket?.id);
+        setIsConnected(true);
         
-        // Join user's personal room for notifications
-        if (user.id) {
-          socketRef.current?.emit('join_user', user.id);
+        // Join user-specific room for notifications
+        if (user?.id) {
+          globalSocket?.emit('join-user-room', user.id);
         }
       });
 
-      socketRef.current.on('disconnect', () => {
-        console.log('Disconnected from Socket.IO server');
-        setConnected(false);
+      globalSocket.on('disconnect', () => {
+        console.log('❌ Socket disconnected');
+        setIsConnected(false);
       });
 
-      socketRef.current.on('error', (error) => {
-        console.error('Socket.IO error:', error);
+      globalSocket.on('connect_error', (error) => {
+        console.error('Socket connection error:', error);
+        setIsConnected(false);
+      });
+
+      globalSocket.on('reconnect', (attemptNumber) => {
+        console.log(`🔄 Socket reconnected after ${attemptNumber} attempts`);
+        setIsConnected(true);
+        
+        // Rejoin user room after reconnection
+        if (user?.id) {
+          globalSocket?.emit('join-user-room', user.id);
+        }
       });
     }
 
+    socketRef.current = globalSocket;
+
+    // Cleanup function
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-        setConnected(false);
-      }
+      // Don't disconnect here - keep connection alive for other components
     };
   }, [user]);
 
-  const joinClub = (clubId: string) => {
-    if (socketRef.current?.connected) {
-      socketRef.current.emit('join_club', clubId);
-    }
-  };
-
-  const leaveClub = (clubId: string) => {
-    if (socketRef.current?.connected) {
-      socketRef.current.emit('leave_club', clubId);
-    }
-  };
-
-  const sendClubMessage = (clubId: string, message: string) => {
-    if (socketRef.current?.connected && user) {
-      socketRef.current.emit('club_message', {
-        clubId,
-        userId: user.id,
-        message,
-      });
-    }
-  };
-
-  const sendDirectMessage = (receiverId: string, message: string) => {
-    if (socketRef.current?.connected && user) {
-      socketRef.current.emit('direct_message', {
-        senderId: user.id,
-        receiverId,
-        message,
-      });
-    }
-  };
-
-  const onClubMessage = (callback: (message: ChatMessage) => void) => {
+  const joinUserRoom = (userId: string) => {
     if (socketRef.current) {
-      socketRef.current.on('new_club_message', callback);
+      socketRef.current.emit('join-user-room', userId);
     }
   };
 
-  const onDirectMessage = (callback: (message: DirectMessage) => void) => {
+  const leaveUserRoom = (userId: string) => {
     if (socketRef.current) {
-      socketRef.current.on('new_direct_message', callback);
-    }
-  };
-
-  const onActivityUpdate = (callback: (data: any) => void) => {
-    if (socketRef.current) {
-      socketRef.current.on('activity_updated', callback);
-    }
-  };
-
-  const disconnect = () => {
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-      socketRef.current = null;
-      setConnected(false);
+      socketRef.current.emit('leave-user-room', userId);
     }
   };
 
   return {
     socket: socketRef.current,
-    connected,
-    joinClub,
-    leaveClub,
-    sendClubMessage,
-    sendDirectMessage,
-    onClubMessage,
-    onDirectMessage,
-    onActivityUpdate,
-    disconnect,
+    isConnected,
+    joinUserRoom,
+    leaveUserRoom,
   };
-}
+};
+
+// Hook for following-specific events
+export const useFollowSocket = () => {
+  const { socket } = useSocket();
+  const { user } = useAuth();
+
+  const emitFollowUser = (followedUserId: string, followerData: any) => {
+    if (socket && user) {
+      socket.emit('user-followed', {
+        followedUserId,
+        followerId: user.id,
+        followerData,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  };
+
+  const emitUnfollowUser = (unfollowedUserId: string) => {
+    if (socket && user) {
+      socket.emit('user-unfollowed', {
+        unfollowedUserId,
+        unfollowerId: user.id,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  };
+
+  const subscribeToFollowEvents = (callbacks: {
+    onNewFollower?: (data: any) => void;
+    onFollowerRemoved?: (data: any) => void;
+    onFollowingUpdate?: (data: any) => void;
+  }) => {
+    if (!socket) return () => {};
+
+    const handleNewFollower = (data: any) => {
+      console.log('📝 New follower received:', data);
+      callbacks.onNewFollower?.(data);
+    };
+
+    const handleFollowerRemoved = (data: any) => {
+      console.log('📝 Follower removed:', data);
+      callbacks.onFollowerRemoved?.(data);
+    };
+
+    const handleFollowingUpdate = (data: any) => {
+      console.log('📝 Following update:', data);
+      callbacks.onFollowingUpdate?.(data);
+    };
+
+    // Subscribe to events
+    socket.on('new-follower', handleNewFollower);
+    socket.on('follower-removed', handleFollowerRemoved);
+    socket.on('following-updated', handleFollowingUpdate);
+
+    // Return cleanup function
+    return () => {
+      socket.off('new-follower', handleNewFollower);
+      socket.off('follower-removed', handleFollowerRemoved);
+      socket.off('following-updated', handleFollowingUpdate);
+    };
+  };
+
+  return {
+    socket,
+    emitFollowUser,
+    emitUnfollowUser,
+    subscribeToFollowEvents,
+  };
+};
+
+export default useSocket;
