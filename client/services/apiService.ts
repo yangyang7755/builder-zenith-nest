@@ -19,7 +19,7 @@ const getAuthHeaders = () => {
 const fetchWithTimeout = async (
   url: string,
   options: RequestInit = {},
-  timeout: number = 12000,
+  timeout: number = 10000,
 ): Promise<Response> => {
   // First try robust fetch directly to bypass FullStory issues
   try {
