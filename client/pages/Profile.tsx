@@ -21,6 +21,7 @@ import BottomNavigation from "../components/BottomNavigation";
 import { ProfileEdit } from "../components/ProfileEdit";
 import RealTimeFollowingList from "../components/RealTimeFollowingList";
 import RealTimeFollowersModal from "../components/RealTimeFollowersModal";
+import RealTimeFollowNotification from "../components/RealTimeFollowNotification";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import {
   getClubProfileImage,
@@ -1087,47 +1088,17 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Followers Modal - Now shows real follower data */}
-      {showFollowers && (
-        <div className="fixed inset-0 z-50 bg-white">
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
-            <button onClick={() => setShowFollowers(false)}>
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
-            </button>
-            <span className="text-gray-500 font-medium">Followers</span>
-            <div className="w-6"></div>
-          </div>
-          <div className="p-4">
-            <div className="text-center py-8 text-gray-500">
-              <p>Followers feature coming soon!</p>
-              <p className="text-sm mt-2">
-                Real-time follower list will appear here
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Real-time Followers Modal */}
+      <RealTimeFollowersModal
+        isOpen={showFollowers}
+        onClose={() => setShowFollowers(false)}
+      />
 
-      {/* Following Modal - Now shows real following data */}
-      {showFollowing && (
-        <div className="fixed inset-0 z-50 bg-white">
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
-            <button onClick={() => setShowFollowing(false)}>
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
-            </button>
-            <span className="text-gray-500 font-medium">Following</span>
-            <div className="w-6"></div>
-          </div>
-          <div className="p-4">
-            <div className="text-center py-8 text-gray-500">
-              <p>Following feature coming soon!</p>
-              <p className="text-sm mt-2">
-                Real-time following list will appear here
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Real-time Following Modal */}
+      <RealTimeFollowingList
+        isOpen={showFollowing}
+        onClose={() => setShowFollowing(false)}
+      />
 
       {/* Bottom Navigation */}
       <BottomNavigation />
