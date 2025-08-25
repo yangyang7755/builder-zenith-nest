@@ -30,9 +30,9 @@ export const useSocket = (): SocketContextType => {
 
     // Create socket connection if it doesn't exist
     if (!globalSocket) {
-      const socketUrl = process.env.NODE_ENV === 'production' 
-        ? window.location.origin 
-        : 'http://localhost:3002';
+      // Always use the current origin for Socket.IO in this environment
+      // The Vite proxy will handle routing to the correct backend port
+      const socketUrl = window.location.origin;
 
       console.log(`🔌 Attempting to connect to Socket.IO server at: ${socketUrl}`);
 
