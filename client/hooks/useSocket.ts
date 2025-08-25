@@ -75,11 +75,20 @@ export const useSocket = (): SocketContextType => {
       globalSocket.on('reconnect', (attemptNumber) => {
         console.log(`🔄 Socket reconnected after ${attemptNumber} attempts`);
         setIsConnected(true);
-        
+
         // Rejoin user room after reconnection
         if (user?.id) {
           globalSocket?.emit('join-user-room', user.id);
         }
+      });
+
+      globalSocket.on('reconnect_error', (error) => {
+        console.error('❌ Socket reconnection error:', error);
+      });
+
+      globalSocket.on('reconnect_failed', () => {
+        console.error('❌ Socket failed to reconnect after all attempts');
+        setIsConnected(false);
       });
     }
 
