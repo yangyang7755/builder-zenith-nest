@@ -118,10 +118,10 @@ class NetworkService {
   }
 
   private startPeriodicChecks(): void {
-    // Check server connection every 30 seconds
+    // Check server connection every 60 seconds to reduce load
     this.checkInterval = window.setInterval(() => {
       this.checkServerConnection();
-    }, 30000);
+    }, 60000);
   }
 
   public async isApiEndpointReachable(endpoint: string): Promise<boolean> {
