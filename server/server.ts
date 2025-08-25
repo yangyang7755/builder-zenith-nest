@@ -20,14 +20,14 @@ async function startServer() {
     // Graceful shutdown
     process.on('SIGTERM', () => {
       console.log('SIGTERM received, shutting down gracefully');
-      server.close(() => {
+      httpServer.close(() => {
         console.log('Process terminated');
       });
     });
 
     process.on('SIGINT', () => {
       console.log('SIGINT received, shutting down gracefully');
-      server.close(() => {
+      httpServer.close(() => {
         console.log('Process terminated');
       });
     });
