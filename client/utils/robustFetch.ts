@@ -73,8 +73,8 @@ const xmlHttpRequestFetch = async (url: string, options: RequestInit = {}): Prom
         });
       }
 
-      // Handle timeout
-      xhr.timeout = 15000; // 15 second timeout
+      // Handle timeout - use same timeout as abort signal
+      xhr.timeout = 10000; // 10 second timeout
 
       xhr.onload = () => {
         try {
@@ -168,7 +168,7 @@ export const robustFetch = async (url: string, options: RequestInit = {}): Promi
   const fetchOptions = {
     ...options,
     // Add timeout signal if not provided (but don't override existing)
-    signal: options.signal || AbortSignal.timeout(12000),
+    signal: options.signal || AbortSignal.timeout(10000),
   };
 
   // If FullStory is detected, prioritize XMLHttpRequest

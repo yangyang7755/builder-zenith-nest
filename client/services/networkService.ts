@@ -93,7 +93,7 @@ class NetworkService {
       const response = await robustFetch("/api/health", {
         method: "GET",
         cache: "no-cache",
-        signal: AbortSignal.timeout(5000), // 5 second timeout
+        signal: AbortSignal.timeout(8000), // 8 second timeout
       });
 
       const responseTime = Date.now() - startTime;
