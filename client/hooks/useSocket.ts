@@ -62,7 +62,13 @@ export const useSocket = (): SocketContextType => {
       });
 
       globalSocket.on('connect_error', (error) => {
-        console.error('Socket connection error:', error);
+        console.error('❌ Socket connection error:', error);
+        console.error('Error details:', {
+          message: error.message,
+          description: error.description,
+          type: error.type,
+          data: error.data
+        });
         setIsConnected(false);
       });
 
