@@ -39,7 +39,8 @@ interface FilterOptions {
 
 const ExploreScreen: React.FC = () => {
   const navigation = useNavigation();
-  const { activities, searchActivities, loading, error, refreshActivities } = useActivities();
+  const { activities, searchActivities, loading, error, refreshActivities } =
+    useActivities();
   const { user } = useAuth();
   const { following, isFollowing } = useFollow();
 
@@ -47,14 +48,25 @@ const ExploreScreen: React.FC = () => {
   const [filteredActivities, setFilteredActivities] = useState(activities);
   const [isSearching, setIsSearching] = useState(false);
   const [showMapView, setShowMapView] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState("Notting hill, London");
+  const [currentLocation, setCurrentLocation] = useState(
+    "Notting hill, London",
+  );
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const [filters, setFilters] = useState<FilterOptions>({
-    activityType: ["Cycling", "Climbing", "Running", "Hiking", "Skiing", "Surfing", "Tennis", "General"],
+    activityType: [
+      "Cycling",
+      "Climbing",
+      "Running",
+      "Hiking",
+      "Skiing",
+      "Surfing",
+      "Tennis",
+      "General",
+    ],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     locationRange: 10,
@@ -88,7 +100,8 @@ const ExploreScreen: React.FC = () => {
 
     return activities.filter((activity) => {
       const organizerId = activity.organizer_id || activity.organizer?.id;
-      const organizerName = activity.organizer?.full_name || activity.organizerName;
+      const organizerName =
+        activity.organizer?.full_name || activity.organizerName;
 
       return (
         followedUserIds.includes(organizerId) ||
@@ -102,7 +115,8 @@ const ExploreScreen: React.FC = () => {
   // Helper function to check if organizer is followed
   const isOrganizerFollowed = (activity: any) => {
     const organizerId = activity.organizer_id || activity.organizer?.id;
-    const organizerName = activity.organizer?.full_name || activity.organizerName;
+    const organizerName =
+      activity.organizer?.full_name || activity.organizerName;
 
     return following.some(
       (rel) =>
@@ -149,7 +163,9 @@ const ExploreScreen: React.FC = () => {
     if (filters.date.start || filters.date.end) {
       filtered = filtered.filter((activity) => {
         const activityDate = new Date(activity.date);
-        const startDate = filters.date.start ? new Date(filters.date.start) : null;
+        const startDate = filters.date.start
+          ? new Date(filters.date.start)
+          : null;
         const endDate = filters.date.end ? new Date(filters.date.end) : null;
 
         if (startDate && activityDate < startDate) return false;
@@ -162,8 +178,12 @@ const ExploreScreen: React.FC = () => {
     if (filters.location && !filters.location.includes("Current Location")) {
       filtered = filtered.filter(
         (activity) =>
-          activity.location.toLowerCase().includes(filters.location.toLowerCase()) ||
-          activity.meetupLocation.toLowerCase().includes(filters.location.toLowerCase()),
+          activity.location
+            .toLowerCase()
+            .includes(filters.location.toLowerCase()) ||
+          activity.meetupLocation
+            .toLowerCase()
+            .includes(filters.location.toLowerCase()),
       );
     }
 
@@ -231,7 +251,7 @@ const ExploreScreen: React.FC = () => {
   const renderHeader = () => (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>Explore!</Text>
-      
+
       {/* Backend Status Indicator */}
       <View style={styles.statusIndicator}>
         {loading ? (
@@ -242,8 +262,13 @@ const ExploreScreen: React.FC = () => {
         ) : error ? (
           <>
             <View style={[styles.statusDot, styles.statusError]} />
-            <Text style={[styles.statusText, styles.statusErrorText]}>Backend connection failed</Text>
-            <TouchableOpacity onPress={refreshActivities} style={styles.retryButton}>
+            <Text style={[styles.statusText, styles.statusErrorText]}>
+              Backend connection failed
+            </Text>
+            <TouchableOpacity
+              onPress={refreshActivities}
+              style={styles.retryButton}
+            >
               <Text style={styles.retryText}>Retry</Text>
             </TouchableOpacity>
           </>
@@ -258,7 +283,10 @@ const ExploreScreen: React.FC = () => {
   );
 
   const renderLocationSelector = () => (
-    <TouchableOpacity onPress={() => setShowLocationModal(true)} style={styles.locationSelector}>
+    <TouchableOpacity
+      onPress={() => setShowLocationModal(true)}
+      style={styles.locationSelector}
+    >
       <Text style={styles.locationIcon}>📍</Text>
       <View style={styles.locationInfo}>
         <Text style={styles.locationLabel}>Chosen location</Text>
@@ -323,14 +351,18 @@ const ExploreScreen: React.FC = () => {
     >
       {/* Header with title and badges */}
       <View style={styles.activityHeader}>
-        <Text style={styles.activityTitle} numberOfLines={2}>{activity.title}</Text>
+        <Text style={styles.activityTitle} numberOfLines={2}>
+          {activity.title}
+        </Text>
         <View style={styles.activityBadges}>
           <TouchableOpacity style={styles.saveButton}>
             <Text style={styles.saveIcon}>🔖</Text>
           </TouchableOpacity>
           <View style={styles.difficultyBadge}>
             <Text style={styles.difficultyText}>
-              {activity.difficulty || activity.difficulty_level || "Intermediate"}
+              {activity.difficulty ||
+                activity.difficulty_level ||
+                "Intermediate"}
             </Text>
           </View>
           {isOrganizerFollowed(activity) && (
@@ -345,14 +377,19 @@ const ExploreScreen: React.FC = () => {
       <View style={styles.organizerInfo}>
         <Image
           source={{
-            uri: activity.imageSrc || activity.organizer?.profile_image ||
-              "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face"
+            uri:
+              activity.imageSrc ||
+              activity.organizer?.profile_image ||
+              "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=40&h=40&fit=crop&crop=face",
           }}
           style={styles.organizerImage}
         />
         <View style={styles.organizerDetails}>
           <Text style={styles.organizerName}>
-            By {activity.organizer?.full_name || activity.organizerName || "Community"}
+            By{" "}
+            {activity.organizer?.full_name ||
+              activity.organizerName ||
+              "Community"}
           </Text>
         </View>
       </View>
@@ -372,44 +409,45 @@ const ExploreScreen: React.FC = () => {
       </View>
 
       {/* Activity Metrics for cycling */}
-      {(activity.type === "cycling" || activity.activity_type === "cycling") && 
-       (activity.distance || activity.pace || activity.elevation) && (
-        <View style={styles.metricsContainer}>
-          {activity.distance && (
-            <View style={styles.metric}>
-              <Text style={styles.metricLabel}>Distance</Text>
-              <View style={styles.metricValue}>
-                <Text style={styles.metricIcon}>🚴</Text>
-                <Text style={styles.metricText}>{activity.distance}</Text>
+      {(activity.type === "cycling" || activity.activity_type === "cycling") &&
+        (activity.distance || activity.pace || activity.elevation) && (
+          <View style={styles.metricsContainer}>
+            {activity.distance && (
+              <View style={styles.metric}>
+                <Text style={styles.metricLabel}>Distance</Text>
+                <View style={styles.metricValue}>
+                  <Text style={styles.metricIcon}>🚴</Text>
+                  <Text style={styles.metricText}>{activity.distance}</Text>
+                </View>
               </View>
-            </View>
-          )}
-          {activity.pace && (
-            <View style={styles.metric}>
-              <Text style={styles.metricLabel}>Pace</Text>
-              <View style={styles.metricValue}>
-                <Text style={styles.metricIcon}>⚡</Text>
-                <Text style={styles.metricText}>{activity.pace}</Text>
+            )}
+            {activity.pace && (
+              <View style={styles.metric}>
+                <Text style={styles.metricLabel}>Pace</Text>
+                <View style={styles.metricValue}>
+                  <Text style={styles.metricIcon}>⚡</Text>
+                  <Text style={styles.metricText}>{activity.pace}</Text>
+                </View>
               </View>
-            </View>
-          )}
-          {activity.elevation && (
-            <View style={styles.metric}>
-              <Text style={styles.metricLabel}>Elevation</Text>
-              <View style={styles.metricValue}>
-                <Text style={styles.metricIcon}>⛰️</Text>
-                <Text style={styles.metricText}>{activity.elevation}</Text>
+            )}
+            {activity.elevation && (
+              <View style={styles.metric}>
+                <Text style={styles.metricLabel}>Elevation</Text>
+                <View style={styles.metricValue}>
+                  <Text style={styles.metricIcon}>⛰️</Text>
+                  <Text style={styles.metricText}>{activity.elevation}</Text>
+                </View>
               </View>
-            </View>
-          )}
-        </View>
-      )}
+            )}
+          </View>
+        )}
 
       {/* Participation button */}
       <View style={styles.participationSection}>
         <View style={styles.participantCount}>
           <Text style={styles.participantText}>
-            0/{activity.maxParticipants || activity.max_participants || 10} participants
+            0/{activity.maxParticipants || activity.max_participants || 10}{" "}
+            participants
           </Text>
         </View>
         <TouchableOpacity style={styles.joinButton}>
@@ -456,7 +494,9 @@ const ExploreScreen: React.FC = () => {
         <Image source={{ uri: carShare.imageSrc }} style={styles.driverImage} />
         <Text style={styles.driverName}>{carShare.driver}</Text>
       </View>
-      <Text style={styles.carShareSeats}>{carShare.availableSeats} seats available</Text>
+      <Text style={styles.carShareSeats}>
+        {carShare.availableSeats} seats available
+      </Text>
       <Text style={styles.carShareCost}>{carShare.cost}</Text>
       <TouchableOpacity style={styles.carShareButton}>
         <Text style={styles.carShareButtonText}>Request Seat</Text>
@@ -473,8 +513,10 @@ const ExploreScreen: React.FC = () => {
       climbingLevel: "5.9-5.11",
       date: "📅 Friday evenings",
       location: "📍 Westway Climbing Centre",
-      description: "Looking for a regular climbing partner for Friday evening sessions. I'm working on lead climbing and could use someone experienced.",
-      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+      description:
+        "Looking for a regular climbing partner for Friday evening sessions. I'm working on lead climbing and could use someone experienced.",
+      imageSrc:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
     },
     {
       title: "Climbing buddy needed!",
@@ -483,8 +525,10 @@ const ExploreScreen: React.FC = () => {
       climbingLevel: "V4-V6 Bouldering",
       date: "📅 Monday evenings",
       location: "📍 The Castle Climbing Centre",
-      description: "Experienced boulderer looking for motivation and someone to work projects with. Happy to share beta and spot!",
-      imageSrc: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+      description:
+        "Experienced boulderer looking for motivation and someone to work projects with. Happy to share beta and spot!",
+      imageSrc:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
     },
   ];
 
@@ -518,7 +562,8 @@ const ExploreScreen: React.FC = () => {
       driver: "Mike Johnson",
       availableSeats: 3,
       cost: "£15 per person",
-      imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
     },
     {
       destination: "Snowdonia",
@@ -527,14 +572,15 @@ const ExploreScreen: React.FC = () => {
       driver: "Sarah Chen",
       availableSeats: 2,
       cost: "£25 per person",
-      imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+      imageSrc:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
     },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       {renderStatusBar()}
-      
+
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -565,7 +611,9 @@ const ExploreScreen: React.FC = () => {
             {/* No Activities Message */}
             {!isSearching && filteredActivities.length === 0 && (
               <View style={styles.emptyState}>
-                <Text style={styles.emptyText}>Change filters to see more activities...</Text>
+                <Text style={styles.emptyText}>
+                  Change filters to see more activities...
+                </Text>
               </View>
             )}
 
@@ -610,16 +658,23 @@ const ExploreScreen: React.FC = () => {
                 </TouchableOpacity>
               </View>
               <View style={styles.verticalList}>
-                {activitiesFromFollowedUsers.slice(0, 3).map((activity, index) => (
-                  <View key={activity.id} style={styles.followingActivityWrapper}>
-                    <View style={styles.followingBadgeContainer}>
-                      <View style={styles.followingActivityBadge}>
-                        <Text style={styles.followingBadgeText}>👥 Following</Text>
+                {activitiesFromFollowedUsers
+                  .slice(0, 3)
+                  .map((activity, index) => (
+                    <View
+                      key={activity.id}
+                      style={styles.followingActivityWrapper}
+                    >
+                      <View style={styles.followingBadgeContainer}>
+                        <View style={styles.followingActivityBadge}>
+                          <Text style={styles.followingBadgeText}>
+                            👥 Following
+                          </Text>
+                        </View>
                       </View>
+                      {renderActivityCard(activity, index)}
                     </View>
-                    {renderActivityCard(activity, index)}
-                  </View>
-                ))}
+                  ))}
               </View>
             </View>
           )}
@@ -694,7 +749,7 @@ const ExploreScreen: React.FC = () => {
                 <Text style={styles.modalClose}>✕</Text>
               </TouchableOpacity>
             </View>
-            
+
             <Text style={styles.modalSubtitle}>
               Select your preferred location for finding activities
             </Text>
@@ -706,7 +761,9 @@ const ExploreScreen: React.FC = () => {
               >
                 <Text style={styles.currentLocationIcon}>📍</Text>
                 <Text style={styles.currentLocationText}>
-                  {isGettingLocation ? "Getting location..." : "Use Current Location"}
+                  {isGettingLocation
+                    ? "Getting location..."
+                    : "Use Current Location"}
                 </Text>
               </TouchableOpacity>
 
@@ -760,10 +817,12 @@ const ExploreScreen: React.FC = () => {
                 <Text style={styles.modalClose}>✕</Text>
               </TouchableOpacity>
             </View>
-            
+
             <ScrollView style={styles.filterContent}>
               <Text style={styles.filterSectionTitle}>Activity Type</Text>
-              <Text style={styles.comingSoonText}>Comprehensive filters coming soon...</Text>
+              <Text style={styles.comingSoonText}>
+                Comprehensive filters coming soon...
+              </Text>
             </ScrollView>
 
             <View style={styles.filterActions}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,15 +11,24 @@ import {
   Alert,
   StyleSheet,
   Dimensions,
-} from 'react-native';
-import { router } from 'expo-router';
+} from "react-native";
+import { router } from "expo-router";
 
 // Import shared logic
-import { formatActivityDate, calculateDistance, getActivityEmoji } from '../../src/shared/utils';
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS } from '../../src/shared/constants';
-import type { Activity, FilterOptions } from '../../src/shared/types';
+import {
+  formatActivityDate,
+  calculateDistance,
+  getActivityEmoji,
+} from "../../src/shared/utils";
+import {
+  COLORS,
+  TYPOGRAPHY,
+  SPACING,
+  BORDER_RADIUS,
+} from "../../src/shared/constants";
+import type { Activity, FilterOptions } from "../../src/shared/types";
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get("window");
 
 // Mock data matching your web version exactly
 const LOCATION_COORDINATES: { [key: string]: { lat: number; lng: number } } = {
@@ -42,10 +51,12 @@ const partnerRequests = [
     climbingLevel: "5.9-5.11",
     date: "📅 Friday evenings",
     location: "📍 Westway Climbing Centre",
-    description: "Looking for a regular climbing partner for Friday evening sessions. I'm working on lead climbing and could use someone experienced.",
+    description:
+      "Looking for a regular climbing partner for Friday evening sessions. I'm working on lead climbing and could use someone experienced.",
     availability: "Fridays 6-9pm",
     experience: "2 years indoor, 6 months outdoor",
-    imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+    imageSrc:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
   },
   {
     id: "2",
@@ -55,10 +66,12 @@ const partnerRequests = [
     climbingLevel: "V4-V6 Bouldering",
     date: "📅 Monday evenings",
     location: "📍 The Castle Climbing Centre",
-    description: "Experienced boulderer looking for motivation and someone to work projects with. Happy to share beta and spot!",
+    description:
+      "Experienced boulderer looking for motivation and someone to work projects with. Happy to share beta and spot!",
     availability: "Monday & Wednesday 7-10pm",
     experience: "5 years climbing, love outdoor bouldering",
-    imageSrc: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+    imageSrc:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
   },
 ];
 
@@ -101,7 +114,8 @@ const carShares = [
     driver: "Mike Johnson",
     availableSeats: 3,
     cost: "£15 per person",
-    imageSrc: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+    imageSrc:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
   },
   {
     id: "snowdonia",
@@ -111,7 +125,8 @@ const carShares = [
     driver: "Sarah Chen",
     availableSeats: 2,
     cost: "£25 per person",
-    imageSrc: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+    imageSrc:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
   },
 ];
 
@@ -120,7 +135,9 @@ export default function Explore() {
   const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showMapView, setShowMapView] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState("Notting hill, London");
+  const [currentLocation, setCurrentLocation] = useState(
+    "Notting hill, London",
+  );
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
@@ -130,7 +147,16 @@ export default function Explore() {
   const [activities, setActivities] = useState<Activity[]>([]);
 
   const [filters, setFilters] = useState<FilterOptions>({
-    activityType: ["Cycling", "Climbing", "Running", "Hiking", "Skiing", "Surfing", "Tennis", "General"],
+    activityType: [
+      "Cycling",
+      "Climbing",
+      "Running",
+      "Hiking",
+      "Skiing",
+      "Surfing",
+      "Tennis",
+      "General",
+    ],
     numberOfPeople: { min: 1, max: 50 },
     location: "",
     locationRange: 10,
@@ -158,7 +184,7 @@ export default function Explore() {
   const onRefresh = async () => {
     setRefreshing(true);
     // Simulate refresh
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setRefreshing(false);
   };
 
@@ -184,7 +210,7 @@ export default function Explore() {
   const Header = () => (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>Explore!</Text>
-      
+
       {/* Backend Status Indicator (matching web) */}
       <View style={styles.statusIndicator}>
         {loading ? (
@@ -195,7 +221,9 @@ export default function Explore() {
         ) : error ? (
           <>
             <View style={[styles.statusDot, styles.statusError]} />
-            <Text style={[styles.statusText, styles.statusErrorText]}>Backend connection failed</Text>
+            <Text style={[styles.statusText, styles.statusErrorText]}>
+              Backend connection failed
+            </Text>
             <TouchableOpacity onPress={onRefresh} style={styles.retryButton}>
               <Text style={styles.retryText}>Retry</Text>
             </TouchableOpacity>
@@ -212,7 +240,10 @@ export default function Explore() {
 
   // Location Selector (matching web exactly)
   const LocationSelector = () => (
-    <TouchableOpacity onPress={() => setShowLocationModal(true)} style={styles.locationSelector}>
+    <TouchableOpacity
+      onPress={() => setShowLocationModal(true)}
+      style={styles.locationSelector}
+    >
       <Text style={styles.locationIcon}>📍</Text>
       <View style={styles.locationInfo}>
         <Text style={styles.locationLabel}>Chosen location</Text>
@@ -270,7 +301,11 @@ export default function Explore() {
   // Activity Type Tags (matching web exactly)
   const ActivityTypeTags = () => (
     <View style={styles.activityTags}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tagsContainer}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.tagsContainer}
+      >
         {["Cycling", "Climbing", "Running", "Hiking"].map((type) => (
           <View key={type} style={styles.tag}>
             <Text style={styles.tagText}>{type}</Text>
@@ -286,7 +321,9 @@ export default function Explore() {
   // Partner Request Card (matching web exactly)
   const PartnerRequestCard = ({ partner }: { partner: any }) => (
     <View style={styles.partnerCard}>
-      <Text style={styles.partnerTitle} numberOfLines={2}>{partner.title}</Text>
+      <Text style={styles.partnerTitle} numberOfLines={2}>
+        {partner.title}
+      </Text>
       <View style={styles.partnerInfo}>
         <Image source={{ uri: partner.imageSrc }} style={styles.partnerImage} />
         <View style={styles.partnerDetails}>
@@ -323,7 +360,9 @@ export default function Explore() {
         <Image source={{ uri: carShare.imageSrc }} style={styles.driverImage} />
         <Text style={styles.driverName}>{carShare.driver}</Text>
       </View>
-      <Text style={styles.carShareSeats}>{carShare.availableSeats} seats available</Text>
+      <Text style={styles.carShareSeats}>
+        {carShare.availableSeats} seats available
+      </Text>
       <Text style={styles.carShareCost}>{carShare.cost}</Text>
       <TouchableOpacity style={styles.carShareButton}>
         <Text style={styles.carShareButtonText}>Request Seat</Text>
@@ -334,7 +373,7 @@ export default function Explore() {
   return (
     <View style={styles.container}>
       <StatusBar />
-      
+
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -359,7 +398,9 @@ export default function Explore() {
 
             {/* Empty State (matching web exactly) */}
             <View style={styles.emptyState}>
-              <Text style={styles.emptyText}>Change filters to see more activities...</Text>
+              <Text style={styles.emptyText}>
+                Change filters to see more activities...
+              </Text>
             </View>
 
             <View style={styles.createActivityContainer}>

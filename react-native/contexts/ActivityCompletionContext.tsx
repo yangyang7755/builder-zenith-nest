@@ -1,9 +1,15 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
-import { useAuth } from './AuthContext';
-import { useActivities } from './ActivitiesContext';
-import { apiService } from '../services/apiService';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
+import { useAuth } from "./AuthContext";
+import { useActivities } from "./ActivitiesContext";
+import { apiService } from "../services/apiService";
 
 export interface ActivityCompletion {
   id: string;
@@ -95,28 +101,34 @@ export function ActivityCompletionProvider({
   const loadCachedData = async () => {
     try {
       const [cachedCompletions, cachedReviews] = await Promise.all([
-        AsyncStorage.getItem('activityCompletions'),
-        AsyncStorage.getItem('activityReviews')
+        AsyncStorage.getItem("activityCompletions"),
+        AsyncStorage.getItem("activityReviews"),
       ]);
 
       if (cachedCompletions) {
         const parsed = JSON.parse(cachedCompletions);
-        setCompletions(parsed.map((c: any) => ({
-          ...c,
-          completion_date: c.completion_date ? new Date(c.completion_date) : undefined,
-          created_at: new Date(c.created_at)
-        })));
+        setCompletions(
+          parsed.map((c: any) => ({
+            ...c,
+            completion_date: c.completion_date
+              ? new Date(c.completion_date)
+              : undefined,
+            created_at: new Date(c.created_at),
+          })),
+        );
       }
 
       if (cachedReviews) {
         const parsed = JSON.parse(cachedReviews);
-        setReviews(parsed.map((r: any) => ({
-          ...r,
-          created_at: new Date(r.created_at)
-        })));
+        setReviews(
+          parsed.map((r: any) => ({
+            ...r,
+            created_at: new Date(r.created_at),
+          })),
+        );
       }
     } catch (error) {
-      console.error('Error loading cached completion data:', error);
+      console.error("Error loading cached completion data:", error);
     }
   };
 
@@ -159,37 +171,33 @@ export function ActivityCompletionProvider({
     organizerId: string,
     organizerName: string,
   ) => {
-    Alert.alert(
-      "Activity Completed?",
-      `Did you complete "${activityTitle}"?`,
-      [
-        {
-          text: "No",
-          style: "cancel",
-          onPress: () => {
-            // Mark as not completed
-            markActivityNotCompleted(activityId);
-          },
+    Alert.alert("Activity Completed?", `Did you complete "${activityTitle}"?`, [
+      {
+        text: "No",
+        style: "cancel",
+        onPress: () => {
+          // Mark as not completed
+          markActivityNotCompleted(activityId);
         },
-        {
-          text: "Yes",
-          style: "default",
-          onPress: () => {
-            markActivityCompleted(activityId).then(() => {
-              // Prompt for review
-              setTimeout(() => {
-                showReviewPrompt(
-                  activityId,
-                  activityTitle,
-                  organizerId,
-                  organizerName,
-                );
-              }, 500);
-            });
-          },
+      },
+      {
+        text: "Yes",
+        style: "default",
+        onPress: () => {
+          markActivityCompleted(activityId).then(() => {
+            // Prompt for review
+            setTimeout(() => {
+              showReviewPrompt(
+                activityId,
+                activityTitle,
+                organizerId,
+                organizerName,
+              );
+            }, 500);
+          });
         },
-      ],
-    );
+      },
+    ]);
   };
 
   const showReviewPrompt = (
@@ -217,7 +225,12 @@ export function ActivityCompletionProvider({
           onPress: () => {
             // In a full implementation, this would navigate to a review screen
             // For now, create a simple rating prompt
-            showSimpleRatingPrompt(activityId, activityTitle, organizerId, organizerName);
+            showSimpleRatingPrompt(
+              activityId,
+              activityTitle,
+              organizerId,
+              organizerName,
+            );
           },
         },
       ],
@@ -235,12 +248,62 @@ export function ActivityCompletionProvider({
       `Rate ${organizerName}`,
       `How would you rate your experience with "${activityTitle}"?`,
       [
-        { text: "⭐ (1 star)", onPress: () => submitSimpleReview(activityId, organizerId, organizerName, activityTitle, 1) },
-        { text: "⭐⭐ (2 stars)", onPress: () => submitSimpleReview(activityId, organizerId, organizerName, activityTitle, 2) },
-        { text: "⭐⭐⭐ (3 stars)", onPress: () => submitSimpleReview(activityId, organizerId, organizerName, activityTitle, 3) },
-        { text: "⭐⭐⭐⭐ (4 stars)", onPress: () => submitSimpleReview(activityId, organizerId, organizerName, activityTitle, 4) },
-        { text: "⭐⭐⭐⭐⭐ (5 stars)", onPress: () => submitSimpleReview(activityId, organizerId, organizerName, activityTitle, 5) },
-        { text: "Skip", style: "cancel" }
+        {
+          text: "⭐ (1 star)",
+          onPress: () =>
+            submitSimpleReview(
+              activityId,
+              organizerId,
+              organizerName,
+              activityTitle,
+              1,
+            ),
+        },
+        {
+          text: "⭐⭐ (2 stars)",
+          onPress: () =>
+            submitSimpleReview(
+              activityId,
+              organizerId,
+              organizerName,
+              activityTitle,
+              2,
+            ),
+        },
+        {
+          text: "⭐⭐⭐ (3 stars)",
+          onPress: () =>
+            submitSimpleReview(
+              activityId,
+              organizerId,
+              organizerName,
+              activityTitle,
+              3,
+            ),
+        },
+        {
+          text: "⭐⭐⭐⭐ (4 stars)",
+          onPress: () =>
+            submitSimpleReview(
+              activityId,
+              organizerId,
+              organizerName,
+              activityTitle,
+              4,
+            ),
+        },
+        {
+          text: "⭐⭐⭐⭐⭐ (5 stars)",
+          onPress: () =>
+            submitSimpleReview(
+              activityId,
+              organizerId,
+              organizerName,
+              activityTitle,
+              5,
+            ),
+        },
+        { text: "Skip", style: "cancel" },
       ],
     );
   };
@@ -250,14 +313,14 @@ export function ActivityCompletionProvider({
     organizerId: string,
     organizerName: string,
     activityTitle: string,
-    rating: number
+    rating: number,
   ) => {
     await submitReview({
       activity_id: activityId,
-      reviewer_id: user?.id || 'unknown',
+      reviewer_id: user?.id || "unknown",
       organizer_id: organizerId,
       rating,
-      comment: '',
+      comment: "",
       activity_title: activityTitle,
       organizer_name: organizerName,
     });
@@ -265,15 +328,18 @@ export function ActivityCompletionProvider({
 
   const markActivityCompleted = async (activityId: string): Promise<void> => {
     if (!user) {
-      Alert.alert('Authentication Required', 'Please log in to mark activities as completed');
+      Alert.alert(
+        "Authentication Required",
+        "Please log in to mark activities as completed",
+      );
       return;
     }
 
     try {
       const response = await apiService.markActivityCompleted(activityId);
-      
+
       if (response.error) {
-        Alert.alert('Error', response.error);
+        Alert.alert("Error", response.error);
         return;
       }
 
@@ -291,12 +357,15 @@ export function ActivityCompletionProvider({
 
       // Cache the updated completions
       const updatedCompletions = [...completions, completion];
-      await AsyncStorage.setItem('activityCompletions', JSON.stringify(updatedCompletions));
+      await AsyncStorage.setItem(
+        "activityCompletions",
+        JSON.stringify(updatedCompletions),
+      );
 
-      Alert.alert('Success', 'Activity marked as completed!');
+      Alert.alert("Success", "Activity marked as completed!");
     } catch (error) {
-      console.error('Error marking activity as completed:', error);
-      Alert.alert('Error', 'Failed to mark activity as completed');
+      console.error("Error marking activity as completed:", error);
+      Alert.alert("Error", "Failed to mark activity as completed");
     }
   };
 
@@ -315,14 +384,17 @@ export function ActivityCompletionProvider({
 
     // Cache the updated completions
     const updatedCompletions = [...completions, completion];
-    await AsyncStorage.setItem('activityCompletions', JSON.stringify(updatedCompletions));
+    await AsyncStorage.setItem(
+      "activityCompletions",
+      JSON.stringify(updatedCompletions),
+    );
   };
 
   const submitReview = async (
     reviewData: Omit<ActivityReview, "id" | "created_at">,
   ): Promise<void> => {
     if (!user) {
-      Alert.alert('Authentication Required', 'Please log in to submit reviews');
+      Alert.alert("Authentication Required", "Please log in to submit reviews");
       return;
     }
 
@@ -335,7 +407,7 @@ export function ActivityCompletionProvider({
       });
 
       if (response.error) {
-        Alert.alert('Error', response.error);
+        Alert.alert("Error", response.error);
         return;
       }
 
@@ -359,15 +431,18 @@ export function ActivityCompletionProvider({
 
       // Cache the updated data
       const updatedReviews = [...reviews, review];
-      await AsyncStorage.setItem('activityReviews', JSON.stringify(updatedReviews));
+      await AsyncStorage.setItem(
+        "activityReviews",
+        JSON.stringify(updatedReviews),
+      );
 
       Alert.alert(
-        'Review Submitted',
+        "Review Submitted",
         `Thank you for reviewing ${reviewData.organizer_name}!`,
       );
     } catch (error) {
-      console.error('Error submitting review:', error);
-      Alert.alert('Error', 'Failed to submit review');
+      console.error("Error submitting review:", error);
+      Alert.alert("Error", "Failed to submit review");
     }
   };
 

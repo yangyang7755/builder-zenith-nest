@@ -15,6 +15,7 @@ This comprehensive guide covers everything you need to deploy your Wildpals Reac
 ## Prerequisites
 
 ### Development Environment
+
 - **macOS** (required for iOS development)
 - **Xcode 14+** (for iOS builds)
 - **Android Studio** (for Android builds)
@@ -23,6 +24,7 @@ This comprehensive guide covers everything you need to deploy your Wildpals Reac
 - **EAS CLI** (`npm install -g @expo/eas-cli`)
 
 ### Developer Accounts
+
 - **Apple Developer Program** ($99/year)
   - Sign up at [developer.apple.com](https://developer.apple.com)
   - Verify your identity (can take 1-3 business days)
@@ -49,9 +51,7 @@ Update your `app.json` or `app.config.js`:
       "resizeMode": "contain",
       "backgroundColor": "#1F381F"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.wildpals.app",
@@ -94,22 +94,27 @@ Update your `app.json` or `app.config.js`:
 Create these assets in your `assets/` folder:
 
 #### App Icons
+
 - **icon.png**: 1024x1024px (iOS and Android)
 - **adaptive-icon.png**: 1024x1024px (Android adaptive icon foreground)
 - **favicon.png**: 48x48px (Web)
 
 #### Splash Screen
+
 - **splash.png**: 1284x2778px (recommended for iPhone 13 Pro Max)
 
 #### App Store Screenshots (iOS)
+
 Create screenshots for these device sizes:
+
 - **6.7" Display (iPhone 14 Plus)**: 1290x2796px
-- **6.5" Display (iPhone 11 Pro Max)**: 1242x2688px  
+- **6.5" Display (iPhone 11 Pro Max)**: 1242x2688px
 - **5.5" Display (iPhone 8 Plus)**: 1242x2208px
 - **12.9" iPad Pro**: 2048x2732px
 - **11" iPad Pro**: 1668x2388px
 
 #### Google Play Screenshots (Android)
+
 - **Phone**: 1080x1920px (minimum), 1080x1920px to 3840x7680px
 - **Tablet**: 1200x1920px (minimum), 1200x1920px to 7680x12800px
 
@@ -153,6 +158,7 @@ Create `eas.json`:
 ### Step 1: Apple Developer Setup
 
 1. **Create App ID**
+
    - Log into Apple Developer Console
    - Go to Certificates, Identifiers & Profiles
    - Create new App ID with bundle identifier: `com.wildpals.app`
@@ -170,16 +176,19 @@ Create `eas.json`:
 ### Step 2: Build for iOS
 
 1. **Login to EAS**
+
    ```bash
    eas login
    ```
 
 2. **Configure Project**
+
    ```bash
    eas build:configure
    ```
 
 3. **Build for iOS**
+
    ```bash
    eas build --platform ios --profile production
    ```
@@ -192,6 +201,7 @@ Create `eas.json`:
 ### Step 3: Upload to App Store
 
 1. **Using EAS Submit**
+
    ```bash
    eas submit --platform ios
    ```
@@ -204,16 +214,19 @@ Create `eas.json`:
 ### Step 4: App Store Connect Configuration
 
 1. **App Information**
+
    - **Category**: Sports
    - **Subcategory**: Outdoor Recreation
    - **Content Rights**: Choose appropriate option
 
 2. **Pricing and Availability**
+
    - Select "Free" or set your price
    - Choose availability territories
    - Set release date
 
 3. **App Privacy**
+
    - Complete privacy questionnaire
    - Declare data collection practices:
      - Location data (for finding nearby activities)
@@ -221,6 +234,7 @@ Create `eas.json`:
      - User content (photos, activity posts)
 
 4. **App Review Information**
+
    - **Demo Account**: Provide test credentials
    - **Contact Information**: Your support contact
    - **Notes**: Include setup instructions for reviewers
@@ -243,6 +257,7 @@ Create `eas.json`:
 ### Step 1: Google Play Console Setup
 
 1. **Create App**
+
    - Go to [Google Play Console](https://play.google.com/console)
    - Create new app
    - **App name**: Wildpals
@@ -259,6 +274,7 @@ Create `eas.json`:
 ### Step 2: Build for Android
 
 1. **Build Android APK/AAB**
+
    ```bash
    eas build --platform android --profile production
    ```
@@ -270,29 +286,33 @@ Create `eas.json`:
 ### Step 3: Upload to Play Console
 
 1. **Create Release**
+
    - Go to Production → Releases
    - Click "Create new release"
    - Upload your AAB file
 
 2. **Release Notes**
+
    ```
-   Welcome to Wildpals! 
-   
+   Welcome to Wildpals!
+
    🏔️ Discover outdoor activities near you
    🤝 Connect with like-minded adventurers
    ⭐ Join climbing, cycling, hiking, and more
    📱 Built for outdoor enthusiasts
-   
+
    Get started exploring today!
    ```
 
 ### Step 4: Store Listing
 
 1. **App Details**
+
    - **Short description**: Connect with outdoor enthusiasts for climbing, cycling, hiking and more adventures
    - **Full description**: See [App Store Copy](#app-store-copy) below
 
 2. **Graphics**
+
    - **App icon**: 512x512px
    - **Feature graphic**: 1024x500px
    - **Phone screenshots**: Upload 4-8 screenshots
@@ -305,10 +325,12 @@ Create `eas.json`:
 ### Step 5: Content Rating & Policies
 
 1. **Content Rating**
+
    - Complete questionnaire
    - Likely rated Teen (13+) due to social features
 
 2. **Privacy Policy**
+
    - Provide URL to privacy policy
    - Ensure it covers data collection practices
 
@@ -319,6 +341,7 @@ Create `eas.json`:
 ### Step 6: Release
 
 1. **Review Release**
+
    - Check all sections are complete
    - Verify screenshots and descriptions
    - Test download link
@@ -377,8 +400,9 @@ outdoor, sports, climbing, cycling, running, hiking, community, adventure, fitne
 ### iOS App Store Keywords
 
 Focus on these high-impact keywords:
+
 - outdoor sports
-- climbing community  
+- climbing community
 - cycling groups
 - hiking meetup
 - running club
@@ -391,6 +415,7 @@ Focus on these high-impact keywords:
 ### Google Play Store SEO
 
 Optimize for these search terms:
+
 - outdoor activities app
 - sports community
 - climbing partners
@@ -405,26 +430,31 @@ Optimize for these search terms:
 ### Screenshot Strategy
 
 **Screenshot 1: Explore Activities**
+
 - Show the main explore screen with activities
 - Include location and activity type filters
 - Highlight the "near you" aspect
 
 **Screenshot 2: Activity Details**
+
 - Display a detailed activity view
 - Show participant info, difficulty level, equipment needed
 - Include "Join Activity" button
 
 **Screenshot 3: Community Features**
+
 - Show chat/messaging interface
 - Display user profiles and reviews
 - Highlight social aspects
 
 **Screenshot 4: Activity Creation**
+
 - Show the create activity flow
 - Demonstrate ease of organizing activities
 - Include customization options
 
 **Screenshot 5: Profile & Stats**
+
 - User profile with completed activities
 - Review system and ratings
 - Sports and skill levels
@@ -434,11 +464,13 @@ Optimize for these search terms:
 ### Analytics and Monitoring
 
 1. **Set up Analytics**
+
    ```bash
    expo install expo-analytics
    ```
 
 2. **Crash Reporting**
+
    ```bash
    expo install expo-error-recovery
    ```
@@ -451,11 +483,13 @@ Optimize for these search terms:
 ### Update Strategy
 
 1. **Version Management**
+
    - Use semantic versioning (1.0.0, 1.0.1, etc.)
    - Plan regular updates every 2-4 weeks
    - Coordinate releases across platforms
 
 2. **OTA Updates**
+
    ```bash
    eas update --branch production --message "Bug fixes and improvements"
    ```
@@ -468,11 +502,13 @@ Optimize for these search terms:
 ### Marketing Launch
 
 1. **Pre-Launch**
+
    - Create landing page
    - Build email list
    - Engage with outdoor communities on social media
 
 2. **Launch Day**
+
    - Announce on all social channels
    - Reach out to local outdoor clubs
    - Contact outdoor sports bloggers/influencers
@@ -487,6 +523,7 @@ Optimize for these search terms:
 ### Common iOS Issues
 
 **Build Failures**
+
 ```bash
 # Clear Expo cache
 expo r -c
@@ -496,11 +533,13 @@ eas build --platform ios --clear-cache
 ```
 
 **Provisioning Profile Issues**
+
 - Ensure bundle identifier matches exactly
 - Check Apple Developer account status
 - Regenerate certificates if needed
 
 **App Store Rejection**
+
 - Review Apple's App Store Review Guidelines
 - Common issues: missing privacy policy, incomplete app functionality
 - Provide detailed notes for reviewers
@@ -508,30 +547,35 @@ eas build --platform ios --clear-cache
 ### Common Android Issues
 
 **Build Failures**
+
 ```bash
 # Clear Gradle cache
 cd android && ./gradlew clean
 
-# Clear EAS cache  
+# Clear EAS cache
 eas build --platform android --clear-cache
 ```
 
 **Google Play Rejection**
+
 - Ensure all store listing sections are complete
 - Check content rating matches app functionality
 - Verify privacy policy is accessible
 
 **APK vs AAB**
+
 - Always upload AAB files (Android App Bundle)
 - AAB files are smaller and support dynamic delivery
 
 ### Getting Help
 
 1. **Expo Documentation**
+
    - [Expo Docs](https://docs.expo.dev)
    - [EAS Build Docs](https://docs.expo.dev/build/introduction/)
 
 2. **Community Support**
+
    - [Expo Discord](https://chat.expo.dev)
    - [React Native Community](https://reactnative.dev/community/overview)
 
@@ -542,8 +586,9 @@ eas build --platform android --clear-cache
 ## Estimated Timeline
 
 ### First-Time Deployment
+
 - **Setup & Configuration**: 2-3 days
-- **Asset Creation**: 3-5 days  
+- **Asset Creation**: 3-5 days
 - **Store Listing Setup**: 1-2 days
 - **iOS Review**: 1-2 days
 - **Android Review**: 1-3 days
@@ -551,6 +596,7 @@ eas build --platform android --clear-cache
 **Total**: 7-15 days for first deployment
 
 ### Subsequent Updates
+
 - **Bug Fix Updates**: 1-2 days
 - **Feature Updates**: 3-7 days
 - **Major Version Updates**: 5-10 days

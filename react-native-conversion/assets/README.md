@@ -3,13 +3,16 @@
 ## Required Assets
 
 ### App Icons
+
 Place these files in the `assets/` directory:
 
 1. **icon.png** (1024x1024px)
+
    - Main app icon for both iOS and Android
    - Use the Wildpals logo from your web version
 
 2. **adaptive-icon.png** (1024x1024px)
+
    - Android adaptive icon foreground
    - Should be the logo without background
 
@@ -17,6 +20,7 @@ Place these files in the `assets/` directory:
    - Web favicon (for Expo web builds)
 
 ### Splash Screen
+
 4. **splash.png** (1284x2778px)
    - App splash screen
    - Recommended size for iPhone 13 Pro Max
@@ -26,6 +30,7 @@ Place these files in the `assets/` directory:
 ### Screenshots for App Stores
 
 #### iOS App Store Screenshots
+
 Create these screenshots from your converted React Native app:
 
 - **6.7" Display (iPhone 14 Plus)**: 1290x2796px
@@ -35,19 +40,23 @@ Create these screenshots from your converted React Native app:
 - **11" iPad Pro**: 1668x2388px
 
 #### Google Play Screenshots
+
 - **Phone**: 1080x1920px (minimum)
 - **Tablet**: 1200x1920px (minimum)
 
 ### Image Assets Used in App
+
 These images are already referenced in the code:
 
 1. **Club Logos**
+
    - Westway Climbing Centre
    - Oxford University Cycling Club
    - Rapha Cycling Club London
    - VauxWall East Climbing Centre
 
 2. **User Profile Images**
+
    - Using Unsplash images as placeholders
    - In production, these would be user-uploaded
 
@@ -64,6 +73,7 @@ The app uses system fonts by default for cross-platform consistency:
 - **Web**: System fonts stack
 
 ### Custom Fonts (Optional)
+
 If you want to use custom fonts matching your web version:
 
 1. Add font files to `assets/fonts/`
@@ -73,12 +83,14 @@ If you want to use custom fonts matching your web version:
 ## Asset Optimization
 
 ### Image Optimization Guidelines
+
 1. Use WebP format when possible for smaller file sizes
 2. Provide multiple resolutions (@2x, @3x for iOS)
 3. Compress images without losing quality
 4. Use appropriate color spaces (sRGB)
 
 ### Performance Tips
+
 1. Lazy load large images
 2. Use placeholder images while loading
 3. Cache frequently used images

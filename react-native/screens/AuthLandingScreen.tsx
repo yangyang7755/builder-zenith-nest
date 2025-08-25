@@ -17,17 +17,17 @@ const AuthLandingScreen: React.FC = () => {
 
   const handleSkip = () => {
     // Navigate to explore screen
-    navigation.navigate('Explore' as never);
+    navigation.navigate("Explore" as never);
   };
 
   const handleSignUp = () => {
     // Navigate to sign up screen
-    navigation.navigate('SignUp' as never);
+    navigation.navigate("SignUp" as never);
   };
 
   const handleLogin = () => {
     // Navigate to login screen
-    navigation.navigate('Login' as never);
+    navigation.navigate("Login" as never);
   };
 
   const handleAppleSignIn = () => {
@@ -50,7 +50,7 @@ const AuthLandingScreen: React.FC = () => {
           <View style={styles.logoContainer}>
             <Image
               source={{
-                uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9e47fe83fd834e79a57361f8a278d9a9?format=webp&width=800"
+                uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9e47fe83fd834e79a57361f8a278d9a9?format=webp&width=800",
               }}
               style={styles.logoImage}
               resizeMode="contain"
@@ -64,10 +64,7 @@ const AuthLandingScreen: React.FC = () => {
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
           {/* Sign up with Email Button */}
-          <TouchableOpacity
-            style={styles.signUpButton}
-            onPress={handleSignUp}
-          >
+          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
             <Text style={styles.signUpButtonText}>Sign up with Email</Text>
           </TouchableOpacity>
 

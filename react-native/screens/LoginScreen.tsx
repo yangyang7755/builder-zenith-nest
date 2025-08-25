@@ -33,7 +33,7 @@ const LoginScreen: React.FC = () => {
     setLoading(true);
     try {
       const { user, error } = await signIn(email, password);
-      
+
       if (error) {
         Alert.alert("Login Failed", error.message || "Invalid credentials");
         return;
@@ -41,7 +41,7 @@ const LoginScreen: React.FC = () => {
 
       if (user) {
         // Navigate to main app
-        navigation.navigate('MainTabs' as never);
+        navigation.navigate("MainTabs" as never);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -67,7 +67,7 @@ const LoginScreen: React.FC = () => {
           <View style={styles.logoContainer}>
             <Image
               source={{
-                uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9e47fe83fd834e79a57361f8a278d9a9?format=webp&width=800"
+                uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9e47fe83fd834e79a57361f8a278d9a9?format=webp&width=800",
               }}
               style={styles.logoImage}
               resizeMode="contain"
@@ -128,7 +128,9 @@ const LoginScreen: React.FC = () => {
           {/* Forgot Password */}
           <View style={styles.forgotPasswordContainer}>
             <TouchableOpacity onPress={handleForgotPassword}>
-              <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
+              <Text style={styles.forgotPasswordText}>
+                Forgot your password?
+              </Text>
             </TouchableOpacity>
           </View>
 

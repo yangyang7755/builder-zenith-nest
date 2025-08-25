@@ -5,7 +5,7 @@ export const formatActivityDate = (dateStr: string): string => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-GB", {
     day: "numeric",
-    month: "long", 
+    month: "long",
     year: "numeric",
   });
 };
@@ -17,7 +17,10 @@ export const calculateAge = (birthday: string): number => {
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
     age--;
   }
   return age;
@@ -29,16 +32,18 @@ export const isValidEmail = (email: string): boolean => {
 };
 
 // Validate password strength
-export const validatePassword = (password: string): { isValid: boolean; errors: string[] } => {
+export const validatePassword = (
+  password: string,
+): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
-  
+
   if (password.length < 6) {
     errors.push("Password must be at least 6 characters");
   }
-  
+
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 };
 
@@ -47,7 +52,7 @@ export const calculateDistance = (
   lat1: number,
   lng1: number,
   lat2: number,
-  lng2: number
+  lng2: number,
 ): number => {
   const R = 6371; // Earth's radius in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -66,13 +71,13 @@ export const calculateDistance = (
 export const getActivityEmoji = (type: string): string => {
   const emojiMap: { [key: string]: string } = {
     climbing: "🧗",
-    cycling: "🚴", 
+    cycling: "🚴",
     running: "🏃",
     hiking: "🥾",
     skiing: "⛷���",
     surfing: "🏄",
     tennis: "🎾",
-    general: "⚡"
+    general: "⚡",
   };
   return emojiMap[type.toLowerCase()] || "⚡";
 };
@@ -97,18 +102,21 @@ export const sortActivitiesByDate = (activities: any[], ascending = true) => {
   return [...activities].sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
-    return ascending ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    return ascending
+      ? dateA.getTime() - dateB.getTime()
+      : dateB.getTime() - dateA.getTime();
   });
 };
 
 // Filter activities by type
 export const filterActivitiesByType = (activities: any[], types: string[]) => {
   if (types.length === 0) return activities;
-  return activities.filter(activity => 
-    types.some(type => 
-      activity.type === type.toLowerCase() ||
-      activity.activity_type === type.toLowerCase()
-    )
+  return activities.filter((activity) =>
+    types.some(
+      (type) =>
+        activity.type === type.toLowerCase() ||
+        activity.activity_type === type.toLowerCase(),
+    ),
   );
 };
 
@@ -129,7 +137,7 @@ export const truncateText = (text: string, maxLength: number): string => {
 // Debounce function
 export const debounce = <T extends (...args: any[]) => any>(
   func: T,
-  delay: number
+  delay: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: NodeJS.Timeout;
   return (...args: Parameters<T>) => {

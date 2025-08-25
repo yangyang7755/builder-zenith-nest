@@ -1,5 +1,5 @@
 // React Native storage adapter (localStorage → AsyncStorage)
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface Storage {
   getItem(key: string): Promise<string | null>;
@@ -15,7 +15,7 @@ class ReactNativeStorage implements Storage {
     try {
       return await AsyncStorage.getItem(key);
     } catch (error) {
-      console.error('AsyncStorage getItem error:', error);
+      console.error("AsyncStorage getItem error:", error);
       return null;
     }
   }
@@ -24,7 +24,7 @@ class ReactNativeStorage implements Storage {
     try {
       await AsyncStorage.setItem(key, value);
     } catch (error) {
-      console.error('AsyncStorage setItem error:', error);
+      console.error("AsyncStorage setItem error:", error);
       throw error;
     }
   }
@@ -33,7 +33,7 @@ class ReactNativeStorage implements Storage {
     try {
       await AsyncStorage.removeItem(key);
     } catch (error) {
-      console.error('AsyncStorage removeItem error:', error);
+      console.error("AsyncStorage removeItem error:", error);
       throw error;
     }
   }
@@ -42,7 +42,7 @@ class ReactNativeStorage implements Storage {
     try {
       await AsyncStorage.clear();
     } catch (error) {
-      console.error('AsyncStorage clear error:', error);
+      console.error("AsyncStorage clear error:", error);
       throw error;
     }
   }
@@ -51,7 +51,7 @@ class ReactNativeStorage implements Storage {
     try {
       return await AsyncStorage.getAllKeys();
     } catch (error) {
-      console.error('AsyncStorage getAllKeys error:', error);
+      console.error("AsyncStorage getAllKeys error:", error);
       return [];
     }
   }
@@ -63,7 +63,7 @@ class WebStorage implements Storage {
     try {
       return localStorage.getItem(key);
     } catch (error) {
-      console.error('localStorage getItem error:', error);
+      console.error("localStorage getItem error:", error);
       return null;
     }
   }
@@ -72,7 +72,7 @@ class WebStorage implements Storage {
     try {
       localStorage.setItem(key, value);
     } catch (error) {
-      console.error('localStorage setItem error:', error);
+      console.error("localStorage setItem error:", error);
       throw error;
     }
   }
@@ -81,7 +81,7 @@ class WebStorage implements Storage {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.error('localStorage removeItem error:', error);
+      console.error("localStorage removeItem error:", error);
       throw error;
     }
   }
@@ -90,7 +90,7 @@ class WebStorage implements Storage {
     try {
       localStorage.clear();
     } catch (error) {
-      console.error('localStorage clear error:', error);
+      console.error("localStorage clear error:", error);
       throw error;
     }
   }
@@ -99,7 +99,7 @@ class WebStorage implements Storage {
     try {
       return Object.keys(localStorage);
     } catch (error) {
-      console.error('localStorage getAllKeys error:', error);
+      console.error("localStorage getAllKeys error:", error);
       return [];
     }
   }
@@ -134,7 +134,11 @@ export const storageHelpers = {
   },
 
   // Store with expiration
-  async setWithExpiry<T>(key: string, data: T, expiryInMs: number): Promise<void> {
+  async setWithExpiry<T>(
+    key: string,
+    data: T,
+    expiryInMs: number,
+  ): Promise<void> {
     try {
       const expiryTime = Date.now() + expiryInMs;
       const dataWithExpiry = {
@@ -151,7 +155,10 @@ export const storageHelpers = {
   // Get with expiration check
   async getWithExpiry<T>(key: string): Promise<T | null> {
     try {
-      const dataWithExpiry = await storageHelpers.getJSON<{data: T; expiry: number}>(key);
+      const dataWithExpiry = await storageHelpers.getJSON<{
+        data: T;
+        expiry: number;
+      }>(key);
       if (!dataWithExpiry) return null;
 
       if (Date.now() > dataWithExpiry.expiry) {
@@ -162,7 +169,10 @@ export const storageHelpers = {
 
       return dataWithExpiry.data;
     } catch (error) {
-      console.error(`Failed to retrieve data with expiry for key ${key}:`, error);
+      console.error(
+        `Failed to retrieve data with expiry for key ${key}:`,
+        error,
+      );
       return null;
     }
   },
@@ -171,10 +181,10 @@ export const storageHelpers = {
   async multiSet(keyValuePairs: [string, string][]): Promise<void> {
     try {
       await Promise.all(
-        keyValuePairs.map(([key, value]) => storage.setItem(key, value))
+        keyValuePairs.map(([key, value]) => storage.setItem(key, value)),
       );
     } catch (error) {
-      console.error('Failed to perform multiSet:', error);
+      console.error("Failed to perform multiSet:", error);
       throw error;
     }
   },
@@ -185,20 +195,20 @@ export const storageHelpers = {
         keys.map(async (key) => {
           const value = await storage.getItem(key);
           return [key, value] as [string, string | null];
-        })
+        }),
       );
       return results;
     } catch (error) {
-      console.error('Failed to perform multiGet:', error);
-      return keys.map(key => [key, null]);
+      console.error("Failed to perform multiGet:", error);
+      return keys.map((key) => [key, null]);
     }
   },
 
   async multiRemove(keys: string[]): Promise<void> {
     try {
-      await Promise.all(keys.map(key => storage.removeItem(key)));
+      await Promise.all(keys.map((key) => storage.removeItem(key)));
     } catch (error) {
-      console.error('Failed to perform multiRemove:', error);
+      console.error("Failed to perform multiRemove:", error);
       throw error;
     }
   },
@@ -208,17 +218,17 @@ export const storageHelpers = {
     try {
       const keys = await storage.getAllKeys();
       let totalSize = 0;
-      
+
       for (const key of keys) {
         const value = await storage.getItem(key);
         if (value) {
           totalSize += key.length + value.length;
         }
       }
-      
+
       return totalSize;
     } catch (error) {
-      console.error('Failed to calculate storage size:', error);
+      console.error("Failed to calculate storage size:", error);
       return 0;
     }
   },
@@ -228,7 +238,7 @@ export const storageHelpers = {
     try {
       const keys = await storage.getAllKeys();
       let clearedCount = 0;
-      
+
       for (const key of keys) {
         try {
           const value = await storage.getItem(key);
@@ -243,10 +253,10 @@ export const storageHelpers = {
           // Not a JSON value with expiry, skip
         }
       }
-      
+
       return clearedCount;
     } catch (error) {
-      console.error('Failed to clear expired items:', error);
+      console.error("Failed to clear expired items:", error);
       return 0;
     }
   },

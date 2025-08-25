@@ -1,8 +1,8 @@
 // React Native StyleSheet system matching web design exactly
-import { StyleSheet, Dimensions } from 'react-native';
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS } from '../constants';
+import { StyleSheet, Dimensions } from "react-native";
+import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS } from "../constants";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 // Common styles matching web CSS classes
 export const globalStyles = StyleSheet.create({
@@ -17,15 +17,15 @@ export const globalStyles = StyleSheet.create({
 
   // Flex utilities (matching web Tailwind)
   flex1: { flex: 1 },
-  flexRow: { flexDirection: 'row' },
-  flexColumn: { flexDirection: 'column' },
-  justifyCenter: { justifyContent: 'center' },
-  justifyBetween: { justifyContent: 'space-between' },
-  justifyAround: { justifyContent: 'space-around' },
-  justifyEvenly: { justifyContent: 'space-evenly' },
-  alignCenter: { alignItems: 'center' },
-  alignStart: { alignItems: 'flex-start' },
-  alignEnd: { alignItems: 'flex-end' },
+  flexRow: { flexDirection: "row" },
+  flexColumn: { flexDirection: "column" },
+  justifyCenter: { justifyContent: "center" },
+  justifyBetween: { justifyContent: "space-between" },
+  justifyAround: { justifyContent: "space-around" },
+  justifyEvenly: { justifyContent: "space-evenly" },
+  alignCenter: { alignItems: "center" },
+  alignStart: { alignItems: "flex-start" },
+  alignEnd: { alignItems: "flex-end" },
 
   // Text styles (matching web font-cabin, etc.)
   textBase: {
@@ -173,12 +173,12 @@ export const globalStyles = StyleSheet.create({
   },
 
   // Position utilities
-  absolute: { position: 'absolute' },
-  relative: { position: 'relative' },
+  absolute: { position: "absolute" },
+  relative: { position: "relative" },
 
   // Width/Height utilities
-  wFull: { width: '100%' },
-  hFull: { height: '100%' },
+  wFull: { width: "100%" },
+  hFull: { height: "100%" },
   w12: { width: 48 },
   h12: { height: 48 },
   w16: { width: 64 },
@@ -187,12 +187,12 @@ export const globalStyles = StyleSheet.create({
   h20: { height: 80 },
 
   // Text alignment
-  textCenter: { textAlign: 'center' },
-  textLeft: { textAlign: 'left' },
-  textRight: { textAlign: 'right' },
+  textCenter: { textAlign: "center" },
+  textLeft: { textAlign: "left" },
+  textRight: { textAlign: "right" },
 
   // Overflow
-  hidden: { overflow: 'hidden' },
+  hidden: { overflow: "hidden" },
 });
 
 // Component-specific styles matching web components exactly
@@ -202,8 +202,8 @@ export const componentStyles = StyleSheet.create({
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.lg,
     borderRadius: BORDER_RADIUS.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonPrimary: {
     backgroundColor: COLORS.primary,

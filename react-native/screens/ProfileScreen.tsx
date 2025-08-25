@@ -24,7 +24,12 @@ interface TabButtonProps {
   icon?: string;
 }
 
-const TabButton: React.FC<TabButtonProps> = ({ title, isActive, onPress, icon }) => (
+const TabButton: React.FC<TabButtonProps> = ({
+  title,
+  isActive,
+  onPress,
+  icon,
+}) => (
   <TouchableOpacity
     style={[styles.tabButton, isActive && styles.activeTab]}
     onPress={onPress}
@@ -39,7 +44,11 @@ const TabButton: React.FC<TabButtonProps> = ({ title, isActive, onPress, icon })
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
   const { user, profile } = useAuth();
-  const { followStats, isLoading: followLoading, refreshFollowData } = useFollow();
+  const {
+    followStats,
+    isLoading: followLoading,
+    refreshFollowData,
+  } = useFollow();
   const {
     completedActivities,
     organizedActivities,
@@ -53,9 +62,15 @@ const ProfileScreen: React.FC = () => {
 
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
-  const [activeTab, setActiveTab] = useState<"sports" | "activities" | "reviews">("sports");
-  const [activeSportTab, setActiveSportTab] = useState<"climbing" | "cycling" | "running">("climbing");
-  const [activeActivitiesTab, setActiveActivitiesTab] = useState<"completed" | "organized">("completed");
+  const [activeTab, setActiveTab] = useState<
+    "sports" | "activities" | "reviews"
+  >("sports");
+  const [activeSportTab, setActiveSportTab] = useState<
+    "climbing" | "cycling" | "running"
+  >("climbing");
+  const [activeActivitiesTab, setActiveActivitiesTab] = useState<
+    "completed" | "organized"
+  >("completed");
   const [refreshing, setRefreshing] = useState(false);
 
   // Calculate age from birthday if available
@@ -65,7 +80,10 @@ const ProfileScreen: React.FC = () => {
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
     return age;
@@ -74,8 +92,13 @@ const ProfileScreen: React.FC = () => {
   // Use actual profile data when available, fallback to demo data matching web exactly
   const profileData = {
     full_name: profile?.full_name || user?.full_name || "KOKO",
-    profile_image: profile?.profile_image || user?.profile_image || "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=120&h=120&fit=crop&crop=face",
-    bio: profile?.bio || "Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!",
+    profile_image:
+      profile?.profile_image ||
+      user?.profile_image ||
+      "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=120&h=120&fit=crop&crop=face",
+    bio:
+      profile?.bio ||
+      "Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!",
     age: profile?.birthday ? calculateAge(profile.birthday) : 15,
     gender: profile?.gender || "Female",
     nationality: profile?.country || "United Kingdom",
@@ -91,7 +114,7 @@ const ProfileScreen: React.FC = () => {
     // Sport-specific data
     climbingLevel: profile?.climbingLevel || "Advanced",
     climbingExperience: profile?.climbingExperience || "3+ years",
-    cyclingLevel: profile?.cyclingLevel || "Intermediate", 
+    cyclingLevel: profile?.cyclingLevel || "Intermediate",
     cyclingExperience: profile?.cyclingExperience || "2+ years",
     runningLevel: profile?.runningLevel || "Beginner",
     runningExperience: profile?.runningExperience || "1+ year",
@@ -99,10 +122,7 @@ const ProfileScreen: React.FC = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await Promise.all([
-      refreshFollowData(),
-      refetchActivities(),
-    ]);
+    await Promise.all([refreshFollowData(), refetchActivities()]);
     setRefreshing(false);
   };
 
@@ -129,7 +149,9 @@ const ProfileScreen: React.FC = () => {
         <Text style={styles.backButton}>←</Text>
       </TouchableOpacity>
       <Text style={styles.headerTitle}>Profile</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Settings' as never)}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Settings" as never)}
+      >
         <Text style={styles.settingsIcon}>⚙️</Text>
       </TouchableOpacity>
     </View>
@@ -153,22 +175,22 @@ const ProfileScreen: React.FC = () => {
 
       {/* Stats Row */}
       <View style={styles.statsRow}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.statItem}
           onPress={() => setShowFollowers(true)}
         >
           <Text style={styles.statNumber}>{profileData.followers}</Text>
           <Text style={styles.statLabel}>Followers</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.statItem}
           onPress={() => setShowFollowing(true)}
         >
           <Text style={styles.statNumber}>{profileData.following}</Text>
           <Text style={styles.statLabel}>Following</Text>
         </TouchableOpacity>
-        
+
         <View style={styles.statItem}>
           <View style={styles.ratingContainer}>
             <Text style={styles.statNumber}>{profileData.rating}</Text>
@@ -211,12 +233,14 @@ const ProfileScreen: React.FC = () => {
             <Text style={styles.detailValue}>{profileData.profession}</Text>
           </View>
         </View>
-        
+
         <View style={styles.languagesSection}>
           <Text style={styles.detailLabel}>Languages</Text>
           <View style={styles.languagesContainer}>
             {profileData.languages.map((lang, index) => (
-              <Text key={index} style={styles.languageFlag}>{lang}</Text>
+              <Text key={index} style={styles.languageFlag}>
+                {lang}
+              </Text>
             ))}
           </View>
         </View>
@@ -265,11 +289,15 @@ const ProfileScreen: React.FC = () => {
             <View style={styles.skillDetails}>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Level</Text>
-                <Text style={styles.skillValue}>{profileData.climbingLevel}</Text>
+                <Text style={styles.skillValue}>
+                  {profileData.climbingLevel}
+                </Text>
               </View>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Experience</Text>
-                <Text style={styles.skillValue}>{profileData.climbingExperience}</Text>
+                <Text style={styles.skillValue}>
+                  {profileData.climbingExperience}
+                </Text>
               </View>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Disciplines</Text>
@@ -291,11 +319,15 @@ const ProfileScreen: React.FC = () => {
             <View style={styles.skillDetails}>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Level</Text>
-                <Text style={styles.skillValue}>{profileData.cyclingLevel}</Text>
+                <Text style={styles.skillValue}>
+                  {profileData.cyclingLevel}
+                </Text>
               </View>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Experience</Text>
-                <Text style={styles.skillValue}>{profileData.cyclingExperience}</Text>
+                <Text style={styles.skillValue}>
+                  {profileData.cyclingExperience}
+                </Text>
               </View>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Disciplines</Text>
@@ -317,11 +349,15 @@ const ProfileScreen: React.FC = () => {
             <View style={styles.skillDetails}>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Level</Text>
-                <Text style={styles.skillValue}>{profileData.runningLevel}</Text>
+                <Text style={styles.skillValue}>
+                  {profileData.runningLevel}
+                </Text>
               </View>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Experience</Text>
-                <Text style={styles.skillValue}>{profileData.runningExperience}</Text>
+                <Text style={styles.skillValue}>
+                  {profileData.runningExperience}
+                </Text>
               </View>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Distances</Text>
@@ -405,14 +441,18 @@ const ProfileScreen: React.FC = () => {
         <Text style={styles.reviewsTitle}>Activity Reviews</Text>
         <View style={styles.reviewsStats}>
           <Text style={styles.reviewsRating}>⭐ {profileData.rating}</Text>
-          <Text style={styles.reviewsCount}>({profileData.reviews} reviews)</Text>
+          <Text style={styles.reviewsCount}>
+            ({profileData.reviews} reviews)
+          </Text>
         </View>
       </View>
 
       <View style={styles.reviewCard}>
         <View style={styles.reviewHeader}>
           <Image
-            source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" }}
+            source={{
+              uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+            }}
             style={styles.reviewerImage}
           />
           <View style={styles.reviewerInfo}>
@@ -422,8 +462,9 @@ const ProfileScreen: React.FC = () => {
           <Text style={styles.reviewRating}>⭐⭐⭐⭐⭐</Text>
         </View>
         <Text style={styles.reviewText}>
-          Great climbing partner! Very experienced and patient. KOKO helped me improve my technique 
-          and made the session really enjoyable. Highly recommend!
+          Great climbing partner! Very experienced and patient. KOKO helped me
+          improve my technique and made the session really enjoyable. Highly
+          recommend!
         </Text>
         <Text style={styles.reviewActivity}>Peak District Climbing Trip</Text>
       </View>
@@ -436,14 +477,18 @@ const ProfileScreen: React.FC = () => {
       <View style={styles.clubsGrid}>
         <View style={styles.clubCard}>
           <Image
-            source={{ uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800" }}
+            source={{
+              uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800",
+            }}
             style={styles.clubImage}
           />
           <Text style={styles.clubName}>Westway Climbing</Text>
         </View>
         <View style={styles.clubCard}>
           <Image
-            source={{ uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800" }}
+            source={{
+              uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800",
+            }}
             style={styles.clubImage}
           />
           <Text style={styles.clubName}>Oxford Cycling</Text>
@@ -485,7 +530,7 @@ const ProfileScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       {renderStatusBar()}
-      
+
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -499,7 +544,7 @@ const ProfileScreen: React.FC = () => {
         {renderTabContent()}
         {renderClubsSection()}
         {renderLocationSection()}
-        
+
         <View style={{ height: 100 }} />
       </ScrollView>
 

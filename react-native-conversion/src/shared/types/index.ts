@@ -21,7 +21,15 @@ export interface User {
 export interface Activity {
   id: string;
   title: string;
-  type: "cycling" | "climbing" | "running" | "hiking" | "skiing" | "surfing" | "tennis" | "general";
+  type:
+    | "cycling"
+    | "climbing"
+    | "running"
+    | "hiking"
+    | "skiing"
+    | "surfing"
+    | "tennis"
+    | "general";
   date: string;
   time?: string;
   location: string;
@@ -146,7 +154,7 @@ export interface SignUpData {
 
 export interface CreateActivityData {
   title: string;
-  type: Activity['type'];
+  type: Activity["type"];
   date: string;
   time: string;
   location: string;
@@ -213,9 +221,17 @@ export interface FollowState {
 }
 
 // Utility types
-export type ActivityType = Activity['type'];
-export type DifficultyLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
-export type GenderPreference = 'All genders' | 'Female only' | 'Male only' | 'Mixed';
+export type ActivityType = Activity["type"];
+export type DifficultyLevel =
+  | "Beginner"
+  | "Intermediate"
+  | "Advanced"
+  | "Expert";
+export type GenderPreference =
+  | "All genders"
+  | "Female only"
+  | "Male only"
+  | "Mixed";
 
 export default {
   User,

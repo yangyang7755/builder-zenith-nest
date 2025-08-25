@@ -23,7 +23,12 @@ interface TabButtonProps {
   count?: number;
 }
 
-const TabButton: React.FC<TabButtonProps> = ({ title, isActive, onPress, count }) => (
+const TabButton: React.FC<TabButtonProps> = ({
+  title,
+  isActive,
+  onPress,
+  count,
+}) => (
   <TouchableOpacity
     style={[styles.tabButton, isActive && styles.activeTab]}
     onPress={onPress}
@@ -48,9 +53,11 @@ const ActivitiesScreen: React.FC = () => {
 
   const [selectedTab, setSelectedTab] = useState("Saved");
   const [refreshing, setRefreshing] = useState(false);
-  const [pastActivitiesNeedingReview, setPastActivitiesNeedingReview] = useState<Activity[]>([]);
+  const [pastActivitiesNeedingReview, setPastActivitiesNeedingReview] =
+    useState<Activity[]>([]);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [selectedActivityForReview, setSelectedActivityForReview] = useState<Activity | null>(null);
+  const [selectedActivityForReview, setSelectedActivityForReview] =
+    useState<Activity | null>(null);
 
   // Mock saved activities for now - would integrate with SavedActivitiesContext
   const [savedActivities, setSavedActivities] = useState<Activity[]>([]);
@@ -97,7 +104,7 @@ const ActivitiesScreen: React.FC = () => {
       const activityDate = new Date(activity.date);
       return activityDate < now;
     });
-    
+
     setPastActivitiesNeedingReview(pastActivities.slice(0, 2)); // Mock some activities needing review
   };
 
@@ -141,7 +148,9 @@ const ActivitiesScreen: React.FC = () => {
   const renderHeader = () => (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>Activities</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Settings' as never)}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Settings" as never)}
+      >
         <Text style={styles.settingsIcon}>⚙️</Text>
       </TouchableOpacity>
     </View>
@@ -170,52 +179,61 @@ const ActivitiesScreen: React.FC = () => {
     </View>
   );
 
-  const renderActivityCard = (activity: Activity, showUnsaveButton = false, showReviewButton = false) => (
+  const renderActivityCard = (
+    activity: Activity,
+    showUnsaveButton = false,
+    showReviewButton = false,
+  ) => (
     <View style={styles.activityCard}>
       {/* Activity Header */}
       <View style={styles.activityHeader}>
         <View style={styles.activityInfo}>
           <Text style={styles.activityTitle}>{activity.title}</Text>
           <View style={styles.activityMeta}>
-            <Text style={styles.metaItem}>📅 {formatActivityDate(activity.date)}</Text>
+            <Text style={styles.metaItem}>
+              📅 {formatActivityDate(activity.date)}
+            </Text>
             <Text style={styles.metaItem}>📍 {activity.location}</Text>
             <Text style={styles.metaItem}>👥 {activity.organizer}</Text>
           </View>
         </View>
         <Image
           source={{
-            uri: activity.imageSrc || "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=60&h=60&fit=crop&crop=face"
+            uri:
+              activity.imageSrc ||
+              "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=60&h=60&fit=crop&crop=face",
           }}
           style={styles.activityImage}
         />
       </View>
 
       {/* Activity Metrics */}
-      {activity.type === "cycling" && (activity.distance || activity.pace || activity.elevation) && (
-        <View style={styles.metricsContainer}>
-          {activity.distance && (
-            <View style={styles.metricItem}>
-              <Text style={styles.metricIcon}>🚴</Text>
-              <Text style={styles.metricValue}>{activity.distance}</Text>
-              <Text style={styles.metricLabel}>Distance</Text>
-            </View>
-          )}
-          {activity.pace && (
-            <View style={styles.metricItem}>
-              <Text style={styles.metricIcon}>⚡</Text>
-              <Text style={styles.metricValue}>{activity.pace}</Text>
-              <Text style={styles.metricLabel}>Pace</Text>
-            </View>
-          )}
-          {activity.elevation && (
-            <View style={styles.metricItem}>
-              <Text style={styles.metricIcon}>⛰️</Text>
-              <Text style={styles.metricValue}>{activity.elevation}</Text>
-              <Text style={styles.metricLabel}>Elevation</Text>
-            </View>
-          )}
-        </View>
-      )}
+      {activity.type === "cycling" &&
+        (activity.distance || activity.pace || activity.elevation) && (
+          <View style={styles.metricsContainer}>
+            {activity.distance && (
+              <View style={styles.metricItem}>
+                <Text style={styles.metricIcon}>🚴</Text>
+                <Text style={styles.metricValue}>{activity.distance}</Text>
+                <Text style={styles.metricLabel}>Distance</Text>
+              </View>
+            )}
+            {activity.pace && (
+              <View style={styles.metricItem}>
+                <Text style={styles.metricIcon}>⚡</Text>
+                <Text style={styles.metricValue}>{activity.pace}</Text>
+                <Text style={styles.metricLabel}>Pace</Text>
+              </View>
+            )}
+            {activity.elevation && (
+              <View style={styles.metricItem}>
+                <Text style={styles.metricIcon}>⛰️</Text>
+                <Text style={styles.metricValue}>{activity.elevation}</Text>
+                <Text style={styles.metricLabel}>Elevation</Text>
+              </View>
+            )}
+          </View>
+        )}
 
       {/* Action Buttons */}
       <View style={styles.actionButtons}>
@@ -243,7 +261,9 @@ const ActivitiesScreen: React.FC = () => {
                     style: "destructive",
                     onPress: () => {
                       // Remove from saved activities
-                      setSavedActivities(prev => prev.filter(a => a.id !== activity.id));
+                      setSavedActivities((prev) =>
+                        prev.filter((a) => a.id !== activity.id),
+                      );
                     },
                   },
                 ],
@@ -307,7 +327,7 @@ const ActivitiesScreen: React.FC = () => {
             </Text>
             <TouchableOpacity
               style={styles.exploreButton}
-              onPress={() => navigation.navigate('Explore' as never)}
+              onPress={() => navigation.navigate("Explore" as never)}
             >
               <Text style={styles.exploreButtonText}>Explore Activities</Text>
             </TouchableOpacity>
@@ -320,16 +340,18 @@ const ActivitiesScreen: React.FC = () => {
           <Text style={styles.sectionTitle}>Upcoming Activities</Text>
           {upcomingSavedActivities.length > 0 ? (
             upcomingSavedActivities.map((activity) =>
-              renderActivityCard(activity, true)
+              renderActivityCard(activity, true),
             )
           ) : (
-            <Text style={styles.emptySubsection}>No upcoming saved activities</Text>
+            <Text style={styles.emptySubsection}>
+              No upcoming saved activities
+            </Text>
           )}
 
           <Text style={styles.sectionTitle}>Past Activities</Text>
           {pastSavedActivities.length > 0 ? (
             pastSavedActivities.map((activity) =>
-              renderActivityCard(activity, true)
+              renderActivityCard(activity, true),
             )
           ) : (
             <Text style={styles.emptySubsection}>No past saved activities</Text>
@@ -342,7 +364,7 @@ const ActivitiesScreen: React.FC = () => {
       return (
         <View style={styles.contentContainer}>
           {renderReviewPrompts()}
-          
+
           {allJoinedActivities.length === 0 ? (
             <View style={styles.emptyState}>
               <Text style={styles.emptyIcon}>👥</Text>
@@ -352,7 +374,7 @@ const ActivitiesScreen: React.FC = () => {
               </Text>
               <TouchableOpacity
                 style={styles.exploreButton}
-                onPress={() => navigation.navigate('Explore' as never)}
+                onPress={() => navigation.navigate("Explore" as never)}
               >
                 <Text style={styles.exploreButtonText}>Find Activities</Text>
               </TouchableOpacity>
@@ -360,7 +382,9 @@ const ActivitiesScreen: React.FC = () => {
           ) : (
             allJoinedActivities.map((activity) => {
               const isPast = new Date(activity.date) < now;
-              const needsReview = isPast && pastActivitiesNeedingReview.some(a => a.id === activity.id);
+              const needsReview =
+                isPast &&
+                pastActivitiesNeedingReview.some((a) => a.id === activity.id);
               return renderActivityCard(activity, false, needsReview);
             })
           )}
@@ -389,9 +413,7 @@ const ActivitiesScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
           ) : (
-            organizedActivities.map((activity) =>
-              renderActivityCard(activity)
-            )
+            organizedActivities.map((activity) => renderActivityCard(activity))
           )}
         </View>
       );
@@ -403,7 +425,7 @@ const ActivitiesScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       {renderStatusBar()}
-      
+
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -414,7 +436,7 @@ const ActivitiesScreen: React.FC = () => {
         {renderHeader()}
         {renderTabs()}
         {renderContent()}
-        
+
         <View style={{ height: 100 }} />
       </ScrollView>
 
@@ -433,7 +455,7 @@ const ActivitiesScreen: React.FC = () => {
                 <Text style={styles.modalClose}>✕</Text>
               </TouchableOpacity>
             </View>
-            
+
             {selectedActivityForReview && (
               <View style={styles.modalContent}>
                 <Text style={styles.reviewActivityTitle}>
@@ -442,9 +464,9 @@ const ActivitiesScreen: React.FC = () => {
                 <Text style={styles.reviewActivityDate}>
                   📅 {formatActivityDate(selectedActivityForReview.date)}
                 </Text>
-                
+
                 <Text style={styles.reviewLabel}>How was your experience?</Text>
-                
+
                 <View style={styles.starRating}>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <TouchableOpacity key={star} style={styles.starButton}>
@@ -452,14 +474,17 @@ const ActivitiesScreen: React.FC = () => {
                     </TouchableOpacity>
                   ))}
                 </View>
-                
+
                 <TouchableOpacity
                   style={styles.submitReviewButton}
                   onPress={() => {
                     // Submit review
-                    Alert.alert("Review Submitted", "Thank you for your feedback!");
-                    setPastActivitiesNeedingReview(prev => 
-                      prev.filter(a => a.id !== selectedActivityForReview.id)
+                    Alert.alert(
+                      "Review Submitted",
+                      "Thank you for your feedback!",
+                    );
+                    setPastActivitiesNeedingReview((prev) =>
+                      prev.filter((a) => a.id !== selectedActivityForReview.id),
                     );
                     setShowReviewModal(false);
                   }}

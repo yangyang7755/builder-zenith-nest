@@ -1,12 +1,14 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet } from "react-native";
+import { Link } from "expo-router";
 
 export default function SignUp() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
-      <Text style={styles.subtitle}>Signup screen will be converted from web version</Text>
-      
+      <Text style={styles.subtitle}>
+        Signup screen will be converted from web version
+      </Text>
+
       <Link href="/(tabs)" style={styles.button}>
         <Text style={styles.buttonText}>Continue to App</Text>
       </Link>
@@ -17,32 +19,32 @@ export default function SignUp() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 40,
-    textAlign: 'center',
+    textAlign: "center",
   },
   button: {
-    backgroundColor: '#1F381F',
+    backgroundColor: "#1F381F",
     padding: 15,
     borderRadius: 8,
-    width: '100%',
-    textAlign: 'center',
+    width: "100%",
+    textAlign: "center",
   },
   buttonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     fontSize: 16,
   },
 });

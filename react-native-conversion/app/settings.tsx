@@ -1,8 +1,14 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
-import { COLORS, TYPOGRAPHY, SPACING } from '../src/shared/constants';
-import { globalStyles } from '../src/shared/styles';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { router } from "expo-router";
+import { COLORS, TYPOGRAPHY, SPACING } from "../src/shared/constants";
+import { globalStyles } from "../src/shared/styles";
 
 export default function Settings() {
   // Status Bar Component (matching web)
@@ -24,12 +30,36 @@ export default function Settings() {
   );
 
   const settingsItems = [
-    { id: 'profile', title: 'Edit Profile', subtitle: 'Update your personal information' },
-    { id: 'notifications', title: 'Notifications', subtitle: 'Manage your notification preferences' },
-    { id: 'privacy', title: 'Privacy & Safety', subtitle: 'Control your privacy settings' },
-    { id: 'account', title: 'Account Settings', subtitle: 'Password, email, and account options' },
-    { id: 'support', title: 'Help & Support', subtitle: 'Get help and contact support' },
-    { id: 'about', title: 'About', subtitle: 'App version and legal information' },
+    {
+      id: "profile",
+      title: "Edit Profile",
+      subtitle: "Update your personal information",
+    },
+    {
+      id: "notifications",
+      title: "Notifications",
+      subtitle: "Manage your notification preferences",
+    },
+    {
+      id: "privacy",
+      title: "Privacy & Safety",
+      subtitle: "Control your privacy settings",
+    },
+    {
+      id: "account",
+      title: "Account Settings",
+      subtitle: "Password, email, and account options",
+    },
+    {
+      id: "support",
+      title: "Help & Support",
+      subtitle: "Get help and contact support",
+    },
+    {
+      id: "about",
+      title: "About",
+      subtitle: "App version and legal information",
+    },
   ];
 
   const SettingsItem = ({ item }: { item: any }) => (
@@ -45,8 +75,11 @@ export default function Settings() {
   return (
     <View style={[globalStyles.container]}>
       <StatusBar />
-      
-      <ScrollView style={globalStyles.flex1} showsVerticalScrollIndicator={false}>
+
+      <ScrollView
+        style={globalStyles.flex1}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
             <Text style={styles.backButton}>←</Text>

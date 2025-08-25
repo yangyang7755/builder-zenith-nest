@@ -124,7 +124,10 @@ function ExploreStackNavigator() {
       }}
     >
       <ExploreStack.Screen name="ExploreMain" component={ExploreScreen} />
-      <ExploreStack.Screen name="ActivityDetails" component={ActivityDetailsScreen} />
+      <ExploreStack.Screen
+        name="ActivityDetails"
+        component={ActivityDetailsScreen}
+      />
     </ExploreStack.Navigator>
   );
 }
@@ -137,8 +140,14 @@ function ActivitiesStackNavigator() {
         headerShown: false,
       }}
     >
-      <ActivitiesStack.Screen name="ActivitiesMain" component={ActivitiesScreen} />
-      <ActivitiesStack.Screen name="ActivityDetails" component={ActivityDetailsScreen} />
+      <ActivitiesStack.Screen
+        name="ActivitiesMain"
+        component={ActivitiesScreen}
+      />
+      <ActivitiesStack.Screen
+        name="ActivityDetails"
+        component={ActivityDetailsScreen}
+      />
     </ActivitiesStack.Navigator>
   );
 }
@@ -173,13 +182,13 @@ function MainTabNavigator() {
 
           return (
             <View style={styles.tabIconContainer}>
-              <Text 
+              <Text
                 style={[
-                  styles.tabIcon, 
-                  { 
+                  styles.tabIcon,
+                  {
                     fontSize: size,
                     opacity: focused ? 1 : 0.6,
-                  }
+                  },
                 ]}
               >
                 {iconText}
@@ -194,36 +203,36 @@ function MainTabNavigator() {
         tabBarLabelStyle: styles.tabLabel,
       })}
     >
-      <MainTab.Screen 
-        name="Explore" 
+      <MainTab.Screen
+        name="Explore"
         component={ExploreStackNavigator}
         options={{
           tabBarLabel: "Explore",
         }}
       />
-      <MainTab.Screen 
-        name="Activities" 
+      <MainTab.Screen
+        name="Activities"
         component={ActivitiesStackNavigator}
         options={{
           tabBarLabel: "Activities",
         }}
       />
-      <MainTab.Screen 
-        name="Create" 
+      <MainTab.Screen
+        name="Create"
         component={CreateScreen}
         options={{
           tabBarLabel: "Create",
         }}
       />
-      <MainTab.Screen 
-        name="Chat" 
+      <MainTab.Screen
+        name="Chat"
         component={ChatScreen}
         options={{
           tabBarLabel: "Chat",
         }}
       />
-      <MainTab.Screen 
-        name="Profile" 
+      <MainTab.Screen
+        name="Profile"
         component={ProfileStackNavigator}
         options={{
           tabBarLabel: "Profile",

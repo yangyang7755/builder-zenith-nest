@@ -1,8 +1,14 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
-import { COLORS, TYPOGRAPHY, SPACING } from '../../src/shared/constants';
-import { globalStyles } from '../../src/shared/styles';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { useLocalSearchParams, router } from "expo-router";
+import { COLORS, TYPOGRAPHY, SPACING } from "../../src/shared/constants";
+import { globalStyles } from "../../src/shared/styles";
 
 export default function ActivityDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -28,8 +34,11 @@ export default function ActivityDetails() {
   return (
     <View style={[globalStyles.container]}>
       <StatusBar />
-      
-      <ScrollView style={globalStyles.flex1} showsVerticalScrollIndicator={false}>
+
+      <ScrollView
+        style={globalStyles.flex1}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
             <Text style={styles.backButton}>←</Text>
@@ -42,8 +51,9 @@ export default function ActivityDetails() {
           <Text style={styles.title}>Activity Details</Text>
           <Text style={styles.subtitle}>Activity ID: {id}</Text>
           <Text style={styles.description}>
-            This screen will show detailed information about the selected activity, 
-            including organizer info, participants, location details, and join options.
+            This screen will show detailed information about the selected
+            activity, including organizer info, participants, location details,
+            and join options.
           </Text>
         </View>
       </ScrollView>

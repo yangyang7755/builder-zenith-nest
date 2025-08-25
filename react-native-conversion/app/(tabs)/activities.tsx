@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   RefreshControl,
-} from 'react-native';
+} from "react-native";
 
 // Import shared constants
-import { COLORS, TYPOGRAPHY, SPACING } from '../../src/shared/constants';
+import { COLORS, TYPOGRAPHY, SPACING } from "../../src/shared/constants";
 
 export default function Activities() {
   const [refreshing, setRefreshing] = useState(false);
@@ -17,7 +17,7 @@ export default function Activities() {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setRefreshing(false);
   };
 
@@ -50,7 +50,15 @@ export default function Activities() {
   );
 
   // Tab Component
-  const TabButton = ({ title, isActive, onPress }: { title: string; isActive: boolean; onPress: () => void }) => (
+  const TabButton = ({
+    title,
+    isActive,
+    onPress,
+  }: {
+    title: string;
+    isActive: boolean;
+    onPress: () => void;
+  }) => (
     <TouchableOpacity
       style={[styles.tabButton, isActive && styles.activeTab]}
       onPress={onPress}
@@ -99,7 +107,7 @@ export default function Activities() {
   return (
     <View style={styles.container}>
       <StatusBar />
-      
+
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -110,7 +118,7 @@ export default function Activities() {
         <Header />
         <Tabs />
         <EmptyState />
-        
+
         <View style={{ height: 100 }} />
       </ScrollView>
     </View>

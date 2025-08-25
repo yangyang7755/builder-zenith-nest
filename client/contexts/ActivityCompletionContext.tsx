@@ -327,7 +327,7 @@ export function ActivityCompletionProvider({
         description: "You can now leave a review for this activity",
       });
     } catch (error) {
-      console.error('Error marking activity as completed:', error);
+      console.error("Error marking activity as completed:", error);
       toast({
         title: "Error",
         description: "Failed to mark activity as completed",
@@ -406,7 +406,7 @@ export function ActivityCompletionProvider({
         description: `Thank you for reviewing ${reviewData.organizer_name}!`,
       });
     } catch (error) {
-      console.error('Error submitting review:', error);
+      console.error("Error submitting review:", error);
       toast({
         title: "Error",
         description: "Failed to submit review",

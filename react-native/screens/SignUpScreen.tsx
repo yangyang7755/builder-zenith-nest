@@ -81,13 +81,9 @@ const SignUpScreen: React.FC = () => {
 
     setLoading(true);
     try {
-      const { user, error } = await signUp(
-        formData.email,
-        formData.password,
-        {
-          full_name: formData.full_name,
-        },
-      );
+      const { user, error } = await signUp(formData.email, formData.password, {
+        full_name: formData.full_name,
+      });
 
       if (error) {
         Alert.alert(
@@ -101,7 +97,9 @@ const SignUpScreen: React.FC = () => {
         const isDemo = user.id?.includes("demo-user");
 
         Alert.alert(
-          isDemo ? "Demo Account Created! 🎉" : "Account Created Successfully! 🎉",
+          isDemo
+            ? "Demo Account Created! 🎉"
+            : "Account Created Successfully! 🎉",
           isDemo
             ? "Welcome to the demo! You can now explore all features."
             : "Welcome! Complete your profile to get started.",
@@ -110,9 +108,9 @@ const SignUpScreen: React.FC = () => {
               text: "OK",
               onPress: () => {
                 if (isDemo) {
-                  navigation.navigate('Profile' as never);
+                  navigation.navigate("Profile" as never);
                 } else {
-                  navigation.navigate('Onboarding' as never);
+                  navigation.navigate("Onboarding" as never);
                 }
               },
             },
@@ -261,9 +259,7 @@ const SignUpScreen: React.FC = () => {
                 style={styles.eyeButton}
                 onPress={() => setShowPassword(!showPassword)}
               >
-                <Text style={styles.eyeIcon}>
-                  {showPassword ? "👁️" : "👁️‍🗨️"}
-                </Text>
+                <Text style={styles.eyeIcon}>{showPassword ? "👁️" : "👁️‍🗨️"}</Text>
               </TouchableOpacity>
             </View>
             {errors.password && (
@@ -333,7 +329,7 @@ const SignUpScreen: React.FC = () => {
           <View style={styles.signInContainer}>
             <Text style={styles.signInText}>Already have an account? </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Login' as never)}
+              onPress={() => navigation.navigate("Login" as never)}
             >
               <Text style={styles.signInLink}>Sign In</Text>
             </TouchableOpacity>

@@ -23,34 +23,34 @@ export const COLORS = {
   primary: "#1F381F", // explore-green
   primaryLight: "#2D5F2D",
   primaryDark: "#0F2B0F",
-  
+
   // Secondary colors
   secondary: "#6B7280", // gray-500
   secondaryLight: "#9CA3AF", // gray-400
   secondaryDark: "#374151", // gray-700
-  
+
   // Status colors
   success: "#10B981", // green-500
   warning: "#F59E0B", // yellow-500
   error: "#EF4444", // red-500
   info: "#3B82F6", // blue-500
-  
+
   // Background colors
   background: "#FFFFFF",
   backgroundSecondary: "#F9FAFB", // gray-50
   backgroundDark: "#111827", // gray-900
-  
+
   // Text colors
   text: "#000000",
   textSecondary: "#6B7280", // gray-500
   textLight: "#9CA3AF", // gray-400
   textInverse: "#FFFFFF",
-  
+
   // Border colors
   border: "#E5E7EB", // gray-200
   borderLight: "#F3F4F6", // gray-100
   borderDark: "#D1D5DB", // gray-300
-  
+
   // Transparent colors
   transparent: "transparent",
   overlay: "rgba(0, 0, 0, 0.5)",
@@ -64,7 +64,7 @@ export const TYPOGRAPHY = {
     medium: "System-Medium",
     bold: "System-Bold",
   },
-  
+
   // Font sizes
   fontSize: {
     xs: 12,
@@ -76,14 +76,14 @@ export const TYPOGRAPHY = {
     "3xl": 28,
     "4xl": 32,
   },
-  
+
   // Line heights
   lineHeight: {
     tight: 1.2,
     normal: 1.5,
     relaxed: 1.75,
   },
-  
+
   // Font weights
   fontWeight: {
     normal: "400",
@@ -156,7 +156,7 @@ export const NAVIGATION_TABS = [
 
 // Default filter values
 export const DEFAULT_FILTERS = {
-  activityType: ACTIVITY_TYPES.map(type => type.name),
+  activityType: ACTIVITY_TYPES.map((type) => type.name),
   numberOfPeople: { min: 1, max: 50 },
   location: "",
   locationRange: 10,

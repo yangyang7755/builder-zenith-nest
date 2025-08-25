@@ -1,5 +1,5 @@
-import { Redirect } from 'expo-router';
-import { useAuth } from '../src/shared/contexts/AuthContext';
+import { Redirect } from "expo-router";
+import { useAuth } from "../src/shared/contexts/AuthContext";
 
 export default function Index() {
   // TODO: Implement auth context

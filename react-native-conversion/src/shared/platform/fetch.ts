@@ -1,15 +1,19 @@
 // React Native fetch adapter with enhanced error handling and timeout
-import { storage } from './storage';
-import { STORAGE_KEYS } from '../constants';
+import { storage } from "./storage";
+import { STORAGE_KEYS } from "../constants";
 
 // Platform-specific fetch implementation for React Native
 class ReactNativeFetch {
   private defaultTimeout: number = 8000;
 
   // Enhanced fetch with timeout and better error handling for React Native
-  async fetch(url: string, options: RequestInit = {}, timeout?: number): Promise<Response> {
+  async fetch(
+    url: string,
+    options: RequestInit = {},
+    timeout?: number,
+  ): Promise<Response> {
     const timeoutMs = timeout || this.defaultTimeout;
-    
+
     // Create AbortController for timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -17,14 +21,14 @@ class ReactNativeFetch {
     try {
       // Set default headers for React Native
       const defaultHeaders = {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
       };
 
       // Get auth token if available
       const authToken = await storage.getItem(STORAGE_KEYS.authToken);
       if (authToken) {
-        defaultHeaders['Authorization'] = `Bearer ${authToken}`;
+        defaultHeaders["Authorization"] = `Bearer ${authToken}`;
       }
 
       const fetchOptions: RequestInit = {
@@ -38,58 +42,58 @@ class ReactNativeFetch {
 
       // Use React Native's built-in fetch
       const response = await fetch(url, fetchOptions);
-      
+
       clearTimeout(timeoutId);
       return response;
     } catch (error) {
       clearTimeout(timeoutId);
-      
+
       // Enhanced error handling for React Native
-      if (error.name === 'AbortError') {
+      if (error.name === "AbortError") {
         throw new Error(`Request timeout after ${timeoutMs}ms`);
       }
-      
-      if (error.message?.includes('Network request failed')) {
-        throw new Error('No internet connection. Please check your network.');
+
+      if (error.message?.includes("Network request failed")) {
+        throw new Error("No internet connection. Please check your network.");
       }
-      
-      if (error.message?.includes('Connection refused')) {
-        throw new Error('Server is not reachable. Please try again later.');
+
+      if (error.message?.includes("Connection refused")) {
+        throw new Error("Server is not reachable. Please try again later.");
       }
-      
+
       throw error;
     }
   }
 
   // Retry fetch with exponential backoff
   async fetchWithRetry(
-    url: string, 
-    options: RequestInit = {}, 
+    url: string,
+    options: RequestInit = {},
     maxRetries: number = 3,
-    timeout?: number
+    timeout?: number,
   ): Promise<Response> {
     let lastError: Error;
-    
+
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         return await this.fetch(url, options, timeout);
       } catch (error) {
         lastError = error as Error;
-        
+
         // Don't retry on certain errors
-        if (error.message?.includes('401') || error.message?.includes('403')) {
+        if (error.message?.includes("401") || error.message?.includes("403")) {
           throw error;
         }
-        
+
         if (attempt < maxRetries) {
           // Exponential backoff: 1s, 2s, 4s
           const delayMs = Math.pow(2, attempt) * 1000;
-          await new Promise(resolve => setTimeout(resolve, delayMs));
+          await new Promise((resolve) => setTimeout(resolve, delayMs));
           continue;
         }
       }
     }
-    
+
     throw lastError;
   }
 
@@ -97,10 +101,14 @@ class ReactNativeFetch {
   async checkNetworkStatus(): Promise<boolean> {
     try {
       // Simple connectivity test
-      const response = await this.fetch('https://www.google.com', { 
-        method: 'HEAD',
-        cache: 'no-cache',
-      }, 3000);
+      const response = await this.fetch(
+        "https://www.google.com",
+        {
+          method: "HEAD",
+          cache: "no-cache",
+        },
+        3000,
+      );
       return response.ok;
     } catch {
       return false;
@@ -112,19 +120,19 @@ class ReactNativeFetch {
     url: string,
     file: any,
     onProgress?: (progress: number) => void,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<Response> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      
-      xhr.upload.addEventListener('progress', (event) => {
+
+      xhr.upload.addEventListener("progress", (event) => {
         if (event.lengthComputable && onProgress) {
           const progress = (event.loaded / event.total) * 100;
           onProgress(progress);
         }
       });
 
-      xhr.addEventListener('load', () => {
+      xhr.addEventListener("load", () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           // Create a Response-like object
           const response = new Response(xhr.responseText, {
@@ -138,23 +146,23 @@ class ReactNativeFetch {
         }
       });
 
-      xhr.addEventListener('error', () => {
-        reject(new Error('Upload failed: Network error'));
+      xhr.addEventListener("error", () => {
+        reject(new Error("Upload failed: Network error"));
       });
 
-      xhr.addEventListener('abort', () => {
-        reject(new Error('Upload aborted'));
+      xhr.addEventListener("abort", () => {
+        reject(new Error("Upload aborted"));
       });
 
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
-      xhr.open(options.method || 'POST', url);
-      
+      xhr.open(options.method || "POST", url);
+
       // Set headers
       if (options.headers) {
         Object.entries(options.headers).forEach(([key, value]) => {
-          if (typeof value === 'string') {
+          if (typeof value === "string") {
             xhr.setRequestHeader(key, value);
           }
         });
@@ -170,16 +178,19 @@ const reactNativeFetch = new ReactNativeFetch();
 
 // Export platform-specific fetch function
 export const platformFetch = reactNativeFetch.fetch.bind(reactNativeFetch);
-export const platformFetchWithRetry = reactNativeFetch.fetchWithRetry.bind(reactNativeFetch);
-export const checkNetworkStatus = reactNativeFetch.checkNetworkStatus.bind(reactNativeFetch);
-export const uploadWithProgress = reactNativeFetch.uploadWithProgress.bind(reactNativeFetch);
+export const platformFetchWithRetry =
+  reactNativeFetch.fetchWithRetry.bind(reactNativeFetch);
+export const checkNetworkStatus =
+  reactNativeFetch.checkNetworkStatus.bind(reactNativeFetch);
+export const uploadWithProgress =
+  reactNativeFetch.uploadWithProgress.bind(reactNativeFetch);
 
 // Network utility functions
 export const networkUtils = {
   // Test if we can reach a specific endpoint
   async testEndpoint(url: string): Promise<boolean> {
     try {
-      const response = await platformFetch(url, { method: 'HEAD' }, 3000);
+      const response = await platformFetch(url, { method: "HEAD" }, 3000);
       return response.ok;
     } catch {
       return false;
@@ -187,30 +198,34 @@ export const networkUtils = {
   },
 
   // Get network quality estimate
-  async getNetworkQuality(): Promise<'fast' | 'slow' | 'offline'> {
+  async getNetworkQuality(): Promise<"fast" | "slow" | "offline"> {
     const startTime = Date.now();
-    
+
     try {
-      await platformFetch('https://www.google.com', { method: 'HEAD' }, 5000);
+      await platformFetch("https://www.google.com", { method: "HEAD" }, 5000);
       const duration = Date.now() - startTime;
-      
-      if (duration < 1000) return 'fast';
-      if (duration < 3000) return 'slow';
-      return 'slow';
+
+      if (duration < 1000) return "fast";
+      if (duration < 3000) return "slow";
+      return "slow";
     } catch {
-      return 'offline';
+      return "offline";
     }
   },
 
   // Adaptive timeout based on network quality
   async getAdaptiveTimeout(): Promise<number> {
     const quality = await networkUtils.getNetworkQuality();
-    
+
     switch (quality) {
-      case 'fast': return 5000;
-      case 'slow': return 15000;
-      case 'offline': return 30000;
-      default: return 8000;
+      case "fast":
+        return 5000;
+      case "slow":
+        return 15000;
+      case "offline":
+        return 30000;
+      default:
+        return 8000;
     }
   },
 };
@@ -218,35 +233,47 @@ export const networkUtils = {
 // HTTP method helpers
 export const httpMethods = {
   async get(url: string, options: RequestInit = {}): Promise<Response> {
-    return platformFetch(url, { ...options, method: 'GET' });
+    return platformFetch(url, { ...options, method: "GET" });
   },
 
-  async post(url: string, data?: any, options: RequestInit = {}): Promise<Response> {
+  async post(
+    url: string,
+    data?: any,
+    options: RequestInit = {},
+  ): Promise<Response> {
     return platformFetch(url, {
       ...options,
-      method: 'POST',
+      method: "POST",
       body: data ? JSON.stringify(data) : options.body,
     });
   },
 
-  async put(url: string, data?: any, options: RequestInit = {}): Promise<Response> {
+  async put(
+    url: string,
+    data?: any,
+    options: RequestInit = {},
+  ): Promise<Response> {
     return platformFetch(url, {
       ...options,
-      method: 'PUT',
+      method: "PUT",
       body: data ? JSON.stringify(data) : options.body,
     });
   },
 
-  async patch(url: string, data?: any, options: RequestInit = {}): Promise<Response> {
+  async patch(
+    url: string,
+    data?: any,
+    options: RequestInit = {},
+  ): Promise<Response> {
     return platformFetch(url, {
       ...options,
-      method: 'PATCH',
+      method: "PATCH",
       body: data ? JSON.stringify(data) : options.body,
     });
   },
 
   async delete(url: string, options: RequestInit = {}): Promise<Response> {
-    return platformFetch(url, { ...options, method: 'DELETE' });
+    return platformFetch(url, { ...options, method: "DELETE" });
   },
 };
 
@@ -264,11 +291,13 @@ export const responseHelpers = {
   async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP ${response.status}: ${errorText || response.statusText}`);
+      throw new Error(
+        `HTTP ${response.status}: ${errorText || response.statusText}`,
+      );
     }
 
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
       return responseHelpers.parseJSON<T>(response);
     } else {
       return response.text() as unknown as T;

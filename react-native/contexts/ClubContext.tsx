@@ -1,8 +1,14 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuth } from './AuthContext';
-import { apiService } from '../services/apiService';
-import { Alert } from 'react-native';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "./AuthContext";
+import { apiService } from "../services/apiService";
+import { Alert } from "react-native";
 
 interface Club {
   id: string;
@@ -22,7 +28,7 @@ interface ClubMembership {
   id: string;
   club_id: string;
   user_id: string;
-  role: 'member' | 'admin' | 'moderator';
+  role: "member" | "admin" | "moderator";
   joined_at: string;
   club?: Club;
 }
@@ -70,11 +76,12 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
 
   const loadCachedData = async () => {
     try {
-      const [cachedClubs, cachedUserClubs, cachedMemberships] = await Promise.all([
-        AsyncStorage.getItem('clubs'),
-        AsyncStorage.getItem('userClubs'),
-        AsyncStorage.getItem('clubMemberships')
-      ]);
+      const [cachedClubs, cachedUserClubs, cachedMemberships] =
+        await Promise.all([
+          AsyncStorage.getItem("clubs"),
+          AsyncStorage.getItem("userClubs"),
+          AsyncStorage.getItem("clubMemberships"),
+        ]);
 
       if (cachedClubs) {
         setClubs(JSON.parse(cachedClubs));
@@ -86,7 +93,7 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
         setMemberships(JSON.parse(cachedMemberships));
       }
     } catch (error) {
-      console.error('Error loading cached club data:', error);
+      console.error("Error loading cached club data:", error);
     }
   };
 
@@ -98,7 +105,7 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
       setError(null);
 
       const response = await apiService.getClubs();
-      
+
       if (response.error) {
         setError(response.error);
         return;
@@ -106,11 +113,11 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
 
       if (response.data) {
         setClubs(response.data);
-        await AsyncStorage.setItem('clubs', JSON.stringify(response.data));
+        await AsyncStorage.setItem("clubs", JSON.stringify(response.data));
       }
     } catch (error) {
-      setError('Failed to fetch clubs');
-      console.error('Error fetching clubs:', error);
+      setError("Failed to fetch clubs");
+      console.error("Error fetching clubs:", error);
     } finally {
       setIsLoading(false);
     }
@@ -121,23 +128,29 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
 
     try {
       setIsLoading(true);
-      
+
       const [clubsResponse, membershipsResponse] = await Promise.all([
         apiService.getUserClubs(user.id),
-        apiService.getClubMemberships()
+        apiService.getClubMemberships(),
       ]);
 
       if (clubsResponse.data) {
         setUserClubs(clubsResponse.data);
-        await AsyncStorage.setItem('userClubs', JSON.stringify(clubsResponse.data));
+        await AsyncStorage.setItem(
+          "userClubs",
+          JSON.stringify(clubsResponse.data),
+        );
       }
 
       if (membershipsResponse.data) {
         setMemberships(membershipsResponse.data);
-        await AsyncStorage.setItem('clubMemberships', JSON.stringify(membershipsResponse.data));
+        await AsyncStorage.setItem(
+          "clubMemberships",
+          JSON.stringify(membershipsResponse.data),
+        );
       }
     } catch (error) {
-      console.error('Error fetching user clubs:', error);
+      console.error("Error fetching user clubs:", error);
     } finally {
       setIsLoading(false);
     }
@@ -145,7 +158,7 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
 
   const joinClub = async (clubId: string): Promise<boolean> => {
     if (!user) {
-      Alert.alert('Authentication Required', 'Please log in to join clubs');
+      Alert.alert("Authentication Required", "Please log in to join clubs");
       return false;
     }
 
@@ -154,39 +167,42 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
       setError(null);
 
       // Optimistic update
-      const club = clubs.find(c => c.id === clubId);
+      const club = clubs.find((c) => c.id === clubId);
       if (club) {
-        setUserClubs(prev => [...prev, club]);
-        setMemberships(prev => [...prev, {
-          id: `temp-${Date.now()}`,
-          club_id: clubId,
-          user_id: user.id,
-          role: 'member',
-          joined_at: new Date().toISOString(),
-          club
-        }]);
+        setUserClubs((prev) => [...prev, club]);
+        setMemberships((prev) => [
+          ...prev,
+          {
+            id: `temp-${Date.now()}`,
+            club_id: clubId,
+            user_id: user.id,
+            role: "member",
+            joined_at: new Date().toISOString(),
+            club,
+          },
+        ]);
       }
 
       const response = await apiService.joinClub(clubId);
 
       if (response.error) {
         // Revert optimistic update
-        setUserClubs(prev => prev.filter(c => c.id !== clubId));
-        setMemberships(prev => prev.filter(m => m.club_id !== clubId));
-        
-        Alert.alert('Error', response.error);
+        setUserClubs((prev) => prev.filter((c) => c.id !== clubId));
+        setMemberships((prev) => prev.filter((m) => m.club_id !== clubId));
+
+        Alert.alert("Error", response.error);
         return false;
       }
 
-      Alert.alert('Success', 'Successfully joined the club!');
-      
+      Alert.alert("Success", "Successfully joined the club!");
+
       // Refresh data to get accurate membership info
       await Promise.all([getUserClubs(), refreshClubs()]);
-      
+
       return true;
     } catch (error) {
-      console.error('Error joining club:', error);
-      Alert.alert('Error', 'Failed to join club');
+      console.error("Error joining club:", error);
+      Alert.alert("Error", "Failed to join club");
       return false;
     } finally {
       setIsLoading(false);
@@ -195,7 +211,7 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
 
   const leaveClub = async (clubId: string): Promise<boolean> => {
     if (!user) {
-      Alert.alert('Authentication Required', 'Please log in to leave clubs');
+      Alert.alert("Authentication Required", "Please log in to leave clubs");
       return false;
     }
 
@@ -204,28 +220,28 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
       setError(null);
 
       // Optimistic update
-      setUserClubs(prev => prev.filter(c => c.id !== clubId));
-      setMemberships(prev => prev.filter(m => m.club_id !== clubId));
+      setUserClubs((prev) => prev.filter((c) => c.id !== clubId));
+      setMemberships((prev) => prev.filter((m) => m.club_id !== clubId));
 
       const response = await apiService.leaveClub(clubId);
 
       if (response.error) {
         // Revert optimistic update by refreshing data
         await getUserClubs();
-        
-        Alert.alert('Error', response.error);
+
+        Alert.alert("Error", response.error);
         return false;
       }
 
-      Alert.alert('Success', 'Successfully left the club');
-      
+      Alert.alert("Success", "Successfully left the club");
+
       // Refresh data to ensure consistency
       await Promise.all([getUserClubs(), refreshClubs()]);
-      
+
       return true;
     } catch (error) {
-      console.error('Error leaving club:', error);
-      Alert.alert('Error', 'Failed to leave club');
+      console.error("Error leaving club:", error);
+      Alert.alert("Error", "Failed to leave club");
       return false;
     } finally {
       setIsLoading(false);
@@ -233,12 +249,12 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
   };
 
   const isMember = (clubId: string): boolean => {
-    return memberships.some(m => m.club_id === clubId);
+    return memberships.some((m) => m.club_id === clubId);
   };
 
   const createClub = async (clubData: Partial<Club>): Promise<Club | null> => {
     if (!user) {
-      Alert.alert('Authentication Required', 'Please log in to create clubs');
+      Alert.alert("Authentication Required", "Please log in to create clubs");
       return null;
     }
 
@@ -248,31 +264,31 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
 
       const response = await apiService.createClub({
         ...clubData,
-        created_by: user.id
+        created_by: user.id,
       });
 
       if (response.error) {
-        Alert.alert('Error', response.error);
+        Alert.alert("Error", response.error);
         return null;
       }
 
       if (response.data) {
         // Add to user clubs and all clubs
-        setUserClubs(prev => [response.data, ...prev]);
-        setClubs(prev => [response.data, ...prev]);
-        
-        Alert.alert('Success', 'Club created successfully!');
-        
+        setUserClubs((prev) => [response.data, ...prev]);
+        setClubs((prev) => [response.data, ...prev]);
+
+        Alert.alert("Success", "Club created successfully!");
+
         // Refresh data
         await Promise.all([getUserClubs(), refreshClubs()]);
-        
+
         return response.data;
       }
 
       return null;
     } catch (error) {
-      console.error('Error creating club:', error);
-      Alert.alert('Error', 'Failed to create club');
+      console.error("Error creating club:", error);
+      Alert.alert("Error", "Failed to create club");
       return null;
     } finally {
       setIsLoading(false);
@@ -299,7 +315,7 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
 export const useClubs = (): ClubContextType => {
   const context = useContext(ClubContext);
   if (context === undefined) {
-    throw new Error('useClubs must be used within a ClubProvider');
+    throw new Error("useClubs must be used within a ClubProvider");
   }
   return context;
 };

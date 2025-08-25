@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,23 +8,28 @@ import {
   StyleSheet,
   RefreshControl,
   Modal,
-} from 'react-native';
+} from "react-native";
 
 // Import shared constants and utils
-import { COLORS, TYPOGRAPHY, SPACING } from '../../src/shared/constants';
-import { calculateAge } from '../../src/shared/utils';
+import { COLORS, TYPOGRAPHY, SPACING } from "../../src/shared/constants";
+import { calculateAge } from "../../src/shared/utils";
 
 export default function Profile() {
   const [refreshing, setRefreshing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
-  const [activeTab, setActiveTab] = useState<"sports" | "activities" | "reviews">("sports");
-  const [activeSportTab, setActiveSportTab] = useState<"climbing" | "cycling" | "running">("climbing");
+  const [activeTab, setActiveTab] = useState<
+    "sports" | "activities" | "reviews"
+  >("sports");
+  const [activeSportTab, setActiveSportTab] = useState<
+    "climbing" | "cycling" | "running"
+  >("climbing");
 
   // Demo profile data (matching web)
   const profileData = {
     full_name: "KOKO",
-    profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=120&h=120&fit=crop&crop=face",
+    profile_image:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=120&h=120&fit=crop&crop=face",
     bio: "Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!",
     age: 15,
     gender: "Female",
@@ -47,7 +52,7 @@ export default function Profile() {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setRefreshing(false);
   };
 
@@ -101,22 +106,22 @@ export default function Profile() {
 
       {/* Stats Row */}
       <View style={styles.statsRow}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.statItem}
           onPress={() => setShowFollowers(true)}
         >
           <Text style={styles.statNumber}>{profileData.followers}</Text>
           <Text style={styles.statLabel}>Followers</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.statItem}
           onPress={() => setShowFollowing(true)}
         >
           <Text style={styles.statNumber}>{profileData.following}</Text>
           <Text style={styles.statLabel}>Following</Text>
         </TouchableOpacity>
-        
+
         <View style={styles.statItem}>
           <View style={styles.ratingContainer}>
             <Text style={styles.statNumber}>{profileData.rating}</Text>
@@ -159,12 +164,14 @@ export default function Profile() {
             <Text style={styles.detailValue}>{profileData.profession}</Text>
           </View>
         </View>
-        
+
         <View style={styles.languagesSection}>
           <Text style={styles.detailLabel}>Languages</Text>
           <View style={styles.languagesContainer}>
             {profileData.languages.map((lang, index) => (
-              <Text key={index} style={styles.languageFlag}>{lang}</Text>
+              <Text key={index} style={styles.languageFlag}>
+                {lang}
+              </Text>
             ))}
           </View>
         </View>
@@ -173,7 +180,17 @@ export default function Profile() {
   );
 
   // Tab Button Component
-  const TabButton = ({ title, isActive, onPress, icon }: { title: string; isActive: boolean; onPress: () => void; icon?: string }) => (
+  const TabButton = ({
+    title,
+    isActive,
+    onPress,
+    icon,
+  }: {
+    title: string;
+    isActive: boolean;
+    onPress: () => void;
+    icon?: string;
+  }) => (
     <TouchableOpacity
       style={[styles.tabButton, isActive && styles.activeTab]}
       onPress={onPress}
@@ -237,11 +254,15 @@ export default function Profile() {
             <View style={styles.skillDetails}>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Level</Text>
-                <Text style={styles.skillValue}>{profileData.climbingLevel}</Text>
+                <Text style={styles.skillValue}>
+                  {profileData.climbingLevel}
+                </Text>
               </View>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Experience</Text>
-                <Text style={styles.skillValue}>{profileData.climbingExperience}</Text>
+                <Text style={styles.skillValue}>
+                  {profileData.climbingExperience}
+                </Text>
               </View>
               <View style={styles.skillItem}>
                 <Text style={styles.skillLabel}>Disciplines</Text>
@@ -265,14 +286,18 @@ export default function Profile() {
       <View style={styles.clubsGrid}>
         <View style={styles.clubCard}>
           <Image
-            source={{ uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800" }}
+            source={{
+              uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800",
+            }}
             style={styles.clubImage}
           />
           <Text style={styles.clubName}>Westway Climbing</Text>
         </View>
         <View style={styles.clubCard}>
           <Image
-            source={{ uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800" }}
+            source={{
+              uri: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800",
+            }}
             style={styles.clubImage}
           />
           <Text style={styles.clubName}>Oxford Cycling</Text>
@@ -295,7 +320,7 @@ export default function Profile() {
   return (
     <View style={styles.container}>
       <StatusBar />
-      
+
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -309,7 +334,7 @@ export default function Profile() {
         {activeTab === "sports" && <SportsTabContent />}
         <ClubsSection />
         <LocationSection />
-        
+
         <View style={{ height: 100 }} />
       </ScrollView>
 

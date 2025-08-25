@@ -8,7 +8,11 @@ interface ApiResponse<T> {
 }
 
 // Platform-specific fetch function will be injected
-let platformFetch: (url: string, options?: RequestInit, timeout?: number) => Promise<Response>;
+let platformFetch: (
+  url: string,
+  options?: RequestInit,
+  timeout?: number,
+) => Promise<Response>;
 
 // Set the platform-specific fetch implementation
 export const setPlatformFetch = (fetchFn: typeof platformFetch) => {
@@ -38,14 +42,18 @@ const fetchWithTimeout = async (
   timeout: number = 8000,
 ): Promise<Response> => {
   if (!platformFetch) {
-    throw new Error("Platform fetch not configured. Call setPlatformFetch() first.");
+    throw new Error(
+      "Platform fetch not configured. Call setPlatformFetch() first.",
+    );
   }
-  
+
   return await platformFetch(url, options, timeout);
 };
 
 // Handle API responses
-const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
+const handleResponse = async <T>(
+  response: Response,
+): Promise<ApiResponse<T>> => {
   try {
     if (!response.ok) {
       const errorText = await response.text();
@@ -65,7 +73,8 @@ const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> =>
     }
   } catch (error) {
     return {
-      error: error instanceof Error ? error.message : "Failed to parse response",
+      error:
+        error instanceof Error ? error.message : "Failed to parse response",
       status: response.status,
     };
   }
@@ -147,7 +156,8 @@ export const activitiesApi = {
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to fetch activities",
+        error:
+          error instanceof Error ? error.message : "Failed to fetch activities",
       };
     }
   },
@@ -155,16 +165,20 @@ export const activitiesApi = {
   getById: async (id: string): Promise<ApiResponse<any>> => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          ...headers,
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/activities/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            ...headers,
+          },
         },
-      });
+      );
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to fetch activity",
+        error:
+          error instanceof Error ? error.message : "Failed to fetch activity",
       };
     }
   },
@@ -183,7 +197,8 @@ export const activitiesApi = {
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to create activity",
+        error:
+          error instanceof Error ? error.message : "Failed to create activity",
       };
     }
   },
@@ -199,12 +214,13 @@ export const activitiesApi = {
             "Content-Type": "application/json",
             ...headers,
           },
-        }
+        },
       );
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to join activity",
+        error:
+          error instanceof Error ? error.message : "Failed to join activity",
       };
     }
   },
@@ -220,12 +236,13 @@ export const activitiesApi = {
             "Content-Type": "application/json",
             ...headers,
           },
-        }
+        },
       );
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to leave activity",
+        error:
+          error instanceof Error ? error.message : "Failed to leave activity",
       };
     }
   },
@@ -236,7 +253,9 @@ export const profileApi = {
   get: async (userId?: string): Promise<ApiResponse<any>> => {
     try {
       const headers = await getAuthHeaders();
-      const endpoint = userId ? `${API_BASE_URL}/profiles/${userId}` : `${API_BASE_URL}/profile`;
+      const endpoint = userId
+        ? `${API_BASE_URL}/profiles/${userId}`
+        : `${API_BASE_URL}/profile`;
       const response = await fetchWithTimeout(endpoint, {
         headers: {
           "Content-Type": "application/json",
@@ -246,7 +265,8 @@ export const profileApi = {
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to fetch profile",
+        error:
+          error instanceof Error ? error.message : "Failed to fetch profile",
       };
     }
   },
@@ -265,7 +285,8 @@ export const profileApi = {
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to update profile",
+        error:
+          error instanceof Error ? error.message : "Failed to update profile",
       };
     }
   },
@@ -295,17 +316,21 @@ export const followApi = {
   unfollow: async (userId: string): Promise<ApiResponse<any>> => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetchWithTimeout(`${API_BASE_URL}/follow/${userId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          ...headers,
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/follow/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            ...headers,
+          },
         },
-      });
+      );
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to unfollow user",
+        error:
+          error instanceof Error ? error.message : "Failed to unfollow user",
       };
     }
   },
@@ -322,7 +347,8 @@ export const followApi = {
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to fetch followers",
+        error:
+          error instanceof Error ? error.message : "Failed to fetch followers",
       };
     }
   },
@@ -339,7 +365,8 @@ export const followApi = {
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to fetch following",
+        error:
+          error instanceof Error ? error.message : "Failed to fetch following",
       };
     }
   },
@@ -365,7 +392,8 @@ export const reviewsApi = {
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to create review",
+        error:
+          error instanceof Error ? error.message : "Failed to create review",
       };
     }
   },
@@ -380,12 +408,13 @@ export const reviewsApi = {
             "Content-Type": "application/json",
             ...headers,
           },
-        }
+        },
       );
       return await handleResponse(response);
     } catch (error) {
       return {
-        error: error instanceof Error ? error.message : "Failed to fetch reviews",
+        error:
+          error instanceof Error ? error.message : "Failed to fetch reviews",
       };
     }
   },
