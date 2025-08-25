@@ -55,13 +55,15 @@ export default function Activities() {
     return getUserOrganizedActivities();
   }, [activities, currentUserProfile]);
 
-  // Combine participated and organized activities, removing duplicates
-  const allJoinedActivities = [
-    ...participatedActivities,
-    ...organizedActivities.filter(
-      (org) => !participatedActivities.some((part) => part.id === org.id),
-    ),
-  ];
+  // Combine participated and organized activities, removing duplicates (memoized)
+  const allJoinedActivities = useMemo(() => {
+    return [
+      ...participatedActivities,
+      ...organizedActivities.filter(
+        (org) => !participatedActivities.some((part) => part.id === org.id),
+      ),
+    ];
+  }, [participatedActivities, organizedActivities]);
 
   const navigate = useNavigate();
 
