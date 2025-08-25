@@ -165,10 +165,11 @@ const isFetchWrapped = (fetchFn: any) => {
 
 // Main robust fetch function
 export const robustFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
+  // Don't add timeout here if signal is already provided to avoid conflicts
   const fetchOptions = {
     ...options,
-    // Add timeout signal if not provided (but don't override existing)
-    signal: options.signal || AbortSignal.timeout(10000),
+    // Only add default timeout if no signal is provided
+    signal: options.signal,
   };
 
   let lastError: Error | null = null;
