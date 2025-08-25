@@ -289,20 +289,51 @@ export function ActivityCompletionProvider({
   };
 
   const markActivityCompleted = async (activityId: string): Promise<void> => {
-    const completion: ActivityCompletion = {
-      id: `completion_${Date.now()}`,
-      activity_id: activityId,
-      user_id: "user_current",
-      completed: true,
-      completion_date: new Date(),
-      review_submitted: false,
-      created_at: new Date(),
-    };
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to mark activities as completed",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setCompletions((prev) => [...prev, completion]);
+    try {
+      const response = await apiService.markActivityCompleted(activityId);
 
-    // In a real app, this would save to database
-    // await apiService.markActivityCompleted(activityId);
+      if (response.error) {
+        toast({
+          title: "Error",
+          description: response.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const completion: ActivityCompletion = {
+        id: response.data?.id || `completion_${Date.now()}`,
+        activity_id: activityId,
+        user_id: user.id,
+        completed: true,
+        completion_date: new Date(),
+        review_submitted: false,
+        created_at: new Date(),
+      };
+
+      setCompletions((prev) => [...prev, completion]);
+
+      toast({
+        title: "Activity marked as completed",
+        description: "You can now leave a review for this activity",
+      });
+    } catch (error) {
+      console.error('Error marking activity as completed:', error);
+      toast({
+        title: "Error",
+        description: "Failed to mark activity as completed",
+        variant: "destructive",
+      });
+    }
   };
 
   const markActivityNotCompleted = (activityId: string) => {
@@ -320,31 +351,68 @@ export function ActivityCompletionProvider({
   const submitReview = async (
     reviewData: Omit<ActivityReview, "id" | "created_at">,
   ): Promise<void> => {
-    const review: ActivityReview = {
-      ...reviewData,
-      id: `review_${Date.now()}`,
-      created_at: new Date(),
-    };
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to submit reviews",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setReviews((prev) => [...prev, review]);
+    try {
+      const response = await apiService.createActivityReview({
+        activity_id: reviewData.activity_id,
+        reviewee_id: reviewData.organizer_id,
+        rating: reviewData.rating,
+        comment: reviewData.comment,
+      });
 
-    // Update completion to mark review as submitted
-    setCompletions((prev) =>
-      prev.map((c) =>
-        c.activity_id === reviewData.activity_id
-          ? { ...c, review_submitted: true }
-          : c,
-      ),
-    );
+      if (response.error) {
+        toast({
+          title: "Error",
+          description: response.error,
+          variant: "destructive",
+        });
+        return;
+      }
 
-    // Show success message
-    showNativeAlert(
-      "Review Submitted",
-      `Thank you for reviewing ${reviewData.organizer_name}!`,
-    );
+      const review: ActivityReview = {
+        ...reviewData,
+        id: response.data?.id || `review_${Date.now()}`,
+        reviewer_id: user.id,
+        created_at: new Date(),
+      };
 
-    // In a real app, this would save to database
-    // await apiService.submitActivityReview(review);
+      setReviews((prev) => [...prev, review]);
+
+      // Update completion to mark review as submitted
+      setCompletions((prev) =>
+        prev.map((c) =>
+          c.activity_id === reviewData.activity_id
+            ? { ...c, review_submitted: true }
+            : c,
+        ),
+      );
+
+      // Show success message
+      showNativeAlert(
+        "Review Submitted",
+        `Thank you for reviewing ${reviewData.organizer_name}!`,
+      );
+
+      toast({
+        title: "Review submitted",
+        description: `Thank you for reviewing ${reviewData.organizer_name}!`,
+      });
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit review",
+        variant: "destructive",
+      });
+    }
   };
 
   const hasReviewedActivity = (activityId: string): boolean => {
