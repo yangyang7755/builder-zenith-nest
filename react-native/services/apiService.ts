@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Configuration
-const API_BASE_URL = __DEV__ ? 'http://localhost:3000/api' : '/api';
+const API_BASE_URL = __DEV__ ? 'http://localhost:3001/api' : '/api';
 
 // Types
 interface ApiResponse<T> {
