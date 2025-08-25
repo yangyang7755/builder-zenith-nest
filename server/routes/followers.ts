@@ -69,6 +69,27 @@ export const handleGetFollowing = async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
 
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      console.log("Supabase not configured, returning demo following");
+      const demoFollowing = [
+        {
+          id: "demo-follow-2",
+          follower_id: user_id,
+          following_id: "demo-user-2",
+          created_at: new Date().toISOString(),
+          following: {
+            id: "demo-user-2",
+            full_name: "Demo Following",
+            profile_image:
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+            university: "Demo University",
+          },
+        },
+      ];
+      return res.json(demoFollowing);
+    }
+
     const { data: following, error } = await supabaseAdmin
       .from("user_followers")
       .select(
