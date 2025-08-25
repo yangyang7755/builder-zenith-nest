@@ -403,7 +403,44 @@ export const apiService = {
     }
   },
 
-  // Activity creation and management
+  // Activity retrieval and management
+  async getActivities(filters: {
+    club_id?: string;
+    activity_type?: string;
+    location?: string;
+    difficulty_level?: string;
+    date_from?: string;
+    date_to?: string;
+    status?: "upcoming" | "ongoing" | "completed" | "cancelled";
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<ApiResponse<any>> {
+    try {
+      const queryParams = new URLSearchParams();
+
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          queryParams.append(key, value.toString());
+        }
+      });
+
+      const url = queryParams.toString()
+        ? `${API_BASE_URL}/activities?${queryParams}`
+        : `${API_BASE_URL}/activities`;
+
+      const response = await fetchWithTimeout(url, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return { error: "Request timeout" };
+      }
+      console.error("Failed to fetch activities:", error);
+      return { error: "Failed to fetch activities" };
+    }
+  },
+
   async createActivity(activityData: any): Promise<ApiResponse<any>> {
     try {
       const response = await fetch(`${API_BASE_URL}/activities`, {
