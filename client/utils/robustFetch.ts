@@ -73,8 +73,8 @@ const xmlHttpRequestFetch = async (url: string, options: RequestInit = {}): Prom
         });
       }
 
-      // Handle timeout - use same timeout as abort signal
-      xhr.timeout = 10000; // 10 second timeout
+      // Set timeout to 15 seconds to avoid conflicts with other timeouts
+      xhr.timeout = 15000;
 
       xhr.onload = () => {
         try {
