@@ -164,18 +164,30 @@ app.get("/api/saved-activities/check/:activityId", handleCheckActivitySaved);
 
 // Socket.IO for real-time features
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+  console.log("✅ User connected:", socket.id);
 
   // Join user-specific room for notifications
   socket.on("join-user-room", (userId) => {
     socket.join(`user-${userId}`);
-    console.log(`User ${userId} joined their room`);
+    console.log(`👤 User ${userId} joined their room`);
+  });
+
+  // Legacy event for backwards compatibility
+  socket.on("join_user", (userId) => {
+    socket.join(`user_${userId}`);
+    console.log(`👤 User ${userId} joined their room (legacy)`);
   });
 
   // Join activity-specific room for real-time updates
   socket.on("join-activity-room", (activityId) => {
     socket.join(`activity-${activityId}`);
-    console.log(`User joined activity room: ${activityId}`);
+    console.log(`🎯 User joined activity room: ${activityId}`);
+  });
+
+  // Join club chat rooms
+  socket.on("join_club", (clubId) => {
+    socket.join(`club_${clubId}`);
+    console.log(`🏢 User joined club room: ${clubId}`);
   });
 
   // Handle real-time review submission
@@ -231,8 +243,15 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Handle activity updates
+  socket.on("activity_update", (data) => {
+    const { activityId, update } = data;
+    // Broadcast to all users interested in this activity
+    socket.broadcast.emit("activity_updated", { activityId, update });
+  });
+
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
+    console.log("❌ User disconnected:", socket.id);
   });
 });
 
