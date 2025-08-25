@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,42 +6,56 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  RefreshControl,
+  Modal,
+  Alert,
+  FlatList,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../contexts/AuthContext";
+import { useActivities, Activity } from "../contexts/ActivitiesContext";
 
-// Import your exact design tokens
-import { designTokens } from "../styles/designTokens";
+interface TabButtonProps {
+  title: string;
+  isActive: boolean;
+  onPress: () => void;
+  count?: number;
+}
 
-// Placeholder for your exact contexts - will need to be converted
-// import { useSavedActivities } from "../contexts/SavedActivitiesContext";
-// import { Activity, useActivities } from "../contexts/ActivitiesContext";
-// import { useActivityParticipation } from "../contexts/ActivityParticipationContext";
-// import { useUserProfile } from "../contexts/UserProfileContext";
+const TabButton: React.FC<TabButtonProps> = ({ title, isActive, onPress, count }) => (
+  <TouchableOpacity
+    style={[styles.tabButton, isActive && styles.activeTab]}
+    onPress={onPress}
+  >
+    <Text style={[styles.tabText, isActive && styles.activeTabText]}>
+      {title}
+      {count !== undefined && count > 0 && ` (${count})`}
+    </Text>
+  </TouchableOpacity>
+);
 
 const ActivitiesScreen: React.FC = () => {
   const navigation = useNavigation();
+  const { user } = useAuth();
+  const {
+    activities,
+    getUserParticipatedActivities,
+    getUserOrganizedActivities,
+    loading,
+    refreshActivities,
+  } = useActivities();
+
   const [selectedTab, setSelectedTab] = useState("Saved");
+  const [refreshing, setRefreshing] = useState(false);
+  const [pastActivitiesNeedingReview, setPastActivitiesNeedingReview] = useState<Activity[]>([]);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedActivityForReview, setSelectedActivityForReview] = useState<Activity | null>(null);
 
-  // Mock data matching your exact structure - will be replaced with real contexts
-  const savedActivities = [
-    {
-      id: "1",
-      title: "Westway Climbing Session",
-      type: "climbing",
-      date: "2024-02-20",
-      time: "18:00",
-      location: "Westway Climbing Centre, London",
-      organizerName: "Holly Smith",
-      maxParticipants: "8",
-      current_participants: 5,
-      status: "upcoming",
-    },
-  ];
+  // Mock saved activities for now - would integrate with SavedActivitiesContext
+  const [savedActivities, setSavedActivities] = useState<Activity[]>([]);
 
-  const participatedActivities = [];
-  const organizedActivities = [];
-
-  // Sort activities by date (future vs past) - EXACT same logic as web
+  // Sort activities by date (future vs past)
   const now = new Date();
   const today = now.toISOString().split("T")[0];
 
@@ -57,7 +71,13 @@ const ActivitiesScreen: React.FC = () => {
     return activityDateString < today;
   });
 
-  // Combine participated and organized activities, removing duplicates - EXACT same logic
+  // Get activities user has joined using participation context
+  const participatedActivities = getUserParticipatedActivities();
+
+  // Get activities user has organized
+  const organizedActivities = getUserOrganizedActivities();
+
+  // Combine participated and organized activities, removing duplicates
   const allJoinedActivities = [
     ...participatedActivities,
     ...organizedActivities.filter(
@@ -65,278 +85,418 @@ const ActivitiesScreen: React.FC = () => {
     ),
   ];
 
-  const handleActivityClick = (activity) => {
-    // EXACT same navigation logic as web
-    if (activity.type === "cycling") {
-      navigation.navigate("ActivityDetail", { id: "sunday-morning-ride" });
-    } else if (activity.type === "climbing") {
-      navigation.navigate("ActivityDetail", { id: "westway-womens-climb" });
-    } else if (activity.type === "running") {
-      navigation.navigate("ActivityDetail", { id: "westway-womens-climb" });
-    } else {
-      navigation.navigate("ActivityDetail", { id: "westway-womens-climb" });
+  useEffect(() => {
+    if (user && selectedTab === "Joined") {
+      loadPastActivitiesNeedingReview();
     }
+  }, [user, selectedTab, participatedActivities]);
+
+  const loadPastActivitiesNeedingReview = async () => {
+    // Mock implementation for now - would integrate with actual API
+    const pastActivities = participatedActivities.filter((activity) => {
+      const activityDate = new Date(activity.date);
+      return activityDate < now;
+    });
+    
+    setPastActivitiesNeedingReview(pastActivities.slice(0, 2)); // Mock some activities needing review
   };
 
-  // EXACT same icon mapping as web
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "cycling":
-        return "🚴";
-      case "climbing":
-        return "🧗";
-      case "running":
-        return "👟";
-      case "hiking":
-        return "🥾";
-      case "skiing":
-        return "🎿";
-      case "surfing":
-        return "🌊";
-      case "tennis":
-        return "🎾";
-      default:
-        return "⚡";
-    }
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refreshActivities();
+    setRefreshing(false);
   };
 
-  const ActivityCard = ({ activity }) => {
-    // EXACT same data extraction logic as web
-    const organizerName =
-      activity.organizer?.full_name || activity.organizerName || "Unknown";
+  const handleReviewActivity = (activity: Activity) => {
+    setSelectedActivityForReview(activity);
+    setShowReviewModal(true);
+  };
 
-    const activityDate = activity.date_time
-      ? new Date(activity.date_time)
-      : activity.date
-        ? new Date(activity.date + "T" + (activity.time || "00:00") + ":00")
-        : new Date();
+  const formatActivityDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
 
-    const activityType = activity.activity_type || activity.type || "general";
-    const maxParticipants =
-      activity.max_participants || parseInt(activity.maxParticipants || "0");
+  const renderStatusBar = () => (
+    <View style={styles.statusBar}>
+      <Text style={styles.statusTime}>9:41</Text>
+      <View style={styles.statusIcons}>
+        <View style={styles.signalBars}>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <View key={i} style={[styles.signalBar, { height: 6 + i * 2 }]} />
+          ))}
+        </View>
+        <View style={styles.batteryIcon}>
+          <View style={styles.batteryBody} />
+          <View style={styles.batteryTip} />
+        </View>
+      </View>
+    </View>
+  );
+
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <Text style={styles.headerTitle}>Activities</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Settings' as never)}>
+        <Text style={styles.settingsIcon}>⚙️</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderTabs = () => (
+    <View style={styles.tabContainer}>
+      <TabButton
+        title="Saved"
+        isActive={selectedTab === "Saved"}
+        onPress={() => setSelectedTab("Saved")}
+        count={savedActivities.length}
+      />
+      <TabButton
+        title="Joined"
+        isActive={selectedTab === "Joined"}
+        onPress={() => setSelectedTab("Joined")}
+        count={allJoinedActivities.length}
+      />
+      <TabButton
+        title="Organized"
+        isActive={selectedTab === "Organized"}
+        onPress={() => setSelectedTab("Organized")}
+        count={organizedActivities.length}
+      />
+    </View>
+  );
+
+  const renderActivityCard = (activity: Activity, showUnsaveButton = false, showReviewButton = false) => (
+    <View style={styles.activityCard}>
+      {/* Activity Header */}
+      <View style={styles.activityHeader}>
+        <View style={styles.activityInfo}>
+          <Text style={styles.activityTitle}>{activity.title}</Text>
+          <View style={styles.activityMeta}>
+            <Text style={styles.metaItem}>📅 {formatActivityDate(activity.date)}</Text>
+            <Text style={styles.metaItem}>📍 {activity.location}</Text>
+            <Text style={styles.metaItem}>👥 {activity.organizer}</Text>
+          </View>
+        </View>
+        <Image
+          source={{
+            uri: activity.imageSrc || "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=60&h=60&fit=crop&crop=face"
+          }}
+          style={styles.activityImage}
+        />
+      </View>
+
+      {/* Activity Metrics */}
+      {activity.type === "cycling" && (activity.distance || activity.pace || activity.elevation) && (
+        <View style={styles.metricsContainer}>
+          {activity.distance && (
+            <View style={styles.metricItem}>
+              <Text style={styles.metricIcon}>🚴</Text>
+              <Text style={styles.metricValue}>{activity.distance}</Text>
+              <Text style={styles.metricLabel}>Distance</Text>
+            </View>
+          )}
+          {activity.pace && (
+            <View style={styles.metricItem}>
+              <Text style={styles.metricIcon}>⚡</Text>
+              <Text style={styles.metricValue}>{activity.pace}</Text>
+              <Text style={styles.metricLabel}>Pace</Text>
+            </View>
+          )}
+          {activity.elevation && (
+            <View style={styles.metricItem}>
+              <Text style={styles.metricIcon}>⛰️</Text>
+              <Text style={styles.metricValue}>{activity.elevation}</Text>
+              <Text style={styles.metricLabel}>Elevation</Text>
+            </View>
+          )}
+        </View>
+      )}
+
+      {/* Action Buttons */}
+      <View style={styles.actionButtons}>
+        <TouchableOpacity
+          style={styles.primaryButton}
+          onPress={() => {
+            // Navigate to activity details
+            // navigation.navigate('ActivityDetails', { activityId: activity.id });
+          }}
+        >
+          <Text style={styles.primaryButtonText}>View Details</Text>
+        </TouchableOpacity>
+
+        {showUnsaveButton && (
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => {
+              Alert.alert(
+                "Unsave Activity",
+                "Remove this activity from your saved list?",
+                [
+                  { text: "Cancel", style: "cancel" },
+                  {
+                    text: "Unsave",
+                    style: "destructive",
+                    onPress: () => {
+                      // Remove from saved activities
+                      setSavedActivities(prev => prev.filter(a => a.id !== activity.id));
+                    },
+                  },
+                ],
+              );
+            }}
+          >
+            <Text style={styles.secondaryButtonText}>🔖 Unsave</Text>
+          </TouchableOpacity>
+        )}
+
+        {showReviewButton && (
+          <TouchableOpacity
+            style={styles.reviewButton}
+            onPress={() => handleReviewActivity(activity)}
+          >
+            <Text style={styles.reviewButtonText}>⭐ Review</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
+
+  const renderReviewPrompts = () => {
+    if (pastActivitiesNeedingReview.length === 0) return null;
 
     return (
-      <TouchableOpacity
-        onPress={() => handleActivityClick(activity)}
-        style={styles.activityCard}
-      >
-        <View style={styles.cardHeader}>
-          <View style={styles.cardContent}>
-            <Text style={styles.activityTitle}>{activity.title}</Text>
-            <Text style={styles.organizerText}>By {organizerName}</Text>
+      <View style={styles.reviewPromptsContainer}>
+        <Text style={styles.reviewPromptsTitle}>Activities to Review</Text>
+        <Text style={styles.reviewPromptsSubtitle}>
+          Help others by sharing your experience
+        </Text>
+        {pastActivitiesNeedingReview.map((activity) => (
+          <View key={activity.id} style={styles.reviewPromptCard}>
+            <View style={styles.reviewPromptInfo}>
+              <Text style={styles.reviewPromptTitle}>{activity.title}</Text>
+              <Text style={styles.reviewPromptDate}>
+                📅 {formatActivityDate(activity.date)}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.reviewPromptButton}
+              onPress={() => handleReviewActivity(activity)}
+            >
+              <Text style={styles.reviewPromptButtonText}>Review</Text>
+            </TouchableOpacity>
           </View>
-          <Text style={styles.activityIcon}>
-            {getActivityIcon(activityType)}
-          </Text>
-        </View>
-
-        <View style={styles.cardDetails}>
-          <View style={styles.detailRow}>
-            <Text style={styles.clockIcon}>🕐</Text>
-            <Text style={styles.detailText}>
-              {activityDate.toLocaleDateString("en-GB", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-              })}{" "}
-              at {activityDate.toTimeString().slice(0, 5)}
-            </Text>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.locationIcon}>📍</Text>
-            <Text style={styles.detailText}>{activity.location}</Text>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.usersIcon}>👥</Text>
-            <Text style={styles.detailText}>
-              {activity.current_participants || 0}/{maxParticipants} people
-            </Text>
-          </View>
-        </View>
-
-        {activity.status && (
-          <View style={styles.statusContainer}>
-            <Text style={styles.checkIcon}>✅</Text>
-            <Text style={styles.statusText}>{activity.status}</Text>
-          </View>
-        )}
-      </TouchableOpacity>
+        ))}
+      </View>
     );
+  };
+
+  const renderContent = () => {
+    if (selectedTab === "Saved") {
+      if (savedActivities.length === 0) {
+        return (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyIcon}>🔖</Text>
+            <Text style={styles.emptyTitle}>No Saved Activities</Text>
+            <Text style={styles.emptySubtitle}>
+              Save activities you're interested in to view them here
+            </Text>
+            <TouchableOpacity
+              style={styles.exploreButton}
+              onPress={() => navigation.navigate('Explore' as never)}
+            >
+              <Text style={styles.exploreButtonText}>Explore Activities</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
+
+      return (
+        <View style={styles.contentContainer}>
+          <Text style={styles.sectionTitle}>Upcoming Activities</Text>
+          {upcomingSavedActivities.length > 0 ? (
+            upcomingSavedActivities.map((activity) =>
+              renderActivityCard(activity, true)
+            )
+          ) : (
+            <Text style={styles.emptySubsection}>No upcoming saved activities</Text>
+          )}
+
+          <Text style={styles.sectionTitle}>Past Activities</Text>
+          {pastSavedActivities.length > 0 ? (
+            pastSavedActivities.map((activity) =>
+              renderActivityCard(activity, true)
+            )
+          ) : (
+            <Text style={styles.emptySubsection}>No past saved activities</Text>
+          )}
+        </View>
+      );
+    }
+
+    if (selectedTab === "Joined") {
+      return (
+        <View style={styles.contentContainer}>
+          {renderReviewPrompts()}
+          
+          {allJoinedActivities.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyIcon}>👥</Text>
+              <Text style={styles.emptyTitle}>No Joined Activities</Text>
+              <Text style={styles.emptySubtitle}>
+                Join activities to connect with fellow outdoor enthusiasts
+              </Text>
+              <TouchableOpacity
+                style={styles.exploreButton}
+                onPress={() => navigation.navigate('Explore' as never)}
+              >
+                <Text style={styles.exploreButtonText}>Find Activities</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            allJoinedActivities.map((activity) => {
+              const isPast = new Date(activity.date) < now;
+              const needsReview = isPast && pastActivitiesNeedingReview.some(a => a.id === activity.id);
+              return renderActivityCard(activity, false, needsReview);
+            })
+          )}
+        </View>
+      );
+    }
+
+    if (selectedTab === "Organized") {
+      return (
+        <View style={styles.contentContainer}>
+          {organizedActivities.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyIcon}>🎯</Text>
+              <Text style={styles.emptyTitle}>No Organized Activities</Text>
+              <Text style={styles.emptySubtitle}>
+                Create activities to build your community
+              </Text>
+              <TouchableOpacity
+                style={styles.exploreButton}
+                onPress={() => {
+                  // Navigate to create activity
+                  // navigation.navigate('CreateActivity');
+                }}
+              >
+                <Text style={styles.exploreButtonText}>Create Activity</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            organizedActivities.map((activity) =>
+              renderActivityCard(activity)
+            )
+          )}
+        </View>
+      );
+    }
+
+    return null;
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Status Bar - EXACT same as web */}
-      <View style={styles.statusBar}>
-        <Text style={styles.statusTime}>9:41</Text>
-        <View style={styles.statusIcons}>
-          <View style={styles.signalBars}>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <View key={i} style={styles.signalBar} />
-            ))}
-          </View>
-          <View style={styles.battery}>
-            <View style={styles.batteryBody} />
-            <View style={styles.batteryTip} />
-          </View>
-        </View>
-      </View>
-
+      {renderStatusBar()}
+      
       <ScrollView
-        style={styles.scrollContainer}
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         showsVerticalScrollIndicator={false}
       >
-        {/* Title - EXACT same styling */}
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>All Activities</Text>
-        </View>
-
-        {/* Tab Navigation - EXACT same design and logic */}
-        <View style={styles.tabContainer}>
-          <TouchableOpacity
-            onPress={() => setSelectedTab("Saved")}
-            style={[styles.tab, selectedTab === "Saved" && styles.activeTab]}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                selectedTab === "Saved" && styles.activeTabText,
-              ]}
-            >
-              Saved Activities
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setSelectedTab("Joined")}
-            style={[styles.tab, selectedTab === "Joined" && styles.activeTab]}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                selectedTab === "Joined" && styles.activeTabText,
-              ]}
-            >
-              Joined Activities
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Content - EXACT same structure and logic */}
-        {selectedTab === "Saved" && (
-          <View>
-            <Text style={styles.sectionTitle}>
-              Upcoming Activities ({upcomingSavedActivities.length})
-            </Text>
-            {upcomingSavedActivities.length > 0 ? (
-              upcomingSavedActivities.map((activity, index) => (
-                <ActivityCard key={index} activity={activity} />
-              ))
-            ) : (
-              <View style={styles.emptyState}>
-                <Text style={styles.bookmarkIcon}>🔖</Text>
-                <Text style={styles.emptyText}>
-                  No upcoming saved activities
-                </Text>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Explore")}
-                >
-                  <Text style={styles.exploreLink}>
-                    Explore activities to save
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {pastSavedActivities.length > 0 && (
-              <View style={styles.pastSection}>
-                <Text style={styles.sectionTitle}>
-                  Past Activities ({pastSavedActivities.length})
-                </Text>
-                {pastSavedActivities.map((activity, index) => (
-                  <ActivityCard key={index} activity={activity} />
-                ))}
-              </View>
-            )}
-          </View>
-        )}
-
-        {selectedTab === "Joined" && (
-          <View>
-            {/* Organized Activities Section - EXACT same structure */}
-            {organizedActivities.length > 0 && (
-              <View style={styles.organizedSection}>
-                <Text style={styles.sectionTitle}>
-                  Your Organized Activities ({organizedActivities.length})
-                </Text>
-                {organizedActivities.map((activity, index) => (
-                  <ActivityCard
-                    key={`organized-${activity.id}-${index}`}
-                    activity={activity}
-                  />
-                ))}
-              </View>
-            )}
-
-            {/* Participated Activities Section - EXACT same structure */}
-            <Text style={styles.sectionTitle}>
-              Joined Activities ({participatedActivities.length})
-            </Text>
-            {participatedActivities.length > 0 ? (
-              participatedActivities.map((activity, index) => (
-                <ActivityCard
-                  key={`participated-${activity.id}-${index}`}
-                  activity={activity}
-                />
-              ))
-            ) : (
-              <View style={styles.emptyState}>
-                <Text style={styles.checkIcon}>✅</Text>
-                <Text style={styles.emptyText}>No joined activities yet</Text>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Explore")}
-                >
-                  <Text style={styles.exploreLink}>
-                    Find activities to join
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        )}
-
-        {/* Development Tools Placeholder - will be converted later */}
-        <View style={styles.devTools}>
-          <Text style={styles.devText}>Backend Test Component</Text>
-          <Text style={styles.devText}>Demo Auth Component</Text>
-          <Text style={styles.devText}>User Nav Component</Text>
-        </View>
+        {renderHeader()}
+        {renderTabs()}
+        {renderContent()}
+        
+        <View style={{ height: 100 }} />
       </ScrollView>
+
+      {/* Review Modal */}
+      <Modal
+        visible={showReviewModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowReviewModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.reviewModal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Review Activity</Text>
+              <TouchableOpacity onPress={() => setShowReviewModal(false)}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            
+            {selectedActivityForReview && (
+              <View style={styles.modalContent}>
+                <Text style={styles.reviewActivityTitle}>
+                  {selectedActivityForReview.title}
+                </Text>
+                <Text style={styles.reviewActivityDate}>
+                  📅 {formatActivityDate(selectedActivityForReview.date)}
+                </Text>
+                
+                <Text style={styles.reviewLabel}>How was your experience?</Text>
+                
+                <View style={styles.starRating}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <TouchableOpacity key={star} style={styles.starButton}>
+                      <Text style={styles.starText}>⭐</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                
+                <TouchableOpacity
+                  style={styles.submitReviewButton}
+                  onPress={() => {
+                    // Submit review
+                    Alert.alert("Review Submitted", "Thank you for your feedback!");
+                    setPastActivitiesNeedingReview(prev => 
+                      prev.filter(a => a.id !== selectedActivityForReview.id)
+                    );
+                    setShowReviewModal(false);
+                  }}
+                >
+                  <Text style={styles.submitReviewText}>Submit Review</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
 
-// Styles using EXACT same design tokens and matching web styling
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: designTokens.colors.white,
+    backgroundColor: "#FFFFFF",
   },
   statusBar: {
     height: 44,
-    backgroundColor: designTokens.colors.white,
+    backgroundColor: "#FFFFFF",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 24,
   },
   statusTime: {
-    color: designTokens.colors.black,
+    color: "#000000",
+    fontSize: 16,
     fontWeight: "500",
   },
   statusIcons: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 8,
   },
   signalBars: {
     flexDirection: "row",
@@ -344,11 +504,10 @@ const styles = StyleSheet.create({
   },
   signalBar: {
     width: 4,
-    height: 12,
-    backgroundColor: designTokens.colors.black,
-    borderRadius: 2,
+    backgroundColor: "#000000",
+    borderRadius: 1,
   },
-  battery: {
+  batteryIcon: {
     flexDirection: "row",
     alignItems: "center",
   },
@@ -356,175 +515,331 @@ const styles = StyleSheet.create({
     width: 22,
     height: 10,
     borderWidth: 1,
-    borderColor: designTokens.colors.black,
+    borderColor: "#000000",
     borderRadius: 2,
   },
   batteryTip: {
     width: 2,
     height: 4,
-    backgroundColor: designTokens.colors.black,
+    backgroundColor: "#000000",
     borderRadius: 1,
+    marginLeft: 1,
   },
-  scrollContainer: {
+  scrollView: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingBottom: 96, // Account for bottom navigation
   },
-  titleContainer: {
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
-  title: {
-    fontSize: 30,
+  headerTitle: {
+    fontSize: 28,
     fontWeight: "bold",
-    color: designTokens.colors.primary, // text-explore-green
+    color: "#000000",
+  },
+  settingsIcon: {
+    fontSize: 24,
   },
   tabContainer: {
     flexDirection: "row",
-    backgroundColor: designTokens.colors.gray[100],
-    borderRadius: 8,
-    padding: 4,
+    paddingHorizontal: 24,
     marginBottom: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB",
   },
-  tab: {
-    flex: 1,
-    paddingVertical: 8,
+  tabButton: {
+    paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 6,
-    alignItems: "center",
+    marginRight: 8,
   },
   activeTab: {
-    backgroundColor: designTokens.colors.white,
-    shadowColor: designTokens.colors.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    borderBottomWidth: 2,
+    borderBottomColor: "#1F381F",
   },
   tabText: {
-    fontSize: 14,
+    fontSize: 16,
+    color: "#6B7280",
     fontWeight: "500",
-    color: designTokens.colors.gray[600],
   },
   activeTabText: {
-    color: designTokens.colors.primary,
+    color: "#1F381F",
+    fontWeight: "600",
+  },
+  contentContainer: {
+    paddingHorizontal: 24,
+    gap: 24,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: designTokens.colors.black,
+    color: "#000000",
     marginBottom: 16,
   },
+  emptySubsection: {
+    fontSize: 16,
+    color: "#6B7280",
+    textAlign: "center",
+    paddingVertical: 24,
+  },
   activityCard: {
-    backgroundColor: designTokens.colors.white,
-    borderRadius: 8,
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: designTokens.colors.gray[200],
+    borderColor: "#E5E7EB",
+    borderRadius: 12,
     padding: 16,
     marginBottom: 16,
   },
-  cardHeader: {
+  activityHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 12,
+    marginBottom: 16,
   },
-  cardContent: {
+  activityInfo: {
     flex: 1,
+    paddingRight: 16,
   },
   activityTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: designTokens.colors.black,
+    color: "#000000",
+    marginBottom: 8,
+  },
+  activityMeta: {
+    gap: 4,
+  },
+  metaItem: {
+    fontSize: 14,
+    color: "#6B7280",
+  },
+  activityImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+  },
+  metricsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#F9FAFB",
+    borderRadius: 8,
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  metricItem: {
+    alignItems: "center",
+  },
+  metricIcon: {
+    fontSize: 20,
     marginBottom: 4,
   },
-  organizerText: {
+  metricValue: {
     fontSize: 14,
-    color: designTokens.colors.gray[600],
+    fontWeight: "600",
+    color: "#000000",
+    marginBottom: 2,
   },
-  activityIcon: {
-    fontSize: 32,
-    marginLeft: 8,
+  metricLabel: {
+    fontSize: 12,
+    color: "#6B7280",
   },
-  cardDetails: {
-    gap: 8,
-    marginBottom: 12,
-  },
-  detailRow: {
+  actionButtons: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+    gap: 12,
   },
-  clockIcon: {
-    fontSize: 16,
-  },
-  locationIcon: {
-    fontSize: 16,
-  },
-  usersIcon: {
-    fontSize: 16,
-  },
-  detailText: {
-    fontSize: 14,
-    color: designTokens.colors.gray[600],
+  primaryButton: {
     flex: 1,
-  },
-  statusContainer: {
-    flexDirection: "row",
+    backgroundColor: "#1F381F",
+    paddingVertical: 12,
+    borderRadius: 8,
     alignItems: "center",
-    gap: 8,
-    marginTop: 12,
   },
-  checkIcon: {
-    fontSize: 16,
-  },
-  statusText: {
+  primaryButtonText: {
+    color: "#FFFFFF",
     fontSize: 14,
     fontWeight: "500",
-    color: designTokens.colors.success,
-    textTransform: "capitalize",
+  },
+  secondaryButton: {
+    flex: 1,
+    backgroundColor: "#F3F4F6",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  secondaryButtonText: {
+    color: "#374151",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  reviewButton: {
+    flex: 1,
+    backgroundColor: "#FEF3C7",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  reviewButtonText: {
+    color: "#92400E",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  reviewPromptsContainer: {
+    backgroundColor: "#FEF3C7",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+  },
+  reviewPromptsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#92400E",
+    marginBottom: 4,
+  },
+  reviewPromptsSubtitle: {
+    fontSize: 14,
+    color: "#92400E",
+    marginBottom: 16,
+  },
+  reviewPromptCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+  },
+  reviewPromptInfo: {
+    flex: 1,
+  },
+  reviewPromptTitle: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#000000",
+    marginBottom: 4,
+  },
+  reviewPromptDate: {
+    fontSize: 14,
+    color: "#6B7280",
+  },
+  reviewPromptButton: {
+    backgroundColor: "#92400E",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  reviewPromptButtonText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "500",
   },
   emptyState: {
     alignItems: "center",
-    paddingVertical: 32,
+    paddingVertical: 64,
   },
-  bookmarkIcon: {
-    fontSize: 48,
-    opacity: 0.3,
+  emptyIcon: {
+    fontSize: 64,
     marginBottom: 16,
   },
-  checkIcon: {
-    fontSize: 48,
-    opacity: 0.3,
-    marginBottom: 16,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: designTokens.colors.gray[500],
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#000000",
     marginBottom: 8,
   },
-  exploreLink: {
+  emptySubtitle: {
     fontSize: 16,
-    color: designTokens.colors.primary,
+    color: "#6B7280",
+    textAlign: "center",
+    marginBottom: 24,
+    lineHeight: 24,
+  },
+  exploreButton: {
+    backgroundColor: "#1F381F",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  exploreButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
     fontWeight: "500",
   },
-  pastSection: {
-    marginTop: 32,
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
   },
-  organizedSection: {
+  reviewModal: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    width: "100%",
+    maxWidth: 400,
+    maxHeight: "80%",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#000000",
+  },
+  modalClose: {
+    fontSize: 24,
+    color: "#6B7280",
+  },
+  modalContent: {
+    padding: 16,
+  },
+  reviewActivityTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000000",
+    marginBottom: 8,
+  },
+  reviewActivityDate: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginBottom: 24,
+  },
+  reviewLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#000000",
+    marginBottom: 16,
+  },
+  starRating: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 8,
     marginBottom: 32,
   },
-  devTools: {
-    paddingVertical: 24,
-    borderTopWidth: 1,
-    borderTopColor: designTokens.colors.gray[200],
-    marginTop: 24,
+  starButton: {
+    padding: 8,
   },
-  devText: {
-    fontSize: 14,
-    color: designTokens.colors.gray[500],
-    textAlign: "center",
-    marginBottom: 8,
+  starText: {
+    fontSize: 32,
+  },
+  submitReviewButton: {
+    backgroundColor: "#1F381F",
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  submitReviewText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
 
