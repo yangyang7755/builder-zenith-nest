@@ -48,10 +48,12 @@ export default function Activities() {
   // Get activities user has joined using participation context (memoized to prevent infinite loops)
   const participatedActivities = useMemo(() => {
     return getUserParticipatedActivities();
-  }, [getUserParticipatedActivities]);
+  }, [activities, currentUserProfile]);
 
-  // Get activities user has organized
-  const organizedActivities = getUserOrganizedActivities();
+  // Get activities user has organized (memoized for consistency)
+  const organizedActivities = useMemo(() => {
+    return getUserOrganizedActivities();
+  }, [activities, currentUserProfile]);
 
   // Combine participated and organized activities, removing duplicates
   const allJoinedActivities = [
