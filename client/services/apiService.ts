@@ -821,7 +821,7 @@ export const apiService = {
     try {
       const response = await fetchWithTimeout(`${API_BASE_URL}/health`, {
         headers: getAuthHeaders(),
-      });
+      }, 5000); // Use 5 second timeout for health checks
       return await handleResponse(response);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
