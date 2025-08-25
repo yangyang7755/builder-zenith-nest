@@ -441,6 +441,21 @@ export const apiService = {
     }
   },
 
+  async getActivity(activityId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return { error: "Request timeout" };
+      }
+      console.error("Failed to fetch activity:", error);
+      return { error: "Failed to fetch activity" };
+    }
+  },
+
   async createActivity(activityData: any): Promise<ApiResponse<any>> {
     try {
       const response = await fetch(`${API_BASE_URL}/activities`, {
@@ -454,6 +469,57 @@ export const apiService = {
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to create activity" };
+    }
+  },
+
+  async updateActivity(activityId: string, updates: any): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify(updates),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return { error: "Request timeout" };
+      }
+      console.error("Failed to update activity:", error);
+      return { error: "Failed to update activity" };
+    }
+  },
+
+  async deleteActivity(activityId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return { error: "Request timeout" };
+      }
+      console.error("Failed to delete activity:", error);
+      return { error: "Failed to delete activity" };
+    }
+  },
+
+  async getActivityParticipants(activityId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}/participants`, {
+        headers: getAuthHeaders(),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return { error: "Request timeout" };
+      }
+      console.error("Failed to fetch activity participants:", error);
+      return { error: "Failed to fetch activity participants" };
     }
   },
 
