@@ -34,11 +34,15 @@ export const useSocket = (): SocketContextType => {
         ? window.location.origin 
         : 'http://localhost:3002';
 
+      console.log(`🔌 Attempting to connect to Socket.IO server at: ${socketUrl}`);
+
       globalSocket = io(socketUrl, {
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,
+        timeout: 10000,
+        autoConnect: true,
       });
 
       // Connection event handlers
