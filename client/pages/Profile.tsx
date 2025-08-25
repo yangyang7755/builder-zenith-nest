@@ -19,6 +19,8 @@ import { useClub } from "@/contexts/ClubContext";
 import { maddieWeiProfile } from "../data/demoProfiles";
 import BottomNavigation from "../components/BottomNavigation";
 import { ProfileEdit } from "../components/ProfileEdit";
+import RealTimeFollowingList from "../components/RealTimeFollowingList";
+import RealTimeFollowersModal from "../components/RealTimeFollowersModal";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import {
   getClubProfileImage,

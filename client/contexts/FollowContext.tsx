@@ -63,6 +63,7 @@ interface FollowProviderProps {
 export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { emitFollowUser, emitUnfollowUser, subscribeToFollowEvents } = useFollowSocket();
   const [followers, setFollowers] = useState<Follower[]>([]);
   const [following, setFollowing] = useState<Following[]>([]);
   const [followStats, setFollowStats] = useState<FollowStats>({
@@ -256,6 +257,13 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
           following: (prev?.following || 0) + 1,
         }));
 
+        // Emit real-time event
+        emitFollowUser(userId, {
+          id: user.id,
+          full_name: user.email || 'User', // TODO: Get actual user name
+          profile_image: undefined,
+        });
+
         toast({
           title: "Following! 👥",
           description: `You are now following ${response.data.following?.full_name || "this user"}`,
@@ -305,6 +313,9 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
         ...prev,
         following: Math.max(0, (prev?.following || 0) - 1),
       }));
+
+      // Emit real-time event
+      emitUnfollowUser(userId);
 
       toast({
         title: "Unfollowed",
