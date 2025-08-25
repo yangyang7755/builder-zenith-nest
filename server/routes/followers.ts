@@ -221,6 +221,13 @@ export const handleFollowUser = async (req: Request, res: Response) => {
 export const handleUnfollowUser = async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params; // user to unfollow
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      console.log("Supabase not configured, returning demo unfollow success");
+      return res.json({ message: "Successfully unfollowed user" });
+    }
+
     const user = await getUserFromToken(req.headers.authorization || "");
 
     if (!user) {
