@@ -22,7 +22,8 @@ import {
   handleJoinActivity,
   handleLeaveActivity,
   handleUpdateActivity,
-  handleDeleteActivity
+  handleDeleteActivity,
+  handleGetActivityParticipants
 } from "./routes/activities";
 import {
   handleGetReviews,
@@ -118,6 +119,7 @@ app.post("/api/activities", handleCreateActivity);
 app.get("/api/activities/:id", handleGetActivity);
 app.put("/api/activities/:id", handleUpdateActivity);
 app.delete("/api/activities/:id", handleDeleteActivity);
+app.get("/api/activities/:id/participants", handleGetActivityParticipants);
 app.post("/api/activities/:id/join", handleJoinActivity);
 app.delete("/api/activities/:id/leave", handleLeaveActivity);
 

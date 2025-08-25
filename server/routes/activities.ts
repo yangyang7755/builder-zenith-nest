@@ -76,6 +76,89 @@ const ListActivitiesSchema = z.object({
 });
 
 // GET /api/activities - List activities with filtering/search
+// GET /api/activities/:id/participants - Get activity participants
+export const handleGetActivityParticipants = async (req: Request, res: Response) => {
+  try {
+    const { id: activityId } = req.params;
+
+    // Demo mode - return mock participants if no database
+    if (!supabaseAdmin) {
+      const demoParticipants = [
+        {
+          id: "demo-participant-1",
+          activity_id: activityId,
+          user_id: "demo-user-1",
+          status: "joined",
+          joined_at: new Date().toISOString(),
+          user: {
+            id: "demo-user-1",
+            full_name: "Sarah Johnson",
+            profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+          }
+        },
+        {
+          id: "demo-participant-2",
+          activity_id: activityId,
+          user_id: "demo-user-2",
+          status: "joined",
+          joined_at: new Date(Date.now() - 86400000).toISOString(),
+          user: {
+            id: "demo-user-2",
+            full_name: "Mike Chen",
+            profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+          }
+        }
+      ];
+
+      return res.json({
+        success: true,
+        data: demoParticipants
+      });
+    }
+
+    const { data: participants, error } = await supabaseAdmin
+      .from("activity_participants")
+      .select(`
+        *,
+        user:profiles!user_id (
+          id,
+          full_name,
+          profile_image
+        )
+      `)
+      .eq("activity_id", activityId)
+      .eq("status", "joined")
+      .order("joined_at", { ascending: true });
+
+    if (error) {
+      console.error("Database error:", error);
+      if (error.code === '42P01') {
+        // Table doesn't exist - return demo data
+        return res.json({
+          success: true,
+          data: []
+        });
+      }
+      return res.status(500).json({
+        success: false,
+        error: "Failed to fetch activity participants"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: participants || []
+    });
+
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch activity participants"
+    });
+  }
+};
+
 export const handleGetActivities = async (req: Request, res: Response) => {
   try {
     const filters = ListActivitiesSchema.parse(req.query);
