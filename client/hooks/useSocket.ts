@@ -37,12 +37,15 @@ export const useSocket = (): SocketContextType => {
       console.log(`🔌 Attempting to connect to Socket.IO server at: ${socketUrl}`);
 
       globalSocket = io(socketUrl, {
+        path: '/socket.io/', // Explicit path for proxy
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,
         timeout: 10000,
         autoConnect: true,
+        forceNew: false,
+        upgrade: true,
       });
 
       // Connection event handlers
