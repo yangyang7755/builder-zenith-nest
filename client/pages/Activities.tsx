@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bookmark, Clock, MapPin, Users, CheckCircle } from "lucide-react";
 import { useSavedActivities } from "../contexts/SavedActivitiesContext";
