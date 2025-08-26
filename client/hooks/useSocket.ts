@@ -46,6 +46,12 @@ export const useSocket = (): SocketContextType => {
 
     // Create socket connection if it doesn't exist
     if (!globalSocket) {
+      // First test API connectivity
+      testApiConnectivity().then((apiReachable) => {
+        if (!apiReachable) {
+          console.warn('⚠️ API not reachable, Socket.IO connection may fail');
+        }
+      });
       // Detect if we're in a hosted environment
       const isHostedEnv = window.location.hostname.includes('.fly.dev') ||
                          window.location.hostname.includes('.vercel.app') ||
