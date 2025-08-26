@@ -30,11 +30,18 @@ export const useSocket = (): SocketContextType => {
 
     // Create socket connection if it doesn't exist
     if (!globalSocket) {
-      // Always use the current origin for Socket.IO in this environment
-      // The Vite proxy will handle routing to the correct backend port
-      const socketUrl = window.location.origin;
+      // Detect if we're in a hosted environment
+      const isHostedEnv = window.location.hostname.includes('.fly.dev') ||
+                         window.location.hostname.includes('.vercel.app') ||
+                         window.location.hostname.includes('.netlify.app') ||
+                         window.location.hostname.includes('.herokuapp.com');
 
-      console.log(`🔌 Attempting to connect to Socket.IO server at: ${socketUrl}`);
+      // Use appropriate URL based on environment
+      const socketUrl = isHostedEnv
+        ? `${window.location.protocol}//${window.location.host}`
+        : window.location.origin;
+
+      console.log(`🔌 Attempting to connect to Socket.IO server at: ${socketUrl} (hosted: ${isHostedEnv})`);
 
       globalSocket = io(socketUrl, {
         path: '/socket.io/', // Explicit path for proxy
