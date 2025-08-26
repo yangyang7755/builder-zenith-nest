@@ -61,16 +61,17 @@ export const useSocket = (): SocketContextType => {
       // Connection event handlers
       globalSocket.on('connect', () => {
         console.log('✅ Socket connected:', globalSocket?.id);
+        console.log('🔗 Using transport:', globalSocket?.io?.engine?.transport?.name);
         setIsConnected(true);
-        
+
         // Join user-specific room for notifications
         if (user?.id) {
           globalSocket?.emit('join-user-room', user.id);
         }
       });
 
-      globalSocket.on('disconnect', () => {
-        console.log('❌ Socket disconnected');
+      globalSocket.on('disconnect', (reason) => {
+        console.log('❌ Socket disconnected:', reason);
         setIsConnected(false);
       });
 
@@ -83,14 +84,20 @@ export const useSocket = (): SocketContextType => {
           data: error.data,
           url: socketUrl,
           transport: globalSocket?.io?.engine?.transport?.name,
-          readyState: globalSocket?.io?.engine?.readyState
+          readyState: globalSocket?.io?.engine?.readyState,
+          isHostedEnv: isHostedEnv
         });
         setIsConnected(false);
 
-        // In hosted environments, try to reconnect more aggressively
+        // In hosted environments, try to fallback to polling if websocket fails
         if (isHostedEnv && globalSocket?.io?.engine?.transport?.name === 'websocket') {
           console.log('🔄 WebSocket failed in hosted env, forcing polling transport');
-          globalSocket.io.opts.transports = ['polling'];
+          setTimeout(() => {
+            if (globalSocket && !globalSocket.connected) {
+              globalSocket.io.opts.transports = ['polling'];
+              globalSocket.connect();
+            }
+          }, 1000);
         }
       });
 
