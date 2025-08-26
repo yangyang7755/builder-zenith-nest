@@ -64,10 +64,14 @@ const app = express();
 const httpServer = createHttpServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: true, // Allow all origins in development
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
+  allowEIO3: true, // Support older Engine.IO versions
+  transports: ['websocket', 'polling'],
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 // Middleware
