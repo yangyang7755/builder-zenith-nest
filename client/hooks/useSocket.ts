@@ -38,14 +38,17 @@ export const useSocket = (): SocketContextType => {
 
       globalSocket = io(socketUrl, {
         path: '/socket.io/', // Explicit path for proxy
-        transports: ['websocket', 'polling'],
+        transports: ['polling', 'websocket'], // Try polling first for stability
         reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        timeout: 10000,
+        reconnectionAttempts: 10, // More attempts
+        reconnectionDelay: 2000, // Longer delay between attempts
+        reconnectionDelayMax: 10000,
+        maxReconnectionAttempts: 10,
+        timeout: 20000, // Longer timeout
         autoConnect: true,
         forceNew: false,
         upgrade: true,
+        rememberUpgrade: false, // Don't remember transport upgrades
       });
 
       // Connection event handlers
