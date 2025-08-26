@@ -80,9 +80,18 @@ export const useSocket = (): SocketContextType => {
           message: error.message,
           description: error.description,
           type: error.type,
-          data: error.data
+          data: error.data,
+          url: socketUrl,
+          transport: globalSocket?.io?.engine?.transport?.name,
+          readyState: globalSocket?.io?.engine?.readyState
         });
         setIsConnected(false);
+
+        // In hosted environments, try to reconnect more aggressively
+        if (isHostedEnv && globalSocket?.io?.engine?.transport?.name === 'websocket') {
+          console.log('🔄 WebSocket failed in hosted env, forcing polling transport');
+          globalSocket.io.opts.transports = ['polling'];
+        }
       });
 
       globalSocket.on('reconnect', (attemptNumber) => {
