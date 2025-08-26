@@ -90,10 +90,18 @@ class NetworkService {
 
     try {
       const startTime = Date.now();
+      // Use longer timeout for hosted environments
+      const isHostedEnv = window.location.hostname.includes('.fly.dev') ||
+                         window.location.hostname.includes('.vercel.app') ||
+                         window.location.hostname.includes('.netlify.app') ||
+                         window.location.hostname.includes('.herokuapp.com');
+
+      const timeout = isHostedEnv ? 8000 : 5000; // Longer timeout for hosted
+
       const response = await robustFetch("/api/health", {
         method: "GET",
         cache: "no-cache",
-        signal: AbortSignal.timeout(5000), // 5 second timeout for health checks
+        signal: AbortSignal.timeout(timeout),
       });
 
       const responseTime = Date.now() - startTime;
@@ -101,7 +109,9 @@ class NetworkService {
 
       let quality: "good" | "poor" | "offline" = "offline";
       if (isReachable) {
-        quality = responseTime < 1000 ? "good" : "poor";
+        // Adjust quality thresholds for hosted environments
+        const goodThreshold = isHostedEnv ? 2000 : 1000;
+        quality = responseTime < goodThreshold ? "good" : "poor";
       }
 
       this.updateStatus({
@@ -109,7 +119,7 @@ class NetworkService {
         connectionQuality: quality,
       });
     } catch (error) {
-      console.warn("Server health check failed:", error);
+      console.warn("Server health check failed:", error.message);
       this.updateStatus({
         isServerReachable: false,
         connectionQuality: this.status.isOnline ? "poor" : "offline",
