@@ -28,6 +28,22 @@ export const useSocket = (): SocketContextType => {
       return;
     }
 
+    // Test API connectivity before establishing Socket.IO connection
+    const testApiConnectivity = async () => {
+      try {
+        const response = await fetch('/api/health', {
+          method: 'GET',
+          timeout: 5000,
+          signal: AbortSignal.timeout(5000)
+        });
+        console.log('✅ API health check successful:', response.status);
+        return response.ok;
+      } catch (error) {
+        console.warn('⚠️ API health check failed:', error.message);
+        return false;
+      }
+    };
+
     // Create socket connection if it doesn't exist
     if (!globalSocket) {
       // Detect if we're in a hosted environment
