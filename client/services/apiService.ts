@@ -820,6 +820,7 @@ export const apiService = {
   async ping(): Promise<ApiResponse<{ message: string }>> {
     try {
       const response = await fetchWithTimeout(`${API_BASE_URL}/health`, {
+        method: "HEAD",
         headers: getAuthHeaders(),
       }, 5000); // Use 5 second timeout for health checks
       return await handleResponse(response);
