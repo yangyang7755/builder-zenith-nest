@@ -225,6 +225,14 @@ export const handleGetSavedActivities = async (req: Request, res: Response) => {
         });
       }
 
+      // In development, degrade gracefully to empty list to avoid blocking UI
+      if (process.env.NODE_ENV !== "production") {
+        console.log(
+          "Development mode: returning empty saved activities due to error",
+        );
+        return res.json({ success: true, data: [] });
+      }
+
       return res.status(500).json({
         success: false,
         error: "Failed to fetch saved activities",
