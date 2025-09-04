@@ -316,11 +316,24 @@ export const apiService = {
   // Saved Activities methods
   async getSavedActivities(): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetch(`${API_BASE_URL}/saved-activities`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/saved-activities`, {
         headers: getAuthHeaders(),
       });
       return await handleResponse(response);
     } catch (error) {
+      if (error instanceof Error) {
+        if (error.name === "AbortError") {
+          return { error: "Request timeout" };
+        }
+        const msg = error.message || "";
+        if (
+          msg.includes("No internet connection") ||
+          msg.includes("Server temporarily unavailable") ||
+          msg.includes("Failed to fetch")
+        ) {
+          return { error: "BACKEND_UNAVAILABLE" };
+        }
+      }
       return { error: "Failed to fetch saved activities" };
     }
   },
