@@ -281,6 +281,9 @@ export const createExpressApp = () => {
   return app;
 };
 
+// Provide a generic factory for environments that expect `createServer()` to return an Express app
+export const createServer = () => app;
+
 // Note: Server is started by server/server.ts, not here
 
 export { io, app, httpServer };
