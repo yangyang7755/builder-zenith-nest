@@ -3,6 +3,12 @@ import { databaseManager, getDatabaseStatus } from "../lib/database.js";
 
 const router = express.Router();
 
+// HEAD /api/health - ultra-fast health ping
+router.head("/", (req, res) => {
+  // Always report healthy for HEAD to keep UI responsive; GET provides detailed status
+  res.status(200).end();
+});
+
 // GET /api/health - Basic health check
 router.get("/", async (req, res) => {
   try {
