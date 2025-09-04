@@ -99,7 +99,7 @@ class NetworkService {
       const timeout = isHostedEnv ? 8000 : 5000; // Longer timeout for hosted
 
       const response = await robustFetch("/api/health", {
-        method: "GET",
+        method: "HEAD",
         cache: "no-cache",
         signal: AbortSignal.timeout(timeout),
       });
