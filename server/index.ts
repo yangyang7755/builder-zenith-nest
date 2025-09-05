@@ -133,8 +133,12 @@ app.post("/api/clubs", handleCreateClub);
 app.get("/api/clubs/:id", handleGetClub);
 app.put("/api/clubs/:id", handleUpdateClub);
 app.post("/api/clubs/:id/join", handleJoinRequest);
+app.delete("/api/clubs/:id/leave", handleLeaveClub);
 app.put("/api/clubs/:id/requests/:requestId/approve", handleApproveRequest);
 app.delete("/api/clubs/:id/requests/:requestId/deny", handleDenyRequest);
+app.get("/api/user/club-memberships", handleGetUserClubMemberships);
+app.delete("/api/clubs/:id/members/:userId", handleRemoveMember);
+app.put("/api/clubs/:id/members/:userId/role", handleUpdateMemberRole);
 
 // Activity routes
 app.get("/api/activities", handleGetActivities);
