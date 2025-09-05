@@ -76,45 +76,43 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
 
     setIsLoading(true);
     try {
-      // Load cached data first for better UX
       await loadCachedData();
-      
-      // Then try to fetch fresh data
-      const [followersData, followingData, statsData] = await Promise.allSettled([
-        fetchFollowersData(user.id),
-        fetchFollowingData(user.id),
-        fetchFollowStats(user.id)
+
+      const [followersRes, followingRes, statsRes] = await Promise.allSettled([
+        apiService.getUserFollowers(user.id),
+        apiService.getUserFollowing(user.id),
+        apiService.getFollowStats(user.id),
       ]);
 
-      // Handle followers response
-      if (followersData.status === 'fulfilled' && Array.isArray(followersData.value)) {
-        setFollowers(followersData.value);
-        await AsyncStorage.setItem('followers', JSON.stringify(followersData.value));
+      if (
+        followersRes.status === "fulfilled" &&
+        followersRes.value.data &&
+        Array.isArray(followersRes.value.data)
+      ) {
+        setFollowers(followersRes.value.data);
+        await AsyncStorage.setItem("followers", JSON.stringify(followersRes.value.data));
       }
 
-      // Handle following response
-      if (followingData.status === 'fulfilled' && Array.isArray(followingData.value)) {
-        setFollowing(followingData.value);
-        await AsyncStorage.setItem('following', JSON.stringify(followingData.value));
+      if (
+        followingRes.status === "fulfilled" &&
+        followingRes.value.data &&
+        Array.isArray(followingRes.value.data)
+      ) {
+        setFollowing(followingRes.value.data);
+        await AsyncStorage.setItem("following", JSON.stringify(followingRes.value.data));
       }
 
-      // Handle stats response
-      if (statsData.status === 'fulfilled' && statsData.value) {
+      if (statsRes.status === "fulfilled" && statsRes.value.data) {
         setFollowStats({
-          followers: statsData.value.followers || 0,
-          following: statsData.value.following || 0
+          followers: statsRes.value.data.followers || 0,
+          following: statsRes.value.data.following || 0,
         });
-        await AsyncStorage.setItem('followStats', JSON.stringify(statsData.value));
+        await AsyncStorage.setItem("followStats", JSON.stringify(statsRes.value.data));
       } else {
-        // Use local data count as fallback
-        setFollowStats({ 
-          followers: followers.length, 
-          following: following.length 
-        });
+        setFollowStats({ followers: followers.length, following: following.length });
       }
     } catch (error) {
-      console.error('Error refreshing follow data:', error);
-      // Keep cached data on error
+      console.error("Error refreshing follow data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -156,50 +154,20 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
 
   const followUser = async (userId: string) => {
     if (!user) {
-      console.warn('No authenticated user for follow action');
+      console.warn("No authenticated user for follow action");
       return;
     }
-
     if (userId === user.id) {
-      console.warn('Cannot follow yourself');
+      console.warn("Cannot follow yourself");
       return;
     }
-
     try {
       setIsLoading(true);
-      
-      // Optimistic update
-      const newFollow: Following = {
-        id: `temp-${Date.now()}`,
-        follower_id: user.id,
-        following_id: userId,
-        created_at: new Date().toISOString(),
-        following: {
-          id: userId,
-          full_name: 'User',
-          profile_image: undefined
-        }
-      };
-
-      setFollowing(prev => {
-        const currentFollowing = Array.isArray(prev) ? prev : [];
-        return [...currentFollowing, newFollow];
-      });
-      setFollowStats(prev => ({
-        ...prev,
-        following: (prev?.following || 0) + 1
-      }));
-
-      // Try to make API call
-      await followUserAPI(userId);
-      
-      // Update cache
-      await AsyncStorage.setItem('following', JSON.stringify(following));
-      
-    } catch (error) {
-      console.error('Error following user:', error);
-      // Revert optimistic update on error
+      const res = await apiService.followUser(userId);
+      if (res.error) throw new Error(res.error);
       await refreshFollowData();
+    } catch (error) {
+      console.error("Error following user:", error);
     } finally {
       setIsLoading(false);
     }
@@ -207,30 +175,13 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
 
   const unfollowUser = async (userId: string) => {
     if (!user) return;
-
     try {
       setIsLoading(true);
-      
-      // Optimistic update
-      setFollowing(prev => {
-        const currentFollowing = Array.isArray(prev) ? prev : [];
-        return currentFollowing.filter(f => f.following_id !== userId);
-      });
-      setFollowStats(prev => ({
-        ...prev,
-        following: Math.max(0, (prev?.following || 0) - 1)
-      }));
-
-      // Try to make API call
-      await unfollowUserAPI(userId);
-      
-      // Update cache
-      await AsyncStorage.setItem('following', JSON.stringify(following));
-      
-    } catch (error) {
-      console.error('Error unfollowing user:', error);
-      // Revert optimistic update on error
+      const res = await apiService.unfollowUser(userId);
+      if (res.error) throw new Error(res.error);
       await refreshFollowData();
+    } catch (error) {
+      console.error("Error unfollowing user:", error);
     } finally {
       setIsLoading(false);
     }
@@ -246,7 +197,6 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
 
   const getFollowerCount = (userId?: string): number => {
     if (userId && userId !== user?.id) {
-      // For other users, return demo data or cached data
       return 0;
     }
     return followStats?.followers || 0;
@@ -254,7 +204,6 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
 
   const getFollowingCount = (userId?: string): number => {
     if (userId && userId !== user?.id) {
-      // For other users, return demo data or cached data
       return 0;
     }
     return followStats?.following || 0;
@@ -280,74 +229,6 @@ export const FollowProvider: React.FC<FollowProviderProps> = ({ children }) => {
   );
 };
 
-// API functions (React Native compatible)
-const fetchFollowersData = async (userId: string): Promise<Follower[]> => {
-  // In React Native, return demo data or implement your API call
-  return [
-    {
-      id: 'demo-follower-1',
-      follower_id: 'demo-user-1',
-      following_id: userId,
-      created_at: new Date().toISOString(),
-      follower: {
-        id: 'demo-user-1',
-        full_name: 'Sarah Johnson',
-        profile_image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-        university: 'Cambridge University'
-      }
-    },
-    {
-      id: 'demo-follower-2', 
-      follower_id: 'demo-user-2',
-      following_id: userId,
-      created_at: new Date(Date.now() - 86400000).toISOString(),
-      follower: {
-        id: 'demo-user-2',
-        full_name: 'Alex Chen',
-        profile_image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-        university: 'Oxford University'
-      }
-    }
-  ];
-};
-
-const fetchFollowingData = async (userId: string): Promise<Following[]> => {
-  // In React Native, return demo data or implement your API call
-  return [
-    {
-      id: 'demo-following-1',
-      follower_id: userId,
-      following_id: 'demo-user-3',
-      created_at: new Date().toISOString(),
-      following: {
-        id: 'demo-user-3',
-        full_name: 'Emma Wilson',
-        profile_image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-        university: 'Imperial College'
-      }
-    }
-  ];
-};
-
-const fetchFollowStats = async (userId: string): Promise<FollowStats> => {
-  // In React Native, return demo data or implement your API call
-  return {
-    followers: 152,
-    following: 87
-  };
-};
-
-const followUserAPI = async (userId: string): Promise<void> => {
-  // Implement actual API call here
-  // For now, simulate success
-  await new Promise(resolve => setTimeout(resolve, 500));
-};
-
-const unfollowUserAPI = async (userId: string): Promise<void> => {
-  // Implement actual API call here
-  // For now, simulate success
-  await new Promise(resolve => setTimeout(resolve, 500));
-};
 
 export const useFollow = (): FollowContextType => {
   const context = useContext(FollowContext);
