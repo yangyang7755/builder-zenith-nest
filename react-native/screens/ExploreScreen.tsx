@@ -20,6 +20,7 @@ import { useActivities } from "../contexts/ActivitiesContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useFollow } from "../contexts/FollowContext";
 import { useClubs } from "../contexts/ClubContext";
+import MapActivitiesModal from "../components/MapActivitiesModal";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -701,7 +702,7 @@ const ExploreScreen: React.FC = () => {
                   : "Recent activities nearby"}
               </Text>
               {!isSearching && (
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowMapView(true)}>
                   <Text style={styles.seeAllText}>See all</Text>
                 </TouchableOpacity>
               )}
@@ -752,7 +753,7 @@ const ExploreScreen: React.FC = () => {
                 <Text style={styles.sectionTitle}>
                   From people you follow ({activitiesFromFollowedUsers.length})
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowMapView(true)}>
                   <Text style={styles.seeAllText}>See all</Text>
                 </TouchableOpacity>
               </View>
@@ -782,7 +783,7 @@ const ExploreScreen: React.FC = () => {
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Partner requests</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowMapView(true)}>
                 <Text style={styles.seeAllText}>See all</Text>
               </TouchableOpacity>
             </View>
@@ -899,6 +900,11 @@ const ExploreScreen: React.FC = () => {
             </View>
           </View>
         </View>
+      </Modal>
+
+      {/* Map Activities Modal */}
+      <Modal visible={showMapView} transparent={false} animationType="slide" onRequestClose={() => setShowMapView(false)}>
+        <MapActivitiesModal activities={filteredActivities} onClose={() => setShowMapView(false)} />
       </Modal>
 
       {/* Filter Modal - Simplified for now */}
