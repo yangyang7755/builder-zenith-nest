@@ -205,11 +205,7 @@ const App = () => {
                                             />
                                             <Route
                                               path="/map-activities"
-                                              element={
-                                                <ProtectedRoute>
-                                                  <MapActivities />
-                                                </ProtectedRoute>
-                                              }
+                                              element={<MapActivities />}
                                             />
                                             <Route
                                               path="/category-activities"
