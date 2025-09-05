@@ -147,6 +147,9 @@ app.get("/api/activities/:id", handleGetActivity);
 app.put("/api/activities/:id", handleUpdateActivity);
 app.delete("/api/activities/:id", handleDeleteActivity);
 app.get("/api/activities/:id/participants", handleGetActivityParticipants);
+app.post("/api/activities/:id/request-join", handleRequestJoinActivity);
+app.put("/api/activities/:id/requests/:requestId/approve", handleApproveActivityRequest);
+app.delete("/api/activities/:id/requests/:requestId/deny", handleDenyActivityRequest);
 app.post("/api/activities/:id/join", handleJoinActivity);
 app.delete("/api/activities/:id/leave", handleLeaveActivity);
 
