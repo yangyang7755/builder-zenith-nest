@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useActivities } from "../contexts/ActivitiesContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useFollow } from "../contexts/FollowContext";
+import { useClubs } from "../contexts/ClubContext";
 
 const { width: screenWidth } = Dimensions.get("window");
 
