@@ -129,6 +129,15 @@ const ExploreScreen: React.FC = () => {
     setFilters(newFilters);
   };
 
+  const toggleActivityType = (type: string) => {
+    setFilters((prev) => {
+      const selected = prev.activityType.includes(type)
+        ? prev.activityType.filter((t) => t !== type)
+        : [...prev.activityType, type];
+      return { ...prev, activityType: selected };
+    });
+  };
+
   useEffect(() => {
     let filtered = activities;
 
