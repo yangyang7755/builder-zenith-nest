@@ -513,9 +513,15 @@ const ExploreScreen: React.FC = () => {
             participants
           </Text>
         </View>
-        <TouchableOpacity style={styles.joinButton}>
-          <Text style={styles.joinButtonText}>Request to join</Text>
-        </TouchableOpacity>
+        {(() => {
+          const clubId = activity.club_id || activity.clubId || activity.club?.id;
+          const canJoin = !clubId || isMember(String(clubId));
+          return (
+            <TouchableOpacity style={[styles.joinButton, !canJoin && { backgroundColor: '#9CA3AF' }]} disabled={!canJoin}>
+              <Text style={styles.joinButtonText}>{canJoin ? 'Request to join' : 'Join club to request'}</Text>
+            </TouchableOpacity>
+          );
+        })()}
       </View>
     </TouchableOpacity>
   );
