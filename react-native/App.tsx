@@ -3,6 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet, Text, View } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+import React from "react";
 
 // Import contexts
 import { AuthProvider } from "./contexts/AuthContext";
@@ -16,6 +18,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import ExploreScreen from "./screens/ExploreScreen";
 import ActivitiesScreen from "./screens/ActivitiesScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import AnimatedSplash from "./components/AnimatedSplash";
 
 // Simple placeholder components for screens that haven't been converted yet
 const CreateScreen = () => (
@@ -245,15 +248,27 @@ function RootNavigator() {
   );
 }
 
+// Keep the native splash screen visible while we set up JS and show animated splash
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
 // Main App Component
 export default function App() {
+  const [showSplash, setShowSplash] = React.useState(true);
+
   return (
     <AuthProvider>
       <FollowProvider>
         <ActivitiesProvider>
-          <NavigationContainer>
-            <RootNavigator />
-          </NavigationContainer>
+          {showSplash ? (
+            <AnimatedSplash
+              sourceUrl="https://cdn.builder.io/o/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9cad890b588b4e8cbd2726cd71167932?alt=media&token=891d3039-c642-45c7-a19e-083d196ae503&apiKey=f84d5d174b6b486a8c8b5017bb90c068"
+              onFinish={() => setShowSplash(false)}
+            />
+          ) : (
+            <NavigationContainer>
+              <RootNavigator />
+            </NavigationContainer>
+          )}
         </ActivitiesProvider>
       </FollowProvider>
     </AuthProvider>
@@ -268,8 +283,8 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
     height: 70,
-    elevation: 8, // Android shadow
-    shadowColor: "#000", // iOS shadow
+    elevation: 8,
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: -2,
