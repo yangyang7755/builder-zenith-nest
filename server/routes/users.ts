@@ -759,17 +759,22 @@ export const handleProfileOnboarding = async (req: Request, res: Response) => {
       // Demo mode - no authentication required
       console.log("Running in demo mode - no authentication required");
     } else if (!userId) {
-      // Production mode - authentication required
-      return res.status(400).json({
-        success: false,
-        error: "User ID is required",
-      });
+      // If no authenticated user in non-production, fall back to demo handling
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("No user ID in request; falling back to demo onboarding handler in non-production");
+      } else {
+        // Production mode - authentication required
+        return res.status(400).json({
+          success: false,
+          error: "User ID is required",
+        });
+      }
     } else {
       console.log("Creating/updating profile from onboarding for user:", userId);
     }
 
-    // Check if Supabase is configured
-    if (!supabaseAdmin) {
+    // Check if Supabase is configured OR we're falling back due to missing userId in non-production
+    if (!supabaseAdmin || (!userId && process.env.NODE_ENV !== "production")) {
       const demoUserId = userId || `demo-user-${Date.now()}`;
       const profileData = {
         id: demoUserId,
