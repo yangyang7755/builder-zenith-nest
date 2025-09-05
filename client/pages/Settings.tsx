@@ -198,8 +198,8 @@ export default function Settings() {
           <SettingsItem
             icon={<User className="w-5 h-5" />}
             title="Edit Profile"
-            subtitle="Update your personal information"
-            onClick={() => navigate("/profile/edit")}
+            subtitle="Update your info and profile photo"
+            onClick={() => navigate("/profile/edit-comprehensive")}
           />
           <SettingsItem
             icon={<Mail className="w-5 h-5" />}
