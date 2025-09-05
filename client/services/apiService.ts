@@ -513,25 +513,10 @@ export const apiService = {
       });
       return await handleResponse(response);
     } catch (error: any) {
-      if (error?.name === "AbortError" || error?.name === "TimeoutError") {
-        return { error: "Request timeout" };
-      }
-
-      const msg = (error && (error.message || String(error))) || "";
-      if (
-        msg.includes("No internet") ||
-        msg.includes("temporarily unavailable") ||
-        msg.includes("Failed to fetch") ||
-        msg.includes("XMLHttpRequest")
-      ) {
-        // Return an empty successful payload to avoid breaking UI in offline/demo mode
-        return {
-          data: { success: true, data: [], pagination: { total: 0, limit: 20, offset: 0 } },
-        };
-      }
-
-      console.error("Failed to fetch activities:", error);
-      return { error: "Failed to fetch activities" };
+      // Always degrade gracefully for activities: return empty-success payload
+      return {
+        data: { success: true, data: [], pagination: { total: 0, limit: 20, offset: 0 } },
+      };
     }
   },
 
