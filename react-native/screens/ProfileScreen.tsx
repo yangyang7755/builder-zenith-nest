@@ -46,6 +46,8 @@ const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
   const { user, profile } = useAuth();
   const {
+    followers,
+    following,
     followStats,
     isLoading: followLoading,
     refreshFollowData,
@@ -587,13 +589,24 @@ const ProfileScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
             <FlatList
-              data={followStats ? [] : []}
+              data={followers}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={{ flexDirection: "row", alignItems: "center", padding: 12, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: "#E5E7EB" }}>
+                  <Image source={{ uri: item.follower.profile_image || "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face" }} style={{ width: 36, height: 36, borderRadius: 18, marginRight: 12 }} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 16, color: "#111827", fontWeight: "500" }}>{item.follower.full_name}</Text>
+                    {!!item.follower.university && (
+                      <Text style={{ fontSize: 12, color: "#6B7280" }}>{item.follower.university}</Text>
+                    )}
+                  </View>
+                </View>
+              )}
               ListEmptyComponent={() => (
                 <View style={{ padding: 16 }}>
                   <Text style={styles.comingSoon}>No followers yet</Text>
                 </View>
               )}
-              renderItem={() => null}
             />
           </View>
         </View>
@@ -615,13 +628,24 @@ const ProfileScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
             <FlatList
-              data={[]}
+              data={following}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={{ flexDirection: "row", alignItems: "center", padding: 12, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: "#E5E7EB" }}>
+                  <Image source={{ uri: item.following.profile_image || "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face" }} style={{ width: 36, height: 36, borderRadius: 18, marginRight: 12 }} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 16, color: "#111827", fontWeight: "500" }}>{item.following.full_name}</Text>
+                    {!!item.following.university && (
+                      <Text style={{ fontSize: 12, color: "#6B7280" }}>{item.following.university}</Text>
+                    )}
+                  </View>
+                </View>
+              )}
               ListEmptyComponent={() => (
                 <View style={{ padding: 16 }}>
                   <Text style={styles.comingSoon}>Not following anyone yet</Text>
                 </View>
               )}
-              renderItem={() => null}
             />
           </View>
         </View>
