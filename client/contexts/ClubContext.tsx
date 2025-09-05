@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { useAuth } from "./AuthContext";
 import { apiService } from "@/services/apiService";
 import { useToast } from "@/hooks/use-toast";
@@ -9,7 +15,15 @@ export interface Club {
   description: string;
   profileImage: string;
   coverImage?: string;
-  type: "cycling" | "climbing" | "running" | "hiking" | "skiing" | "surfing" | "tennis" | "general";
+  type:
+    | "cycling"
+    | "climbing"
+    | "running"
+    | "hiking"
+    | "skiing"
+    | "surfing"
+    | "tennis"
+    | "general";
   location: string;
   memberCount: number;
   managerId: string;
@@ -72,32 +86,38 @@ export function ClubProvider({ children }: { children: ReactNode }) {
     const handleMembershipChange = (event: CustomEvent) => {
       const { action, clubId, userId } = event.detail;
 
-      setClubs(prev =>
-        prev.map(club => {
+      setClubs((prev) =>
+        prev.map((club) => {
           if (club.id === clubId) {
-            if (action === 'joined') {
+            if (action === "joined") {
               return {
                 ...club,
                 members: [...club.members, userId],
-                memberCount: club.memberCount + 1
+                memberCount: club.memberCount + 1,
               };
-            } else if (action === 'left') {
+            } else if (action === "left") {
               return {
                 ...club,
-                members: club.members.filter(id => id !== userId),
-                memberCount: Math.max(0, club.memberCount - 1)
+                members: club.members.filter((id) => id !== userId),
+                memberCount: Math.max(0, club.memberCount - 1),
               };
             }
           }
           return club;
-        })
+        }),
       );
     };
 
-    window.addEventListener('clubMembershipChanged', handleMembershipChange as EventListener);
+    window.addEventListener(
+      "clubMembershipChanged",
+      handleMembershipChange as EventListener,
+    );
 
     return () => {
-      window.removeEventListener('clubMembershipChanged', handleMembershipChange as EventListener);
+      window.removeEventListener(
+        "clubMembershipChanged",
+        handleMembershipChange as EventListener,
+      );
     };
   }, []);
 
@@ -117,17 +137,18 @@ export function ClubProvider({ children }: { children: ReactNode }) {
       ]);
 
       // Handle clubs response
-      if (clubsResponse.status === 'fulfilled' && clubsResponse.value.data) {
+      if (clubsResponse.status === "fulfilled" && clubsResponse.value.data) {
         setClubs(clubsResponse.value.data);
       } else {
-        console.warn('Failed to load clubs, using demo data');
+        console.warn("Failed to load clubs, using demo data");
         // Use demo clubs as fallback
         setClubs([
           {
             id: "oucc",
             name: "Oxford University Cycling Club",
             description: "The premier cycling club at Oxford University.",
-            profileImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800",
+            profileImage:
+              "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F2ef8190dcf74499ba685f251b701545c?format=webp&width=800",
             type: "cycling",
             location: "Oxford, UK",
             memberCount: 156,
@@ -144,7 +165,8 @@ export function ClubProvider({ children }: { children: ReactNode }) {
             id: "westway",
             name: "Westway Climbing Centre",
             description: "London's premier climbing facility.",
-            profileImage: "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800",
+            profileImage:
+              "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fcce50dcf455a49d6aa9a7694c8a58f26?format=webp&width=800",
             type: "climbing",
             location: "London, UK",
             memberCount: 342,
@@ -161,14 +183,19 @@ export function ClubProvider({ children }: { children: ReactNode }) {
       }
 
       // Handle user clubs response
-      if (userClubsResponse.status === 'fulfilled' && userClubsResponse.value.data) {
-        setUserClubs(userClubsResponse.value.data.map((club: any) => ({
-          clubId: club.id,
-          role: club.role || 'member',
-          joinedAt: new Date(club.joined_at || Date.now()),
-        })));
+      if (
+        userClubsResponse.status === "fulfilled" &&
+        userClubsResponse.value.data
+      ) {
+        setUserClubs(
+          userClubsResponse.value.data.map((club: any) => ({
+            clubId: club.id,
+            role: club.role || "member",
+            joinedAt: new Date(club.joined_at || Date.now()),
+          })),
+        );
       } else {
-        console.warn('Failed to load user clubs, using demo data');
+        console.warn("Failed to load user clubs, using demo data");
         // Use demo memberships as fallback
         setUserClubs([
           {
@@ -184,7 +211,7 @@ export function ClubProvider({ children }: { children: ReactNode }) {
         ]);
       }
     } catch (error) {
-      console.error('Error loading club data:', error);
+      console.error("Error loading club data:", error);
     } finally {
       setLoading(false);
     }
@@ -210,12 +237,14 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   }, [userClubs]);
 
   const getUserClubRole = (clubId: string): UserClubRole => {
-    const userClub = userClubs.find(uc => uc.clubId === clubId);
+    const userClub = userClubs.find((uc) => uc.clubId === clubId);
     return userClub?.role || "non-member";
   };
 
   const getUserClubs = (): Club[] => {
-    return userClubs.map(uc => clubs.find(c => c.id === uc.clubId)).filter(Boolean) as Club[];
+    return userClubs
+      .map((uc) => clubs.find((c) => c.id === uc.clubId))
+      .filter(Boolean) as Club[];
   };
 
   const isClubManager = (clubId: string): boolean => {
@@ -228,7 +257,7 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   };
 
   const getClubById = (clubId: string): Club | undefined => {
-    return clubs.find(c => c.id === clubId);
+    return clubs.find((c) => c.id === clubId);
   };
 
   const requestToJoinClub = async (clubId: string, message?: string) => {
@@ -244,8 +273,8 @@ export function ClubProvider({ children }: { children: ReactNode }) {
       }
 
       // Update local state optimistically
-      setUserClubs(prev => [
-        ...prev.filter(uc => uc.clubId !== clubId),
+      setUserClubs((prev) => [
+        ...prev.filter((uc) => uc.clubId !== clubId),
         {
           clubId,
           role: "member",
@@ -253,15 +282,17 @@ export function ClubProvider({ children }: { children: ReactNode }) {
         },
       ]);
 
-      setClubs(prev => prev.map(c =>
-        c.id === clubId
-          ? {
-              ...c,
-              members: [...c.members, currentUserId],
-              memberCount: c.memberCount + 1
-            }
-          : c
-      ));
+      setClubs((prev) =>
+        prev.map((c) =>
+          c.id === clubId
+            ? {
+                ...c,
+                members: [...c.members, currentUserId],
+                memberCount: c.memberCount + 1,
+              }
+            : c,
+        ),
+      );
 
       toast({
         title: "Joined Club! 🎉",
@@ -269,12 +300,13 @@ export function ClubProvider({ children }: { children: ReactNode }) {
       });
 
       // Dispatch event for other components
-      window.dispatchEvent(new CustomEvent('clubMembershipChanged', {
-        detail: { action: 'joined', clubId, userId: currentUserId }
-      }));
-
+      window.dispatchEvent(
+        new CustomEvent("clubMembershipChanged", {
+          detail: { action: "joined", clubId, userId: currentUserId },
+        }),
+      );
     } catch (error: any) {
-      console.error('Error joining club:', error);
+      console.error("Error joining club:", error);
       toast({
         title: "Error Joining Club",
         description: error.message || "Failed to join club. Please try again.",
@@ -287,25 +319,29 @@ export function ClubProvider({ children }: { children: ReactNode }) {
 
   const approveClubRequest = (clubId: string, requestId: string) => {
     const club = getClubById(clubId);
-    const request = club?.pendingRequests.find(r => r.id === requestId);
+    const request = club?.pendingRequests.find((r) => r.id === requestId);
     if (!club || !request || !isClubManager(clubId)) return;
 
     // Add user to club members
-    setClubs(prev => prev.map(c => 
-      c.id === clubId 
-        ? { 
-            ...c, 
-            members: [...c.members, request.userId],
-            memberCount: c.memberCount + 1,
-            pendingRequests: c.pendingRequests.filter(r => r.id !== requestId)
-          }
-        : c
-    ));
+    setClubs((prev) =>
+      prev.map((c) =>
+        c.id === clubId
+          ? {
+              ...c,
+              members: [...c.members, request.userId],
+              memberCount: c.memberCount + 1,
+              pendingRequests: c.pendingRequests.filter(
+                (r) => r.id !== requestId,
+              ),
+            }
+          : c,
+      ),
+    );
 
     // Add club to user's clubs if it's the current user
     if (request.userId === currentUserId) {
-      setUserClubs(prev => [
-        ...prev.filter(uc => uc.clubId !== clubId),
+      setUserClubs((prev) => [
+        ...prev.filter((uc) => uc.clubId !== clubId),
         {
           clubId,
           role: "member",
@@ -318,11 +354,18 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   const denyClubRequest = (clubId: string, requestId: string) => {
     if (!isClubManager(clubId)) return;
 
-    setClubs(prev => prev.map(c => 
-      c.id === clubId 
-        ? { ...c, pendingRequests: c.pendingRequests.filter(r => r.id !== requestId) }
-        : c
-    ));
+    setClubs((prev) =>
+      prev.map((c) =>
+        c.id === clubId
+          ? {
+              ...c,
+              pendingRequests: c.pendingRequests.filter(
+                (r) => r.id !== requestId,
+              ),
+            }
+          : c,
+      ),
+    );
   };
 
   const removeMember = async (clubId: string, memberId: string) => {
@@ -337,19 +380,21 @@ export function ClubProvider({ children }: { children: ReactNode }) {
       }
 
       // Update local state
-      setClubs(prev => prev.map(c =>
-        c.id === clubId
-          ? {
-              ...c,
-              members: c.members.filter(m => m !== memberId),
-              memberCount: Math.max(0, c.memberCount - 1)
-            }
-          : c
-      ));
+      setClubs((prev) =>
+        prev.map((c) =>
+          c.id === clubId
+            ? {
+                ...c,
+                members: c.members.filter((m) => m !== memberId),
+                memberCount: Math.max(0, c.memberCount - 1),
+              }
+            : c,
+        ),
+      );
 
       // Remove club from user's clubs if it's the current user
       if (memberId === currentUserId) {
-        setUserClubs(prev => prev.filter(uc => uc.clubId !== clubId));
+        setUserClubs((prev) => prev.filter((uc) => uc.clubId !== clubId));
 
         const club = getClubById(clubId);
         toast({
@@ -358,13 +403,14 @@ export function ClubProvider({ children }: { children: ReactNode }) {
         });
 
         // Dispatch event for other components
-        window.dispatchEvent(new CustomEvent('clubMembershipChanged', {
-          detail: { action: 'left', clubId, userId: currentUserId }
-        }));
+        window.dispatchEvent(
+          new CustomEvent("clubMembershipChanged", {
+            detail: { action: "left", clubId, userId: currentUserId },
+          }),
+        );
       }
-
     } catch (error: any) {
-      console.error('Error leaving club:', error);
+      console.error("Error leaving club:", error);
       toast({
         title: "Error Leaving Club",
         description: error.message || "Failed to leave club. Please try again.",
@@ -378,11 +424,9 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   const updateClub = (clubId: string, updates: Partial<Club>) => {
     if (!isClubManager(clubId)) return;
 
-    setClubs(prev => prev.map(c => 
-      c.id === clubId 
-        ? { ...c, ...updates }
-        : c
-    ));
+    setClubs((prev) =>
+      prev.map((c) => (c.id === clubId ? { ...c, ...updates } : c)),
+    );
   };
 
   const getClubActivities = (clubId: string) => {
@@ -392,22 +436,24 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ClubContext.Provider value={{
-      clubs,
-      userClubs,
-      getUserClubRole,
-      getUserClubs,
-      isClubManager,
-      isClubMember,
-      getClubById,
-      requestToJoinClub,
-      approveClubRequest,
-      denyClubRequest,
-      removeMember,
-      updateClub,
-      getClubActivities,
-      currentUserId,
-    }}>
+    <ClubContext.Provider
+      value={{
+        clubs,
+        userClubs,
+        getUserClubRole,
+        getUserClubs,
+        isClubManager,
+        isClubMember,
+        getClubById,
+        requestToJoinClub,
+        approveClubRequest,
+        denyClubRequest,
+        removeMember,
+        updateClub,
+        getClubActivities,
+        currentUserId,
+      }}
+    >
       {children}
     </ClubContext.Provider>
   );
@@ -434,7 +480,9 @@ const defaultClubContext: ClubContextType = {
 export function useClub() {
   const context = useContext(ClubContext);
   if (context === undefined) {
-    console.warn("useClub called outside ClubProvider. Using fallback context.");
+    console.warn(
+      "useClub called outside ClubProvider. Using fallback context.",
+    );
     return defaultClubContext;
   }
   return context;

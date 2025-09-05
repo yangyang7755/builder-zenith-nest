@@ -52,7 +52,11 @@ interface ClubContextType {
   createClub: (clubData: Partial<Club>) => Promise<Club | null>;
   approveRequest: (clubId: string, requestId: string) => Promise<boolean>;
   denyRequest: (clubId: string, requestId: string) => Promise<boolean>;
-  updateMemberRole: (clubId: string, userId: string, role: "member" | "manager") => Promise<boolean>;
+  updateMemberRole: (
+    clubId: string,
+    userId: string,
+    role: "member" | "manager",
+  ) => Promise<boolean>;
   removeMember: (clubId: string, userId: string) => Promise<boolean>;
 }
 
@@ -165,7 +169,10 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
     }
   };
 
-  const requestJoin = async (clubId: string, message?: string): Promise<boolean> => {
+  const requestJoin = async (
+    clubId: string,
+    message?: string,
+  ): Promise<boolean> => {
     if (!user) {
       Alert.alert("Authentication Required", "Please log in to join clubs");
       return false;
@@ -196,13 +203,18 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
 
       if (response.error) {
         // Revert optimistic pending request
-        setMemberships((prev) => prev.filter((m) => !(m.club_id === clubId && m.user_id === user.id)));
+        setMemberships((prev) =>
+          prev.filter((m) => !(m.club_id === clubId && m.user_id === user.id)),
+        );
 
         Alert.alert("Error", response.error);
         return false;
       }
 
-      Alert.alert("Request sent", "Your request to join the club has been sent");
+      Alert.alert(
+        "Request sent",
+        "Your request to join the club has been sent",
+      );
 
       // Refresh data to get accurate membership info
       await Promise.all([getUserClubs(), refreshClubs()]);
@@ -257,11 +269,18 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
   };
 
   const isMember = (clubId: string): boolean => {
-    return memberships.some((m) => m.club_id === clubId && (m.status === "approved" || !m.status));
+    return memberships.some(
+      (m) => m.club_id === clubId && (m.status === "approved" || !m.status),
+    );
   };
 
   const isManager = (clubId: string): boolean => {
-    return memberships.some((m) => m.club_id === clubId && m.role === "manager" && (m.status === "approved" || !m.status));
+    return memberships.some(
+      (m) =>
+        m.club_id === clubId &&
+        m.role === "manager" &&
+        (m.status === "approved" || !m.status),
+    );
   };
 
   const getUserRole = (clubId: string): "non-member" | "member" | "manager" => {
@@ -313,7 +332,10 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
     }
   };
 
-  const approveRequest = async (clubId: string, requestId: string): Promise<boolean> => {
+  const approveRequest = async (
+    clubId: string,
+    requestId: string,
+  ): Promise<boolean> => {
     try {
       setIsLoading(true);
       const res = await apiService.approveClubRequest(clubId, requestId);
@@ -328,7 +350,10 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
     }
   };
 
-  const denyRequest = async (clubId: string, requestId: string): Promise<boolean> => {
+  const denyRequest = async (
+    clubId: string,
+    requestId: string,
+  ): Promise<boolean> => {
     try {
       setIsLoading(true);
       const res = await apiService.denyClubRequest(clubId, requestId);
@@ -342,7 +367,11 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
     }
   };
 
-  const updateMemberRoleAction = async (clubId: string, userId: string, role: "member" | "manager"): Promise<boolean> => {
+  const updateMemberRoleAction = async (
+    clubId: string,
+    userId: string,
+    role: "member" | "manager",
+  ): Promise<boolean> => {
     try {
       setIsLoading(true);
       const res = await apiService.updateMemberRole(clubId, userId, role);
@@ -357,7 +386,10 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
     }
   };
 
-  const removeMemberAction = async (clubId: string, userId: string): Promise<boolean> => {
+  const removeMemberAction = async (
+    clubId: string,
+    userId: string,
+  ): Promise<boolean> => {
     try {
       setIsLoading(true);
       const res = await apiService.removeClubMember(clubId, userId);

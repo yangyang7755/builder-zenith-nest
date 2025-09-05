@@ -11,7 +11,7 @@ async function getAuthenticatedUser(req: Request) {
     if (process.env.NODE_ENV !== "production") {
       return {
         id: "demo-user-id",
-        email: "demo@example.com"
+        email: "demo@example.com",
       };
     }
     return null;
@@ -22,7 +22,7 @@ async function getAuthenticatedUser(req: Request) {
     // Fallback to demo user in development
     return {
       id: "demo-user-id",
-      email: "demo@example.com"
+      email: "demo@example.com",
     };
   }
 
@@ -46,16 +46,20 @@ const ActivitySchema = z.object({
     "skiing",
     "surfing",
     "tennis",
-    "general"
+    "general",
   ]),
   date_time: z.string().datetime(), // ISO 8601 format
   location: z.string().min(1).max(255),
-  coordinates: z.object({
-    lat: z.number(),
-    lng: z.number()
-  }).optional(),
+  coordinates: z
+    .object({
+      lat: z.number(),
+      lng: z.number(),
+    })
+    .optional(),
   max_participants: z.number().positive().default(10),
-  difficulty_level: z.enum(["beginner", "intermediate", "advanced", "all"]).default("beginner"),
+  difficulty_level: z
+    .enum(["beginner", "intermediate", "advanced", "all"])
+    .default("beginner"),
   activity_image: z.string().url().optional(),
   route_link: z.string().url().optional(),
   special_requirements: z.string().optional(),
@@ -76,13 +80,22 @@ const ListActivitiesSchema = z.object({
   date_from: z.string().datetime().optional(),
   date_to: z.string().datetime().optional(),
   status: z.enum(["upcoming", "ongoing", "completed", "cancelled"]).optional(),
-  limit: z.string().transform(val => parseInt(val) || 20).optional(),
-  offset: z.string().transform(val => parseInt(val) || 0).optional(),
+  limit: z
+    .string()
+    .transform((val) => parseInt(val) || 20)
+    .optional(),
+  offset: z
+    .string()
+    .transform((val) => parseInt(val) || 0)
+    .optional(),
 });
 
 // GET /api/activities - List activities with filtering/search
 // GET /api/activities/:id/participants - Get activity participants
-export const handleGetActivityParticipants = async (req: Request, res: Response) => {
+export const handleGetActivityParticipants = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { id: activityId } = req.params;
 
@@ -98,8 +111,9 @@ export const handleGetActivityParticipants = async (req: Request, res: Response)
           user: {
             id: "demo-user-1",
             full_name: "Sarah Johnson",
-            profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
-          }
+            profile_image:
+              "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+          },
         },
         {
           id: "demo-participant-2",
@@ -110,56 +124,58 @@ export const handleGetActivityParticipants = async (req: Request, res: Response)
           user: {
             id: "demo-user-2",
             full_name: "Mike Chen",
-            profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-          }
-        }
+            profile_image:
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+          },
+        },
       ];
 
       return res.json({
         success: true,
-        data: demoParticipants
+        data: demoParticipants,
       });
     }
 
     const { data: participants, error } = await supabaseAdmin
       .from("activity_participants")
-      .select(`
+      .select(
+        `
         *,
         user:profiles!user_id (
           id,
           full_name,
           profile_image
         )
-      `)
+      `,
+      )
       .eq("activity_id", activityId)
       .eq("status", "joined")
       .order("joined_at", { ascending: true });
 
     if (error) {
       console.error("Database error:", error);
-      if (error.code === '42P01') {
+      if (error.code === "42P01") {
         // Table doesn't exist - return demo data
         return res.json({
           success: true,
-          data: []
+          data: [],
         });
       }
       return res.status(500).json({
         success: false,
-        error: "Failed to fetch activity participants"
+        error: "Failed to fetch activity participants",
       });
     }
 
     res.json({
       success: true,
-      data: participants || []
+      data: participants || [],
     });
-
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch activity participants"
+      error: "Failed to fetch activity participants",
     });
   }
 };
@@ -174,7 +190,8 @@ export const handleGetActivities = async (req: Request, res: Response) => {
         {
           id: "demo-activity-1",
           title: "Morning Richmond Park Cycle",
-          description: "Join us for a scenic morning ride through Richmond Park!",
+          description:
+            "Join us for a scenic morning ride through Richmond Park!",
           activity_type: "cycling",
           organizer_id: "demo-user-1",
           club_id: null,
@@ -184,39 +201,44 @@ export const handleGetActivities = async (req: Request, res: Response) => {
           max_participants: 15,
           current_participants: 8,
           difficulty_level: "intermediate",
-          activity_image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7f09?w=600&h=400&fit=crop",
+          activity_image:
+            "https://images.unsplash.com/photo-1558618047-3c8c76ca7f09?w=600&h=400&fit=crop",
           status: "upcoming",
           price_per_person: 0,
           created_at: new Date().toISOString(),
           organizer: {
             id: "demo-user-1",
             full_name: "Sarah Johnson",
-            profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
-          }
+            profile_image:
+              "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+          },
         },
         {
           id: "demo-activity-2",
           title: "Beginner Rock Climbing",
-          description: "Perfect for newcomers to climbing. All equipment provided!",
+          description:
+            "Perfect for newcomers to climbing. All equipment provided!",
           activity_type: "climbing",
           organizer_id: "demo-user-2",
           club_id: "westway",
           date_time: new Date(Date.now() + 172800000).toISOString(), // Day after tomorrow
           location: "Westway Climbing Centre, London",
-          coordinates: { lat: 51.5200, lng: -0.2367 },
+          coordinates: { lat: 51.52, lng: -0.2367 },
           max_participants: 8,
           current_participants: 5,
           difficulty_level: "beginner",
-          activity_image: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=600&h=400&fit=crop",
+          activity_image:
+            "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=600&h=400&fit=crop",
           status: "upcoming",
-          price_per_person: 15.00,
+          price_per_person: 15.0,
           created_at: new Date().toISOString(),
           organizer: {
             id: "demo-user-2",
             full_name: "Mike Chen",
-            profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-          }
-        }
+            profile_image:
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+          },
+        },
       ];
 
       return res.json({
@@ -225,15 +247,16 @@ export const handleGetActivities = async (req: Request, res: Response) => {
         pagination: {
           total: demoActivities.length,
           limit: filters.limit || 20,
-          offset: filters.offset || 0
-        }
+          offset: filters.offset || 0,
+        },
       });
     }
 
     // Build query with enhanced filtering
     let query = supabaseAdmin
       .from("activities")
-      .select(`
+      .select(
+        `
         *,
         organizer:profiles!organizer_id (
           id,
@@ -245,7 +268,8 @@ export const handleGetActivities = async (req: Request, res: Response) => {
           name,
           profile_image
         )
-      `)
+      `,
+      )
       .order("date_time", { ascending: true });
 
     // Apply filters
@@ -290,17 +314,17 @@ export const handleGetActivities = async (req: Request, res: Response) => {
     if (error) {
       console.error("Database error:", error);
       // If table doesn't exist, return demo data
-      if (error.code === '42P01') {
+      if (error.code === "42P01") {
         console.log("Database tables not set up yet, returning demo data");
         return res.json({
           success: true,
           data: [],
-          pagination: { total: 0, limit, offset }
+          pagination: { total: 0, limit, offset },
         });
       }
       return res.status(500).json({
         success: false,
-        error: "Failed to fetch activities"
+        error: "Failed to fetch activities",
       });
     }
 
@@ -309,15 +333,15 @@ export const handleGetActivities = async (req: Request, res: Response) => {
       (activities || []).map(async (activity) => {
         const { count: participantCount } = await supabaseAdmin
           .from("activity_participants")
-          .select("*", { count: 'exact' })
+          .select("*", { count: "exact" })
           .eq("activity_id", activity.id)
           .eq("status", "joined");
 
         return {
           ...activity,
-          current_participants: participantCount || 0
+          current_participants: participantCount || 0,
         };
-      })
+      }),
     );
 
     res.json({
@@ -326,22 +350,21 @@ export const handleGetActivities = async (req: Request, res: Response) => {
       pagination: {
         total: count || 0,
         limit,
-        offset
-      }
+        offset,
+      },
     });
-
   } catch (error) {
     console.error("Server error:", error);
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         error: "Invalid query parameters",
-        details: error.errors
+        details: error.errors,
       });
     }
     res.status(500).json({
       success: false,
-      error: "Failed to fetch activities"
+      error: "Failed to fetch activities",
     });
   }
 };
@@ -372,20 +395,22 @@ export const handleGetActivity = async (req: Request, res: Response) => {
         organizer: {
           id: "demo-user-1",
           full_name: "Demo User",
-          profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
+          profile_image:
+            "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
         },
-        participants: []
+        participants: [],
       };
 
       return res.json({
         success: true,
-        data: demoActivity
+        data: demoActivity,
       });
     }
 
     const { data: activity, error } = await supabaseAdmin
       .from("activities")
-      .select(`
+      .select(
+        `
         *,
         organizer:profiles!organizer_id (
           id,
@@ -408,7 +433,8 @@ export const handleGetActivity = async (req: Request, res: Response) => {
             profile_image
           )
         )
-      `)
+      `,
+      )
       .eq("id", id)
       .single();
 
@@ -416,7 +442,7 @@ export const handleGetActivity = async (req: Request, res: Response) => {
     if (activity) {
       const { count: participantCount } = await supabaseAdmin
         .from("activity_participants")
-        .select("*", { count: 'exact' })
+        .select("*", { count: "exact" })
         .eq("activity_id", activity.id)
         .eq("status", "joined");
 
@@ -425,28 +451,27 @@ export const handleGetActivity = async (req: Request, res: Response) => {
 
     if (error) {
       console.error("Database error:", error);
-      if (error.code === 'PGRST116') {
+      if (error.code === "PGRST116") {
         return res.status(404).json({
           success: false,
-          error: "Activity not found"
+          error: "Activity not found",
         });
       }
       return res.status(500).json({
         success: false,
-        error: "Failed to fetch activity"
+        error: "Failed to fetch activity",
       });
     }
 
     res.json({
       success: true,
-      data: activity
+      data: activity,
     });
-
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch activity"
+      error: "Failed to fetch activity",
     });
   }
 };
@@ -458,7 +483,7 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
@@ -473,13 +498,13 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
         current_participants: 0,
         status: "upcoming",
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
 
       return res.status(201).json({
         success: true,
         data: demoActivity,
-        message: "Activity created successfully (demo mode)"
+        message: "Activity created successfully (demo mode)",
       });
     }
 
@@ -496,7 +521,8 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
       if (!membership) {
         return res.status(403).json({
           success: false,
-          error: "You must be a member of this club to create activities for it",
+          error:
+            "You must be a member of this club to create activities for it",
         });
       }
     }
@@ -506,38 +532,40 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
     if (activityDateTime <= new Date()) {
       return res.status(400).json({
         success: false,
-        error: "Activity date must be in the future"
+        error: "Activity date must be in the future",
       });
     }
 
     // Ensure profile exists before creating activity
-    const { data: existingProfile, error: profileCheckError } = await supabaseAdmin
-      .from("profiles")
-      .select("id")
-      .eq("id", user.id)
-      .single();
+    const { data: existingProfile, error: profileCheckError } =
+      await supabaseAdmin
+        .from("profiles")
+        .select("id")
+        .eq("id", user.id)
+        .single();
 
-    if (profileCheckError && profileCheckError.code === 'PGRST116') {
+    if (profileCheckError && profileCheckError.code === "PGRST116") {
       // Profile doesn't exist, create one
       console.log("Profile doesn't exist for user, creating one...");
-      const { data: newProfile, error: profileCreateError } = await supabaseAdmin
-        .from("profiles")
-        .insert({
-          id: user.id,
-          email: user.email,
-          full_name: user.email?.split('@')[0] || "User", // Use email prefix as name
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
+      const { data: newProfile, error: profileCreateError } =
+        await supabaseAdmin
+          .from("profiles")
+          .insert({
+            id: user.id,
+            email: user.email,
+            full_name: user.email?.split("@")[0] || "User", // Use email prefix as name
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .select()
+          .single();
 
       if (profileCreateError) {
         console.error("Profile creation error:", profileCreateError);
         return res.status(500).json({
           success: false,
           error: "Failed to create user profile",
-          details: profileCreateError
+          details: profileCreateError,
         });
       }
       console.log("Profile created successfully:", newProfile);
@@ -545,7 +573,7 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
       console.error("Profile check error:", profileCheckError);
       return res.status(500).json({
         success: false,
-        error: "Failed to verify user profile"
+        error: "Failed to verify user profile",
       });
     }
 
@@ -554,16 +582,18 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
       .insert({
         ...validatedData,
         organizer_id: user.id,
-        status: "upcoming"
+        status: "upcoming",
       })
-      .select(`
+      .select(
+        `
         *,
         organizer:profiles!organizer_id (
           id,
           full_name,
           profile_image
         )
-      `)
+      `,
+      )
       .single();
 
     if (error) {
@@ -571,28 +601,27 @@ export const handleCreateActivity = async (req: Request, res: Response) => {
       return res.status(500).json({
         success: false,
         error: "Failed to create activity",
-        details: error
+        details: error,
       });
     }
 
     res.status(201).json({
       success: true,
       data: newActivity,
-      message: "Activity created successfully"
+      message: "Activity created successfully",
     });
-
   } catch (error) {
     console.error("Create activity error:", error);
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         error: "Invalid activity data",
-        details: error.errors
+        details: error.errors,
       });
     }
     res.status(500).json({
       success: false,
-      error: "Failed to create activity"
+      error: "Failed to create activity",
     });
   }
 };
@@ -606,7 +635,7 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
@@ -614,7 +643,7 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
       return res.json({
         success: true,
         data: { id, ...req.body },
-        message: "Activity updated successfully (demo mode)"
+        message: "Activity updated successfully (demo mode)",
       });
     }
 
@@ -628,7 +657,7 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
     if (!activity) {
       return res.status(404).json({
         success: false,
-        error: "Activity not found"
+        error: "Activity not found",
       });
     }
 
@@ -651,7 +680,7 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
     if (!hasPermission) {
       return res.status(403).json({
         success: false,
-        error: "You don't have permission to update this activity"
+        error: "You don't have permission to update this activity",
       });
     }
 
@@ -663,7 +692,7 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
       if (activityDateTime <= new Date()) {
         return res.status(400).json({
           success: false,
-          error: "Activity date must be in the future"
+          error: "Activity date must be in the future",
         });
       }
     }
@@ -672,42 +701,43 @@ export const handleUpdateActivity = async (req: Request, res: Response) => {
       .from("activities")
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq("id", id)
-      .select(`
+      .select(
+        `
         *,
         organizer:profiles!organizer_id (
           id,
           full_name,
           profile_image
         )
-      `)
+      `,
+      )
       .single();
 
     if (error) {
       console.error("Database error:", error);
       return res.status(500).json({
         success: false,
-        error: "Failed to update activity"
+        error: "Failed to update activity",
       });
     }
 
     res.json({
       success: true,
       data: updatedActivity,
-      message: "Activity updated successfully"
+      message: "Activity updated successfully",
     });
-
   } catch (error) {
     console.error("Update activity error:", error);
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         error: "Invalid update data",
-        details: error.errors
+        details: error.errors,
       });
     }
     res.status(500).json({
       success: false,
-      error: "Failed to update activity"
+      error: "Failed to update activity",
     });
   }
 };
@@ -721,14 +751,14 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
     if (!supabaseAdmin) {
       return res.json({
         success: true,
-        message: "Activity cancelled successfully (demo mode)"
+        message: "Activity cancelled successfully (demo mode)",
       });
     }
 
@@ -742,7 +772,7 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
     if (!activity) {
       return res.status(404).json({
         success: false,
-        error: "Activity not found"
+        error: "Activity not found",
       });
     }
 
@@ -765,7 +795,7 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
     if (!hasPermission) {
       return res.status(403).json({
         success: false,
-        error: "You don't have permission to delete this activity"
+        error: "You don't have permission to delete this activity",
       });
     }
 
@@ -774,7 +804,7 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
       .from("activities")
       .update({
         status: "cancelled",
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", id);
 
@@ -782,38 +812,53 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
       console.error("Database error:", error);
       return res.status(500).json({
         success: false,
-        error: "Failed to cancel activity"
+        error: "Failed to cancel activity",
       });
     }
 
     res.json({
       success: true,
-      message: "Activity cancelled successfully"
+      message: "Activity cancelled successfully",
     });
-
   } catch (error) {
     console.error("Delete activity error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to cancel activity"
+      error: "Failed to cancel activity",
     });
   }
 };
 
 // POST /api/activities/:id/request-join - Request to join an activity (with waitlist)
-export const handleRequestJoinActivity = async (req: Request, res: Response) => {
+export const handleRequestJoinActivity = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { id } = req.params; // activity id
     const user = await getAuthenticatedUser(req);
 
     if (!user) {
-      return res.status(401).json({ success: false, error: "Authentication required" });
+      return res
+        .status(401)
+        .json({ success: false, error: "Authentication required" });
     }
 
     const { message } = JoinActivityRequestSchema.parse(req.body || {});
 
     if (!supabaseAdmin) {
-      return res.status(201).json({ success: true, data: { id: `demo-${Date.now()}`, activity_id: id, user_id: user.id, status: "pending", message } });
+      return res
+        .status(201)
+        .json({
+          success: true,
+          data: {
+            id: `demo-${Date.now()}`,
+            activity_id: id,
+            user_id: user.id,
+            status: "pending",
+            message,
+          },
+        });
     }
 
     // Fetch activity and counts
@@ -825,7 +870,9 @@ export const handleRequestJoinActivity = async (req: Request, res: Response) => 
       .single();
 
     if (!activity) {
-      return res.status(404).json({ success: false, error: "Activity not found or not open" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Activity not found or not open" });
     }
 
     // Prevent duplicate requests
@@ -838,24 +885,33 @@ export const handleRequestJoinActivity = async (req: Request, res: Response) => 
 
     if (existing) {
       if (existing.status === "joined") {
-        return res.status(400).json({ success: false, error: "Already joined" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Already joined" });
       }
       if (existing.status === "pending") {
-        return res.status(400).json({ success: false, error: "Request already pending" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Request already pending" });
       }
       if (existing.status === "waitlisted") {
-        return res.status(400).json({ success: false, error: "Already on waitlist" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Already on waitlist" });
       }
     }
 
     // Count joined
     const { count: joinedCount } = await supabaseAdmin
       .from("activity_participants")
-      .select("*", { count: 'exact' })
+      .select("*", { count: "exact" })
       .eq("activity_id", id)
       .eq("status", "joined");
 
-    const isFull = activity.max_participants && joinedCount !== null && joinedCount >= activity.max_participants;
+    const isFull =
+      activity.max_participants &&
+      joinedCount !== null &&
+      joinedCount >= activity.max_participants;
     const status = isFull ? "waitlisted" : "pending";
 
     const { data: request, error: insertError } = await supabaseAdmin
@@ -866,7 +922,9 @@ export const handleRequestJoinActivity = async (req: Request, res: Response) => 
 
     if (insertError) {
       console.error("Join request error:", insertError);
-      return res.status(500).json({ success: false, error: "Failed to create join request" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Failed to create join request" });
     }
 
     // Notify organizer
@@ -876,7 +934,7 @@ export const handleRequestJoinActivity = async (req: Request, res: Response) => 
         "activity_join_request",
         "New join request",
         "A user requested to join your activity",
-        { activity_id: id, requester_id: user.id, status }
+        { activity_id: id, requester_id: user.id, status },
       );
     } catch (e) {
       console.warn("Notification error (join request):", e);
@@ -885,7 +943,13 @@ export const handleRequestJoinActivity = async (req: Request, res: Response) => 
     return res.status(201).json({ success: true, data: request });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ success: false, error: "Invalid request data", details: error.errors });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          error: "Invalid request data",
+          details: error.errors,
+        });
     }
     console.error("Request-join error:", error);
     res.status(500).json({ success: false, error: "Failed to request join" });
@@ -901,14 +965,14 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
     if (!supabaseAdmin) {
       return res.json({
         success: true,
-        message: "Successfully joined activity (demo mode)"
+        message: "Successfully joined activity (demo mode)",
       });
     }
 
@@ -941,7 +1005,7 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
     if (activity && !activityError) {
       const { count: participantCount } = await supabaseAdmin
         .from("activity_participants")
-        .select("*", { count: 'exact' })
+        .select("*", { count: "exact" })
         .eq("activity_id", activity.id)
         .eq("status", "joined");
 
@@ -951,7 +1015,7 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
     if (activityError || !activity) {
       return res.status(404).json({
         success: false,
-        error: "Activity not found or not available for joining"
+        error: "Activity not found or not available for joining",
       });
     }
 
@@ -967,7 +1031,7 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
       if (existingParticipation.status === "joined") {
         return res.status(400).json({
           success: false,
-          error: "You are already a participant in this activity"
+          error: "You are already a participant in this activity",
         });
       } else if (existingParticipation.status === "left") {
         // User previously left, allow them to rejoin
@@ -975,7 +1039,7 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
           .from("activity_participants")
           .update({
             status: "joined",
-            joined_at: new Date().toISOString()
+            joined_at: new Date().toISOString(),
           })
           .eq("activity_id", id)
           .eq("user_id", user.id);
@@ -984,23 +1048,26 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
           console.error("Database error:", rejoinError);
           return res.status(500).json({
             success: false,
-            error: "Failed to rejoin activity"
+            error: "Failed to rejoin activity",
           });
         }
 
         return res.json({
           success: true,
-          message: "Successfully rejoined activity"
+          message: "Successfully rejoined activity",
         });
       }
     }
 
     // Check if activity is full
     const currentCount = activity.current_participants || 0;
-    if (activity.max_participants && currentCount >= activity.max_participants) {
+    if (
+      activity.max_participants &&
+      currentCount >= activity.max_participants
+    ) {
       return res.status(400).json({
         success: false,
-        error: "Activity is full"
+        error: "Activity is full",
       });
     }
 
@@ -1009,7 +1076,7 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
     if (activityDateTime <= new Date()) {
       return res.status(400).json({
         success: false,
-        error: "Cannot join past activities"
+        error: "Cannot join past activities",
       });
     }
 
@@ -1019,14 +1086,14 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
       .insert({
         activity_id: id,
         user_id: user.id,
-        status: "joined"
+        status: "joined",
       });
 
     if (joinError) {
       console.error("Database error:", joinError);
       return res.status(500).json({
         success: false,
-        error: "Failed to join activity"
+        error: "Failed to join activity",
       });
     }
 
@@ -1040,37 +1107,44 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
         {
           activity_id: id,
           participant_id: user.id,
-          activity_title: activity.title
-        }
+          activity_title: activity.title,
+        },
       );
     }
 
     res.json({
       success: true,
-      message: "Successfully joined activity"
+      message: "Successfully joined activity",
     });
-
   } catch (error) {
     console.error("Join activity error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to join activity"
+      error: "Failed to join activity",
     });
   }
 };
 
 // DELETE /api/activities/:id/leave - Leave an activity
-export const handleApproveActivityRequest = async (req: Request, res: Response) => {
+export const handleApproveActivityRequest = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { id, requestId } = req.params;
     const user = await getAuthenticatedUser(req);
 
     if (!user) {
-      return res.status(401).json({ success: false, error: "Authentication required" });
+      return res
+        .status(401)
+        .json({ success: false, error: "Authentication required" });
     }
 
     if (!supabaseAdmin) {
-      return res.json({ success: true, message: "Request approved (demo mode)" });
+      return res.json({
+        success: true,
+        message: "Request approved (demo mode)",
+      });
     }
 
     // Verify organizer owns activity
@@ -1081,19 +1155,26 @@ export const handleApproveActivityRequest = async (req: Request, res: Response) 
       .single();
 
     if (!activity || activity.organizer_id !== user.id) {
-      return res.status(403).json({ success: false, error: "Only the organizer can approve" });
+      return res
+        .status(403)
+        .json({ success: false, error: "Only the organizer can approve" });
     }
 
     // Check capacity
     const { count: joinedCount } = await supabaseAdmin
       .from("activity_participants")
-      .select("*", { count: 'exact' })
+      .select("*", { count: "exact" })
       .eq("activity_id", id)
       .eq("status", "joined");
 
-    const isFull = activity.max_participants && joinedCount !== null && joinedCount >= activity.max_participants;
+    const isFull =
+      activity.max_participants &&
+      joinedCount !== null &&
+      joinedCount >= activity.max_participants;
     if (isFull) {
-      return res.status(400).json({ success: false, error: "Activity is full" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Activity is full" });
     }
 
     const { data: updated, error } = await supabaseAdmin
@@ -1106,27 +1187,46 @@ export const handleApproveActivityRequest = async (req: Request, res: Response) 
 
     if (error) {
       console.error("Approve request error:", error);
-      return res.status(500).json({ success: false, error: "Failed to approve request" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Failed to approve request" });
     }
 
     try {
-      await createNotification(updated.user_id, "activity_request_approved", "Request approved", "Your request was approved", { activity_id: id });
+      await createNotification(
+        updated.user_id,
+        "activity_request_approved",
+        "Request approved",
+        "Your request was approved",
+        { activity_id: id },
+      );
     } catch {}
 
-    return res.json({ success: true, data: updated, message: "Request approved" });
+    return res.json({
+      success: true,
+      data: updated,
+      message: "Request approved",
+    });
   } catch (error) {
     console.error("Approve request error:", error);
-    res.status(500).json({ success: false, error: "Failed to approve request" });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to approve request" });
   }
 };
 
-export const handleDenyActivityRequest = async (req: Request, res: Response) => {
+export const handleDenyActivityRequest = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { id, requestId } = req.params;
     const user = await getAuthenticatedUser(req);
 
     if (!user) {
-      return res.status(401).json({ success: false, error: "Authentication required" });
+      return res
+        .status(401)
+        .json({ success: false, error: "Authentication required" });
     }
 
     if (!supabaseAdmin) {
@@ -1141,7 +1241,9 @@ export const handleDenyActivityRequest = async (req: Request, res: Response) => 
       .single();
 
     if (!activity || activity.organizer_id !== user.id) {
-      return res.status(403).json({ success: false, error: "Only the organizer can deny" });
+      return res
+        .status(403)
+        .json({ success: false, error: "Only the organizer can deny" });
     }
 
     const { error } = await supabaseAdmin
@@ -1152,7 +1254,9 @@ export const handleDenyActivityRequest = async (req: Request, res: Response) => 
 
     if (error) {
       console.error("Deny request error:", error);
-      return res.status(500).json({ success: false, error: "Failed to deny request" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Failed to deny request" });
     }
 
     return res.json({ success: true, message: "Request denied" });
@@ -1170,14 +1274,14 @@ export const handleLeaveActivity = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
     if (!supabaseAdmin) {
       return res.json({
         success: true,
-        message: "Successfully left activity (demo mode)"
+        message: "Successfully left activity (demo mode)",
       });
     }
 
@@ -1193,7 +1297,7 @@ export const handleLeaveActivity = async (req: Request, res: Response) => {
     if (!participation) {
       return res.status(400).json({
         success: false,
-        error: "You are not a participant in this activity"
+        error: "You are not a participant in this activity",
       });
     }
 
@@ -1208,37 +1312,39 @@ export const handleLeaveActivity = async (req: Request, res: Response) => {
       console.error("Database error:", error);
       return res.status(500).json({
         success: false,
-        error: "Failed to leave activity"
+        error: "Failed to leave activity",
       });
     }
 
     res.json({
       success: true,
-      message: "Successfully left activity"
+      message: "Successfully left activity",
     });
-
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to leave activity"
+      error: "Failed to leave activity",
     });
   }
 };
 
 // GET /api/activities/:id/participants - Get participant list
 // GET /api/activities/user/history - Get user's past activities
-export const handleGetUserActivityHistory = async (req: Request, res: Response) => {
+export const handleGetUserActivityHistory = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const user = await getAuthenticatedUser(req);
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Authentication required"
+        error: "Authentication required",
       });
     }
 
-    const { status = 'completed', limit = 20, offset = 0 } = req.query;
+    const { status = "completed", limit = 20, offset = 0 } = req.query;
 
     if (!supabaseAdmin) {
       // Demo mode - return mock past activities
@@ -1253,7 +1359,7 @@ export const handleGetUserActivityHistory = async (req: Request, res: Response) 
           organizer_name: "Sarah Johnson",
           participation_status: "completed",
           user_rating: 4.5,
-          review_count: 3
+          review_count: 3,
         },
         {
           id: "demo-past-2",
@@ -1265,36 +1371,39 @@ export const handleGetUserActivityHistory = async (req: Request, res: Response) 
           organizer_name: "Mike Chen",
           participation_status: "completed",
           user_rating: 5.0,
-          review_count: 2
-        }
+          review_count: 2,
+        },
       ];
 
       return res.json({
         success: true,
         data: demoHistory,
-        pagination: { total: demoHistory.length, limit: 20, offset: 0 }
+        pagination: { total: demoHistory.length, limit: 20, offset: 0 },
       });
     }
 
     // Get user's activity history from database
-    const { data: historyData, error } = await supabaseAdmin
-      .rpc('get_user_activity_history', {
+    const { data: historyData, error } = await supabaseAdmin.rpc(
+      "get_user_activity_history",
+      {
         user_uuid: user.id,
-        activity_status: status
-      });
+        activity_status: status,
+      },
+    );
 
     if (error) {
       console.error("Error fetching user activity history:", error);
       return res.status(500).json({
         success: false,
-        error: "Failed to fetch activity history"
+        error: "Failed to fetch activity history",
       });
     }
 
     // Apply pagination
     const startIndex = parseInt(offset as string) || 0;
     const pageSize = parseInt(limit as string) || 20;
-    const paginatedData = historyData?.slice(startIndex, startIndex + pageSize) || [];
+    const paginatedData =
+      historyData?.slice(startIndex, startIndex + pageSize) || [];
 
     res.json({
       success: true,
@@ -1302,15 +1411,14 @@ export const handleGetUserActivityHistory = async (req: Request, res: Response) 
       pagination: {
         total: historyData?.length || 0,
         limit: pageSize,
-        offset: startIndex
-      }
+        offset: startIndex,
+      },
     });
-
   } catch (error) {
     console.error("Get user activity history error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch activity history"
+      error: "Failed to fetch activity history",
     });
   }
 };
@@ -1331,8 +1439,9 @@ export const handleGetParticipants = async (req: Request, res: Response) => {
           user: {
             id: "demo-user-1",
             full_name: "Sarah Johnson",
-            profile_image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face"
-          }
+            profile_image:
+              "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=40&h=40&fit=crop&crop=face",
+          },
         },
         {
           id: "demo-participant-2",
@@ -1343,21 +1452,23 @@ export const handleGetParticipants = async (req: Request, res: Response) => {
           user: {
             id: "demo-user-2",
             full_name: "Mike Chen",
-            profile_image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-          }
-        }
+            profile_image:
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
+          },
+        },
       ];
 
       return res.json({
         success: true,
-        data: demoParticipants
+        data: demoParticipants,
       });
     }
 
     // Get all active participants for the activity
     const { data: participants, error } = await supabaseAdmin
       .from("activity_participants")
-      .select(`
+      .select(
+        `
         id,
         user_id,
         activity_id,
@@ -1369,7 +1480,8 @@ export const handleGetParticipants = async (req: Request, res: Response) => {
           profile_image,
           email
         )
-      `)
+      `,
+      )
       .eq("activity_id", id)
       .eq("status", "joined")
       .order("joined_at", { ascending: true });
@@ -1378,20 +1490,19 @@ export const handleGetParticipants = async (req: Request, res: Response) => {
       console.error("Database error:", error);
       return res.status(500).json({
         success: false,
-        error: "Failed to fetch participants"
+        error: "Failed to fetch participants",
       });
     }
 
     res.json({
       success: true,
-      data: participants || []
+      data: participants || [],
     });
-
   } catch (error) {
     console.error("Server error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch participants"
+      error: "Failed to fetch participants",
     });
   }
 };

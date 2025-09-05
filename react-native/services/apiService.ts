@@ -652,7 +652,10 @@ export const apiService = {
     }
   },
 
-  async joinActivity(activityId: string, message?: string): Promise<ApiResponse<any>> {
+  async joinActivity(
+    activityId: string,
+    message?: string,
+  ): Promise<ApiResponse<any>> {
     try {
       const response = await fetchWithTimeout(
         `/activities/${activityId}/request-join`,
@@ -670,7 +673,10 @@ export const apiService = {
     }
   },
 
-  async approveActivityRequest(activityId: string, requestId: string): Promise<ApiResponse<any>> {
+  async approveActivityRequest(
+    activityId: string,
+    requestId: string,
+  ): Promise<ApiResponse<any>> {
     try {
       const response = await fetchWithTimeout(
         `/activities/${activityId}/requests/${requestId}/approve`,
@@ -682,7 +688,10 @@ export const apiService = {
     }
   },
 
-  async denyActivityRequest(activityId: string, requestId: string): Promise<ApiResponse<any>> {
+  async denyActivityRequest(
+    activityId: string,
+    requestId: string,
+  ): Promise<ApiResponse<any>> {
     try {
       const response = await fetchWithTimeout(
         `/activities/${activityId}/requests/${requestId}/deny`,
@@ -885,45 +894,70 @@ export const apiService = {
     }
   },
 
-  async approveClubRequest(clubId: string, requestId: string): Promise<ApiResponse<any>> {
+  async approveClubRequest(
+    clubId: string,
+    requestId: string,
+  ): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`/clubs/${clubId}/requests/${requestId}/approve`, {
-        method: "PUT",
-      });
+      const response = await fetchWithTimeout(
+        `/clubs/${clubId}/requests/${requestId}/approve`,
+        {
+          method: "PUT",
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to approve request" };
     }
   },
 
-  async denyClubRequest(clubId: string, requestId: string): Promise<ApiResponse<any>> {
+  async denyClubRequest(
+    clubId: string,
+    requestId: string,
+  ): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`/clubs/${clubId}/requests/${requestId}/deny`, {
-        method: "DELETE",
-      });
+      const response = await fetchWithTimeout(
+        `/clubs/${clubId}/requests/${requestId}/deny`,
+        {
+          method: "DELETE",
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to deny request" };
     }
   },
 
-  async updateMemberRole(clubId: string, userId: string, role: "member"|"manager"): Promise<ApiResponse<any>> {
+  async updateMemberRole(
+    clubId: string,
+    userId: string,
+    role: "member" | "manager",
+  ): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`/clubs/${clubId}/members/${userId}/role`, {
-        method: "PUT",
-        body: JSON.stringify({ role }),
-      });
+      const response = await fetchWithTimeout(
+        `/clubs/${clubId}/members/${userId}/role`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ role }),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to update member role" };
     }
   },
 
-  async removeClubMember(clubId: string, userId: string): Promise<ApiResponse<any>> {
+  async removeClubMember(
+    clubId: string,
+    userId: string,
+  ): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`/clubs/${clubId}/members/${userId}`, {
-        method: "DELETE",
-      });
+      const response = await fetchWithTimeout(
+        `/clubs/${clubId}/members/${userId}`,
+        {
+          method: "DELETE",
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to remove member" };

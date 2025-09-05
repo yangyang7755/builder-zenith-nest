@@ -111,8 +111,10 @@ export const handleGetClub = async (req: Request, res: Response) => {
       return res.status(500).json({ error: "Failed to fetch club" });
     }
 
-    const members = club.memberships?.filter((m: any) => m.status === "approved") || [];
-    const pendingRequests = club.memberships?.filter((m: any) => m.status === "pending") || [];
+    const members =
+      club.memberships?.filter((m: any) => m.status === "approved") || [];
+    const pendingRequests =
+      club.memberships?.filter((m: any) => m.status === "pending") || [];
 
     const clubData = {
       ...club,
@@ -181,7 +183,9 @@ export const handleUpdateClub = async (req: Request, res: Response) => {
     res.json(updatedClub);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid club data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid club data", details: error.errors });
     } else {
       console.error("Server error:", error);
       res.status(500).json({ error: "Failed to update club" });
@@ -219,9 +223,13 @@ export const handleJoinRequest = async (req: Request, res: Response) => {
 
     if (existingMembership) {
       if (existingMembership.status === "approved") {
-        return res.status(400).json({ error: "You are already a member of this club" });
+        return res
+          .status(400)
+          .json({ error: "You are already a member of this club" });
       } else if (existingMembership.status === "pending") {
-        return res.status(400).json({ error: "You already have a pending request for this club" });
+        return res
+          .status(400)
+          .json({ error: "You already have a pending request for this club" });
       }
     }
 
@@ -257,7 +265,9 @@ export const handleJoinRequest = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid request data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid request data", details: error.errors });
     } else {
       console.error("Server error:", error);
       res.status(500).json({ error: "Failed to create join request" });
@@ -284,7 +294,9 @@ export const handleApproveRequest = async (req: Request, res: Response) => {
       .single();
 
     if (!membership) {
-      return res.status(403).json({ error: "Only club managers can approve requests" });
+      return res
+        .status(403)
+        .json({ error: "Only club managers can approve requests" });
     }
 
     const { error } = await supabaseAdmin
@@ -327,7 +339,9 @@ export const handleDenyRequest = async (req: Request, res: Response) => {
       .single();
 
     if (!membership) {
-      return res.status(403).json({ error: "Only club managers can deny requests" });
+      return res
+        .status(403)
+        .json({ error: "Only club managers can deny requests" });
     }
 
     const { error } = await supabaseAdmin
@@ -374,7 +388,9 @@ export const handleCreateClub = async (req: Request, res: Response) => {
 
     if (clubError) {
       if ((clubError as any).code === "23505") {
-        return res.status(400).json({ error: "A club with this name already exists" });
+        return res
+          .status(400)
+          .json({ error: "A club with this name already exists" });
       }
       console.error("Database error:", clubError);
       return res.status(500).json({ error: "Failed to create club" });
@@ -397,7 +413,9 @@ export const handleCreateClub = async (req: Request, res: Response) => {
     res.status(201).json(newClub);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid club data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid club data", details: error.errors });
     } else {
       console.error("Server error:", error);
       res.status(500).json({ error: "Failed to create club" });
@@ -405,7 +423,10 @@ export const handleCreateClub = async (req: Request, res: Response) => {
   }
 };
 
-export const handleGetUserClubMemberships = async (req: Request, res: Response) => {
+export const handleGetUserClubMemberships = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const user = await getUserFromToken(req.headers.authorization || "");
 
@@ -491,7 +512,9 @@ export const handleRemoveMember = async (req: Request, res: Response) => {
       .single();
 
     if (!manager) {
-      return res.status(403).json({ error: "Only club managers can remove members" });
+      return res
+        .status(403)
+        .json({ error: "Only club managers can remove members" });
     }
 
     const { error } = await supabaseAdmin
@@ -538,7 +561,9 @@ export const handleUpdateMemberRole = async (req: Request, res: Response) => {
       .single();
 
     if (!manager) {
-      return res.status(403).json({ error: "Only club managers can update roles" });
+      return res
+        .status(403)
+        .json({ error: "Only club managers can update roles" });
     }
 
     const { error } = await supabaseAdmin
@@ -556,7 +581,9 @@ export const handleUpdateMemberRole = async (req: Request, res: Response) => {
     res.json({ message: "Role updated" });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: "Invalid role", details: error.errors });
+      return res
+        .status(400)
+        .json({ error: "Invalid role", details: error.errors });
     }
     console.error("Server error:", error);
     res.status(500).json({ error: "Failed to update role" });
