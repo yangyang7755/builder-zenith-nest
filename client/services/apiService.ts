@@ -132,9 +132,18 @@ export const apiService = {
         },
       );
       return await handleResponse(response);
-    } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
+    } catch (error: any) {
+      if (error?.name === "AbortError" || error?.name === "TimeoutError") {
         return { error: "Request timeout" };
+      }
+      const msg = (error && (error.message || String(error))) || "";
+      if (
+        msg.includes("No internet") ||
+        msg.includes("temporarily unavailable") ||
+        msg.includes("Failed to fetch") ||
+        msg.includes("XMLHttpRequest")
+      ) {
+        return { error: "BACKEND_UNAVAILABLE" };
       }
       console.error("Failed to fetch activity reviews:", error);
       return { error: "Failed to fetch reviews" };
@@ -157,7 +166,19 @@ export const apiService = {
         body: JSON.stringify(reviewData),
       });
       return await handleResponse(response);
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.name === "AbortError" || error?.name === "TimeoutError") {
+        return { error: "Request timeout" };
+      }
+      const msg = (error && (error.message || String(error))) || "";
+      if (
+        msg.includes("No internet") ||
+        msg.includes("temporarily unavailable") ||
+        msg.includes("Failed to fetch") ||
+        msg.includes("XMLHttpRequest")
+      ) {
+        return { error: "BACKEND_UNAVAILABLE" };
+      }
       return { error: "Failed to create review" };
     }
   },
