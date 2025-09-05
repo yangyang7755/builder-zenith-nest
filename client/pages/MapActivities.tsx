@@ -19,13 +19,12 @@ export default function MapActivities() {
   }, [activities, params]);
 
   return (
-    <div className="fixed inset-0 bg-white z-40">
+    <div className="mobile-container bg-white">
       <MapView
         activities={filtered}
         onClose={() => navigate(-1)}
         onActivitySelect={() => {}}
       />
-
     </div>
   );
 }
