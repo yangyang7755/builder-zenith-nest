@@ -31,8 +31,8 @@ const AuthLandingScreen: React.FC = () => {
   };
 
   const handleAppleSignIn = () => {
-    // Handle Apple sign in
-    console.log("Apple sign in");
+    // Match web behavior: route to Login for now
+    navigation.navigate("Login" as never);
   };
 
   return (
