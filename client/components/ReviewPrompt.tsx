@@ -213,12 +213,14 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
+                  type="button"
                   onClick={() => handleRatingClick(star)}
-                  className="transition-colors"
+                  className="transition-colors cursor-pointer"
                   disabled={isSubmitting}
+                  aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                 >
                   <Star
-                    className={`w-8 h-8 ${
+                    className={`w-8 h-8 pointer-events-none ${
                       star <= rating
                         ? "fill-yellow-400 text-yellow-400"
                         : "text-gray-300 hover:text-yellow-200"
