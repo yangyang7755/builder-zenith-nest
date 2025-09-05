@@ -477,7 +477,7 @@ const ProfileScreen: React.FC = () => {
             <Text style={styles.reviewerName}>Alex M.</Text>
             <Text style={styles.reviewDate}>2 weeks ago</Text>
           </View>
-          <Text style={styles.reviewRating}>⭐⭐⭐⭐⭐</Text>
+          <Text style={styles.reviewRating}>⭐⭐⭐⭐��</Text>
         </View>
         <Text style={styles.reviewText}>
           Great climbing partner! Very experienced and patient. KOKO helped me
@@ -907,6 +907,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#6B7280",
   },
+  clubsSection: {
+    marginTop: 16,
+  },
+  clubsList: {
+    marginTop: 8,
+    gap: 8,
+  },
+  clubItem: {
+    paddingVertical: 8,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: "#E5E7EB",
+  },
+  clubName: {
+    fontSize: 14,
+    color: "#111827",
+  },
   emptyState: {
     alignItems: "center",
     paddingVertical: 32,
@@ -916,6 +932,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   emptyText: {
+    fontSize: 14,
+    color: "#6B7280",
+  },
+  emptyTextOld: {
     fontSize: 16,
     color: "#6B7280",
   },
