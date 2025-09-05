@@ -1,6 +1,6 @@
 import { networkAwareFetch, networkService } from "./networkService";
 import { fetchWithTimeout as robustFetchWithTimeout } from "../utils/robustFetch";
-import { networkAwareFetch, networkService } from "./networkService";
+import { networkService } from "./networkService";
 
 const API_BASE_URL = "/api";
 
@@ -31,28 +31,21 @@ const fetchWithTimeout = async (
       window.location.hostname.includes(".herokuapp.com"));
   const effectiveTimeout = Math.max(timeout || 0, isHostedEnv ? 20000 : 10000);
 
-  // First try robust fetch directly to bypass FullStory issues
+  // Try robust fetch; if it fails, add network context and rethrow
   try {
     return await robustFetchWithTimeout(url, options, effectiveTimeout);
-  } catch (error) {
-    // If robust fetch fails, try network-aware fetch as fallback
-    try {
-      return await networkAwareFetch(url, options, effectiveTimeout);
-    } catch (networkError) {
-      // Enhanced error handling with network context
-      const status = networkService.getStatus();
+  } catch (error: any) {
+    const status = networkService.getStatus();
 
-      if (!status.isOnline) {
-        throw new Error("No internet connection - please check your network");
-      }
-
-      if (!status.isServerReachable) {
-        throw new Error("Server temporarily unavailable - using offline mode");
-      }
-
-      // Re-throw original error if network seems fine
-      throw networkError;
+    if (!status.isOnline) {
+      throw new Error("No internet connection - please check your network");
     }
+
+    if (!status.isServerReachable) {
+      throw new Error("Server temporarily unavailable - using offline mode");
+    }
+
+    throw error;
   }
 };
 
