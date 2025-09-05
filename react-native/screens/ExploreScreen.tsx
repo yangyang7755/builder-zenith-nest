@@ -306,46 +306,70 @@ const ExploreScreen: React.FC = () => {
   );
 
   const renderFilterBar = () => (
-    <View style={styles.filterBar}>
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Text style={styles.searchIcon}>🔍</Text>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search activities..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholderTextColor="#6B7280"
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery("")}>
-            <Text style={styles.clearIcon}>✕</Text>
-          </TouchableOpacity>
-        )}
+    <View>
+      <View style={styles.filterBar}>
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <Text style={styles.searchIcon}>🔍</Text>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search activities..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor="#6B7280"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <Text style={styles.clearIcon}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Filter Button */}
+        <TouchableOpacity
+          onPress={() => setShowFilterModal(true)}
+          style={styles.filterButton}
+        >
+          <Text style={styles.filterIcon}>⚙️</Text>
+          <Text style={styles.filterText}>Filter</Text>
+          {getActiveFilterCount() > 0 && (
+            <View style={styles.filterBadge}>
+              <Text style={styles.filterBadgeText}>{getActiveFilterCount()}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+
+        {/* Map Button */}
+        <TouchableOpacity
+          onPress={() => setShowMapView(true)}
+          style={styles.mapButton}
+        >
+          <Text style={styles.mapIcon}>📍</Text>
+          <Text style={styles.mapText}>Map</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Filter Button */}
-      <TouchableOpacity
-        onPress={() => setShowFilterModal(true)}
-        style={styles.filterButton}
+      {/* Selected Filter Chips */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.chipsScroll}
       >
-        <Text style={styles.filterIcon}>⚙️</Text>
-        <Text style={styles.filterText}>Filter</Text>
-        {getActiveFilterCount() > 0 && (
-          <View style={styles.filterBadge}>
-            <Text style={styles.filterBadgeText}>{getActiveFilterCount()}</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      {/* Map Button */}
-      <TouchableOpacity
-        onPress={() => setShowMapView(true)}
-        style={styles.mapButton}
-      >
-        <Text style={styles.mapIcon}>📍</Text>
-        <Text style={styles.mapText}>Map</Text>
-      </TouchableOpacity>
+        {["Cycling","Climbing","Running","Hiking","Skiing","Surfing","Tennis","General"].map((type) => {
+          const selected = filters.activityType.includes(type);
+          return (
+            <TouchableOpacity
+              key={type}
+              onPress={() => toggleActivityType(type)}
+              style={[styles.chip, selected ? styles.chipSelected : styles.chipUnselected]}
+            >
+              <Text style={[styles.chipText, selected ? styles.chipTextSelected : styles.chipTextUnselected]}>
+                {type}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 
