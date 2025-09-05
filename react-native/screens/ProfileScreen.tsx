@@ -598,7 +598,7 @@ const ProfileScreen: React.FC = () => {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Following</Text>
               <TouchableOpacity onPress={() => setShowFollowing(false)}>
-                <Text style={styles.modalClose}>✕</Text>
+                <Text style={styles.modalClose}>��</Text>
               </TouchableOpacity>
             </View>
             <Text style={styles.comingSoon}>Following list coming soon!</Text>
@@ -933,10 +933,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
-    color: "#6B7280",
-  },
-  emptyTextOld: {
-    fontSize: 16,
     color: "#6B7280",
   },
   reviewsHeader: {
