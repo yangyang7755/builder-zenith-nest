@@ -44,6 +44,7 @@ const ExploreScreen: React.FC = () => {
     useActivities();
   const { user } = useAuth();
   const { following, isFollowing } = useFollow();
+  const { isMember } = useClubs();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredActivities, setFilteredActivities] = useState(activities);
