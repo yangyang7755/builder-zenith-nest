@@ -722,7 +722,6 @@ export const apiService = {
 
       const result = await handleResponse(response);
 
-      // Cache the new club
       if (result.data) {
         const clubs = (await AsyncStorage.getItem("user_clubs")) || "[]";
         const parsedClubs = JSON.parse(clubs);
@@ -741,14 +740,12 @@ export const apiService = {
       const response = await fetchWithTimeout("/clubs");
       const result = await handleResponse(response);
 
-      // Cache clubs
       if (result.data) {
         await AsyncStorage.setItem("clubs", JSON.stringify(result.data));
       }
 
       return result;
     } catch (error) {
-      // Fallback to cached data
       try {
         const cached = await AsyncStorage.getItem("clubs");
         if (cached) {
@@ -766,7 +763,6 @@ export const apiService = {
       const response = await fetchWithTimeout(`/clubs?userId=${userId}`);
       const result = await handleResponse(response);
 
-      // Cache user clubs
       if (result.data) {
         await AsyncStorage.setItem(
           `user_clubs_${userId}`,
@@ -776,7 +772,6 @@ export const apiService = {
 
       return result;
     } catch (error) {
-      // Fallback to cached data
       try {
         const cached = await AsyncStorage.getItem(`user_clubs_${userId}`);
         if (cached) {
@@ -789,15 +784,24 @@ export const apiService = {
     }
   },
 
-  async joinClub(clubId: string): Promise<ApiResponse<any>> {
+  async getClub(clubId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/clubs/${clubId}`);
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to fetch club" };
+    }
+  },
+
+  async joinClub(clubId: string, message?: string): Promise<ApiResponse<any>> {
     try {
       const response = await fetchWithTimeout(`/clubs/${clubId}/join`, {
         method: "POST",
+        body: JSON.stringify({ message }),
       });
 
       const result = await handleResponse(response);
 
-      // Update local cache on success
       if (result.data) {
         const memberships =
           (await AsyncStorage.getItem("club_memberships")) || "[]";
@@ -823,7 +827,6 @@ export const apiService = {
 
       const result = await handleResponse(response);
 
-      // Update local cache on success
       if (!result.error) {
         const memberships =
           (await AsyncStorage.getItem("club_memberships")) || "[]";
@@ -848,7 +851,6 @@ export const apiService = {
       const response = await fetchWithTimeout("/user/club-memberships");
       const result = await handleResponse(response);
 
-      // Cache memberships
       if (result.data) {
         await AsyncStorage.setItem(
           "club_memberships",
@@ -858,7 +860,6 @@ export const apiService = {
 
       return result;
     } catch (error) {
-      // Fallback to cached data
       try {
         const cached = await AsyncStorage.getItem("club_memberships");
         if (cached) {
@@ -868,6 +869,51 @@ export const apiService = {
         console.error("Cache error:", cacheError);
       }
       return { error: "Failed to fetch club memberships" };
+    }
+  },
+
+  async approveClubRequest(clubId: string, requestId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/clubs/${clubId}/requests/${requestId}/approve`, {
+        method: "PUT",
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to approve request" };
+    }
+  },
+
+  async denyClubRequest(clubId: string, requestId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/clubs/${clubId}/requests/${requestId}/deny`, {
+        method: "DELETE",
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to deny request" };
+    }
+  },
+
+  async updateMemberRole(clubId: string, userId: string, role: "member"|"manager"): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/clubs/${clubId}/members/${userId}/role`, {
+        method: "PUT",
+        body: JSON.stringify({ role }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to update member role" };
+    }
+  },
+
+  async removeClubMember(clubId: string, userId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(`/clubs/${clubId}/members/${userId}`, {
+        method: "DELETE",
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to remove member" };
     }
   },
 
