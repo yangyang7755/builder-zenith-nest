@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-      const response = await safeFetch("/api/profile", {
+      const response = await safeFetch(`/api/users/${userId}/profile`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
@@ -131,7 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!session?.access_token) return;
 
     try {
-      const response = await safeFetch("/api/profile", {
+      const response = await safeFetch("/api/users/profile", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${session.access_token}`,
