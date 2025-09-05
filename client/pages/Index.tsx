@@ -1026,7 +1026,7 @@ function MixedActivitiesSection({
               From your clubs ({activitiesFromUserClubs.length})
             </h2>
             <Link
-              to="/activities"
+              to="/map-activities"
               className="text-sm text-black underline font-poppins"
             >
               See all
@@ -1420,7 +1420,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.registration && (
               <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-cabin">
-                ���� {activity.registration}
+                ��� {activity.registration}
               </span>
             )}
           </div>
