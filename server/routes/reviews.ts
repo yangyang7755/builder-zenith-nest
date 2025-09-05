@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { z } from "zod";
 import { supabaseAdmin, getUserFromToken } from "../lib/supabase";
 
+// In-memory store for demo reviews when Supabase is not configured
+const demoReviewStore: any[] = [];
+
 // Review schema for validation
 const ReviewSchema = z.object({
   activity_id: z.string().uuid(),
@@ -17,13 +20,16 @@ export const handleGetReviews = async (req: Request, res: Response) => {
 
     // Check if Supabase is configured
     if (!supabaseAdmin) {
-      console.log("Supabase not configured, returning demo reviews");
-      const demoReviews = [
+      console.log("Supabase not configured, returning demo reviews (with in-memory store)");
+
+      const { activity_id, user_id } = req.query as { activity_id?: string; user_id?: string };
+
+      const baseDemo = activity_id || user_id ? [
         {
           id: "demo-review-1",
-          activity_id: req.query.activity_id || "demo-activity-1",
+          activity_id: activity_id || "demo-activity-1",
           reviewer_id: "demo-user-1",
-          reviewee_id: req.query.user_id || "demo-organizer-1",
+          reviewee_id: user_id || "demo-organizer-1",
           rating: 5,
           comment: "Excellent activity! Well organized and fun.",
           created_at: new Date(Date.now() - 86400000).toISOString(),
@@ -34,19 +40,28 @@ export const handleGetReviews = async (req: Request, res: Response) => {
               "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
           },
           reviewee: {
-            id: req.query.user_id || "demo-organizer-1",
+            id: user_id || "demo-organizer-1",
             full_name: "Demo Organizer",
             profile_image:
               "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
           },
           activity: {
-            id: req.query.activity_id || "demo-activity-1",
+            id: activity_id || "demo-activity-1",
             title: "Demo Activity",
             date: new Date(Date.now() - 86400000).toISOString(),
           },
         },
-      ];
-      return res.json(demoReviews);
+      ] : [];
+
+      const filtered = demoReviewStore.filter((r) => (
+        (!activity_id || r.activity_id === activity_id) &&
+        (!user_id || r.reviewee_id === user_id)
+      ));
+
+      const combined = [...filtered, ...baseDemo];
+      combined.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      return res.json(combined);
     }
 
     const { activity_id, user_id } = req.query;
@@ -97,30 +112,28 @@ export const handleCreateReview = async (req: Request, res: Response) => {
 
     // Check if Supabase is configured
     if (!supabaseAdmin) {
-      console.log("Supabase not configured, returning demo success");
-      // Return demo success response for development
+      console.log("Supabase not configured, storing demo review in-memory");
       const demoReview = {
         id: "demo-review-" + Date.now(),
         activity_id: req.body.activity_id,
-        reviewer_id: "demo-user-id",
+        reviewer_id: req.body.reviewer_id || "demo-user-id",
         reviewee_id: req.body.reviewee_id,
         rating: req.body.rating,
         comment: req.body.comment,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         reviewer: {
-          id: "demo-user-id",
-          full_name: "Demo User",
-          profile_image:
-            "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+          id: req.body.reviewer_id || "demo-user-id",
+          full_name: "You",
+          profile_image: null,
         },
         reviewee: {
           id: req.body.reviewee_id,
           full_name: "Demo Organizer",
-          profile_image:
-            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+          profile_image: null,
         },
       };
+      demoReviewStore.unshift(demoReview);
       return res.status(201).json(demoReview);
     }
 
