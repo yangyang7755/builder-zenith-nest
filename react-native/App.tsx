@@ -25,19 +25,52 @@ const CreateScreen = () => (
   </View>
 );
 
-const ChatScreen = () => (
-  <View style={styles.placeholderContainer}>
-    <Text style={styles.placeholderText}>Chat</Text>
-    <Text style={styles.placeholderSubtext}>Coming Soon!</Text>
-  </View>
-);
+import { Switch, TouchableOpacity } from "react-native";
+import { useAuth } from "./contexts/AuthContext";
 
-const SettingsScreen = () => (
-  <View style={styles.placeholderContainer}>
-    <Text style={styles.placeholderText}>Settings</Text>
-    <Text style={styles.placeholderSubtext}>Coming Soon!</Text>
-  </View>
-);
+const SettingsScreen: React.FC = () => {
+  const { signOut } = useAuth();
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
+  const [privateProfile, setPrivateProfile] = React.useState(false);
+
+  return (
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF", padding: 24 }}>
+      <Text style={{ fontSize: 24, fontWeight: "bold", color: "#000", marginBottom: 16 }}>
+        Settings
+      </Text>
+
+      <View style={{ borderTopWidth: 1, borderTopColor: "#E5E7EB" }} />
+
+      <View style={{ paddingVertical: 16 }}>
+        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111827", marginBottom: 12 }}>
+          Preferences
+        </Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 12 }}>
+          <Text style={{ fontSize: 16, color: "#111827" }}>Push notifications</Text>
+          <Switch value={notificationsEnabled} onValueChange={setNotificationsEnabled} />
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 12 }}>
+          <Text style={{ fontSize: 16, color: "#111827" }}>Private profile</Text>
+          <Switch value={privateProfile} onValueChange={setPrivateProfile} />
+        </View>
+      </View>
+
+      <View style={{ borderTopWidth: 1, borderTopColor: "#E5E7EB" }} />
+
+      <View style={{ paddingVertical: 16 }}>
+        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111827", marginBottom: 12 }}>
+          Account
+        </Text>
+        <TouchableOpacity
+          onPress={signOut}
+          style={{ backgroundColor: "#ef4444", paddingVertical: 12, borderRadius: 8, alignItems: "center" }}
+        >
+          <Text style={{ color: "#fff", fontWeight: "600" }}>Sign out</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const OnboardingScreen = () => (
   <View style={styles.placeholderContainer}>
@@ -159,7 +192,6 @@ function MainTabNavigator() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconText;
-
           switch (route.name) {
             case "Explore":
               iconText = "🏠";
@@ -167,77 +199,30 @@ function MainTabNavigator() {
             case "Activities":
               iconText = "⏰";
               break;
-            case "Create":
-              iconText = "➕";
-              break;
-            case "Chat":
-              iconText = "💬";
-              break;
             case "Profile":
               iconText = "👤";
               break;
             default:
               iconText = "🏠";
           }
-
           return (
             <View style={styles.tabIconContainer}>
-              <Text
-                style={[
-                  styles.tabIcon,
-                  {
-                    fontSize: size,
-                    opacity: focused ? 1 : 0.6,
-                  },
-                ]}
-              >
+              <Text style={[styles.tabIcon, { fontSize: size, opacity: focused ? 1 : 0.6 }]}>
                 {iconText}
               </Text>
             </View>
           );
         },
-        tabBarActiveTintColor: "#1F381F", // explore-green color
-        tabBarInactiveTintColor: "#6B7280", // gray-500
+        tabBarActiveTintColor: "#1F381F",
+        tabBarInactiveTintColor: "#6B7280",
         tabBarStyle: styles.tabBar,
         headerShown: false,
         tabBarLabelStyle: styles.tabLabel,
       })}
     >
-      <MainTab.Screen
-        name="Explore"
-        component={ExploreStackNavigator}
-        options={{
-          tabBarLabel: "Explore",
-        }}
-      />
-      <MainTab.Screen
-        name="Activities"
-        component={ActivitiesStackNavigator}
-        options={{
-          tabBarLabel: "Activities",
-        }}
-      />
-      <MainTab.Screen
-        name="Create"
-        component={CreateScreen}
-        options={{
-          tabBarLabel: "Create",
-        }}
-      />
-      <MainTab.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{
-          tabBarLabel: "Chat",
-        }}
-      />
-      <MainTab.Screen
-        name="Profile"
-        component={ProfileStackNavigator}
-        options={{
-          tabBarLabel: "Profile",
-        }}
-      />
+      <MainTab.Screen name="Explore" component={ExploreStackNavigator} options={{ tabBarLabel: "Explore" }} />
+      <MainTab.Screen name="Activities" component={ActivitiesStackNavigator} options={{ tabBarLabel: "Activities" }} />
+      <MainTab.Screen name="Profile" component={ProfileStackNavigator} options={{ tabBarLabel: "Profile" }} />
     </MainTab.Navigator>
   );
 }
