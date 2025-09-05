@@ -263,8 +263,8 @@ export default function Profile() {
     full_name: "Maddie Wei",
     profile_image:
       "https://cdn.builder.io/api/v1/image/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2Fb4460a1279a84ad1b10626393196b1cf?format=webp&width=800",
-    followers: 152,
-    following: 87,
+    followers: 0,
+    following: 0,
     rating: 4.8,
     reviews: 23,
     age: 25,
@@ -308,9 +308,11 @@ export default function Profile() {
         }
       : {
           ...baseDemoProfile,
+          followers: 0,
+          following: 0,
           rating: averageRating || baseDemoProfile.rating,
           reviews: totalReviews || baseDemoProfile.reviews,
-        }; // Show Maddie Wei profile for non-authenticated users with real review data
+        };
 
   const handleProfileUpdate = (updatedProfile: any) => {
     if (user && refetch) {
