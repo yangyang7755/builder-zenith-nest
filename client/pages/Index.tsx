@@ -973,7 +973,7 @@ function MixedActivitiesSection({
               From people you follow ({activitiesFromFollowedUsers.length})
             </h2>
             <Link
-              to="/activities"
+              to="/map-activities"
               className="text-sm text-black underline font-poppins"
             >
               See all
@@ -1420,7 +1420,7 @@ function ClimbingActivityCard({ activity }: { activity: any }) {
             )}
             {activity.registration && (
               <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-cabin">
-                ��� {activity.registration}
+                ���� {activity.registration}
               </span>
             )}
           </div>
@@ -1476,7 +1476,7 @@ function CyclingExploreSection() {
     {
       title: "Intermediate Chaingang",
       date: "���� Tuesday, 6:30 PM",
-      location: "���Box Hill, Surrey",
+      location: "📍Box Hill, Surrey",
       organizer: "Surrey Road Cycling",
       distance: "40km",
       pace: "32 kph",
@@ -1519,7 +1519,7 @@ function CyclingExploreSection() {
   const bikepacking = [
     {
       title: "South Downs Way Bikepacking",
-      date: "���� Fri-Sun, July 15-17",
+      date: "📅 Fri-Sun, July 15-17",
       location: "📍Winchester to Eastbourne",
       organizer: "Adventure Cycling UK",
       distance: "160km over 3 days",
