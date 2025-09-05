@@ -33,25 +33,32 @@ export const useSocket = (): SocketContextType => {
       try {
         const response = await fetch('/api/health', {
           method: 'GET',
-          timeout: 5000,
-          signal: AbortSignal.timeout(5000)
+          signal: AbortSignal.timeout(8000)
         });
         console.log('✅ API health check successful:', response.status);
         return response.ok;
-      } catch (error) {
-        console.warn('⚠️ API health check failed:', error.message);
+      } catch (error: any) {
+        console.warn('⚠️ API health check failed:', error?.message || error);
         return false;
       }
     };
 
-    // Create socket connection if it doesn't exist
-    if (!globalSocket) {
-      // First test API connectivity
-      testApiConnectivity().then((apiReachable) => {
-        if (!apiReachable) {
-          console.warn('⚠️ API not reachable, Socket.IO connection may fail');
-        }
-      });
+    let retryTimer: number | null = null;
+
+    const initiateSocketConnection = async () => {
+      // Only create socket when API is reachable
+      const apiReachable = await testApiConnectivity();
+      if (!apiReachable) {
+        console.warn('⚠️ API not reachable, delaying Socket.IO connection');
+        retryTimer = window.setTimeout(initiateSocketConnection, 10000);
+        return;
+      }
+
+      if (globalSocket) {
+        socketRef.current = globalSocket;
+        return;
+      }
+
       // Detect if we're in a hosted environment
       const isHostedEnv = window.location.hostname.includes('.fly.dev') ||
                          window.location.hostname.includes('.vercel.app') ||
@@ -59,25 +66,22 @@ export const useSocket = (): SocketContextType => {
                          window.location.hostname.includes('.herokuapp.com');
 
       // Use appropriate URL based on environment
-      const socketUrl = isHostedEnv
-        ? `${window.location.protocol}//${window.location.host}`
-        : window.location.origin;
+      const socketUrl = `${window.location.protocol}//${window.location.host}`;
 
       console.log(`🔌 Attempting to connect to Socket.IO server at: ${socketUrl} (hosted: ${isHostedEnv})`);
 
       globalSocket = io(socketUrl, {
-        path: '/socket.io/', // Explicit path for proxy
-        transports: ['polling', 'websocket'], // Try polling first for stability
+        path: '/socket.io/',
+        transports: isHostedEnv ? ['polling'] : ['polling', 'websocket'],
         reconnection: true,
-        reconnectionAttempts: 10, // More attempts
-        reconnectionDelay: 2000, // Longer delay between attempts
+        reconnectionAttempts: 10,
+        reconnectionDelay: 2000,
         reconnectionDelayMax: 10000,
-        maxReconnectionAttempts: 10,
-        timeout: 20000, // Longer timeout
+        timeout: 30000,
         autoConnect: true,
         forceNew: false,
-        upgrade: true,
-        rememberUpgrade: false, // Don't remember transport upgrades
+        upgrade: !isHostedEnv,
+        rememberUpgrade: false,
       });
 
       // Connection event handlers
@@ -97,7 +101,7 @@ export const useSocket = (): SocketContextType => {
         setIsConnected(false);
       });
 
-      globalSocket.on('connect_error', (error) => {
+      globalSocket.on('connect_error', (error: any) => {
         console.error('❌ Socket connection error:', error);
         console.error('Error details:', {
           message: error.message,
@@ -107,19 +111,12 @@ export const useSocket = (): SocketContextType => {
           url: socketUrl,
           transport: globalSocket?.io?.engine?.transport?.name,
           readyState: globalSocket?.io?.engine?.readyState,
-          isHostedEnv: isHostedEnv
         });
         setIsConnected(false);
 
-        // In hosted environments, try to fallback to polling if websocket fails
-        if (isHostedEnv && globalSocket?.io?.engine?.transport?.name === 'websocket') {
-          console.log('🔄 WebSocket failed in hosted env, forcing polling transport');
-          setTimeout(() => {
-            if (globalSocket && !globalSocket.connected) {
-              globalSocket.io.opts.transports = ['polling'];
-              globalSocket.connect();
-            }
-          }, 1000);
+        // In hosted environments, retry later instead of spamming errors
+        if (!globalSocket?.connected && retryTimer == null) {
+          retryTimer = window.setTimeout(initiateSocketConnection, 10000);
         }
       });
 
@@ -141,13 +138,19 @@ export const useSocket = (): SocketContextType => {
         console.error('❌ Socket failed to reconnect after all attempts');
         setIsConnected(false);
       });
-    }
 
-    socketRef.current = globalSocket;
+      socketRef.current = globalSocket;
+    };
+
+    initiateSocketConnection();
 
     // Cleanup function
     return () => {
-      // Don't disconnect here - keep connection alive for other components
+      if (retryTimer) {
+        clearTimeout(retryTimer);
+        retryTimer = null;
+      }
+      // Keep socket alive for other components
     };
   }, [user]);
 
