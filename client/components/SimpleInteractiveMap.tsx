@@ -312,7 +312,7 @@ export default function SimpleInteractiveMap({
             <h1 className="text-lg font-bold">
               {mode === 'select' ? 'Select Location' : 'Activity Map'}
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="hidden sm:block text-sm text-gray-500 truncate max-w-[160px]">
               {mode === 'select'
                 ? 'Tap on the map to select a location'
                 : `${activitiesWithCoords.length} activities shown`
