@@ -106,7 +106,7 @@ const ProfileScreen: React.FC = () => {
     nationality: profile?.country || "United Kingdom",
     profession: profile?.profession || "STUDENT",
     university: profile?.university || "",
-    location: profile?.location || "Oxford, UK",
+    location: profile?.location || "United Kingdom",
     sports: profile?.sports || ["Cycling", "Climbing", "Running"],
     languages: profile?.languages || ["🇪🇸", "🇬🇧", "🇨🇳"],
     followers: followStats?.followers || 125,
@@ -116,7 +116,7 @@ const ProfileScreen: React.FC = () => {
     // Sport-specific data
     climbingLevel: profile?.climbingLevel || "Advanced",
     climbingExperience: profile?.climbingExperience || "3+ years",
-    cyclingLevel: profile?.cyclingLevel || "Intermediate",
+    cyclingLevel: profile?.cyclingLevel || "Beginner",
     cyclingExperience: profile?.cyclingExperience || "2+ years",
     runningLevel: profile?.runningLevel || "Beginner",
     runningExperience: profile?.runningExperience || "1+ year",
@@ -195,10 +195,15 @@ const ProfileScreen: React.FC = () => {
 
         <View style={styles.statItem}>
           <View style={styles.ratingContainer}>
-            <Text style={styles.statNumber}>{profileData.rating}</Text>
-            <Text style={styles.starIcon}>⭐</Text>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Text key={i} style={styles.starIcon}>
+                {i < Math.round(profileData.rating) ? "⭐" : "☆"}
+              </Text>
+            ))}
           </View>
-          <Text style={styles.statLabel}>{profileData.reviews} Reviews</Text>
+          <Text style={styles.statLabel}>
+            {profileData.rating.toFixed(1)} ({profileData.reviews} reviews)
+          </Text>
         </View>
       </View>
 
@@ -216,9 +221,17 @@ const ProfileScreen: React.FC = () => {
 
       {/* Clubs Section */}
       <View style={styles.clubsSection}>
-        <Text style={styles.sectionLabel}>Clubs & Communities</Text>
+        <Text style={styles.sectionLabel}>Clubs</Text>
         {userClubs.length === 0 ? (
-          <Text style={styles.emptyText}>No clubs yet</Text>
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyText}>No clubs yet</Text>
+            <TouchableOpacity
+              style={styles.exploreButton}
+              onPress={() => navigation.navigate("Explore" as never)}
+            >
+              <Text style={styles.exploreButtonText}>Explore Clubs</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           <View style={styles.clubsList}>
             {userClubs.map((club: any) => (
@@ -236,7 +249,7 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.detailsGrid}>
           <View style={styles.detailItem}>
             <Text style={styles.detailLabel}>Age</Text>
-            <Text style={styles.detailValue}>{profileData.age}</Text>
+            <Text style={styles.detailValue}>{profileData.age} years old</Text>
           </View>
           <View style={styles.detailItem}>
             <Text style={styles.detailLabel}>Gender</Text>
@@ -477,7 +490,7 @@ const ProfileScreen: React.FC = () => {
             <Text style={styles.reviewerName}>Alex M.</Text>
             <Text style={styles.reviewDate}>2 weeks ago</Text>
           </View>
-          <Text style={styles.reviewRating}>⭐⭐⭐⭐��</Text>
+          <Text style={styles.reviewRating}>⭐⭐⭐⭐⭐</Text>
         </View>
         <Text style={styles.reviewText}>
           Great climbing partner! Very experienced and patient. KOKO helped me
@@ -491,7 +504,7 @@ const ProfileScreen: React.FC = () => {
 
   const renderClubsSection = () => (
     <View style={styles.clubsSection}>
-      <Text style={styles.sectionLabel}>Clubs & Communities</Text>
+      <Text style={styles.sectionLabel}>Clubs</Text>
       <View style={styles.clubsGrid}>
         <View style={styles.clubCard}>
           <Image
@@ -560,7 +573,6 @@ const ProfileScreen: React.FC = () => {
         {renderProfileSection()}
         {renderMainTabs()}
         {renderTabContent()}
-        {renderClubsSection()}
         {renderLocationSection()}
 
         <View style={{ height: 100 }} />
@@ -598,7 +610,7 @@ const ProfileScreen: React.FC = () => {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Following</Text>
               <TouchableOpacity onPress={() => setShowFollowing(false)}>
-                <Text style={styles.modalClose}>��</Text>
+                <Text style={styles.modalClose}>✕</Text>
               </TouchableOpacity>
             </View>
             <Text style={styles.comingSoon}>Following list coming soon!</Text>
@@ -1001,6 +1013,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#6B7280",
     fontStyle: "italic",
+  },
+  exploreButton: {
+    marginTop: 12,
+    backgroundColor: "#1F381F",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  exploreButtonText: {
+    color: "#FFFFFF",
+    fontWeight: "600",
   },
   clubsSection: {
     paddingHorizontal: 24,
