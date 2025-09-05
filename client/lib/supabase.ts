@@ -14,14 +14,24 @@ const isValidUrl = (url: string | undefined) => {
   }
 };
 
-const hasValidConfig =
-  isValidUrl(supabaseUrl) &&
-  supabaseAnonKey &&
-  supabaseAnonKey !== "temp-placeholder";
+// Basic JWT-like check for anon key format to avoid runtime AuthApiError loops
+const isLikelyValidAnonKey = (key: string | undefined) => {
+  if (!key || key === "temp-placeholder") return false;
+  const parts = key.split(".");
+  if (parts.length < 2) return false;
+  try {
+    const decoded = JSON.parse(atob(parts[0].replace(/-/g, "+").replace(/_/g, "/")));
+    return typeof decoded === "object" && !!decoded;
+  } catch {
+    return false;
+  }
+};
+
+const hasValidConfig = isValidUrl(supabaseUrl) && isLikelyValidAnonKey(supabaseAnonKey);
 
 if (!hasValidConfig) {
   console.warn(
-    "Warning: Missing or invalid Supabase environment variables. Authentication features will not work.",
+    "Supabase not fully configured or API key invalid. Running in demo mode (no auth).",
   );
 }
 
