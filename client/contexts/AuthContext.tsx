@@ -276,6 +276,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSession(initialSession);
         setUser(initialSession?.user || null);
 
+        if (initialSession?.access_token) {
+          localStorage.setItem("auth_token", initialSession.access_token);
+        } else {
+          localStorage.removeItem("auth_token");
+        }
+
         if (initialSession?.user && initialSession?.access_token) {
           await fetchProfile(
             initialSession.user.id,
@@ -303,6 +309,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           if (mounted) {
             setSession(currentSession);
             setUser(currentSession?.user || null);
+
+            if (currentSession?.access_token) {
+              localStorage.setItem("auth_token", currentSession.access_token);
+            } else {
+              localStorage.removeItem("auth_token");
+            }
 
             if (currentSession?.user && currentSession?.access_token) {
               await fetchProfile(
@@ -377,6 +389,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         // Clear persisted data
         localStorage.removeItem("userProfile");
         localStorage.removeItem("userSession");
+        localStorage.removeItem("auth_token");
       }
       return { error: result.error };
     },
