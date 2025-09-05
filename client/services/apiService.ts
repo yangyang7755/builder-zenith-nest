@@ -1,5 +1,6 @@
 import { fetchWithTimeout as robustFetchWithTimeout } from "../utils/robustFetch";
 import { networkService } from "./networkService";
+import { fetchWithTimeout as robustFetchWithTimeout } from "../utils/robustFetch";
 
 const API_BASE_URL = "/api";
 
