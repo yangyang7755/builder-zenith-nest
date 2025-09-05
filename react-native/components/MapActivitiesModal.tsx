@@ -105,23 +105,7 @@ export default function MapActivitiesModal({ activities, onClose, onSelect }: Pr
         <View style={[styles.gridCol, { left: "50%" }]} />
         <View style={[styles.gridCol, { left: "75%" }]} />
 
-        {/* Markers */}
-        {activitiesWithCoords.map((a) => (
-          <View
-            key={a.id}
-            style={styles.markerWrapper}
-            onLayout={() => {}}
-          >
-            <View
-              style={styles.markerPositioner}
-              pointerEvents="box-none"
-            >
-              {/* We'll compute position using absolute style on child */}
-            </View>
-          </View>
-        ))}
-
-        {/* Absolutely positioned markers after layout using overlay size */}
+        {/* Markers overlay */}
         <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
           {activitiesWithCoords.map((a) => {
             const w = Dimensions.get("window").width;
