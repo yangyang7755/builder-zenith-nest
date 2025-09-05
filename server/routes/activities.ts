@@ -29,6 +29,11 @@ async function getAuthenticatedUser(req: Request) {
   return user;
 }
 
+// Join request schema
+const JoinActivityRequestSchema = z.object({
+  message: z.string().max(500).optional(),
+});
+
 // Enhanced Activity schema for validation
 const ActivitySchema = z.object({
   title: z.string().min(1).max(255),
