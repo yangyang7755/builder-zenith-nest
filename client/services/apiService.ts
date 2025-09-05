@@ -730,7 +730,7 @@ export const apiService = {
   ): Promise<ApiResponse<any[]>> {
     try {
       const response = await fetchWithTimeout(
-        `${API_BASE_URL}/chat/club/${clubId}/messages?limit=${limit}&offset=${offset}`,
+        `${API_BASE_URL}/chat/clubs/${clubId}/messages?limit=${limit}&offset=${offset}`,
         {
           headers: getAuthHeaders(),
         },
@@ -750,7 +750,7 @@ export const apiService = {
   ): Promise<ApiResponse<any>> {
     try {
       const response = await fetchWithTimeout(
-        `${API_BASE_URL}/chat/club/${clubId}/messages`,
+        `${API_BASE_URL}/chat/clubs/${clubId}/messages`,
         {
           method: "POST",
           headers: {
@@ -776,7 +776,7 @@ export const apiService = {
   ): Promise<ApiResponse<any[]>> {
     try {
       const response = await fetchWithTimeout(
-        `${API_BASE_URL}/chat/direct/${otherUserId}?limit=${limit}&offset=${offset}`,
+        `${API_BASE_URL}/chat/direct/${otherUserId}/messages?limit=${limit}&offset=${offset}`,
         {
           headers: getAuthHeaders(),
         },
@@ -795,7 +795,7 @@ export const apiService = {
     message: string,
   ): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/chat/direct`, {
+      const response = await fetchWithTimeout(`${API_BASE_URL}/chat/direct/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -815,7 +815,7 @@ export const apiService = {
   async markMessagesAsRead(senderId: string): Promise<ApiResponse<any>> {
     try {
       const response = await fetchWithTimeout(
-        `${API_BASE_URL}/chat/mark-read`,
+        `${API_BASE_URL}/chat/direct/mark-read`,
         {
           method: "POST",
           headers: {
@@ -835,6 +835,21 @@ export const apiService = {
   },
 
   // Search functionality
+  async getClubOnlineUsers(clubId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/chat/clubs/${clubId}/online-users`,
+        { headers: getAuthHeaders() }
+      );
+      return await handleResponse(response);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return { error: "Request timeout" };
+      }
+      return { error: "Failed to fetch online users" };
+    }
+  },
+
   async searchUsers(query: string): Promise<ApiResponse<any[]>> {
     try {
       const response = await fetch(
