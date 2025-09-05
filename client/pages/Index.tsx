@@ -875,7 +875,7 @@ function MixedActivitiesSection({
           </h2>
           {!isSearching && (
             <Link
-              to="/category-activities?category=Recent%20activities%20nearby&location=london"
+              to="/map-activities?location=london"
               className="text-sm text-black underline font-poppins"
             >
               See all
