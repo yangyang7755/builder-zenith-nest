@@ -165,7 +165,7 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
     }
   };
 
-  const joinClub = async (clubId: string): Promise<boolean> => {
+  const requestJoin = async (clubId: string, message?: string): Promise<boolean> => {
     if (!user) {
       Alert.alert("Authentication Required", "Please log in to join clubs");
       return false;
@@ -175,10 +175,9 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
       setIsLoading(true);
       setError(null);
 
-      // Optimistic update
+      // Optimistic local pending request only
       const club = clubs.find((c) => c.id === clubId);
       if (club) {
-        setUserClubs((prev) => [...prev, club]);
         setMemberships((prev) => [
           ...prev,
           {
@@ -186,24 +185,24 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
             club_id: clubId,
             user_id: user.id,
             role: "member",
-            joined_at: new Date().toISOString(),
+            status: "pending",
+            requested_at: new Date().toISOString(),
             club,
           },
         ]);
       }
 
-      const response = await apiService.joinClub(clubId);
+      const response = await apiService.joinClub(clubId, message);
 
       if (response.error) {
-        // Revert optimistic update
-        setUserClubs((prev) => prev.filter((c) => c.id !== clubId));
-        setMemberships((prev) => prev.filter((m) => m.club_id !== clubId));
+        // Revert optimistic pending request
+        setMemberships((prev) => prev.filter((m) => !(m.club_id === clubId && m.user_id === user.id)));
 
         Alert.alert("Error", response.error);
         return false;
       }
 
-      Alert.alert("Success", "Successfully joined the club!");
+      Alert.alert("Request sent", "Your request to join the club has been sent");
 
       // Refresh data to get accurate membership info
       await Promise.all([getUserClubs(), refreshClubs()]);
@@ -258,7 +257,17 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
   };
 
   const isMember = (clubId: string): boolean => {
-    return memberships.some((m) => m.club_id === clubId);
+    return memberships.some((m) => m.club_id === clubId && (m.status === "approved" || !m.status));
+  };
+
+  const isManager = (clubId: string): boolean => {
+    return memberships.some((m) => m.club_id === clubId && m.role === "manager" && (m.status === "approved" || !m.status));
+  };
+
+  const getUserRole = (clubId: string): "non-member" | "member" | "manager" => {
+    if (isManager(clubId)) return "manager";
+    if (isMember(clubId)) return "member";
+    return "non-member";
   };
 
   const createClub = async (clubData: Partial<Club>): Promise<Club | null> => {
@@ -304,18 +313,83 @@ export const ClubProvider: React.FC<ClubProviderProps> = ({ children }) => {
     }
   };
 
+  const approveRequest = async (clubId: string, requestId: string): Promise<boolean> => {
+    try {
+      setIsLoading(true);
+      const res = await apiService.approveClubRequest(clubId, requestId);
+      if (res.error) {
+        Alert.alert("Error", res.error);
+        return false;
+      }
+      await getUserClubs();
+      return true;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const denyRequest = async (clubId: string, requestId: string): Promise<boolean> => {
+    try {
+      setIsLoading(true);
+      const res = await apiService.denyClubRequest(clubId, requestId);
+      if (res.error) {
+        Alert.alert("Error", res.error);
+        return false;
+      }
+      return true;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateMemberRoleAction = async (clubId: string, userId: string, role: "member" | "manager"): Promise<boolean> => {
+    try {
+      setIsLoading(true);
+      const res = await apiService.updateMemberRole(clubId, userId, role);
+      if (res.error) {
+        Alert.alert("Error", res.error);
+        return false;
+      }
+      await getUserClubs();
+      return true;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const removeMemberAction = async (clubId: string, userId: string): Promise<boolean> => {
+    try {
+      setIsLoading(true);
+      const res = await apiService.removeClubMember(clubId, userId);
+      if (res.error) {
+        Alert.alert("Error", res.error);
+        return false;
+      }
+      await getUserClubs();
+      return true;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const value: ClubContextType = {
     clubs,
     userClubs,
     memberships,
     isLoading,
     error,
-    joinClub,
+    requestJoin,
     leaveClub,
     isMember,
+    isManager,
+    getUserRole,
     refreshClubs,
     getUserClubs,
     createClub,
+    approveRequest,
+    denyRequest,
+    updateMemberRole: updateMemberRoleAction,
+    removeMember: removeMemberAction,
   };
 
   return <ClubContext.Provider value={value}>{children}</ClubContext.Provider>;
