@@ -51,7 +51,9 @@ const xmlHttpRequestFetch = async (url: string, options: RequestInit = {}): Prom
       if (options.signal) {
         options.signal.addEventListener('abort', () => {
           xhr.abort();
-          reject(new Error('Request aborted'));
+          const err: any = new Error('Request aborted');
+          err.name = 'AbortError';
+          reject(err);
         });
       }
 
@@ -113,11 +115,15 @@ const xmlHttpRequestFetch = async (url: string, options: RequestInit = {}): Prom
 
       xhr.ontimeout = () => {
         console.error(`XHR request timeout: ${method} ${url}`);
-        reject(new Error('XHR request timeout'));
+        const err: any = new Error('Request timeout');
+        err.name = 'TimeoutError';
+        reject(err);
       };
 
       xhr.onabort = () => {
-        reject(new Error('XHR request aborted'));
+        const err: any = new Error('Request aborted');
+        err.name = 'AbortError';
+        reject(err);
       };
 
       // Send request
@@ -221,8 +227,10 @@ export const robustFetch = async (url: string, options: RequestInit = {}): Promi
   }
 
   // If all methods failed, throw the last error
-  const finalError = lastError || new Error('All fetch methods failed');
-  console.error('🚨 All fetch methods exhausted:', finalError.message);
+  const finalError: any = lastError || new Error('All fetch methods failed');
+  const msg = (finalError && (finalError.message || '')) as string;
+  const isBenign = finalError.name === 'AbortError' || finalError.name === 'TimeoutError' || /aborted|timeout/i.test(msg);
+  (isBenign ? console.warn : console.error)('🚨 All fetch methods exhausted:', msg);
   throw finalError;
 };
 
