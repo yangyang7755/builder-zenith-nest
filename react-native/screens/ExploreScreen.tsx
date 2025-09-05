@@ -516,8 +516,21 @@ const ExploreScreen: React.FC = () => {
         {(() => {
           const clubId = activity.club_id || activity.clubId || activity.club?.id;
           const canJoin = !clubId || isMember(String(clubId));
+          const onRequest = async () => {
+            try {
+              const res = await apiService.joinActivity(activity.id || activity.activity_id);
+              if (res.error) {
+                Alert.alert('Error', res.error);
+              } else {
+                const status = res.data?.status || 'pending';
+                Alert.alert('Requested', status === 'waitlisted' ? 'Added to waitlist' : 'Request sent');
+              }
+            } catch (e) {
+              Alert.alert('Error', 'Failed to request join');
+            }
+          };
           return (
-            <TouchableOpacity style={[styles.joinButton, !canJoin && { backgroundColor: '#9CA3AF' }]} disabled={!canJoin}>
+            <TouchableOpacity style={[styles.joinButton, !canJoin && { backgroundColor: '#9CA3AF' }]} disabled={!canJoin} onPress={onRequest}>
               <Text style={styles.joinButtonText}>{canJoin ? 'Request to join' : 'Join club to request'}</Text>
             </TouchableOpacity>
           );
