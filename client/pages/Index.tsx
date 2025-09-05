@@ -558,7 +558,7 @@ export default function Index() {
               Partner requests
             </h2>
             <Link
-              to="/map-activities"
+              to={`/map-activities?location=${encodeURIComponent(currentLocation)}`}
               className="text-sm text-black underline font-poppins"
             >
               See all
@@ -973,7 +973,7 @@ function MixedActivitiesSection({
               From people you follow ({activitiesFromFollowedUsers.length})
             </h2>
             <Link
-              to="/map-activities"
+              to={`/map-activities?location=${encodeURIComponent(currentLocation)}`}
               className="text-sm text-black underline font-poppins"
             >
               See all
@@ -1026,7 +1026,7 @@ function MixedActivitiesSection({
               From your clubs ({activitiesFromUserClubs.length})
             </h2>
             <Link
-              to="/map-activities"
+              to={`/map-activities?location=${encodeURIComponent(currentLocation)}`}
               className="text-sm text-black underline font-poppins"
             >
               See all
