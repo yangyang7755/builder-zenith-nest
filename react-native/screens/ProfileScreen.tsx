@@ -214,6 +214,22 @@ const ProfileScreen: React.FC = () => {
         </View>
       </View>
 
+      {/* Clubs Section */}
+      <View style={styles.clubsSection}>
+        <Text style={styles.sectionLabel}>Clubs & Communities</Text>
+        {userClubs.length === 0 ? (
+          <Text style={styles.emptyText}>No clubs yet</Text>
+        ) : (
+          <View style={styles.clubsList}>
+            {userClubs.map((club: any) => (
+              <View key={club.id} style={styles.clubItem}>
+                <Text style={styles.clubName}>{club.name}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+
       {/* Personal Details */}
       <View style={styles.personalDetails}>
         <Text style={styles.sectionLabel}>Personal Details</Text>
