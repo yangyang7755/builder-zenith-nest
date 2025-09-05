@@ -446,6 +446,10 @@ export const handleLeaveClub = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Authentication required" });
     }
 
+    if (!supabaseAdmin) {
+      return res.json({ message: "Left club successfully (demo mode)" });
+    }
+
     const { error } = await supabaseAdmin
       .from("club_memberships")
       .delete()
