@@ -64,8 +64,8 @@ const ProfileScreen: React.FC = () => {
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "sports" | "activities" | "reviews"
-  >("sports");
+    "activities" | "reviews"
+  >("activities");
   const [activeSportTab, setActiveSportTab] = useState<
     "climbing" | "cycling" | "running"
   >("climbing");
@@ -77,7 +77,7 @@ const ProfileScreen: React.FC = () => {
 
   // Calculate age from birthday if available
   const calculateAge = (birthday: string): number => {
-    if (!birthday) return 15;
+    if (!birthday) return 25;
     const birthDate = new Date(birthday);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -101,7 +101,7 @@ const ProfileScreen: React.FC = () => {
     bio:
       profile?.bio ||
       "Passionate climber and outdoor enthusiast from Oxford. Love exploring new routes and meeting fellow adventurers!",
-    age: profile?.birthday ? calculateAge(profile.birthday) : 15,
+    age: profile?.birthday ? calculateAge(profile.birthday) : 25,
     gender: profile?.gender || "Female",
     nationality: profile?.country || "United Kingdom",
     profession: profile?.profession || "STUDENT",
@@ -280,9 +280,7 @@ const ProfileScreen: React.FC = () => {
   );
 
   const renderTabContent = () => {
-    if (activeTab === "sports") {
-      return renderSportsLicensingTab();
-    } else if (activeTab === "activities") {
+    if (activeTab === "activities") {
       return renderActivitiesTab();
     } else if (activeTab === "reviews") {
       return renderReviewsTab();
@@ -540,11 +538,6 @@ const ProfileScreen: React.FC = () => {
 
   const renderMainTabs = () => (
     <View style={styles.mainTabs}>
-      <TabButton
-        title="Sports & Licensing"
-        isActive={activeTab === "sports"}
-        onPress={() => setActiveTab("sports")}
-      />
       <TabButton
         title="Activities & Reviews"
         isActive={activeTab === "activities"}
