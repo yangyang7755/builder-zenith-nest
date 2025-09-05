@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../contexts/AuthContext";
 import { useFollow } from "../contexts/FollowContext";
 import { useUserActivitiesAndReviews } from "../hooks/useUserActivitiesAndReviews";
+import { useClubs } from "../contexts/ClubContext";
 
 interface TabButtonProps {
   title: string;
