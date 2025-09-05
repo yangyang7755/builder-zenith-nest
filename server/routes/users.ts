@@ -257,7 +257,7 @@ export const handleGetUserProfile = async (req: Request, res: Response) => {
     console.log("=== GET USER PROFILE REQUEST ===");
 
     // Extract user ID from auth token or params
-    const userId = req.params.userId || req.user?.id;
+    const userId = (req as any).params?.id || (req as any).params?.userId || (req as any).user?.id;
 
     if (!userId) {
       return res.status(400).json({
@@ -321,7 +321,7 @@ export const handleUpdateUserProfile = async (req: Request, res: Response) => {
     console.log("=== UPDATE USER PROFILE REQUEST ===");
     console.log("Request body:", JSON.stringify(req.body, null, 2));
 
-    const userId = req.params.userId || req.user?.id;
+    const userId = (req as any).params?.id || (req as any).params?.userId || (req as any).user?.id;
 
     if (!userId) {
       return res.status(400).json({
@@ -539,7 +539,7 @@ export const handleGetUserClubs = async (req: Request, res: Response) => {
   try {
     console.log("=== GET USER CLUBS REQUEST ===");
 
-    const userId = req.params.userId || req.user?.id;
+    const userId = (req as any).params?.id || (req as any).params?.userId || (req as any).user?.id;
 
     if (!userId) {
       return res.status(400).json({
@@ -773,8 +773,8 @@ export const handleProfileOnboarding = async (req: Request, res: Response) => {
       console.log("Creating/updating profile from onboarding for user:", userId);
     }
 
-    // Check if Supabase is configured OR we're falling back due to missing userId in non-production
-    if (!supabaseAdmin || (!userId && process.env.NODE_ENV !== "production")) {
+    // If Supabase isn't configured OR userId is missing, fall back to demo response
+    if (!supabaseAdmin || !userId) {
       const demoUserId = userId || `demo-user-${Date.now()}`;
       const profileData = {
         id: demoUserId,
