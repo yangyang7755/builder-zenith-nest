@@ -511,7 +511,13 @@ export const apiService = {
       const response = await fetchWithTimeout(url, {
         headers: getAuthHeaders(),
       });
-      return await handleResponse(response);
+      const parsed = await handleResponse(response);
+      if (parsed.error) {
+        return {
+          data: { success: true, data: [], pagination: { total: 0, limit: 20, offset: 0 } },
+        };
+      }
+      return parsed;
     } catch (error: any) {
       // Always degrade gracefully for activities: return empty-success payload
       return {
