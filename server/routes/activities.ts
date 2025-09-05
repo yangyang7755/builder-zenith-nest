@@ -1060,6 +1060,108 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
 };
 
 // DELETE /api/activities/:id/leave - Leave an activity
+export const handleApproveActivityRequest = async (req: Request, res: Response) => {
+  try {
+    const { id, requestId } = req.params;
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
+      return res.status(401).json({ success: false, error: "Authentication required" });
+    }
+
+    if (!supabaseAdmin) {
+      return res.json({ success: true, message: "Request approved (demo mode)" });
+    }
+
+    // Verify organizer owns activity
+    const { data: activity } = await supabaseAdmin
+      .from("activities")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (!activity || activity.organizer_id !== user.id) {
+      return res.status(403).json({ success: false, error: "Only the organizer can approve" });
+    }
+
+    // Check capacity
+    const { count: joinedCount } = await supabaseAdmin
+      .from("activity_participants")
+      .select("*", { count: 'exact' })
+      .eq("activity_id", id)
+      .eq("status", "joined");
+
+    const isFull = activity.max_participants && joinedCount !== null && joinedCount >= activity.max_participants;
+    if (isFull) {
+      return res.status(400).json({ success: false, error: "Activity is full" });
+    }
+
+    const { data: updated, error } = await supabaseAdmin
+      .from("activity_participants")
+      .update({ status: "joined", joined_at: new Date().toISOString() })
+      .eq("id", requestId)
+      .eq("activity_id", id)
+      .select("*")
+      .single();
+
+    if (error) {
+      console.error("Approve request error:", error);
+      return res.status(500).json({ success: false, error: "Failed to approve request" });
+    }
+
+    try {
+      await createNotification(updated.user_id, "activity_request_approved", "Request approved", "Your request was approved", { activity_id: id });
+    } catch {}
+
+    return res.json({ success: true, data: updated, message: "Request approved" });
+  } catch (error) {
+    console.error("Approve request error:", error);
+    res.status(500).json({ success: false, error: "Failed to approve request" });
+  }
+};
+
+export const handleDenyActivityRequest = async (req: Request, res: Response) => {
+  try {
+    const { id, requestId } = req.params;
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
+      return res.status(401).json({ success: false, error: "Authentication required" });
+    }
+
+    if (!supabaseAdmin) {
+      return res.json({ success: true, message: "Request denied (demo mode)" });
+    }
+
+    // Verify organizer
+    const { data: activity } = await supabaseAdmin
+      .from("activities")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (!activity || activity.organizer_id !== user.id) {
+      return res.status(403).json({ success: false, error: "Only the organizer can deny" });
+    }
+
+    const { error } = await supabaseAdmin
+      .from("activity_participants")
+      .update({ status: "denied" })
+      .eq("id", requestId)
+      .eq("activity_id", id);
+
+    if (error) {
+      console.error("Deny request error:", error);
+      return res.status(500).json({ success: false, error: "Failed to deny request" });
+    }
+
+    return res.json({ success: true, message: "Request denied" });
+  } catch (error) {
+    console.error("Deny request error:", error);
+    res.status(500).json({ success: false, error: "Failed to deny request" });
+  }
+};
+
 export const handleLeaveActivity = async (req: Request, res: Response) => {
   try {
     const { id } = req.params; // activity id
