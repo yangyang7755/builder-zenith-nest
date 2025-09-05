@@ -150,6 +150,13 @@ const ExploreScreen: React.FC = () => {
       setIsSearching(false);
     }
 
+    // Hide club-only activities unless user is a member of that club
+    filtered = filtered.filter((activity) => {
+      const clubId = activity.club_id || activity.clubId || activity.club?.id;
+      if (!clubId) return true; // public activity
+      return isMember(String(clubId));
+    });
+
     // Apply comprehensive filters (same logic as web)
     if (filters.activityType.length > 0) {
       filtered = filtered.filter((activity) => {
