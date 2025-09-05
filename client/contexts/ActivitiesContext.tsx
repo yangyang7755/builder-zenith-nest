@@ -421,8 +421,21 @@ export function ActivitiesProvider({ children }: { children: ReactNode }) {
       console.log("Raw response from getActivities:", response);
 
       if (response.error) {
-        // Backend error - show actual error to user
         console.error("Backend error in getActivities:", response.error);
+        const msg = String(response.error || "");
+        // Gracefully handle network/unavailable/timeouts by showing empty list
+        if (
+          msg === "BACKEND_UNAVAILABLE" ||
+          msg === "Request timeout" ||
+          msg.includes("temporarily unavailable") ||
+          msg.includes("Failed to fetch") ||
+          msg.includes("Network") ||
+          msg.includes("XMLHttpRequest")
+        ) {
+          setActivities([]);
+          setPagination({ total: 0, limit: 20, offset: 0 });
+          return;
+        }
         throw new Error(response.error);
       }
 
