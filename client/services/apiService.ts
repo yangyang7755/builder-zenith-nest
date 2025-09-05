@@ -1,4 +1,3 @@
-import { networkAwareFetch, networkService } from "./networkService";
 import { fetchWithTimeout as robustFetchWithTimeout } from "../utils/robustFetch";
 import { networkService } from "./networkService";
 
