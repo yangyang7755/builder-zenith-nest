@@ -29,9 +29,9 @@ export const useSocket = (): any => {
 
     const testApiConnectivity = async () => {
       try {
-        const response = await fetch('/api/health', {
-          method: 'GET',
-          signal: AbortSignal.timeout(8000)
+        const response = await fetch("/api/health", {
+          method: "GET",
+          signal: AbortSignal.timeout(8000),
         });
         return response.ok;
       } catch {
@@ -53,16 +53,17 @@ export const useSocket = (): any => {
         return;
       }
 
-      const isHostedEnv = window.location.hostname.includes('.fly.dev') ||
-                         window.location.hostname.includes('.vercel.app') ||
-                         window.location.hostname.includes('.netlify.app') ||
-                         window.location.hostname.includes('.herokuapp.com');
+      const isHostedEnv =
+        window.location.hostname.includes(".fly.dev") ||
+        window.location.hostname.includes(".vercel.app") ||
+        window.location.hostname.includes(".netlify.app") ||
+        window.location.hostname.includes(".herokuapp.com");
 
       const socketUrl = `${window.location.protocol}//${window.location.host}`;
 
       globalSocket = io(socketUrl, {
-        path: '/socket.io/',
-        transports: isHostedEnv ? ['polling'] : ['polling', 'websocket'],
+        path: "/socket.io/",
+        transports: isHostedEnv ? ["polling"] : ["polling", "websocket"],
         reconnection: true,
         reconnectionAttempts: 10,
         reconnectionDelay: 2000,
@@ -74,18 +75,18 @@ export const useSocket = (): any => {
         rememberUpgrade: false,
       });
 
-      globalSocket.on('connect', () => {
+      globalSocket.on("connect", () => {
         setIsConnected(true);
         if (user?.id) {
-          globalSocket?.emit('join-user-room', user.id);
+          globalSocket?.emit("join-user-room", user.id);
         }
       });
 
-      globalSocket.on('disconnect', () => {
+      globalSocket.on("disconnect", () => {
         setIsConnected(false);
       });
 
-      globalSocket.on('connect_error', () => {
+      globalSocket.on("connect_error", () => {
         setIsConnected(false);
         if (!globalSocket?.connected && retryTimer == null) {
           retryTimer = window.setTimeout(initiateSocketConnection, 10000);
@@ -105,18 +106,34 @@ export const useSocket = (): any => {
     };
   }, [user]);
 
-  const joinUserRoom = (userId: string) => socketRef.current?.emit('join-user-room', userId);
-  const leaveUserRoom = (userId: string) => socketRef.current?.emit('leave-user-room', userId);
+  const joinUserRoom = (userId: string) =>
+    socketRef.current?.emit("join-user-room", userId);
+  const leaveUserRoom = (userId: string) =>
+    socketRef.current?.emit("leave-user-room", userId);
 
   // Club helpers expected by consumers
-  const joinClub = (clubId: string) => socketRef.current?.emit('join_club', clubId);
-  const leaveClub = (clubId: string) => socketRef.current?.emit('leave_club', clubId);
-  const sendClubMessage = (clubId: string, message: string) => socketRef.current?.emit('club_message', { clubId, userId: user?.id, message });
-  const onClubMessage = (cb: (msg: any) => void) => socketRef.current?.on('new_club_message', cb);
+  const joinClub = (clubId: string) =>
+    socketRef.current?.emit("join_club", clubId);
+  const leaveClub = (clubId: string) =>
+    socketRef.current?.emit("leave_club", clubId);
+  const sendClubMessage = (clubId: string, message: string) =>
+    socketRef.current?.emit("club_message", {
+      clubId,
+      userId: user?.id,
+      message,
+    });
+  const onClubMessage = (cb: (msg: any) => void) =>
+    socketRef.current?.on("new_club_message", cb);
 
   // Direct message helpers
-  const sendDirectMessage = (receiverId: string, message: string) => socketRef.current?.emit('direct_message', { senderId: user?.id, receiverId, message });
-  const onDirectMessage = (cb: (msg: any) => void) => socketRef.current?.on('new_direct_message', cb);
+  const sendDirectMessage = (receiverId: string, message: string) =>
+    socketRef.current?.emit("direct_message", {
+      senderId: user?.id,
+      receiverId,
+      message,
+    });
+  const onDirectMessage = (cb: (msg: any) => void) =>
+    socketRef.current?.on("new_direct_message", cb);
 
   return {
     socket: socketRef.current,
@@ -140,7 +157,7 @@ export const useFollowSocket = () => {
 
   const emitFollowUser = (followedUserId: string, followerData: any) => {
     if (socket && user) {
-      socket.emit('user-followed', {
+      socket.emit("user-followed", {
         followedUserId,
         followerId: user.id,
         followerData,
@@ -151,7 +168,7 @@ export const useFollowSocket = () => {
 
   const emitUnfollowUser = (unfollowedUserId: string) => {
     if (socket && user) {
-      socket.emit('user-unfollowed', {
+      socket.emit("user-unfollowed", {
         unfollowedUserId,
         unfollowerId: user.id,
         timestamp: new Date().toISOString(),
@@ -167,30 +184,30 @@ export const useFollowSocket = () => {
     if (!socket) return () => {};
 
     const handleNewFollower = (data: any) => {
-      console.log('📝 New follower received:', data);
+      console.log("📝 New follower received:", data);
       callbacks.onNewFollower?.(data);
     };
 
     const handleFollowerRemoved = (data: any) => {
-      console.log('📝 Follower removed:', data);
+      console.log("📝 Follower removed:", data);
       callbacks.onFollowerRemoved?.(data);
     };
 
     const handleFollowingUpdate = (data: any) => {
-      console.log('📝 Following update:', data);
+      console.log("📝 Following update:", data);
       callbacks.onFollowingUpdate?.(data);
     };
 
     // Subscribe to events
-    socket.on('new-follower', handleNewFollower);
-    socket.on('follower-removed', handleFollowerRemoved);
-    socket.on('following-updated', handleFollowingUpdate);
+    socket.on("new-follower", handleNewFollower);
+    socket.on("follower-removed", handleFollowerRemoved);
+    socket.on("following-updated", handleFollowingUpdate);
 
     // Return cleanup function
     return () => {
-      socket.off('new-follower', handleNewFollower);
-      socket.off('follower-removed', handleFollowerRemoved);
-      socket.off('following-updated', handleFollowingUpdate);
+      socket.off("new-follower", handleNewFollower);
+      socket.off("follower-removed", handleFollowerRemoved);
+      socket.off("following-updated", handleFollowingUpdate);
     };
   };
 

@@ -20,46 +20,58 @@ export const handleGetReviews = async (req: Request, res: Response) => {
 
     // Check if Supabase is configured
     if (!supabaseAdmin) {
-      console.log("Supabase not configured, returning demo reviews (with in-memory store)");
+      console.log(
+        "Supabase not configured, returning demo reviews (with in-memory store)",
+      );
 
-      const { activity_id, user_id } = req.query as { activity_id?: string; user_id?: string };
+      const { activity_id, user_id } = req.query as {
+        activity_id?: string;
+        user_id?: string;
+      };
 
-      const baseDemo = activity_id || user_id ? [
-        {
-          id: "demo-review-1",
-          activity_id: activity_id || "demo-activity-1",
-          reviewer_id: "demo-user-1",
-          reviewee_id: user_id || "demo-organizer-1",
-          rating: 5,
-          comment: "Excellent activity! Well organized and fun.",
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-          reviewer: {
-            id: "demo-user-1",
-            full_name: "Demo Reviewer",
-            profile_image:
-              "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
-          },
-          reviewee: {
-            id: user_id || "demo-organizer-1",
-            full_name: "Demo Organizer",
-            profile_image:
-              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-          },
-          activity: {
-            id: activity_id || "demo-activity-1",
-            title: "Demo Activity",
-            date: new Date(Date.now() - 86400000).toISOString(),
-          },
-        },
-      ] : [];
+      const baseDemo =
+        activity_id || user_id
+          ? [
+              {
+                id: "demo-review-1",
+                activity_id: activity_id || "demo-activity-1",
+                reviewer_id: "demo-user-1",
+                reviewee_id: user_id || "demo-organizer-1",
+                rating: 5,
+                comment: "Excellent activity! Well organized and fun.",
+                created_at: new Date(Date.now() - 86400000).toISOString(),
+                reviewer: {
+                  id: "demo-user-1",
+                  full_name: "Demo Reviewer",
+                  profile_image:
+                    "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+                },
+                reviewee: {
+                  id: user_id || "demo-organizer-1",
+                  full_name: "Demo Organizer",
+                  profile_image:
+                    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+                },
+                activity: {
+                  id: activity_id || "demo-activity-1",
+                  title: "Demo Activity",
+                  date: new Date(Date.now() - 86400000).toISOString(),
+                },
+              },
+            ]
+          : [];
 
-      const filtered = demoReviewStore.filter((r) => (
-        (!activity_id || r.activity_id === activity_id) &&
-        (!user_id || r.reviewee_id === user_id)
-      ));
+      const filtered = demoReviewStore.filter(
+        (r) =>
+          (!activity_id || r.activity_id === activity_id) &&
+          (!user_id || r.reviewee_id === user_id),
+      );
 
       const combined = [...filtered, ...baseDemo];
-      combined.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      combined.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      );
 
       return res.json(combined);
     }
@@ -175,12 +187,9 @@ export const handleCreateReview = async (req: Request, res: Response) => {
       .single();
 
     if (!participation) {
-      return res
-        .status(403)
-        .json({
-          error:
-            "You must have participated in this activity to leave a review",
-        });
+      return res.status(403).json({
+        error: "You must have participated in this activity to leave a review",
+      });
     }
 
     // Check if user already reviewed this activity

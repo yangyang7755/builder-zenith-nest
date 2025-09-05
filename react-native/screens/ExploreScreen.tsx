@@ -334,7 +334,9 @@ const ExploreScreen: React.FC = () => {
           <Text style={styles.filterText}>Filter</Text>
           {getActiveFilterCount() > 0 && (
             <View style={styles.filterBadge}>
-              <Text style={styles.filterBadgeText}>{getActiveFilterCount()}</Text>
+              <Text style={styles.filterBadgeText}>
+                {getActiveFilterCount()}
+              </Text>
             </View>
           )}
         </TouchableOpacity>
@@ -355,15 +357,34 @@ const ExploreScreen: React.FC = () => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.chipsScroll}
       >
-        {["Cycling","Climbing","Running","Hiking","Skiing","Surfing","Tennis","General"].map((type) => {
+        {[
+          "Cycling",
+          "Climbing",
+          "Running",
+          "Hiking",
+          "Skiing",
+          "Surfing",
+          "Tennis",
+          "General",
+        ].map((type) => {
           const selected = filters.activityType.includes(type);
           return (
             <TouchableOpacity
               key={type}
               onPress={() => toggleActivityType(type)}
-              style={[styles.chip, selected ? styles.chipSelected : styles.chipUnselected]}
+              style={[
+                styles.chip,
+                selected ? styles.chipSelected : styles.chipUnselected,
+              ]}
             >
-              <Text style={[styles.chipText, selected ? styles.chipTextSelected : styles.chipTextUnselected]}>
+              <Text
+                style={[
+                  styles.chipText,
+                  selected
+                    ? styles.chipTextSelected
+                    : styles.chipTextUnselected,
+                ]}
+              >
                 {type}
               </Text>
             </TouchableOpacity>

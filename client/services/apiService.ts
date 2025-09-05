@@ -22,12 +22,12 @@ const fetchWithTimeout = async (
   timeout: number = 10000,
 ): Promise<Response> => {
   // Adapt timeout for hosted environments which may have cold starts or higher latency
-  const isHostedEnv = typeof window !== 'undefined' && (
-    window.location.hostname.includes('.fly.dev') ||
-    window.location.hostname.includes('.vercel.app') ||
-    window.location.hostname.includes('.netlify.app') ||
-    window.location.hostname.includes('.herokuapp.com')
-  );
+  const isHostedEnv =
+    typeof window !== "undefined" &&
+    (window.location.hostname.includes(".fly.dev") ||
+      window.location.hostname.includes(".vercel.app") ||
+      window.location.hostname.includes(".netlify.app") ||
+      window.location.hostname.includes(".herokuapp.com"));
   const effectiveTimeout = Math.max(timeout || 0, isHostedEnv ? 20000 : 10000);
 
   // First try robust fetch directly to bypass FullStory issues
@@ -185,13 +185,16 @@ export const apiService = {
 
   async markActivityCompleted(activityId: string): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}/complete`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeaders(),
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/activities/${activityId}/complete`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders(),
+          },
         },
-      });
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to mark activity as completed" };
@@ -200,9 +203,12 @@ export const apiService = {
 
   async getCompletedActivities(): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/user/completed-activities`, {
-        headers: getAuthHeaders(),
-      });
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/user/completed-activities`,
+        {
+          headers: getAuthHeaders(),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to fetch completed activities" };
@@ -263,7 +269,12 @@ export const apiService = {
           return { error: "Request timeout" };
         }
         const msg = error.message || "";
-        if (msg.includes("No internet") || msg.includes("Server temporarily unavailable") || msg.includes("Failed to fetch") || msg.includes("XMLHttpRequest")) {
+        if (
+          msg.includes("No internet") ||
+          msg.includes("Server temporarily unavailable") ||
+          msg.includes("Failed to fetch") ||
+          msg.includes("XMLHttpRequest")
+        ) {
           return { error: "BACKEND_UNAVAILABLE" };
         }
       }
@@ -287,7 +298,12 @@ export const apiService = {
           return { error: "Request timeout" };
         }
         const msg = error.message || "";
-        if (msg.includes("No internet") || msg.includes("Server temporarily unavailable") || msg.includes("Failed to fetch") || msg.includes("XMLHttpRequest")) {
+        if (
+          msg.includes("No internet") ||
+          msg.includes("Server temporarily unavailable") ||
+          msg.includes("Failed to fetch") ||
+          msg.includes("XMLHttpRequest")
+        ) {
           return { error: "BACKEND_UNAVAILABLE" };
         }
       }
@@ -352,7 +368,12 @@ export const apiService = {
           return { error: "Request timeout" };
         }
         const msg = error.message || "";
-        if (msg.includes("No internet") || msg.includes("Server temporarily unavailable") || msg.includes("Failed to fetch") || msg.includes("XMLHttpRequest")) {
+        if (
+          msg.includes("No internet") ||
+          msg.includes("Server temporarily unavailable") ||
+          msg.includes("Failed to fetch") ||
+          msg.includes("XMLHttpRequest")
+        ) {
           return { error: "BACKEND_UNAVAILABLE" };
         }
       }
@@ -364,9 +385,12 @@ export const apiService = {
   // Saved Activities methods
   async getSavedActivities(): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/saved-activities`, {
-        headers: getAuthHeaders(),
-      });
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/saved-activities`,
+        {
+          headers: getAuthHeaders(),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       if (error instanceof Error) {
@@ -465,17 +489,19 @@ export const apiService = {
   },
 
   // Activity retrieval and management
-  async getActivities(filters: {
-    club_id?: string;
-    activity_type?: string;
-    location?: string;
-    difficulty_level?: string;
-    date_from?: string;
-    date_to?: string;
-    status?: "upcoming" | "ongoing" | "completed" | "cancelled";
-    limit?: number;
-    offset?: number;
-  } = {}): Promise<ApiResponse<any>> {
+  async getActivities(
+    filters: {
+      club_id?: string;
+      activity_type?: string;
+      location?: string;
+      difficulty_level?: string;
+      date_from?: string;
+      date_to?: string;
+      status?: "upcoming" | "ongoing" | "completed" | "cancelled";
+      limit?: number;
+      offset?: number;
+    } = {},
+  ): Promise<ApiResponse<any>> {
     try {
       const queryParams = new URLSearchParams();
 
@@ -504,9 +530,12 @@ export const apiService = {
 
   async getActivity(activityId: string): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}`, {
-        headers: getAuthHeaders(),
-      });
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/activities/${activityId}`,
+        {
+          headers: getAuthHeaders(),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -533,16 +562,22 @@ export const apiService = {
     }
   },
 
-  async updateActivity(activityId: string, updates: any): Promise<ApiResponse<any>> {
+  async updateActivity(
+    activityId: string,
+    updates: any,
+  ): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeaders(),
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/activities/${activityId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders(),
+          },
+          body: JSON.stringify(updates),
         },
-        body: JSON.stringify(updates),
-      });
+      );
       return await handleResponse(response);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -555,10 +590,13 @@ export const apiService = {
 
   async deleteActivity(activityId: string): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}`, {
-        method: "DELETE",
-        headers: getAuthHeaders(),
-      });
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/activities/${activityId}`,
+        {
+          method: "DELETE",
+          headers: getAuthHeaders(),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -569,11 +607,16 @@ export const apiService = {
     }
   },
 
-  async getActivityParticipants(activityId: string): Promise<ApiResponse<any[]>> {
+  async getActivityParticipants(
+    activityId: string,
+  ): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/activities/${activityId}/participants`, {
-        headers: getAuthHeaders(),
-      });
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/activities/${activityId}/participants`,
+        {
+          headers: getAuthHeaders(),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -647,9 +690,12 @@ export const apiService = {
 
   async getUserClubs(userId: string): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/clubs?userId=${userId}`, {
-        headers: getAuthHeaders(),
-      });
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/clubs?userId=${userId}`,
+        {
+          headers: getAuthHeaders(),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to fetch user clubs" };
@@ -658,13 +704,16 @@ export const apiService = {
 
   async joinClub(clubId: string): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/clubs/${clubId}/join`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeaders(),
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/clubs/${clubId}/join`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders(),
+          },
         },
-      });
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to join club" };
@@ -673,10 +722,13 @@ export const apiService = {
 
   async leaveClub(clubId: string): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/clubs/${clubId}/leave`, {
-        method: "DELETE",
-        headers: getAuthHeaders(),
-      });
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/clubs/${clubId}/leave`,
+        {
+          method: "DELETE",
+          headers: getAuthHeaders(),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to leave club" };
@@ -685,9 +737,12 @@ export const apiService = {
 
   async getClubMemberships(): Promise<ApiResponse<any[]>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/user/club-memberships`, {
-        headers: getAuthHeaders(),
-      });
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/user/club-memberships`,
+        {
+          headers: getAuthHeaders(),
+        },
+      );
       return await handleResponse(response);
     } catch (error) {
       return { error: "Failed to fetch club memberships" };
@@ -795,14 +850,17 @@ export const apiService = {
     message: string,
   ): Promise<ApiResponse<any>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/chat/direct/messages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeaders(),
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/chat/direct/messages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders(),
+          },
+          body: JSON.stringify({ receiver_id: receiverId, message }),
         },
-        body: JSON.stringify({ receiver_id: receiverId, message }),
-      });
+      );
       return await handleResponse(response);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -839,7 +897,7 @@ export const apiService = {
     try {
       const response = await fetchWithTimeout(
         `${API_BASE_URL}/chat/clubs/${clubId}/online-users`,
-        { headers: getAuthHeaders() }
+        { headers: getAuthHeaders() },
       );
       return await handleResponse(response);
     } catch (error) {
@@ -895,10 +953,14 @@ export const apiService = {
   // Health check and server ping
   async ping(): Promise<ApiResponse<{ message: string }>> {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/health`, {
-        method: "HEAD",
-        headers: getAuthHeaders(),
-      }, 5000); // Use 5 second timeout for health checks
+      const response = await fetchWithTimeout(
+        `${API_BASE_URL}/health`,
+        {
+          method: "HEAD",
+          headers: getAuthHeaders(),
+        },
+        5000,
+      ); // Use 5 second timeout for health checks
       return await handleResponse(response);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {

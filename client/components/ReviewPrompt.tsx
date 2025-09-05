@@ -217,7 +217,7 @@ export const ReviewPrompt: React.FC<ReviewPromptProps> = ({
                   onClick={() => handleRatingClick(star)}
                   className="transition-colors cursor-pointer"
                   disabled={isSubmitting}
-                  aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                  aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
                 >
                   <Star
                     className={`w-8 h-8 pointer-events-none ${

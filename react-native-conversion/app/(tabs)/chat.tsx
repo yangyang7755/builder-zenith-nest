@@ -1,5 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { platformFetch } from "../../src/shared/platform/fetch";
 import { API_BASE_URL } from "../../src/shared/services/apiService";
 
@@ -30,7 +40,10 @@ export default function Chat() {
     setLoading(true);
     setError(null);
     try {
-      const res = await platformFetch(`${API_BASE_URL}/chat/direct/${otherUserId}/messages`, { method: "GET" });
+      const res = await platformFetch(
+        `${API_BASE_URL}/chat/direct/${otherUserId}/messages`,
+        { method: "GET" },
+      );
       if (!res.ok) throw new Error(`Failed to load messages (${res.status})`);
       const data = await res.json();
       const items: DirectMessage[] = data?.data || [];
@@ -55,7 +68,10 @@ export default function Chat() {
       const res = await platformFetch(`${API_BASE_URL}/chat/direct/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ receiver_id: otherUserId, message: input.trim() }),
+        body: JSON.stringify({
+          receiver_id: otherUserId,
+          message: input.trim(),
+        }),
       });
       if (!res.ok) throw new Error(`Failed to send (${res.status})`);
       const data = await res.json();
@@ -74,16 +90,23 @@ export default function Chat() {
     return (
       <View style={[styles.msgRow, mine ? styles.msgMine : styles.msgTheirs]}>
         <Text style={styles.msgText}>{item.message}</Text>
-        <Text style={styles.msgMeta}>{new Date(item.created_at).toLocaleString()}</Text>
+        <Text style={styles.msgMeta}>
+          {new Date(item.created_at).toLocaleString()}
+        </Text>
       </View>
     );
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
       <View style={styles.header}>
         <Text style={styles.title}>Direct Messages</Text>
-        <Text style={styles.caption}>Enter a user ID to load your conversation</Text>
+        <Text style={styles.caption}>
+          Enter a user ID to load your conversation
+        </Text>
         <TextInput
           style={styles.input}
           value={otherUserId}
@@ -92,8 +115,16 @@ export default function Chat() {
           autoCapitalize="none"
           autoCorrect={false}
         />
-        <TouchableOpacity style={styles.reloadBtn} onPress={loadMessages} disabled={!otherUserId || loading}>
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.reloadText}>Load Messages</Text>}
+        <TouchableOpacity
+          style={styles.reloadBtn}
+          onPress={loadMessages}
+          disabled={!otherUserId || loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.reloadText}>Load Messages</Text>
+          )}
         </TouchableOpacity>
         {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
@@ -110,7 +141,9 @@ export default function Chat() {
             </View>
           ) : null
         }
-        contentContainerStyle={messages.length === 0 ? styles.listEmpty : undefined}
+        contentContainerStyle={
+          messages.length === 0 ? styles.listEmpty : undefined
+        }
       />
 
       <View style={styles.composer}>
@@ -121,8 +154,16 @@ export default function Chat() {
           placeholder="Type a message"
           editable={!sending}
         />
-        <TouchableOpacity style={styles.sendBtn} onPress={sendMessage} disabled={sending || !input.trim() || !otherUserId}>
-          {sending ? <ActivityIndicator color="#fff" /> : <Text style={styles.sendText}>Send</Text>}
+        <TouchableOpacity
+          style={styles.sendBtn}
+          onPress={sendMessage}
+          disabled={sending || !input.trim() || !otherUserId}
+        >
+          {sending ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.sendText}>Send</Text>
+          )}
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -131,24 +172,58 @@ export default function Chat() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFFFFF" },
-  header: { padding: 16, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#eee" },
+  header: {
+    padding: 16,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#eee",
+  },
   title: { fontSize: 20, fontWeight: "600", marginBottom: 4 },
   caption: { color: "#666", marginBottom: 8 },
   input: { borderWidth: 1, borderColor: "#ddd", borderRadius: 8, padding: 10 },
-  reloadBtn: { marginTop: 10, backgroundColor: "#2563eb", paddingVertical: 10, borderRadius: 8, alignItems: "center" },
+  reloadBtn: {
+    marginTop: 10,
+    backgroundColor: "#2563eb",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+  },
   reloadText: { color: "#fff", fontWeight: "600" },
   error: { color: "#dc2626", marginTop: 8 },
   list: { flex: 1 },
   listEmpty: { flexGrow: 1, justifyContent: "center", alignItems: "center" },
   empty: { alignItems: "center", padding: 20 },
   emptyText: { color: "#666" },
-  msgRow: { marginHorizontal: 12, marginVertical: 6, padding: 10, borderRadius: 10, maxWidth: "80%" },
+  msgRow: {
+    marginHorizontal: 12,
+    marginVertical: 6,
+    padding: 10,
+    borderRadius: 10,
+    maxWidth: "80%",
+  },
   msgMine: { alignSelf: "flex-end", backgroundColor: "#dcfce7" },
   msgTheirs: { alignSelf: "flex-start", backgroundColor: "#f1f5f9" },
   msgText: { fontSize: 16 },
   msgMeta: { marginTop: 4, fontSize: 12, color: "#64748b" },
-  composer: { flexDirection: "row", padding: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "#eee" },
-  composeInput: { flex: 1, borderWidth: 1, borderColor: "#ddd", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, marginRight: 8 },
-  sendBtn: { backgroundColor: "#16a34a", paddingHorizontal: 16, justifyContent: "center", borderRadius: 20 },
+  composer: {
+    flexDirection: "row",
+    padding: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: "#eee",
+  },
+  composeInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    marginRight: 8,
+  },
+  sendBtn: {
+    backgroundColor: "#16a34a",
+    paddingHorizontal: 16,
+    justifyContent: "center",
+    borderRadius: 20,
+  },
   sendText: { color: "#fff", fontWeight: "700" },
 });

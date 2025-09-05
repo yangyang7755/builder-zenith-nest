@@ -11,7 +11,7 @@ import {
   handleJoinRequest,
   handleApproveRequest,
   handleDenyRequest,
-  handleCreateClub
+  handleCreateClub,
 } from "./routes/clubs";
 import healthRouter from "./routes/health";
 import { getUserFromToken } from "./lib/supabase";
@@ -23,20 +23,20 @@ import {
   handleLeaveActivity,
   handleUpdateActivity,
   handleDeleteActivity,
-  handleGetActivityParticipants
+  handleGetActivityParticipants,
 } from "./routes/activities";
 import {
   handleGetReviews,
   handleCreateReview,
   handleUpdateReview,
-  handleDeleteReview
+  handleDeleteReview,
 } from "./routes/reviews";
 import {
   handleGetFollowers,
   handleGetFollowing,
   handleFollowUser,
   handleUnfollowUser,
-  handleGetFollowStats
+  handleGetFollowStats,
 } from "./routes/followers";
 import {
   handleCreateUser,
@@ -46,12 +46,12 @@ import {
   handleUpdateUserProfile,
   handleGetUserActivityHistory,
   handleGetActivitiesNeedingReview,
-  handleProfileOnboarding
+  handleProfileOnboarding,
 } from "./routes/users";
 import uploadsRouter from "./routes/uploads";
 import {
   handleGetNotifications,
-  handleMarkNotificationRead
+  handleMarkNotificationRead,
 } from "./routes/notifications";
 import {
   handleGetClubMessages,
@@ -59,13 +59,13 @@ import {
   handleGetDirectMessages,
   handleSendDirectMessage,
   handleMarkMessagesRead,
-  handleGetClubOnlineUsers
+  handleGetClubOnlineUsers,
 } from "./routes/chat";
 import {
   handleGetSavedActivities,
   handleSaveActivity,
   handleUnsaveActivity,
-  handleCheckActivitySaved
+  handleCheckActivitySaved,
 } from "./routes/saved_activities";
 
 const app = express();
@@ -77,7 +77,7 @@ const io = new Server(httpServer, {
     credentials: true,
   },
   allowEIO3: true, // Support older Engine.IO versions
-  transports: ['websocket', 'polling'],
+  transports: ["websocket", "polling"],
   pingTimeout: 60000,
   pingInterval: 25000,
 });
@@ -85,12 +85,14 @@ const io = new Server(httpServer, {
 // Middleware
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-app.use(cors({
-  origin: true, // Allow all origins in development/hosted environments
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-}));
+app.use(
+  cors({
+    origin: true, // Allow all origins in development/hosted environments
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  }),
+);
 
 // Auth middleware to extract user from JWT token
 const authMiddleware = async (req: any, res: any, next: any) => {
@@ -103,7 +105,10 @@ const authMiddleware = async (req: any, res: any, next: any) => {
         req.user = user;
       }
     } catch (error) {
-      console.log("Auth middleware error (continuing without auth):", error.message);
+      console.log(
+        "Auth middleware error (continuing without auth):",
+        error.message,
+      );
       // In demo mode or when Supabase isn't configured, continue without user context
       // This allows the app to work in development without proper Supabase setup
     }
@@ -157,7 +162,10 @@ app.put("/api/users/:id", handleUpdateUser);
 app.get("/api/users/:id/profile", handleGetUserProfile);
 app.put("/api/users/profile", handleUpdateUserProfile);
 app.get("/api/user/activities", handleGetUserActivityHistory);
-app.get("/api/user/activities/pending-reviews", handleGetActivitiesNeedingReview);
+app.get(
+  "/api/user/activities/pending-reviews",
+  handleGetActivitiesNeedingReview,
+);
 
 // Profile/onboarding routes
 app.post("/api/profile/onboarding", handleProfileOnboarding);
@@ -229,29 +237,31 @@ io.on("connection", (socket) => {
     // Notify the followed user about new follower
     socket.to(`user-${data.followedUserId}`).emit("new-follower", {
       ...data,
-      type: 'new_follower'
+      type: "new_follower",
     });
 
     // Notify all followers of the follower about following update
     socket.to(`user-${data.followerId}`).emit("following-updated", {
       ...data,
-      type: 'following_added'
+      type: "following_added",
     });
   });
 
   socket.on("user-unfollowed", (data) => {
-    console.log(`📝 User ${data.unfollowerId} unfollowed ${data.unfollowedUserId}`);
+    console.log(
+      `📝 User ${data.unfollowerId} unfollowed ${data.unfollowedUserId}`,
+    );
 
     // Notify the unfollowed user about follower removal
     socket.to(`user-${data.unfollowedUserId}`).emit("follower-removed", {
       ...data,
-      type: 'follower_removed'
+      type: "follower_removed",
     });
 
     // Notify unfollower about following update
     socket.to(`user-${data.unfollowerId}`).emit("following-updated", {
       ...data,
-      type: 'following_removed'
+      type: "following_removed",
     });
   });
 
@@ -261,7 +271,9 @@ io.on("connection", (socket) => {
     socket.to(`activity-${data.activityId}`).emit("participant-joined", data);
     // Notify organizer
     if (data.organizerId) {
-      socket.to(`user-${data.organizerId}`).emit("activity-participant-joined", data);
+      socket
+        .to(`user-${data.organizerId}`)
+        .emit("activity-participant-joined", data);
     }
   });
 
@@ -278,13 +290,23 @@ io.on("connection", (socket) => {
 });
 
 // Error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error("Server error:", err);
-  res.status(500).json({ 
-    error: "Internal server error",
-    message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong"
-  });
-});
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    console.error("Server error:", err);
+    res.status(500).json({
+      error: "Internal server error",
+      message:
+        process.env.NODE_ENV === "development"
+          ? err.message
+          : "Something went wrong",
+    });
+  },
+);
 
 // 404 handler
 app.use((req: express.Request, res: express.Response) => {
