@@ -28,8 +28,11 @@ interface ClubMembership {
   id: string;
   club_id: string;
   user_id: string;
-  role: "member" | "admin" | "moderator";
-  joined_at: string;
+  role: "member" | "manager";
+  status?: "pending" | "approved" | "denied";
+  requested_at?: string;
+  approved_at?: string | null;
+  joined_at?: string;
   club?: Club;
 }
 
