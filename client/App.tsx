@@ -60,6 +60,7 @@ import LoginEnhanced from "./pages/LoginEnhanced";
 import ProfileDemo from "./pages/ProfileDemo";
 import ProfileEnhanced from "./pages/ProfileEnhanced";
 import CategoryActivities from "./pages/CategoryActivities";
+import MapActivities from "./pages/MapActivities";
 import ChangePassword from "./pages/ChangePassword";
 import CreateClub from "./pages/CreateClub";
 import ClubManagerDashboard from "./pages/ClubManagerDashboard";
@@ -199,6 +200,14 @@ const App = () => {
                                               element={
                                                 <ProtectedRoute>
                                                   <Activities />
+                                                </ProtectedRoute>
+                                              }
+                                            />
+                                            <Route
+                                              path="/map-activities"
+                                              element={
+                                                <ProtectedRoute>
+                                                  <MapActivities />
                                                 </ProtectedRoute>
                                               }
                                             />
