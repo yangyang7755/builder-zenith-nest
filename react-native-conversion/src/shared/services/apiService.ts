@@ -19,7 +19,7 @@ export const setPlatformFetch = (fetchFn: typeof platformFetch) => {
   platformFetch = fetchFn;
 };
 
-const API_BASE_URL = "https://Wildpals.fly.dev/api";
+export const API_BASE_URL = "https://Wildpals.fly.dev/api";
 
 // Utility function to get auth headers (platform-specific storage will be injected)
 let getAuthToken: () => Promise<string | null>;
