@@ -1088,6 +1088,36 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#FFFFFF",
   },
+  chipsScroll: {
+    paddingHorizontal: 4,
+    paddingBottom: 8,
+  },
+  chip: {
+    borderWidth: 2,
+    borderColor: "#1F381F",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 999,
+    marginRight: 8,
+    backgroundColor: "#FFFFFF",
+  },
+  chipSelected: {
+    backgroundColor: "#E5F4EA",
+    borderColor: "#1F381F",
+  },
+  chipUnselected: {
+    backgroundColor: "#FFFFFF",
+  },
+  chipText: {
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  chipTextSelected: {
+    color: "#1F381F",
+  },
+  chipTextUnselected: {
+    color: "#1F381F",
+  },
   section: {
     marginBottom: 32,
   },
