@@ -800,6 +800,98 @@ export const handleDeleteActivity = async (req: Request, res: Response) => {
   }
 };
 
+// POST /api/activities/:id/request-join - Request to join an activity (with waitlist)
+export const handleRequestJoinActivity = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // activity id
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
+      return res.status(401).json({ success: false, error: "Authentication required" });
+    }
+
+    const { message } = JoinActivityRequestSchema.parse(req.body || {});
+
+    if (!supabaseAdmin) {
+      return res.status(201).json({ success: true, data: { id: `demo-${Date.now()}`, activity_id: id, user_id: user.id, status: "pending", message } });
+    }
+
+    // Fetch activity and counts
+    const { data: activity } = await supabaseAdmin
+      .from("activities")
+      .select("*")
+      .eq("id", id)
+      .eq("status", "upcoming")
+      .single();
+
+    if (!activity) {
+      return res.status(404).json({ success: false, error: "Activity not found or not open" });
+    }
+
+    // Prevent duplicate requests
+    const { data: existing } = await supabaseAdmin
+      .from("activity_participants")
+      .select("*")
+      .eq("activity_id", id)
+      .eq("user_id", user.id)
+      .single();
+
+    if (existing) {
+      if (existing.status === "joined") {
+        return res.status(400).json({ success: false, error: "Already joined" });
+      }
+      if (existing.status === "pending") {
+        return res.status(400).json({ success: false, error: "Request already pending" });
+      }
+      if (existing.status === "waitlisted") {
+        return res.status(400).json({ success: false, error: "Already on waitlist" });
+      }
+    }
+
+    // Count joined
+    const { count: joinedCount } = await supabaseAdmin
+      .from("activity_participants")
+      .select("*", { count: 'exact' })
+      .eq("activity_id", id)
+      .eq("status", "joined");
+
+    const isFull = activity.max_participants && joinedCount !== null && joinedCount >= activity.max_participants;
+    const status = isFull ? "waitlisted" : "pending";
+
+    const { data: request, error: insertError } = await supabaseAdmin
+      .from("activity_participants")
+      .insert({ activity_id: id, user_id: user.id, status, message })
+      .select("*")
+      .single();
+
+    if (insertError) {
+      console.error("Join request error:", insertError);
+      return res.status(500).json({ success: false, error: "Failed to create join request" });
+    }
+
+    // Notify organizer
+    try {
+      await createNotification(
+        activity.organizer_id,
+        "activity_join_request",
+        "New join request",
+        "A user requested to join your activity",
+        { activity_id: id, requester_id: user.id, status }
+      );
+    } catch (e) {
+      console.warn("Notification error (join request):", e);
+    }
+
+    return res.status(201).json({ success: true, data: request });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ success: false, error: "Invalid request data", details: error.errors });
+    }
+    console.error("Request-join error:", error);
+    res.status(500).json({ success: false, error: "Failed to request join" });
+  }
+};
+
 // POST /api/activities/:id/join - Join an activity
 export const handleJoinActivity = async (req: Request, res: Response) => {
   try {
