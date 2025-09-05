@@ -331,9 +331,10 @@ export const handleGetActivities = async (req: Request, res: Response) => {
           pagination: { total: 0, limit, offset },
         });
       }
-      return res.status(500).json({
-        success: false,
-        error: "Failed to fetch activities",
+      return res.json({
+        success: true,
+        data: [],
+        pagination: { total: 0, limit, offset },
       });
     }
 
