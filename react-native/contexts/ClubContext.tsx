@@ -42,12 +42,18 @@ interface ClubContextType {
   memberships: ClubMembership[];
   isLoading: boolean;
   error: string | null;
-  joinClub: (clubId: string) => Promise<boolean>;
+  requestJoin: (clubId: string, message?: string) => Promise<boolean>;
   leaveClub: (clubId: string) => Promise<boolean>;
   isMember: (clubId: string) => boolean;
+  isManager: (clubId: string) => boolean;
+  getUserRole: (clubId: string) => "non-member" | "member" | "manager";
   refreshClubs: () => Promise<void>;
   getUserClubs: () => Promise<void>;
   createClub: (clubData: Partial<Club>) => Promise<Club | null>;
+  approveRequest: (clubId: string, requestId: string) => Promise<boolean>;
+  denyRequest: (clubId: string, requestId: string) => Promise<boolean>;
+  updateMemberRole: (clubId: string, userId: string, role: "member" | "manager") => Promise<boolean>;
+  removeMember: (clubId: string, userId: string) => Promise<boolean>;
 }
 
 const ClubContext = createContext<ClubContextType | undefined>(undefined);
