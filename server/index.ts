@@ -54,6 +54,14 @@ import {
   handleMarkNotificationRead
 } from "./routes/notifications";
 import {
+  handleGetClubMessages,
+  handleSendClubMessage,
+  handleGetDirectMessages,
+  handleSendDirectMessage,
+  handleMarkMessagesRead,
+  handleGetClubOnlineUsers
+} from "./routes/chat";
+import {
   handleGetSavedActivities,
   handleSaveActivity,
   handleUnsaveActivity,
@@ -161,6 +169,14 @@ app.use("/api/uploads", uploadsRouter);
 // Notification routes
 app.get("/api/notifications", handleGetNotifications);
 app.put("/api/notifications/:id/read", handleMarkNotificationRead);
+
+// Chat routes
+app.get("/api/chat/clubs/:club_id/messages", handleGetClubMessages);
+app.post("/api/chat/clubs/:club_id/messages", handleSendClubMessage);
+app.get("/api/chat/direct/:other_user_id/messages", handleGetDirectMessages);
+app.post("/api/chat/direct/messages", handleSendDirectMessage);
+app.post("/api/chat/direct/mark-read", handleMarkMessagesRead);
+app.get("/api/chat/clubs/:club_id/online-users", handleGetClubOnlineUsers);
 
 // Saved activities routes
 app.get("/api/saved-activities", handleGetSavedActivities);
