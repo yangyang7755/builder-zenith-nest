@@ -73,6 +73,7 @@ const ProfileScreen: React.FC = () => {
     "completed" | "organized"
   >("completed");
   const [refreshing, setRefreshing] = useState(false);
+  const { userClubs, memberships, getUserClubs } = useClubs();
 
   // Calculate age from birthday if available
   const calculateAge = (birthday: string): number => {
