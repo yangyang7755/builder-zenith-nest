@@ -21,13 +21,22 @@ const fetchWithTimeout = async (
   options: RequestInit = {},
   timeout: number = 10000,
 ): Promise<Response> => {
+  // Adapt timeout for hosted environments which may have cold starts or higher latency
+  const isHostedEnv = typeof window !== 'undefined' && (
+    window.location.hostname.includes('.fly.dev') ||
+    window.location.hostname.includes('.vercel.app') ||
+    window.location.hostname.includes('.netlify.app') ||
+    window.location.hostname.includes('.herokuapp.com')
+  );
+  const effectiveTimeout = Math.max(timeout || 0, isHostedEnv ? 20000 : 10000);
+
   // First try robust fetch directly to bypass FullStory issues
   try {
-    return await robustFetchWithTimeout(url, options, timeout);
+    return await robustFetchWithTimeout(url, options, effectiveTimeout);
   } catch (error) {
     // If robust fetch fails, try network-aware fetch as fallback
     try {
-      return await networkAwareFetch(url, options, timeout);
+      return await networkAwareFetch(url, options, effectiveTimeout);
     } catch (networkError) {
       // Enhanced error handling with network context
       const status = networkService.getStatus();
@@ -228,8 +237,14 @@ export const apiService = {
       );
       return await handleResponse(response);
     } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        return { error: "Request timeout" };
+      if (error instanceof Error) {
+        if (error.name === "AbortError" || error.name === "TimeoutError") {
+          return { error: "Request timeout" };
+        }
+        const msg = error.message || "";
+        if (msg.includes("No internet") || msg.includes("Server temporarily unavailable") || msg.includes("Failed to fetch") || msg.includes("XMLHttpRequest")) {
+          return { error: "BACKEND_UNAVAILABLE" };
+        }
       }
       console.error("Failed to fetch followers:", error);
       return { error: "Failed to fetch followers" };
@@ -246,8 +261,14 @@ export const apiService = {
       );
       return await handleResponse(response);
     } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        return { error: "Request timeout" };
+      if (error instanceof Error) {
+        if (error.name === "AbortError" || error.name === "TimeoutError") {
+          return { error: "Request timeout" };
+        }
+        const msg = error.message || "";
+        if (msg.includes("No internet") || msg.includes("Server temporarily unavailable") || msg.includes("Failed to fetch") || msg.includes("XMLHttpRequest")) {
+          return { error: "BACKEND_UNAVAILABLE" };
+        }
       }
       console.error("Failed to fetch following:", error);
       return { error: "Failed to fetch following" };
@@ -305,8 +326,14 @@ export const apiService = {
       );
       return await handleResponse(response);
     } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        return { error: "Request timeout" };
+      if (error instanceof Error) {
+        if (error.name === "AbortError" || error.name === "TimeoutError") {
+          return { error: "Request timeout" };
+        }
+        const msg = error.message || "";
+        if (msg.includes("No internet") || msg.includes("Server temporarily unavailable") || msg.includes("Failed to fetch") || msg.includes("XMLHttpRequest")) {
+          return { error: "BACKEND_UNAVAILABLE" };
+        }
       }
       console.error("Failed to fetch follow stats:", error);
       return { error: "Failed to fetch follow stats" };
