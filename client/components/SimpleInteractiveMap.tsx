@@ -301,7 +301,7 @@ export default function SimpleInteractiveMap({
   };
 
   return (
-    <div className="fixed inset-0 bg-white z-50">
+    <div className="fixed inset-0 bg-white z-50 flex flex-col">
       {/* Header */}
       <div className="h-16 bg-white border-b flex items-center justify-between px-4 relative z-10">
         <div className="flex items-center gap-3">
@@ -360,7 +360,7 @@ export default function SimpleInteractiveMap({
 
       {/* Map Container */}
       {mapView === 'embedded' ? (
-        <div className="relative flex-1 h-[calc(100vh-4rem)]">
+        <div className="relative flex-1 min-h-0 h-[calc(100dvh-4rem)]">
           {/* Embedded Map */}
           <div
             ref={mapContainerRef}
@@ -510,7 +510,7 @@ export default function SimpleInteractiveMap({
           </div>
 
           {/* Activities List or Location Selection */}
-          <div className="h-1/3 bg-white border-t p-4 overflow-y-auto">
+          <div className="h-1/3 bg-white border-t p-4 overflow-y-auto pb-[env(safe-area-inset-bottom)]">
             {mode === 'select' ? (
               /* Location Selection UI */
               <div className="space-y-4">
@@ -679,7 +679,7 @@ export default function SimpleInteractiveMap({
         </div>
       ) : (
         /* List View */
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 pb-[env(safe-area-inset-bottom)]">
           <div className="max-w-2xl mx-auto space-y-3">
             {activitiesWithCoords.map((activity) => {
               const style = getActivityMarkerStyle(activity.type);
