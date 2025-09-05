@@ -12,6 +12,10 @@ import {
   handleApproveRequest,
   handleDenyRequest,
   handleCreateClub,
+  handleGetUserClubMemberships,
+  handleLeaveClub,
+  handleRemoveMember,
+  handleUpdateMemberRole,
 } from "./routes/clubs";
 import healthRouter from "./routes/health";
 import { getUserFromToken } from "./lib/supabase";
