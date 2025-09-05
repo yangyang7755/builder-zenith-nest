@@ -652,32 +652,45 @@ export const apiService = {
     }
   },
 
-  async joinActivity(activityId: string): Promise<ApiResponse<any>> {
+  async joinActivity(activityId: string, message?: string): Promise<ApiResponse<any>> {
     try {
       const response = await fetchWithTimeout(
-        `/activities/${activityId}/join`,
+        `/activities/${activityId}/request-join`,
         {
           method: "POST",
+          body: JSON.stringify({ message }),
         },
       );
 
       const result = await handleResponse(response);
 
-      // Update local cache on success
-      if (result.data) {
-        const joinedActivities =
-          (await AsyncStorage.getItem("joined_activities")) || "[]";
-        const parsedJoined = JSON.parse(joinedActivities);
-        parsedJoined.push(result.data);
-        await AsyncStorage.setItem(
-          "joined_activities",
-          JSON.stringify(parsedJoined),
-        );
-      }
-
       return result;
     } catch (error) {
-      return { error: "Failed to join activity" };
+      return { error: "Failed to request to join activity" };
+    }
+  },
+
+  async approveActivityRequest(activityId: string, requestId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(
+        `/activities/${activityId}/requests/${requestId}/approve`,
+        { method: "PUT" },
+      );
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to approve activity request" };
+    }
+  },
+
+  async denyActivityRequest(activityId: string, requestId: string): Promise<ApiResponse<any>> {
+    try {
+      const response = await fetchWithTimeout(
+        `/activities/${activityId}/requests/${requestId}/deny`,
+        { method: "DELETE" },
+      );
+      return await handleResponse(response);
+    } catch (error) {
+      return { error: "Failed to deny activity request" };
     }
   },
 
