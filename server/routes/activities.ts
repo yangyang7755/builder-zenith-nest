@@ -823,6 +823,23 @@ export const handleJoinActivity = async (req: Request, res: Response) => {
       .eq("status", "upcoming")
       .single();
 
+    // If activity is club-only, ensure requester is an approved member
+    if (activity?.club_id) {
+      const { data: membership } = await supabaseAdmin
+        .from("club_memberships")
+        .select("*")
+        .eq("club_id", activity.club_id)
+        .eq("user_id", user.id)
+        .eq("status", "approved")
+        .single();
+      if (!membership) {
+        return res.status(403).json({
+          success: false,
+          error: "You must be a member of this club to join its activities",
+        });
+      }
+    }
+
     // Get current participant count separately
     if (activity && !activityError) {
       const { count: participantCount } = await supabaseAdmin
