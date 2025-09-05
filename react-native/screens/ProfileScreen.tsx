@@ -586,7 +586,15 @@ const ProfileScreen: React.FC = () => {
                 <Text style={styles.modalClose}>✕</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.comingSoon}>Followers list coming soon!</Text>
+            <FlatList
+              data={followStats ? [] : []}
+              ListEmptyComponent={() => (
+                <View style={{ padding: 16 }}>
+                  <Text style={styles.comingSoon}>No followers yet</Text>
+                </View>
+              )}
+              renderItem={() => null}
+            />
           </View>
         </View>
       </Modal>
@@ -606,7 +614,15 @@ const ProfileScreen: React.FC = () => {
                 <Text style={styles.modalClose}>✕</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.comingSoon}>Following list coming soon!</Text>
+            <FlatList
+              data={[]}
+              ListEmptyComponent={() => (
+                <View style={{ padding: 16 }}>
+                  <Text style={styles.comingSoon}>Not following anyone yet</Text>
+                </View>
+              )}
+              renderItem={() => null}
+            />
           </View>
         </View>
       </Modal>
