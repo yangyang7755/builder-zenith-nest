@@ -413,10 +413,29 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Safe fallback to prevent crashes if hook is used outside provider (e.g., during HMR or route-level renders)
+const defaultClubContext: ClubContextType = {
+  clubs: [],
+  userClubs: [],
+  getUserClubRole: () => "non-member",
+  getUserClubs: () => [],
+  isClubManager: () => false,
+  isClubMember: () => false,
+  getClubById: () => undefined,
+  requestToJoinClub: () => {},
+  approveClubRequest: () => {},
+  denyClubRequest: () => {},
+  removeMember: () => {},
+  updateClub: () => {},
+  getClubActivities: () => [],
+  currentUserId: "demo-user",
+};
+
 export function useClub() {
   const context = useContext(ClubContext);
   if (context === undefined) {
-    throw new Error("useClub must be used within a ClubProvider");
+    console.warn("useClub called outside ClubProvider. Using fallback context.");
+    return defaultClubContext;
   }
   return context;
 }
