@@ -369,8 +369,7 @@ export default function SimpleInteractiveMap({
           >
             <iframe
               src={mapUrl}
-              width="100%"
-              height="100%"
+              className="absolute inset-0 w-full h-full"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
