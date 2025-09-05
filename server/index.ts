@@ -28,6 +28,9 @@ import {
   handleUpdateActivity,
   handleDeleteActivity,
   handleGetActivityParticipants,
+  handleRequestJoinActivity,
+  handleApproveActivityRequest,
+  handleDenyActivityRequest,
 } from "./routes/activities";
 import {
   handleGetReviews,
