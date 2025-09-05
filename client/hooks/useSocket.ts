@@ -11,14 +11,13 @@ interface SocketContextType {
 
 let globalSocket: Socket | null = null;
 
-export const useSocket = (): SocketContextType => {
+export const useSocket = (): any => {
   const { user } = useAuth();
   const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
     if (!user) {
-      // Disconnect when user logs out
       if (globalSocket) {
         globalSocket.disconnect();
         globalSocket = null;
@@ -28,17 +27,14 @@ export const useSocket = (): SocketContextType => {
       return;
     }
 
-    // Test API connectivity before establishing Socket.IO connection
     const testApiConnectivity = async () => {
       try {
         const response = await fetch('/api/health', {
           method: 'GET',
           signal: AbortSignal.timeout(8000)
         });
-        console.log('✅ API health check successful:', response.status);
         return response.ok;
-      } catch (error: any) {
-        console.warn('⚠️ API health check failed:', error?.message || error);
+      } catch {
         return false;
       }
     };
@@ -46,10 +42,8 @@ export const useSocket = (): SocketContextType => {
     let retryTimer: number | null = null;
 
     const initiateSocketConnection = async () => {
-      // Only create socket when API is reachable
       const apiReachable = await testApiConnectivity();
       if (!apiReachable) {
-        console.warn('⚠️ API not reachable, delaying Socket.IO connection');
         retryTimer = window.setTimeout(initiateSocketConnection, 10000);
         return;
       }
@@ -59,16 +53,12 @@ export const useSocket = (): SocketContextType => {
         return;
       }
 
-      // Detect if we're in a hosted environment
       const isHostedEnv = window.location.hostname.includes('.fly.dev') ||
                          window.location.hostname.includes('.vercel.app') ||
                          window.location.hostname.includes('.netlify.app') ||
                          window.location.hostname.includes('.herokuapp.com');
 
-      // Use appropriate URL based on environment
       const socketUrl = `${window.location.protocol}//${window.location.host}`;
-
-      console.log(`🔌 Attempting to connect to Socket.IO server at: ${socketUrl} (hosted: ${isHostedEnv})`);
 
       globalSocket = io(socketUrl, {
         path: '/socket.io/',
@@ -84,59 +74,22 @@ export const useSocket = (): SocketContextType => {
         rememberUpgrade: false,
       });
 
-      // Connection event handlers
       globalSocket.on('connect', () => {
-        console.log('✅ Socket connected:', globalSocket?.id);
-        console.log('🔗 Using transport:', globalSocket?.io?.engine?.transport?.name);
         setIsConnected(true);
-
-        // Join user-specific room for notifications
         if (user?.id) {
           globalSocket?.emit('join-user-room', user.id);
         }
       });
 
-      globalSocket.on('disconnect', (reason) => {
-        console.log('❌ Socket disconnected:', reason);
+      globalSocket.on('disconnect', () => {
         setIsConnected(false);
       });
 
-      globalSocket.on('connect_error', (error: any) => {
-        console.error('❌ Socket connection error:', error);
-        console.error('Error details:', {
-          message: error.message,
-          description: error.description,
-          type: error.type,
-          data: error.data,
-          url: socketUrl,
-          transport: globalSocket?.io?.engine?.transport?.name,
-          readyState: globalSocket?.io?.engine?.readyState,
-        });
+      globalSocket.on('connect_error', () => {
         setIsConnected(false);
-
-        // In hosted environments, retry later instead of spamming errors
         if (!globalSocket?.connected && retryTimer == null) {
           retryTimer = window.setTimeout(initiateSocketConnection, 10000);
         }
-      });
-
-      globalSocket.on('reconnect', (attemptNumber) => {
-        console.log(`🔄 Socket reconnected after ${attemptNumber} attempts`);
-        setIsConnected(true);
-
-        // Rejoin user room after reconnection
-        if (user?.id) {
-          globalSocket?.emit('join-user-room', user.id);
-        }
-      });
-
-      globalSocket.on('reconnect_error', (error) => {
-        console.error('❌ Socket reconnection error:', error);
-      });
-
-      globalSocket.on('reconnect_failed', () => {
-        console.error('❌ Socket failed to reconnect after all attempts');
-        setIsConnected(false);
       });
 
       socketRef.current = globalSocket;
@@ -144,33 +97,39 @@ export const useSocket = (): SocketContextType => {
 
     initiateSocketConnection();
 
-    // Cleanup function
     return () => {
       if (retryTimer) {
         clearTimeout(retryTimer);
         retryTimer = null;
       }
-      // Keep socket alive for other components
     };
   }, [user]);
 
-  const joinUserRoom = (userId: string) => {
-    if (socketRef.current) {
-      socketRef.current.emit('join-user-room', userId);
-    }
-  };
+  const joinUserRoom = (userId: string) => socketRef.current?.emit('join-user-room', userId);
+  const leaveUserRoom = (userId: string) => socketRef.current?.emit('leave-user-room', userId);
 
-  const leaveUserRoom = (userId: string) => {
-    if (socketRef.current) {
-      socketRef.current.emit('leave-user-room', userId);
-    }
-  };
+  // Club helpers expected by consumers
+  const joinClub = (clubId: string) => socketRef.current?.emit('join_club', clubId);
+  const leaveClub = (clubId: string) => socketRef.current?.emit('leave_club', clubId);
+  const sendClubMessage = (clubId: string, message: string) => socketRef.current?.emit('club_message', { clubId, userId: user?.id, message });
+  const onClubMessage = (cb: (msg: any) => void) => socketRef.current?.on('new_club_message', cb);
+
+  // Direct message helpers
+  const sendDirectMessage = (receiverId: string, message: string) => socketRef.current?.emit('direct_message', { senderId: user?.id, receiverId, message });
+  const onDirectMessage = (cb: (msg: any) => void) => socketRef.current?.on('new_direct_message', cb);
 
   return {
     socket: socketRef.current,
+    connected: isConnected,
     isConnected,
     joinUserRoom,
     leaveUserRoom,
+    joinClub,
+    leaveClub,
+    sendClubMessage,
+    onClubMessage,
+    sendDirectMessage,
+    onDirectMessage,
   };
 };
 
