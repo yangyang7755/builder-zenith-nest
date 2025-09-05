@@ -410,11 +410,14 @@ export const handleGetUserClubMemberships = async (req: Request, res: Response) 
     const user = await getUserFromToken(req.headers.authorization || "");
 
     if (!user) {
-      // Demo mode support
       if (!supabaseAdmin) {
         return res.json([]);
       }
       return res.status(401).json({ error: "Authentication required" });
+    }
+
+    if (!supabaseAdmin) {
+      return res.json([]);
     }
 
     const { data, error } = await supabaseAdmin
