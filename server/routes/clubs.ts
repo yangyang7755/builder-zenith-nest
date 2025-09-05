@@ -520,6 +520,10 @@ export const handleUpdateMemberRole = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Authentication required" });
     }
 
+    if (!supabaseAdmin) {
+      return res.json({ message: "Role updated (demo mode)" });
+    }
+
     const { data: manager } = await supabaseAdmin
       .from("club_memberships")
       .select("*")
