@@ -20,8 +20,8 @@ const items: { section: string; links: { label: string; route?: { stack?: string
     { label: "Saved", note: "Planned" },
   ]},
   { section: "Clubs", links: [
-    { label: "Clubs List", note: "Planned" },
-    { label: "Club Details", note: "Planned" },
+    { label: "Clubs List", route: { stack: "Profile", screen: "ClubsList" } },
+    { label: "Club Details", route: { stack: "Profile", screen: "ClubDetails" } },
     { label: "Club Management", note: "Planned" },
   ]},
   { section: "Other", links: [
