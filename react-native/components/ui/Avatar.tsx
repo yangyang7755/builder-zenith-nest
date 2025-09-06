@@ -47,7 +47,6 @@ const Avatar: React.FC<AvatarProps> = ({
       <Image
         source={{ uri }}
         style={containerStyle}
-        defaultSource={require("../../assets/placeholder-avatar.png")}
       />
     );
   }
