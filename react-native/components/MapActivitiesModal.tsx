@@ -1,6 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import React, { useMemo, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 
 interface Activity {
   id: string;
@@ -36,7 +43,11 @@ const LOCATION_COORDINATES: Record<string, { lat: number; lng: number }> = {
 
 const { height: screenH } = Dimensions.get("window");
 
-export default function MapActivitiesModal({ activities, onClose, onSelect }: Props) {
+export default function MapActivitiesModal({
+  activities,
+  onClose,
+  onSelect,
+}: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const mapRef = useRef<View>(null);
   const mapHeight = Math.min(screenH * 0.6, 520);
@@ -45,18 +56,25 @@ export default function MapActivitiesModal({ activities, onClose, onSelect }: Pr
   const activitiesWithCoords = useMemo(() => {
     return activities.map((a, i) => {
       if (a.coordinates) return a;
-      const key = Object.keys(LOCATION_COORDINATES).find((k) => a.location?.toLowerCase().includes(k));
+      const key = Object.keys(LOCATION_COORDINATES).find((k) =>
+        a.location?.toLowerCase().includes(k),
+      );
       const jitter = (n: number) => (Math.random() - 0.5) * n;
       const coords = key
         ? LOCATION_COORDINATES[key]
-        : { lat: DEFAULT_CENTER.lat + jitter(0.08), lng: DEFAULT_CENTER.lng + jitter(0.12) };
+        : {
+            lat: DEFAULT_CENTER.lat + jitter(0.08),
+            lng: DEFAULT_CENTER.lng + jitter(0.12),
+          };
       return { ...a, coordinates: coords };
     });
   }, [activities]);
 
   // Compute map bounds
   const bounds = useMemo(() => {
-    const coords = activitiesWithCoords.map((a) => a.coordinates!).filter(Boolean);
+    const coords = activitiesWithCoords
+      .map((a) => a.coordinates!)
+      .filter(Boolean);
     if (!coords.length) {
       return {
         north: DEFAULT_CENTER.lat + 0.05,
@@ -111,17 +129,30 @@ export default function MapActivitiesModal({ activities, onClose, onSelect }: Pr
           {activitiesWithCoords.map((a) => {
             const w = Dimensions.get("window").width;
             const h = mapHeight;
-            const { x, y } = latLngToPixel(a.coordinates!.lat, a.coordinates!.lng, w, h);
+            const { x, y } = latLngToPixel(
+              a.coordinates!.lat,
+              a.coordinates!.lng,
+              w,
+              h,
+            );
             const selected = selectedId === a.id;
             const type = (a.type || a.activity_type || "").toLowerCase();
             const emoji =
-              type === "cycling" ? "🚴" :
-              type === "running" ? "👟" :
-              type === "climbing" ? "🧗" :
-              type === "hiking" ? "🥾" :
-              type === "tennis" ? "🎾" :
-              type === "skiing" ? "⛷️" :
-              type === "surfing" ? "🏄" : "📍";
+              type === "cycling"
+                ? "🚴"
+                : type === "running"
+                  ? "👟"
+                  : type === "climbing"
+                    ? "🧗"
+                    : type === "hiking"
+                      ? "🥾"
+                      : type === "tennis"
+                        ? "🎾"
+                        : type === "skiing"
+                          ? "⛷️"
+                          : type === "surfing"
+                            ? "🏄"
+                            : "📍";
             return (
               <TouchableOpacity
                 key={a.id + "-btn"}
@@ -134,7 +165,11 @@ export default function MapActivitiesModal({ activities, onClose, onSelect }: Pr
                   {
                     left: Math.max(12, Math.min(w - 12, x)),
                     top: Math.max(12, Math.min(h - 12, y)),
-                    transform: [{ translateX: -10 }, { translateY: -10 }, { scale: selected ? 1.25 : 1 }],
+                    transform: [
+                      { translateX: -10 },
+                      { translateY: -10 },
+                      { scale: selected ? 1.25 : 1 },
+                    ],
                     backgroundColor: selected ? "#1F381F" : "#222",
                   },
                 ]}
@@ -147,10 +182,20 @@ export default function MapActivitiesModal({ activities, onClose, onSelect }: Pr
       </View>
 
       {/* Swipeable cards */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.cards}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.cards}
+      >
         {activities.map((a) => (
-          <TouchableOpacity key={a.id} style={styles.card} onPress={() => setSelectedId(a.id)}>
-            <Text style={styles.cardTitle} numberOfLines={1}>{a.title}</Text>
+          <TouchableOpacity
+            key={a.id}
+            style={styles.card}
+            onPress={() => setSelectedId(a.id)}
+          >
+            <Text style={styles.cardTitle} numberOfLines={1}>
+              {a.title}
+            </Text>
             {!!a.date && <Text style={styles.cardMeta}>📅 {a.date}</Text>}
             <Text style={styles.cardMeta}>📍 {a.location}</Text>
             <Text style={styles.cardMeta} numberOfLines={1}>
@@ -165,19 +210,65 @@ export default function MapActivitiesModal({ activities, onClose, onSelect }: Pr
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  header: { height: 56, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: "#e5e7eb" },
-  headerBtn: { width: 40, height: 40, alignItems: "center", justifyContent: "center" },
+  header: {
+    height: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
+  },
+  headerBtn: {
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   headerBtnText: { fontSize: 18 },
   headerTitle: { fontSize: 16, fontWeight: "700", color: "#111827" },
   map: { width: "100%", backgroundColor: "#E8F3EA", overflow: "hidden" },
-  gridRow: { position: "absolute", left: 0, right: 0, top: 0, height: 1, backgroundColor: "#cfe3d3" },
-  gridCol: { position: "absolute", top: 0, bottom: 0, width: 1, backgroundColor: "#cfe3d3" },
+  gridRow: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 1,
+    backgroundColor: "#cfe3d3",
+  },
+  gridCol: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    width: 1,
+    backgroundColor: "#cfe3d3",
+  },
   markerWrapper: { position: "absolute" },
   markerPositioner: { position: "absolute" },
-  point: { position: "absolute", width: 24, height: 24, borderRadius: 12, alignItems: "center", justifyContent: "center" },
+  point: {
+    position: "absolute",
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   pointText: { fontSize: 12, color: "#fff" },
   cards: { paddingVertical: 10, paddingHorizontal: 8 },
-  card: { width: 240, marginRight: 10, backgroundColor: "#fff", borderRadius: 12, padding: 12, borderWidth: 1, borderColor: "#e5e7eb" },
-  cardTitle: { fontSize: 14, fontWeight: "700", color: "#111827", marginBottom: 4 },
+  card: {
+    width: 240,
+    marginRight: 10,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+  },
+  cardTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#111827",
+    marginBottom: 4,
+  },
   cardMeta: { fontSize: 12, color: "#6B7280" },
 });
