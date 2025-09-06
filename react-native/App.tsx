@@ -331,22 +331,24 @@ export default function App() {
   const [showSplash, setShowSplash] = React.useState(true);
 
   return (
-    <AuthProvider>
-      <FollowProvider>
-        <ActivitiesProvider>
-          {showSplash ? (
-            <AnimatedSplash
-              sourceUrl="https://cdn.builder.io/o/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9cad890b588b4e8cbd2726cd71167932?alt=media&token=891d3039-c642-45c7-a19e-083d196ae503&apiKey=f84d5d174b6b486a8c8b5017bb90c068"
-              onFinish={() => setShowSplash(false)}
-            />
-          ) : (
-            <NavigationContainer>
-              <RootNavigator />
-            </NavigationContainer>
-          )}
-        </ActivitiesProvider>
-      </FollowProvider>
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <FollowProvider>
+          <ActivitiesProvider>
+            {showSplash ? (
+              <AnimatedSplash
+                sourceUrl="https://cdn.builder.io/o/assets%2Ff84d5d174b6b486a8c8b5017bb90c068%2F9cad890b588b4e8cbd2726cd71167932?alt=media&token=891d3039-c642-45c7-a19e-083d196ae503&apiKey=f84d5d174b6b486a8c8b5017bb90c068"
+                onFinish={() => setShowSplash(false)}
+              />
+            ) : (
+              <NavigationContainer>
+                <RootNavigator />
+              </NavigationContainer>
+            )}
+          </ActivitiesProvider>
+        </FollowProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }
 
