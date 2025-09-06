@@ -10,8 +10,8 @@ const items: { section: string; links: { label: string; route?: { stack?: string
     { label: "Profile", route: { stack: "Profile", screen: "ProfileMain" } },
   ]},
   { section: "Maps", links: [
-    { label: "Map Activities", note: "Planned: modal-style map" },
-    { label: "Category Activities", note: "Planned" },
+    { label: "Map Activities", route: { stack: "Activities", screen: "MapActivities" } },
+    { label: "Category Activities", route: { stack: "Activities", screen: "CategoryActivities" } },
   ]},
   { section: "Social", links: [
     { label: "Chat", note: "Planned: Chat list & room" },
