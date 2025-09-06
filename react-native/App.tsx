@@ -248,6 +248,9 @@ function MainTabNavigator() {
             case "Create":
               iconText = "➕";
               break;
+            case "Chat":
+              iconText = "💬";
+              break;
             case "Profile":
               iconText = "👤";
               break;
