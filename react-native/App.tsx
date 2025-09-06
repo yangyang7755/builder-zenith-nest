@@ -193,11 +193,13 @@ function ActivitiesStackNavigator() {
   );
 }
 
+import CreateTemplatesScreen from "./screens/CreateTemplatesScreen";
+
 // Create Stack Navigator
 function CreateStackNavigator() {
   return (
     <CreateStack.Navigator screenOptions={{ headerShown: false }}>
-      <CreateStack.Screen name="CreateTemplates" component={require("./screens/CreateTemplatesScreen").default} />
+      <CreateStack.Screen name="CreateTemplates" component={CreateTemplatesScreen} />
     </CreateStack.Navigator>
   );
 }
