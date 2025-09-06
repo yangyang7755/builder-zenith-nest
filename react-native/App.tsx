@@ -275,6 +275,7 @@ function MainTabNavigator() {
       <MainTab.Screen name="Explore" component={ExploreStackNavigator} options={{ tabBarLabel: "Explore" }} />
       <MainTab.Screen name="Create" component={CreateStackNavigator} options={{ tabBarLabel: "Create" }} />
       <MainTab.Screen name="Activities" component={ActivitiesStackNavigator} options={{ tabBarLabel: "Activities" }} />
+      <MainTab.Screen name="Chat" component={ChatStackNavigator} options={{ tabBarLabel: "Chat" }} />
       <MainTab.Screen name="Profile" component={ProfileStackNavigator} options={{ tabBarLabel: "Profile" }} />
     </MainTab.Navigator>
   );
