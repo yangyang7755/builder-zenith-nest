@@ -31,9 +31,7 @@ export default function CreateTemplatesScreen() {
             key={t.key}
             style={styles.card}
             onPress={() => {
-              // For now we just preselect the template and navigate to Activities tab where flows exist
-              // This keeps UX consistent and avoids dead-ends
-              (navigation.getParent() as any)?.navigate("Activities" as keyof MainTabParamList);
+              navigation.navigate("CreateActivity" as never, { type: t.label } as never);
             }}
           >
             <Text style={styles.cardEmoji}>🏷️</Text>
