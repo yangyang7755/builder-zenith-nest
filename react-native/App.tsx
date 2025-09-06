@@ -214,6 +214,8 @@ function ActivitiesStackNavigator() {
 import CreateTemplatesScreen from "./screens/CreateTemplatesScreen";
 import ChatListScreen from "./screens/ChatListScreen";
 import ChatRoomScreen from "./screens/ChatRoomScreen";
+import ClubsListScreen from "./screens/ClubsListScreen";
+import ClubDetailsScreen from "./screens/ClubDetailsScreen";
 
 // Create Stack Navigator
 function CreateStackNavigator() {
