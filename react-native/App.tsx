@@ -245,7 +245,7 @@ function MainTabNavigator() {
               iconText = "⏰";
               break;
             case "Create":
-              iconText = "���";
+              iconText = "➕";
               break;
             case "Chat":
               iconText = "💬";
