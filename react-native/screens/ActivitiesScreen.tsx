@@ -405,8 +405,7 @@ const ActivitiesScreen: React.FC = () => {
               <TouchableOpacity
                 style={styles.exploreButton}
                 onPress={() => {
-                  // Navigate to create activity
-                  // navigation.navigate('CreateActivity');
+                  (navigation as any).getParent()?.navigate('Create');
                 }}
               >
                 <Text style={styles.exploreButtonText}>Create Activity</Text>
