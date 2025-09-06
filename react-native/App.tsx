@@ -170,6 +170,8 @@ function ProfileStackNavigator() {
       <ProfileStack.Screen name="ProfileEdit" component={ProfileEditScreen} />
       <ProfileStack.Screen name="Settings" component={SettingsScreen} />
       <ProfileStack.Screen name="AllFeatures" component={require("./screens/AllFeaturesScreen").default} />
+      <ProfileStack.Screen name="ClubsList" component={ClubsListScreen} />
+      <ProfileStack.Screen name="ClubDetails" component={ClubDetailsScreen} />
     </ProfileStack.Navigator>
   );
 }
