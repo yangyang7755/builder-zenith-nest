@@ -217,6 +217,10 @@ function ActivitiesStackNavigator() {
         name="Saved"
         component={require("./screens/SavedScreen").default}
       />
+      <ActivitiesStack.Screen name="CategoryActivities" component={CategoryActivitiesScreen} />
+      <ActivitiesStack.Screen name="MapActivities" component={MapActivitiesScreen} />
+      <ActivitiesStack.Screen name="PartnerDetails" component={PartnerDetailsScreen} />
+      <ActivitiesStack.Screen name="CarShareDetails" component={CarShareDetailsScreen} />
     </ActivitiesStack.Navigator>
   );
 }
