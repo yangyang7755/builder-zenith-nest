@@ -86,6 +86,11 @@ export type ExploreStackParamList = {
 export type ActivitiesStackParamList = {
   ActivitiesMain: undefined;
   ActivityDetails: { activityId: string };
+  Saved: undefined;
+  CategoryActivities: undefined;
+  MapActivities: undefined;
+  PartnerDetails: undefined;
+  CarShareDetails: undefined;
 };
 
 // Create navigators
