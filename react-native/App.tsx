@@ -116,6 +116,7 @@ export type MainTabParamList = {
   Explore: undefined;
   Activities: undefined;
   Create: undefined;
+  Chat: undefined;
   Profile: undefined;
 };
 
