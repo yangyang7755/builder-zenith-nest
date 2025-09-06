@@ -163,7 +163,7 @@ function ActivitiesStackNavigator() {
       />
       <ActivitiesStack.Screen
         name="Saved"
-        component={require("./screens/SavedScreen").default}
+        component={SavedScreen}
       />
       <ActivitiesStack.Screen name="CategoryActivities" component={CategoryActivitiesScreen} />
       <ActivitiesStack.Screen name="MapActivities" component={MapActivitiesScreen} />
