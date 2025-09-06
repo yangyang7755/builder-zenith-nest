@@ -209,6 +209,10 @@ function ActivitiesStackNavigator() {
         name="ActivityDetails"
         component={ActivityDetailsScreen}
       />
+      <ActivitiesStack.Screen
+        name="Saved"
+        component={require("./screens/SavedScreen").default}
+      />
     </ActivitiesStack.Navigator>
   );
 }
