@@ -144,6 +144,12 @@ const ProfileStack = createStackNavigator<ProfileStackParamList>();
 const ExploreStack = createStackNavigator<ExploreStackParamList>();
 const ActivitiesStack = createStackNavigator<ActivitiesStackParamList>();
 
+export type ChatStackParamList = {
+  ChatList: undefined;
+  ChatRoom: { userId?: string; clubId?: string } | undefined;
+};
+const ChatStack = createStackNavigator<ChatStackParamList>();
+
 // Create stack types and navigator
 export type CreateStackParamList = {
   CreateTemplates: undefined;
