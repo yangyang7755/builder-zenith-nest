@@ -736,7 +736,7 @@ const ExploreScreen: React.FC = () => {
               ) : activities.length === 0 ? (
                 <View style={styles.emptyState}>
                   <Text style={styles.emptyText}>No activities yet</Text>
-                  <TouchableOpacity style={styles.createButton}>
+                  <TouchableOpacity style={styles.createButton} onPress={() => (navigation as any).getParent()?.navigate('Create')}>
                     <Text style={styles.createButtonText}>Create Activity</Text>
                   </TouchableOpacity>
                 </View>
