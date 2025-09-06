@@ -478,7 +478,7 @@ export default function CategoryActivities({ activities = [] }: Props) {
             <Text style={styles.emptySubtitle}>
               Try adjusting your filters or check back later
             </Text>
-            <TouchableOpacity style={styles.createButton}>
+            <TouchableOpacity style={styles.createButton} onPress={() => (require('@react-navigation/native').useNavigation() as any).getParent()?.navigate('Create')}>
               <Text style={styles.createButtonText}>Create Activity</Text>
             </TouchableOpacity>
           </View>
