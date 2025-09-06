@@ -228,6 +228,10 @@ import ClubsListScreen from "./screens/ClubsListScreen";
 import ClubDetailsScreen from "./screens/ClubDetailsScreen";
 import FollowersScreen from "./screens/FollowersScreen";
 import FollowingScreen from "./screens/FollowingScreen";
+import CategoryActivitiesScreen from "./screens/CategoryActivitiesScreen";
+import MapActivitiesScreen from "./screens/MapActivitiesScreen";
+import PartnerDetailsScreen from "./screens/PartnerDetailsScreen";
+import CarShareDetailsScreen from "./screens/CarShareDetailsScreen";
 
 // Create Stack Navigator
 function CreateStackNavigator() {
