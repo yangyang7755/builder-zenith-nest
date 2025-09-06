@@ -224,6 +224,8 @@ import ChatListScreen from "./screens/ChatListScreen";
 import ChatRoomScreen from "./screens/ChatRoomScreen";
 import ClubsListScreen from "./screens/ClubsListScreen";
 import ClubDetailsScreen from "./screens/ClubDetailsScreen";
+import FollowersScreen from "./screens/FollowersScreen";
+import FollowingScreen from "./screens/FollowingScreen";
 
 // Create Stack Navigator
 function CreateStackNavigator() {
