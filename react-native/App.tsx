@@ -125,6 +125,8 @@ export type ProfileStackParamList = {
   ProfileEdit: undefined;
   Settings: undefined;
   AllFeatures: undefined;
+  ClubsList: undefined;
+  ClubDetails: { clubId: string } | undefined;
 };
 
 export type ExploreStackParamList = {
