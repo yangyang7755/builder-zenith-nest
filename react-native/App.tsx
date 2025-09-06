@@ -166,14 +166,23 @@ function ActivitiesStackNavigator() {
         name="ActivityDetails"
         component={ActivityDetailsScreen}
       />
+      <ActivitiesStack.Screen name="Saved" component={SavedScreen} />
       <ActivitiesStack.Screen
-        name="Saved"
-        component={SavedScreen}
+        name="CategoryActivities"
+        component={CategoryActivitiesScreen}
       />
-      <ActivitiesStack.Screen name="CategoryActivities" component={CategoryActivitiesScreen} />
-      <ActivitiesStack.Screen name="MapActivities" component={MapActivitiesScreen} />
-      <ActivitiesStack.Screen name="PartnerDetails" component={PartnerDetailsScreen} />
-      <ActivitiesStack.Screen name="CarShareDetails" component={CarShareDetailsScreen} />
+      <ActivitiesStack.Screen
+        name="MapActivities"
+        component={MapActivitiesScreen}
+      />
+      <ActivitiesStack.Screen
+        name="PartnerDetails"
+        component={PartnerDetailsScreen}
+      />
+      <ActivitiesStack.Screen
+        name="CarShareDetails"
+        component={CarShareDetailsScreen}
+      />
     </ActivitiesStack.Navigator>
   );
 }
@@ -197,8 +206,14 @@ import CreateActivityScreen from "./screens/CreateActivityScreen";
 function CreateStackNavigator() {
   return (
     <CreateStack.Navigator screenOptions={{ headerShown: false }}>
-      <CreateStack.Screen name="CreateTemplates" component={CreateTemplatesScreen} />
-      <CreateStack.Screen name="CreateActivity" component={CreateActivityScreen} />
+      <CreateStack.Screen
+        name="CreateTemplates"
+        component={CreateTemplatesScreen}
+      />
+      <CreateStack.Screen
+        name="CreateActivity"
+        component={CreateActivityScreen}
+      />
     </CreateStack.Navigator>
   );
 }
@@ -240,7 +255,12 @@ function MainTabNavigator() {
           }
           return (
             <View style={styles.tabIconContainer}>
-              <Text style={[styles.tabIcon, { fontSize: size, opacity: focused ? 1 : 0.6 }]}>
+              <Text
+                style={[
+                  styles.tabIcon,
+                  { fontSize: size, opacity: focused ? 1 : 0.6 },
+                ]}
+              >
                 {iconText}
               </Text>
             </View>
@@ -253,11 +273,31 @@ function MainTabNavigator() {
         tabBarLabelStyle: styles.tabLabel,
       })}
     >
-      <MainTab.Screen name="Explore" component={ExploreStackNavigator} options={{ tabBarLabel: "Explore" }} />
-      <MainTab.Screen name="Create" component={CreateStackNavigator} options={{ tabBarLabel: "Create" }} />
-      <MainTab.Screen name="Activities" component={ActivitiesStackNavigator} options={{ tabBarLabel: "Activities" }} />
-      <MainTab.Screen name="Chat" component={ChatStackNavigator} options={{ tabBarLabel: "Chat" }} />
-      <MainTab.Screen name="Profile" component={ProfileStackNavigator} options={{ tabBarLabel: "Profile" }} />
+      <MainTab.Screen
+        name="Explore"
+        component={ExploreStackNavigator}
+        options={{ tabBarLabel: "Explore" }}
+      />
+      <MainTab.Screen
+        name="Create"
+        component={CreateStackNavigator}
+        options={{ tabBarLabel: "Create" }}
+      />
+      <MainTab.Screen
+        name="Activities"
+        component={ActivitiesStackNavigator}
+        options={{ tabBarLabel: "Activities" }}
+      />
+      <MainTab.Screen
+        name="Chat"
+        component={ChatStackNavigator}
+        options={{ tabBarLabel: "Chat" }}
+      />
+      <MainTab.Screen
+        name="Profile"
+        component={ProfileStackNavigator}
+        options={{ tabBarLabel: "Profile" }}
+      />
     </MainTab.Navigator>
   );
 }

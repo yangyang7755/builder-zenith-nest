@@ -9,7 +9,10 @@ export default function MapActivitiesScreen() {
   const navigation = useNavigation<any>();
   return (
     <View style={styles.container}>
-      <MapActivitiesModal activities={activities} onClose={() => navigation.goBack()} />
+      <MapActivitiesModal
+        activities={activities}
+        onClose={() => navigation.goBack()}
+      />
     </View>
   );
 }

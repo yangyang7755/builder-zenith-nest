@@ -43,12 +43,7 @@ const Avatar: React.FC<AvatarProps> = ({
   ];
 
   if (uri) {
-    return (
-      <Image
-        source={{ uri }}
-        style={containerStyle}
-      />
-    );
+    return <Image source={{ uri }} style={containerStyle} />;
   }
 
   return (

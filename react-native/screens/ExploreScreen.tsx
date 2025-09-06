@@ -736,7 +736,12 @@ const ExploreScreen: React.FC = () => {
               ) : activities.length === 0 ? (
                 <View style={styles.emptyState}>
                   <Text style={styles.emptyText}>No activities yet</Text>
-                  <TouchableOpacity style={styles.createButton} onPress={() => (navigation as any).getParent()?.navigate('Create')}>
+                  <TouchableOpacity
+                    style={styles.createButton}
+                    onPress={() =>
+                      (navigation as any).getParent()?.navigate("Create")
+                    }
+                  >
                     <Text style={styles.createButtonText}>Create Activity</Text>
                   </TouchableOpacity>
                 </View>
@@ -903,8 +908,16 @@ const ExploreScreen: React.FC = () => {
       </Modal>
 
       {/* Map Activities Modal */}
-      <Modal visible={showMapView} transparent={false} animationType="slide" onRequestClose={() => setShowMapView(false)}>
-        <MapActivitiesModal activities={filteredActivities} onClose={() => setShowMapView(false)} />
+      <Modal
+        visible={showMapView}
+        transparent={false}
+        animationType="slide"
+        onRequestClose={() => setShowMapView(false)}
+      >
+        <MapActivitiesModal
+          activities={filteredActivities}
+          onClose={() => setShowMapView(false)}
+        />
       </Modal>
 
       {/* Filter Modal - Simplified for now */}

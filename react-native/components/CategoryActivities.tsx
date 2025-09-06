@@ -13,7 +13,12 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Feather";
-import { designTokens, commonStyles, getColor, getShadow } from "../styles/designTokens";
+import {
+  designTokens,
+  commonStyles,
+  getColor,
+  getShadow,
+} from "../styles/designTokens";
 
 const { width } = Dimensions.get("window");
 
@@ -194,7 +199,10 @@ export default function CategoryActivities({ activities = [] }: Props) {
         key={activity.id}
         style={styles.activityCard}
         onPress={() =>
-          navigation.navigate("ActivityDetails" as never, { activityId: activity.id } as never)
+          navigation.navigate(
+            "ActivityDetails" as never,
+            { activityId: activity.id } as never,
+          )
         }
       >
         <View style={styles.cardContent}>
@@ -478,7 +486,12 @@ export default function CategoryActivities({ activities = [] }: Props) {
             <Text style={styles.emptySubtitle}>
               Try adjusting your filters or check back later
             </Text>
-            <TouchableOpacity style={styles.createButton} onPress={() => (navigation as any).getParent()?.navigate('Create')}>
+            <TouchableOpacity
+              style={styles.createButton}
+              onPress={() =>
+                (navigation as any).getParent()?.navigate("Create")
+              }
+            >
               <Text style={styles.createButtonText}>Create Activity</Text>
             </TouchableOpacity>
           </View>

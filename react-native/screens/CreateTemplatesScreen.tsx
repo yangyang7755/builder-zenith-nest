@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { MainTabParamList } from "../App";
 
@@ -25,18 +31,26 @@ export default function CreateTemplatesScreen() {
         <Text style={styles.subtitle}>Choose a template to start</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.grid}
+        showsVerticalScrollIndicator={false}
+      >
         {TEMPLATES.map((t) => (
           <TouchableOpacity
             key={t.key}
             style={styles.card}
             onPress={() => {
-              navigation.navigate("CreateActivity" as never, { type: t.label } as never);
+              navigation.navigate(
+                "CreateActivity" as never,
+                { type: t.label } as never,
+              );
             }}
           >
             <Text style={styles.cardEmoji}>🏷️</Text>
             <Text style={styles.cardLabel}>{t.label}</Text>
-            <Text style={styles.cardHint}>Start a {t.label.toLowerCase()} activity</Text>
+            <Text style={styles.cardHint}>
+              Start a {t.label.toLowerCase()} activity
+            </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -46,7 +60,13 @@ export default function CreateTemplatesScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  header: { paddingTop: 20, paddingHorizontal: 20, paddingBottom: 8, borderBottomWidth: 1, borderBottomColor: "#e5e7eb" },
+  header: {
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
+  },
   title: { fontSize: 22, fontWeight: "700", color: "#111827" },
   subtitle: { marginTop: 4, color: "#6B7280" },
   grid: { padding: 16, flexDirection: "row", flexWrap: "wrap" },
