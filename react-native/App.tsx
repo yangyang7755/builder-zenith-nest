@@ -127,6 +127,8 @@ export type ProfileStackParamList = {
   AllFeatures: undefined;
   ClubsList: undefined;
   ClubDetails: { clubId: string } | undefined;
+  Followers: undefined;
+  Following: undefined;
 };
 
 export type ExploreStackParamList = {
