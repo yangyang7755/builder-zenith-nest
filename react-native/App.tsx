@@ -109,7 +109,6 @@ export type MainTabParamList = {
   Explore: undefined;
   Activities: undefined;
   Create: undefined;
-  Chat: undefined;
   Profile: undefined;
 };
 
@@ -135,6 +134,12 @@ const MainTab = createBottomTabNavigator<MainTabParamList>();
 const ProfileStack = createStackNavigator<ProfileStackParamList>();
 const ExploreStack = createStackNavigator<ExploreStackParamList>();
 const ActivitiesStack = createStackNavigator<ActivitiesStackParamList>();
+
+// Create stack types and navigator
+export type CreateStackParamList = {
+  CreateTemplates: undefined;
+};
+const CreateStack = createStackNavigator<CreateStackParamList>();
 
 // Profile Stack Navigator
 function ProfileStackNavigator() {
@@ -188,6 +193,15 @@ function ActivitiesStackNavigator() {
   );
 }
 
+// Create Stack Navigator
+function CreateStackNavigator() {
+  return (
+    <CreateStack.Navigator screenOptions={{ headerShown: false }}>
+      <CreateStack.Screen name="CreateTemplates" component={require("./screens/CreateTemplatesScreen").default} />
+    </CreateStack.Navigator>
+  );
+}
+
 // Main Tab Navigator (matches web bottom navigation)
 function MainTabNavigator() {
   return (
@@ -201,6 +215,9 @@ function MainTabNavigator() {
               break;
             case "Activities":
               iconText = "⏰";
+              break;
+            case "Create":
+              iconText = "➕";
               break;
             case "Profile":
               iconText = "👤";
@@ -224,6 +241,7 @@ function MainTabNavigator() {
       })}
     >
       <MainTab.Screen name="Explore" component={ExploreStackNavigator} options={{ tabBarLabel: "Explore" }} />
+      <MainTab.Screen name="Create" component={CreateStackNavigator} options={{ tabBarLabel: "Create" }} />
       <MainTab.Screen name="Activities" component={ActivitiesStackNavigator} options={{ tabBarLabel: "Activities" }} />
       <MainTab.Screen name="Profile" component={ProfileStackNavigator} options={{ tabBarLabel: "Profile" }} />
     </MainTab.Navigator>
