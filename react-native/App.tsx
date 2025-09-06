@@ -210,6 +210,8 @@ function ActivitiesStackNavigator() {
 }
 
 import CreateTemplatesScreen from "./screens/CreateTemplatesScreen";
+import ChatListScreen from "./screens/ChatListScreen";
+import ChatRoomScreen from "./screens/ChatRoomScreen";
 
 // Create Stack Navigator
 function CreateStackNavigator() {
