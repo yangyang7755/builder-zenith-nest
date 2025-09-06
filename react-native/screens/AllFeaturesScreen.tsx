@@ -39,16 +39,15 @@ export default function AllFeaturesScreen() {
       Alert.alert("Coming soon", note || "Not implemented yet");
       return;
     }
-    if (route.stack === "Explore") navigation.navigate("Explore" as never);
-    else if (route.stack === "Activities") {
+    const parent = navigation.getParent?.();
+    if (route.stack === "Profile") {
+      // We're already in Profile stack; navigate internally
       if (route.screen) navigation.navigate(route.screen as never);
-      else navigation.navigate("Activities" as never);
+      else parent?.navigate("Profile" as never);
+      return;
     }
-    else if (route.stack === "Create") navigation.navigate("Create" as never);
-    else if (route.stack === "Profile") {
-      if (route.screen) navigation.navigate(route.screen as never);
-      else navigation.navigate("Profile" as never);
-    }
+    // Switch to another tab and optionally a nested screen
+    parent?.navigate(route.stack as never, route.screen ? ({ screen: route.screen } as never) : undefined);
   };
 
   return (
