@@ -157,6 +157,7 @@ const ChatStack = createStackNavigator<ChatStackParamList>();
 // Create stack types and navigator
 export type CreateStackParamList = {
   CreateTemplates: undefined;
+  CreateActivity: { type: string };
 };
 const CreateStack = createStackNavigator<CreateStackParamList>();
 
