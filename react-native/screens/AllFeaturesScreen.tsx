@@ -15,8 +15,8 @@ const items: { section: string; links: { label: string; route?: { stack?: string
   ]},
   { section: "Social", links: [
     { label: "Chat", note: "Planned: Chat list & room" },
-    { label: "Followers", note: "Planned" },
-    { label: "Following", note: "Planned" },
+    { label: "Followers", route: { stack: "Profile", screen: "Followers" } },
+    { label: "Following", route: { stack: "Profile", screen: "Following" } },
     { label: "Saved", route: { stack: "Activities", screen: "Saved" } },
   ]},
   { section: "Clubs", links: [
