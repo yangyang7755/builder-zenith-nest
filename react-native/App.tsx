@@ -66,6 +66,12 @@ const SettingsScreen: React.FC = () => {
           Account
         </Text>
         <TouchableOpacity
+          onPress={() => navigation.navigate("AllFeatures")}
+          style={{ backgroundColor: "#1F381F", paddingVertical: 12, borderRadius: 8, alignItems: "center", marginBottom: 12 }}
+        >
+          <Text style={{ color: "#fff", fontWeight: "600" }}>All Features</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={signOut}
           style={{ backgroundColor: "#ef4444", paddingVertical: 12, borderRadius: 8, alignItems: "center" }}
         >
