@@ -174,6 +174,8 @@ function ProfileStackNavigator() {
       <ProfileStack.Screen name="AllFeatures" component={require("./screens/AllFeaturesScreen").default} />
       <ProfileStack.Screen name="ClubsList" component={ClubsListScreen} />
       <ProfileStack.Screen name="ClubDetails" component={ClubDetailsScreen} />
+      <ProfileStack.Screen name="Followers" component={FollowersScreen} />
+      <ProfileStack.Screen name="Following" component={FollowingScreen} />
     </ProfileStack.Navigator>
   );
 }
