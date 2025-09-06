@@ -193,7 +193,7 @@ function CreateStackNavigator() {
   return (
     <CreateStack.Navigator screenOptions={{ headerShown: false }}>
       <CreateStack.Screen name="CreateTemplates" component={CreateTemplatesScreen} />
-      <CreateStack.Screen name="CreateActivity" component={require("./screens/CreateActivityScreen").default} />
+      <CreateStack.Screen name="CreateActivity" component={CreateActivityScreen} />
     </CreateStack.Navigator>
   );
 }
