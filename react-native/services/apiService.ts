@@ -70,7 +70,7 @@ interface Club {
 // Utility function to get auth headers
 const getAuthHeaders = async () => {
   try {
-    const token = await AsyncStorage.getItem("auth_token");
+    const token = await AsyncStorage.getItem("token");
     return token ? { Authorization: `Bearer ${token}` } : {};
   } catch (error) {
     console.error("Error getting auth token:", error);
