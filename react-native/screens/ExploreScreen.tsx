@@ -21,6 +21,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useFollow } from "../contexts/FollowContext";
 import { useClubs } from "../contexts/ClubContext";
 import MapActivitiesModal from "../components/MapActivitiesModal";
+import apiService from "../services/apiService";
 
 const { width: screenWidth } = Dimensions.get("window");
 
