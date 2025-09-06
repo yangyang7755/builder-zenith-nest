@@ -222,6 +222,15 @@ function CreateStackNavigator() {
   );
 }
 
+function ChatStackNavigator() {
+  return (
+    <ChatStack.Navigator screenOptions={{ headerShown: false }}>
+      <ChatStack.Screen name="ChatList" component={ChatListScreen} />
+      <ChatStack.Screen name="ChatRoom" component={ChatRoomScreen} />
+    </ChatStack.Navigator>
+  );
+}
+
 // Main Tab Navigator (matches web bottom navigation)
 function MainTabNavigator() {
   return (
