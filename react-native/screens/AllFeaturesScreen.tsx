@@ -40,7 +40,10 @@ export default function AllFeaturesScreen() {
       return;
     }
     if (route.stack === "Explore") navigation.navigate("Explore" as never);
-    else if (route.stack === "Activities") navigation.navigate("Activities" as never);
+    else if (route.stack === "Activities") {
+      if (route.screen) navigation.navigate(route.screen as never);
+      else navigation.navigate("Activities" as never);
+    }
     else if (route.stack === "Create") navigation.navigate("Create" as never);
     else if (route.stack === "Profile") {
       if (route.screen) navigation.navigate(route.screen as never);
