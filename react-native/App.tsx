@@ -116,6 +116,7 @@ export type ProfileStackParamList = {
   ProfileMain: undefined;
   ProfileEdit: undefined;
   Settings: undefined;
+  AllFeatures: undefined;
 };
 
 export type ExploreStackParamList = {
