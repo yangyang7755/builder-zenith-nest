@@ -33,6 +33,7 @@ import { useAuth } from "./contexts/AuthContext";
 
 const SettingsScreen: React.FC = () => {
   const { signOut } = useAuth();
+  const navigation = (require("@react-navigation/native") as any).useNavigation();
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
   const [privateProfile, setPrivateProfile] = React.useState(false);
 
