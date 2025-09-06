@@ -194,7 +194,7 @@ export default function CategoryActivities({ activities = [] }: Props) {
         key={activity.id}
         style={styles.activityCard}
         onPress={() =>
-          navigation.navigate("ActivityDetail", { id: activity.id })
+          navigation.navigate("ActivityDetails" as never, { activityId: activity.id } as never)
         }
       >
         <View style={styles.cardContent}>
