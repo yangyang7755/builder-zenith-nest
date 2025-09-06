@@ -19,6 +19,7 @@ import ExploreScreen from "./screens/ExploreScreen";
 import ActivitiesScreen from "./screens/ActivitiesScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AnimatedSplash from "./components/AnimatedSplash";
+import SettingsScreen from "./screens/SettingsScreen";
 
 // Simple placeholder components for screens that haven't been converted yet
 const CreateScreen = () => (
@@ -27,60 +28,6 @@ const CreateScreen = () => (
     <Text style={styles.placeholderSubtext}>Coming Soon!</Text>
   </View>
 );
-
-import { Switch, TouchableOpacity } from "react-native";
-import { useAuth } from "./contexts/AuthContext";
-
-const SettingsScreen: React.FC = () => {
-  const { signOut } = useAuth();
-  const navigation = (require("@react-navigation/native") as any).useNavigation();
-  const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
-  const [privateProfile, setPrivateProfile] = React.useState(false);
-
-  return (
-    <View style={{ flex: 1, backgroundColor: "#FFFFFF", padding: 24 }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold", color: "#000", marginBottom: 16 }}>
-        Settings
-      </Text>
-
-      <View style={{ borderTopWidth: 1, borderTopColor: "#E5E7EB" }} />
-
-      <View style={{ paddingVertical: 16 }}>
-        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111827", marginBottom: 12 }}>
-          Preferences
-        </Text>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 12 }}>
-          <Text style={{ fontSize: 16, color: "#111827" }}>Push notifications</Text>
-          <Switch value={notificationsEnabled} onValueChange={setNotificationsEnabled} />
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 12 }}>
-          <Text style={{ fontSize: 16, color: "#111827" }}>Private profile</Text>
-          <Switch value={privateProfile} onValueChange={setPrivateProfile} />
-        </View>
-      </View>
-
-      <View style={{ borderTopWidth: 1, borderTopColor: "#E5E7EB" }} />
-
-      <View style={{ paddingVertical: 16 }}>
-        <Text style={{ fontSize: 16, fontWeight: "600", color: "#111827", marginBottom: 12 }}>
-          Account
-        </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("AllFeatures")}
-          style={{ backgroundColor: "#1F381F", paddingVertical: 12, borderRadius: 8, alignItems: "center", marginBottom: 12 }}
-        >
-          <Text style={{ color: "#fff", fontWeight: "600" }}>All Features</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={signOut}
-          style={{ backgroundColor: "#ef4444", paddingVertical: 12, borderRadius: 8, alignItems: "center" }}
-        >
-          <Text style={{ color: "#fff", fontWeight: "600" }}>Sign out</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
 
 const OnboardingScreen = () => (
   <View style={styles.placeholderContainer}>
