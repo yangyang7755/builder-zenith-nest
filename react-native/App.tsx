@@ -184,6 +184,9 @@ import CategoryActivitiesScreen from "./screens/CategoryActivitiesScreen";
 import MapActivitiesScreen from "./screens/MapActivitiesScreen";
 import PartnerDetailsScreen from "./screens/PartnerDetailsScreen";
 import CarShareDetailsScreen from "./screens/CarShareDetailsScreen";
+import AllFeaturesScreen from "./screens/AllFeaturesScreen";
+import SavedScreen from "./screens/SavedScreen";
+import CreateActivityScreen from "./screens/CreateActivityScreen";
 
 // Create Stack Navigator
 function CreateStackNavigator() {
