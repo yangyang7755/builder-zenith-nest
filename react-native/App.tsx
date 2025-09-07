@@ -1,7 +1,7 @@
 import React from "react";
 import "react-native-gesture-handler";
 import "react-native-reanimated";
-import React from "react";
+import { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -328,7 +328,7 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 
 // Main App Component
 export default function App() {
-  const [showSplash, setShowSplash] = React.useState(true);
+  const [showSplash, setShowSplash] = useState(true);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
